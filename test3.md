@@ -5,3 +5,5 @@ main - commit1 - merge
 main - commit2 - merge
 //
 main - commit3 - merge
+//
+main - commit4 - merge
