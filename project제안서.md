@@ -27,11 +27,11 @@
 
 | 담당자                | 주요 기능               | 핵심 테이블                                          | 주요 JSP 페이지                                                     | 주요 구현 내용                                   | 난이도      |
 | :----------------- | :------------------ | :---------------------------------------------- | :------------------------------------------------------------- | :----------------------------------------- | :------- |
-| 🧍‍♂️① 사용자·반려동물 담당 | 사용자 및 반려동물 정보 관리    | `User`, `Pet`                                   | `userList.jsp`, `userForm.jsp`, `petForm.jsp`, `petDetail.jsp` | 사용자 등록, 반려동물 등록, 질환 선택(드롭다운), 정보 수정/삭제     | ⚙️ 중간    |
-| 💊② 질환별 영양가이드 담당   | 질환 및 권장 영양 수치 관리    | `DiseaseGuide`                                  | `guideList.jsp`, `guideForm.jsp`                               | 질환명, 권장 단백질/인/칼로리 수치, 건강 가이드 문구 CRUD       | 🟢 쉬움~중간 |
-| 🍖③ 사료 정보 담당       | 사료 데이터 관리           | `Food`                                          | `foodList.jsp`, `foodForm.jsp`, `foodDetail.jsp`               | 사료명, 단백질/인/칼로리/알러지 정보 CRUD + 검색 필터         | ⚙️ 중간    |
-| 🎯④ 추천 담당 (핵심)     | 질환 기반 사료 추천 + 결과 저장 | `Recommendation` + JOIN(`DiseaseGuide`, `Food`) | `filterForm.jsp`, `recommendList.jsp`, `recommendResult.jsp`   | 질환 선택 기반 SQL JOIN 필터링, 결과 리스트 출력, 추천 저장 기능 | 🔥 어려움   |
-| 📚⑤ 건강정보 제공 담당     | 건강·영양 관련 정보 콘텐츠 제공  | `HealthInfo`                                    | `infoList.jsp`, `infoForm.jsp`, `infoDetail.jsp`               | 건강 상식, 질환 관리법, 사료 영양 설명 등 정보성 콘텐츠 CRUD     | ⚙️ 중간    |
+| 🧍‍♂️① 사용자·반려동물 담당(태훈) | 사용자 및 반려동물 정보 관리    | `User`, `Pet`                                   | `userList.jsp`, `userForm.jsp`, `petForm.jsp`, `petDetail.jsp` | 사용자 등록, 반려동물 등록, 질환 선택(드롭다운), 정보 수정/삭제     | ⚙️ 중간    |
+| 💊② 질환별 영양가이드 담당(상욱)   | 질환 및 권장 영양 수치 관리    | `DiseaseGuide`                                  | `guideList.jsp`, `guideForm.jsp`                               | 질환명, 권장 단백질/인/칼로리 수치, 건강 가이드 문구 CRUD       | 🟢 쉬움~중간 |
+| 🍖③ 사료 정보 담당(준용)       | 사료 데이터 관리           | `Food`                                          | `foodList.jsp`, `foodForm.jsp`, `foodDetail.jsp`               | 사료명, 단백질/인/칼로리/알러지 정보 CRUD + 검색 필터         | ⚙️ 중간    |
+| 🎯④ 추천 담당 (현주)     | 질환 기반 사료 추천 + 결과 저장 | `Recommendation` + JOIN(`DiseaseGuide`, `Food`) | `filterForm.jsp`, `recommendList.jsp`, `recommendResult.jsp`   | 질환 선택 기반 SQL JOIN 필터링, 결과 리스트 출력, 추천 저장 기능 | 🔥 어려움   |
+| 📚⑤ 건강정보 제공 담당(승현)     | 건강·영양 관련 정보 콘텐츠 제공  | `HealthInfo`                                    | `infoList.jsp`, `infoForm.jsp`, `infoDetail.jsp`               | 건강 상식, 질환 관리법, 사료 영양 설명 등 정보성 콘텐츠 CRUD     | ⚙️ 중간    |
 
 ---
 
@@ -44,22 +44,7 @@ DISEASE_GUIDE(disease_id, disease_name, protein_min, protein_max, phosphorus_min
 FOOD(food_id, name, protein, phosphorus, calorie, allergy_tag)
 RECOMMENDATION(rec_id, pet_id, food_id, match_score, created_at)
 HEALTH_INFO(info_id, category, title, content, thumbnail, created_at)
-```
 
----
-
-## 🧭 **데이터 흐름 요약**
-
-```
-[User] ─< [Pet] ─ 선택 질환 → [DiseaseGuide]
-                            ↓
-                         JOIN
-                            ↓
-                         [Food]
-                            ↓
-                     결과 저장 → [Recommendation]
-
-[HealthInfo] (팀 제공, 조회용)
 ```
 
 
@@ -73,7 +58,7 @@ HEALTH_INFO(info_id, category, title, content, thumbnail, created_at)
 
 * 사용자는 입력한 질환에 따라 → 필터링할 조건 자동 추천
 
-* 사용자는 **질환이나 사료 성분 조건(단백질·인·칼로리 등)을 직접 입력**해
+* 사용자는 **질환이나 사료 성분 조건(단백질·인·칼로리 등)을 직접 선택**해
   **수동 필터링 방식으로 원하는 사료를 탐색**
 
 * 추천 로직은 `DiseaseGuide`와 `Food` 테이블을 **JOIN하여 조건 매칭**하는 구조
