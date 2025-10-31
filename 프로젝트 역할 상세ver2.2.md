@@ -9,6 +9,7 @@
 | `PET_TYPE`           | 반려동물 종류 (강아지, 고양이 등) |
 | `FOOD`               | 사료 정보 |
 | `FOOD_BRAND`         | 사료 브랜드 |
+| `FOOD_INGREDIENT`    | 사료에 쓰인 식재료 정보 |
 | `DISEASE`            | 질환 정보 |
 | `PET_DISEASE`        | 반려동물-질환 매핑 |
 | `FOOD_NUTRIENT`      | 사료-영양소 매핑 |
