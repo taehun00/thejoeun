@@ -60,6 +60,8 @@
 #### 12. `REVIEW`
 - `review_id` (PK), `userid` (FK), `food_id` (FK), `rating`, `comment`, `created_at`
 
+#### 13. `FOOD_INGREDIENT`
+- 주원료 등 이용된 재료 정보
  
 
 ### 👥 5명 역할 분담 
@@ -67,10 +69,10 @@
 | 담당자 | 역할 | 주요 테이블 |
 |--------|------|-------------|
 | A | 사용자 및 반려동물 관리 | `USER`, `PET`, `PET_TYPE` |
-| B | 사료 및 브랜드 관리 | `FOOD`, `FOOD_BRAND`, `FOOD_NUTRIENT` |
+| B | 사료 및 브랜드 관리 | `FOOD`, `FOOD_BRAND`, 'FOOD_INGREDIENT' |
 | C | 질환 정보 및 매핑 | `DISEASE`, `PET_DISEASE` |
 | D | 추천 및 즐겨찾기 기능 | `FOOD_RECOMMEND`, `FAVORITE_FOOD` |
-| E | 리뷰 및 영양소 관리 | `REVIEW`, `NUTRIENT` |
+| E | 리뷰 및 영양소 관리 | `REVIEW`, `NUTRIENT`, 'FOOD_NUTRIENT' |
  
 
 
