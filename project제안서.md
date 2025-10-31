@@ -46,6 +46,87 @@ RECOMMENDATION(rec_id, pet_id, food_id, match_score, created_at)
 HEALTH_INFO(info_id, category, title, content, thumbnail, created_at)
 
 ```
+ 
+
+### --1. table (user) + sequence (user_seq)
+| 컬럼명       | 데이터 타입       | 제약 조건        | 설명 |
+|--------------|-------------------|------------------|------|
+| `user_id`    | `NUMBER`          | `PRIMARY KEY`    | 사용자 고유 ID |
+| `name`       | `VARCHAR2(100)`   | `NOT NULL`       | 사용자 이름 |
+| `email`      | `VARCHAR2(200)`   | `NOT NULL`       | 이메일 주소 |
+
+---
+### --2-1. table (pet) + sequence (pet_seq)
+| 컬럼명       | 데이터 타입       | 제약 조건        | 설명 |
+|--------------|-------------------|------------------|------|
+| `pet_id`     | `NUMBER`          | `PRIMARY KEY`    | 반려동물 고유 ID |
+| `user_id`    | `NUMBER`          | `NOT NULL`       | 사용자 ID (`user` 테이블 참조) |
+| `name`       | `VARCHAR2(100)`   | `NOT NULL`       | 반려동물 이름 |
+| `species`    | `VARCHAR2(50)`    | `NOT NULL`       | 반려동물 종 |
+| `age`        | `NUMBER`          | —                | 반려동물 나이 |
+| —            | —                 | `FOREIGN KEY`    | `user_id`는 `user(user_id)` 참조 |
+
+---
+
+### --2-2. table (pet_disease) + sequence (pet_disease_seq)
+| 컬럼명       | 데이터 타입       | 제약 조건        | 설명 |
+|--------------|-------------------|------------------|------|
+| `pet_disease_id` | `NUMBER`      | `PRIMARY KEY`    | 고유 ID |
+| `pet_id`     | `NUMBER`          | `NOT NULL`       | 반려동물 ID (`pet` 테이블 참조) |
+| `disease_id` | `NUMBER`          | `NOT NULL`       | 질환 ID (`disease_guide` 테이블 참조) |
+| —            | —                 | `FOREIGN KEY`    | `pet_id`는 `pet(pet_id)` 참조, `disease_id`는 `disease_guide(disease_id)` 참조 |
+ 
+
+### --3. table (disease_guide) + sequence (disease_guide_seq)
+| 컬럼명           | 데이터 타입       | 제약 조건        | 설명 |
+|------------------|-------------------|------------------|------|
+| `disease_id`     | `NUMBER`          | `PRIMARY KEY`    | 질환 고유 ID |
+| `disease_name`   | `VARCHAR2(100)`   | `NOT NULL`       | 질환명 |
+| `protein_min`    | `NUMBER`          | —                | 최소 단백질 수치 |
+| `protein_max`    | `NUMBER`          | —                | 최대 단백질 수치 |
+| `phosphorus_min` | `NUMBER`          | —                | 최소 인 수치 |
+| `phosphorus_max` | `NUMBER`          | —                | 최대 인 수치 |
+| `guide_message`  | `VARCHAR2(500)`   | —                | 건강 가이드 문구 |
+
+---
+
+### --4. table (food) + sequence (food_seq)
+| 컬럼명       | 데이터 타입       | 제약 조건        | 설명 |
+|--------------|-------------------|------------------|------|
+| `food_id`    | `NUMBER`          | `PRIMARY KEY`    | 사료 고유 ID |
+| `name`       | `VARCHAR2(200)`   | `NOT NULL`       | 사료명 |
+| `protein`    | `NUMBER`          | —                | 단백질 함량 |
+| `phosphorus` | `NUMBER`          | —                | 인 함량 |
+| `calorie`    | `NUMBER`          | —                | 칼로리 |
+| `allergy_tag`| `VARCHAR2(200)`   | —                | 알러지 태그 (쉼표 구분 문자열) |
+
+---
+
+### --5. table (recommendation) + sequence (recommendation_seq)
+| 컬럼명       | 데이터 타입       | 제약 조건        | 설명 |
+|--------------|-------------------|------------------|------|
+| `rec_id`     | `NUMBER`          | `PRIMARY KEY`    | 추천 결과 고유 ID |
+| `pet_id`     | `NUMBER`          | `NOT NULL`       | 반려동물 ID (`pet` 테이블 참조) |
+| `food_id`    | `NUMBER`          | `NOT NULL`       | 사료 ID (`food` 테이블 참조) |
+| `match_score`| `NUMBER`          | —                | 질환-사료 적합도 점수 |
+| `created_at` | `DATE`            | `DEFAULT SYSDATE`| 추천 생성일 |
+| —            | —                 | `FOREIGN KEY`    | `pet_id`는 `pet(pet_id)` 참조, `food_id`는 `food(food_id)` 참조 |
+
+---
+
+### --6. table (health_info) + sequence (health_info_seq)
+| 컬럼명       | 데이터 타입       | 제약 조건        | 설명 |
+|--------------|-------------------|------------------|------|
+| `info_id`    | `NUMBER`          | `PRIMARY KEY`    | 건강정보 고유 ID |
+| `category`   | `VARCHAR2(100)`   | —                | 정보 카테고리 |
+| `title`      | `VARCHAR2(200)`   | `NOT NULL`       | 정보 제목 |
+| `content`    | `CLOB`            | `NOT NULL`       | 정보 내용 |
+| `thumbnail`  | `VARCHAR2(300)`   | —                | 썸네일 이미지 경로 |
+| `created_at` | `DATE`            | `DEFAULT SYSDATE`| 작성일 |
+ 
+
+
+
 
 
 ## ✅ **요약 포인트**
@@ -67,4 +148,6 @@ HEALTH_INFO(info_id, category, title, content, thumbnail, created_at)
 
 * **추천 담당**이 필터링 로직과 결과 출력까지 통합 담당,
   사용자의 선택 조건을 반영해 동적으로 결과를 생성
+
+
 
