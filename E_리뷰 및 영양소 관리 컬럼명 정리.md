@@ -12,19 +12,21 @@
 ### --12. table (review) + sequence (review_seq) 리뷰 게시판(사료를 브랜드-제품명 순으로 필터링 후 간단한 한줄평 남기는 게시판이 어떨까요?)
 | 컬럼명      | 데이터 타입       | 제약 조건                                                | 설명 |
 |-------------|-------------------|----------------------------------------------------------|------|
-| `reviewid`  | `NUMBER`          | `PRIMARY KEY`                                            | 리뷰 ID |
+| `review_id`  | `NUMBER`          | `PRIMARY KEY`                                            | 리뷰 ID |
 | `userid`     | `NUMBER`          | `FOREIGN KEY REFERENCES user(userid)`                   | 작성자 |
-| `password`   | `VARCHAR2(50)`     | 'not null'                                              | 글 비밀번호|
-| `brandid`    | `NUMBER`          | `FOREIGN KEY REFERENCES food_brand(brand_id)`            | 브랜드 ID |
-| `foodid`    | `NUMBER`          | `FOREIGN KEY REFERENCES food(food_id)`                  | 사료 ID |
-| `foodimg`    | `VARCHAR2(300)`   | `우선 null값 채우기`                                      | 사료 이미지 |
+| `password`   | `VARCHAR2(50)`     | `not null`                                                | 글 비밀번호|
+| `brand_id`    | `NUMBER`          | `FOREIGN KEY REFERENCES food_brand(brand_id)`            | 브랜드 ID |
+| `food_id`    | `NUMBER`          | `FOREIGN KEY REFERENCES food(food_id)`                  | 사료 ID |
+| `food_img`    | `VARCHAR2(300)`   | `우선 null값 채우기`                                      | 사료 이미지 |
 | `rating`     | `NUMBER(1)`       | `CHECK (rating BETWEEN 1 AND 5)`                         | 평점 |
-| `reviewcomment`    | `VARCHAR2(500)`   | comment는 등록 불가 컬럼이라 수정                     리뷰 내용 |
-| `createdat` |date | DEFAULT SYSDAYE                                                        | 작성일 |
+| `title`     | `VARCHAR2(100)`       |                                                      | 제목 |
+| `review_comment`    | `VARCHAR2(500)`   | —                                                 | 리뷰 내용 |
+| `created_at` | `VARCHAR2(200)`   | —                                                        | 작성일 |
 
 ```
- 리뷰id     작성자닉네임    글비밀번호      브랜드id    사료id      사료이미지      평점                리뷰 내용                              작성일
-  '1'        'user1'       '1111'        '2'        '03'        null         '5'   '기호성이 너무 좋아서 우리 애가 돼지가 됐어요'      '2025-10-30'
+ 리뷰id     작성자닉네임    글비밀번호      브랜드id    사료id      사료이미지      평점        제목            리뷰 내용                              작성일
+  '1'        'user1'       '1111'        '2'        '03'        null        *****      잘먹어요           '기호성이 너무 좋아서 우리 애가 돼지가 됐어요'      '2025-10-30'
+```
 ```
 
 
