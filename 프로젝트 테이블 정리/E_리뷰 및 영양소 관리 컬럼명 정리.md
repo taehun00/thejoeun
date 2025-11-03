@@ -2,10 +2,10 @@
 
 | 담당자 | 역할 | 주요 테이블 |
 |--------|------|-------------|
-| A | 사용자 및 반려동물 관리 | `USER`, `PET`, `PET_TYPE` |
-| B | 사료 및 브랜드 관리 | `FOOD`, `FOOD_BRAND`, `FOOD_INGREDIENT`|
-| C | 질환 정보 및 매핑 | `DISEASE`, `PET_DISEASE` |
-| D | 추천 및 즐겨찾기 기능 | `FOOD_RECOMMEND`, `FAVORITE_FOOD` |
+| A | 사용자 및 반려동물 관리 | `USER`, `PET`, `PETTYPE` |
+| B | 사료 및 브랜드 관리 | `FOOD`, `FOODBRAND`, `FOODINGREDIENT`|
+| C | 질환 정보 및 매핑 | `DISEASE`, `PETDISEASE` |
+| D | 추천 및 즐겨찾기 기능 | `FOODRECOMMEND`, `FAVORITEFOOD` |
 | E | 리뷰 및 영양소 관리 | `REVIEW`, `NUTRIENT`, `FOODNUTRIENT` + `NUTRIENTRANGE`|  ✔ 테이블 생성 
 
 
@@ -86,3 +86,7 @@ AND A.AMOUNT BETWEEN C.MINVALUE AND C.MAXVALUE );
 
 출력: 3(foodid 나중에 사료테이블과 연계하면 사료명 출력),   단백질   30%   고양이건사료_중단백
 ```
+
+
+**게시판 시안**
+<img src="/thejoeun/프로젝트 테이블 정리/img/review001.png" alt="게시판시안1차">
