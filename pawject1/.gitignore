@@ -22,3 +22,4 @@ Thumbs.db
 
 # 민감 정보
 *.properties
+/.metadata/
