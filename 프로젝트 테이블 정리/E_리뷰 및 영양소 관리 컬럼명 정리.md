@@ -2,11 +2,11 @@
 
 | 담당자 | 역할 | 주요 테이블 |
 |--------|------|-------------|
-| A | 사용자 및 반려동물 관리 | `USER`, `PET`, `PETTYPE` |
+| A | 사용자 및 반려동물 관리 | `USERS`, `PET`, `PETTYPE` | ✔ 테이블 생성 완료
 | B | 사료 및 브랜드 관리 | `FOOD`, `FOODBRAND`, `FOODINGREDIENT`|
 | C | 질환 정보 및 매핑 | `DISEASE`, `PETDISEASE` |
 | D | 추천 및 즐겨찾기 기능 | `FOODRECOMMEND`, `FAVORITEFOOD` |
-| E | 리뷰 및 영양소 관리 | `REVIEW`, `NUTRIENT`, `FOODNUTRIENT` + `NUTRIENTRANGE`|  ✔ 테이블 생성 
+| E | 리뷰 및 영양소 관리 | `REVIEW`, `NUTRIENT`, `FOODNUTRIENT` |  ✔ 테이블 생성 완료
 
 
 ### --12. table (review) + sequence (review_seq) 리뷰 게시판(사료를 브랜드-제품명 순으로 필터링 후 간단한 한줄평 남기는 게시판이 어떨까요?)
