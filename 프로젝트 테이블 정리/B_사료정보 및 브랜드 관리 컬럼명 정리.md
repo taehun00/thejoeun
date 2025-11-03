@@ -84,3 +84,4 @@ JOIN foodingredient fi ON f.foodid = fi.foodid;
 
 대상반려동물ID(pettypeid) 를 대상반려동물이름(typename) : `개`, `고양이` 로 교체 하는 것이 자연스러워보입니다
 
+ 
