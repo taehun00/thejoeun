@@ -6,7 +6,7 @@
 | B | 사료 및 브랜드 관리 | `FOOD`, `FOOD_BRAND`, `FOOD_INGREDIENT`|
 | C | 질환 정보 및 매핑 | `DISEASE`, `PET_DISEASE` |
 | D | 추천 및 즐겨찾기 기능 | `FOOD_RECOMMEND`, `FAVORITE_FOOD` |
-| E | 리뷰 및 영양소 관리 | `REVIEW`, `NUTRIENT`, `FOOD_NUTRIENT` |  ✔ 테이블 생성 완료
+| E | 리뷰 및 영양소 관리 | `REVIEW`, `NUTRIENT`, `FOODNUTRIENT` + `NUTRIENTRANGE`|  ✔ 테이블 생성 
 
 
 ### --12. table (review) + sequence (review_seq) 리뷰 게시판(사료를 브랜드-제품명 순으로 필터링 후 간단한 한줄평 남기는 게시판이 어떨까요?)
@@ -15,8 +15,8 @@
 | `reviewid`  | `NUMBER`          | `PRIMARY KEY`                                            | 리뷰 ID |
 | `userid`     | `NUMBER`          | `FOREIGN KEY REFERENCES user(userid)`                   | 작성자 |
 | `password`   | `VARCHAR2(50)`     | `not null`                                                | 글 비밀번호|
-| `brandid`    | `NUMBER`          | `FOREIGN KEY REFERENCES food_brand(brand_id)`            | 브랜드 ID |
-| `foodid`    | `NUMBER`          | `FOREIGN KEY REFERENCES food(food_id)`                  | 사료 ID |
+| `brandid`    | `NUMBER`          | `FOREIGN KEY REFERENCES food_brand(brandid)`            | 브랜드 ID |
+| `foodid`    | `NUMBER`          | `FOREIGN KEY REFERENCES food(foodid)`                  | 사료 ID |
 | `foodimg`    | `VARCHAR2(300)`   | `우선 null값 채우기`                                      | 사료 이미지 |
 | `rating`     | `NUMBER(1)`       | `CHECK (rating BETWEEN 1 AND 5)`                         | 평점 |
 | `title`     | `VARCHAR2(100)`       |                                                      | 제목 |
@@ -30,13 +30,13 @@
 
 
 
-### --9. table (food_nutrient) 단순 사료 라벨 데이터
+### --9. table (foodnutrient) 단순 사료 라벨 데이터
 | 컬럼명         | 데이터 타입       | 제약 조건                                                        | 설명 |
 |----------------|-------------------|------------------------------------------------------------------|------|
-| `foodid`       | `NUMBER`          | `FOREIGN KEY REFERENCES food(food_id)`                          | 사료 ID |
-| `nutrientid`   | `NUMBER`          | `FOREIGN KEY REFERENCES nutrient(nutrient_id)`                  | 영양소 ID |
+| `foodid`       | `NUMBER`          | `FOREIGN KEY REFERENCES food(foodid)`                          | 사료 ID |
+| `nutrientid`   | `NUMBER`          | `FOREIGN KEY REFERENCES nutrient(nutrientid)`                  | 영양소 ID |
 | `amount`        | `NUMBER`          | —                                                                | 포함량 |
-| **복합키**      |                   | `PRIMARY KEY (food_id, nutrient_id)`/미구현                            | 사료-영양소 매핑 |
+| **복합키**      |                   | `PRIMARY KEY (foodid, nutrientid)`/미구현                            | 사료-영양소 매핑 |
 
 ```
 사료id      영양소id       포함량
@@ -55,13 +55,13 @@
 '6'         '단백질'       '%'
 ``` 
 
-### --14. table (NUTRIENT_RANGE) 영양소 기준 설정 - 영양소에 대한 구체적인 기준 예시와 직관적 설명이 필요해 보여서 추가했습니다
+### --14. table (NUTRIENTRANGE) 영양소 기준 설정 - 영양소에 대한 구체적인 기준 예시와 직관적 설명이 필요해 보여서 추가했습니다
 
 | 컬럼명         | 데이터 타입       | 제약 조건        | 설명 |
 |----------------|-------------------|------------------|------|
 | `rangeid`    |    `NUMBER`          | `PRIMARY KEY`    | 구간 ID |
-| `pettypeid`    | `NUMBER`          | `FOREIGN KEY REFERENCES PET_TYPE(pet_type_id)`    | 고양이/강아지 구분 ID |
-| `nutrientid`   | `NUMBER`          | `FOREIGN KEY REFERENCES nutrient(nutrient_id)`    | 영양소 ID |
+| `pettypeid`    | `NUMBER`          | `FOREIGN KEY REFERENCES PET_TYPE(pettypeid)`    | 고양이/강아지 구분 ID |
+| `nutrientid`   | `NUMBER`          | `FOREIGN KEY REFERENCES nutrient(nutrientid)`    | 영양소 ID |
 | `minvalue`      | `NUMBER`    | `NOT NULL` | 최소값|
 | `maxvalue`      | `NUMBER`    | `NOT NULL`      | 최대값 |
 | `rangelabel`   | `VARCHAR2(50)`    | `NOT NULL`       | 중,저,고 등 직관적 구간 설명 |
