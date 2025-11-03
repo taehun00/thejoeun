@@ -17,7 +17,7 @@
 | `disname`  | `VARCHAR2(50)`    | `NOT NULL`, `UNIQUE`  | 질병 이름                      |
 | `disex`    | `VARCHAR2(150)`   | `NULL`                 | 질병 설명                      |
 | `kindpet`  | `VARCHAR2(200)`   | `NOT NULL`             | 해당 질병에 걸리는 반려동물 종류 |
-| `infval`   | `VARCHAR2(200)`   | `NULL`                 | 감염 경로 또는 감염 값         |
+| `infval`   | `VARCHAR2(200)`   | `NULL`                 | 감염 관련 정보 또는 감염 값         |
 | `mannote`  | `VARCHAR2(200)`   | `NULL`                 | 관리 시 참고 사항              |
 
 # 🧬 DISEASE 테이블 데이터
@@ -40,8 +40,8 @@
 |--------------|-------------------|------------------------|--------------------|
 | `disid`      | `VARCHAR2(20)`    | `PRIMARY KEY`, `NOT NULL` | 반려동물 질병 ID   |
 | `disname`    | `VARCHAR2(50)`    | `NOT NULL`             | 질병 이름          |
-| `Fedm`       | `NUMBER(10)`      | `NULL`                 | 사료 관련 수치     |
-| `Pdm`        | `NUMBER(10)`      | `NULL`                 | 펫닥터 진단 수치   |
+| `Fedm`       | `NUMBER(10)`      | `NULL`                 | 철 관련 수치     |
+| `Pdm`        | `NUMBER(10)`      | `NULL`                 | 인 관련 수치   |
 | `Proteindm`  | `NUMBER(10)`      | `NULL`                 | 단백질 관련 수치   |
 
 # 🧬 PETDISEASE 테이블 데이터
