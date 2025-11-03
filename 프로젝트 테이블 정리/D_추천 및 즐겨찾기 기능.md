@@ -26,7 +26,7 @@
 
 ```
 테이블(SQL / 추후에 변경사항 있으면 변경할 예정.)
-create sequence recommend seq;
+create sequence recommend_seq;
 
 create table foodrecommend (
    recommendid        number primary key,
@@ -47,28 +47,30 @@ create table foodrecommend (
 
 
 ---
-### --11. table (favorite_food)
+### --11. table (favoritefood)
 | 컬럼명      | 데이터 타입       | 제약 조건                                                | 설명 |
 |-------------|-------------------|----------------------------------------------------------|------|
-| `userid`     | `NUMBER`          | `FOREIGN KEY REFERENCES user(userid)`                   | 사용자 ID |
+| `userid`     | `NUMBER`         | `FOREIGN KEY REFERENCES user(userid)`                   | 사용자 ID |
 | `foodid`    | `NUMBER`          | `FOREIGN KEY REFERENCES food(foodid)`                  | 사료 ID |
-| `addedat`   | `VARCHAR2(200)`   | —                                                        | 즐겨찾기 등록일 |
-| **복합키**   |                   | `PRIMARY KEY (userid, foodid)`                         | 즐겨찾기 매핑 |
+| `addedat`   | `VARCHAR2(200)`   | —                                                      | 즐겨찾기 등록일 |
+| `favoriteid`    | `NUMBER`      | `FOREIGN KEY REFERENCES food(foodid)`              | 즐겨찾기 ID |
+| `notet`        | `VARCHAR2(200)`| —                                                   | 유저코멘트 |
+| **복합키**   |                  | `PRIMARY KEY (userid, foodid)`                        | 즐겨찾기 매핑 |
 ---
 
 ```
 테이블 (SQL/ 추후에 변경사항 있으면 변경할 예정.)
 create table favoritefood (
    favoriteid  number            primary key,  --추가된 부분/ 추후에 조정가능
-   userid      number            foreign key references  user(user id),
-   foodid      number            foreign key references  food(food id),
+   userid      number            foreign key references  user(userid),
+   foodid      number            foreign key references  food(foodid),
    addedat     varchar2(200), 
    note        varchar2(500)     --추가된 부분/ 추후에 조정가능
 );
 
 (임시)
 사용자 id(    userid)         : 123
-사료   id(    foddid)         : 1234
+사료   id(    foodid)         : 1234
 즐겨찾기 등록일(sysdate, date)  : xxxx년 xx월 xx일
 즐겨찾기 매핑(  userid, foodid) : ~~사료
 즐겨찾기 id(   favoriteid)     : 15                             --추가된 부분/ 추후에 조정가능
