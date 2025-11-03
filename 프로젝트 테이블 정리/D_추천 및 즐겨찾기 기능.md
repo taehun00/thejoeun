@@ -36,7 +36,7 @@ create table foodrecommend (
    recommended at varchar2(200)  
 );
 
-(임시 컬럼명) 
+(임시) 
 추천 id    : 5
 유저 id    : 123
 추천사료 id : 15
@@ -63,7 +63,7 @@ create table favorite food (
    hit                          primary key(userid, foodid)
 );
 
-(임시 컬럼명)
+(임시)
 사용자 id      : 123
 사료   id      : 1234
 즐겨찾기 등록일  : xxxx년 xx월 xx일
