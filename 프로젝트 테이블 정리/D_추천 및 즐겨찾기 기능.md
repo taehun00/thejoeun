@@ -44,6 +44,8 @@ create table foodrecommend (
 추천일      : xxxx년 xx월 xx일
 
 ```
+
+
 ---
 ### --11. table (favorite_food)
 | 컬럼명      | 데이터 타입       | 제약 조건                                                | 설명 |
