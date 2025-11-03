@@ -2,11 +2,11 @@
 
 | 담당자 | 역할 | 주요 테이블 |
 |--------|------|-------------|
-| A | 사용자 및 반려동물 관리 | `USER`, `PET`, `PET_TYPE` |
-| B | 사료 및 브랜드 관리 | `FOOD`, `FOOD_BRAND`, 'FOOD_INGREDIENT' |
-| C | 질환 정보 및 매핑 | `DISEASE`, `PET_DISEASE` |
-| D | 추천 및 즐겨찾기 기능 | `FOOD_RECOMMEND`, `FAVORITE_FOOD` |
-| E | 리뷰 및 영양소 관리 | `REVIEW`, `NUTRIENT`, 'FOOD_NUTRIENT' |
+| A | 사용자 및 반려동물 관리 | `USERS`, `PET`, `PETTYPE` | ✔ 테이블 생성 완료
+| B | 사료 및 브랜드 관리 | `FOOD`, `FOODBRAND`, `FOODINGREDIENT`|
+| C | 질환 정보 및 매핑 | `DISEASE`, `PETDISEASE` |
+| D | 추천 및 즐겨찾기 기능 | `FOODRECOMMEND`, `FAVORITEFOOD` |
+| E | 리뷰 및 영양소 관리 | `REVIEW`, `NUTRIENT`, `FOODNUTRIENT` |  ✔ 테이블 생성 완료
 
 ---
 
