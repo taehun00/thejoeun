@@ -71,13 +71,10 @@ create table favoritefood (
 즐겨찾기 매핑(  userid, foodid) : ~~사료
 즐겨찾기 id(   favoriteid)     : 15                             --추가된 부분/ 추후에 조정가능
 유저코멘트(     note)           : 우리집 강아지가 이 간식을 좋아해요~ --추가된 부분/ 추후에 조정가능
-
-사용자 id      : 123
-사료   id      : 1234
-즐겨찾기 등록일  : xxxx년 xx월 xx일
-즐겨찾기 매핑    : ~~사료
-
 ```
+
+
+
 
 
 
