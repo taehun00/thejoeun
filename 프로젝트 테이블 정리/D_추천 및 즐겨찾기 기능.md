@@ -54,7 +54,7 @@ create table foodrecommend (
 | `foodid`    | `NUMBER`          | `FOREIGN KEY REFERENCES food(foodid)`                  | 사료 ID |
 | `addedat`   | `VARCHAR2(200)`   | —                                                      | 즐겨찾기 등록일 |
 | `favoriteid`    | `NUMBER`      | `FOREIGN KEY REFERENCES food(foodid)`              | 즐겨찾기 ID |
-| `notet`        | `VARCHAR2(200)`| —                                                   | 유저코멘트 |
+| `note`        | `VARCHAR2(200)`| —                                                   | 유저코멘트 |
 | **복합키**   |                  | `PRIMARY KEY (userid, foodid)`                        | 즐겨찾기 매핑 |
 ---
 
