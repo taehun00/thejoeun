@@ -70,3 +70,4 @@ create table favorite food (
 즐겨찾기 매핑    : ~~사료
 ```
 
+
