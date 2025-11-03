@@ -23,7 +23,7 @@ userid      email                   nickname        password        createdate
 ```
 
 
-### --2. table (pettype) + sequence (pet_type_seq)
+### --2. table (pettype)
 | 컬럼명        | 데이터 타입       | 제약 조건        | 설명 |
 |---------------|-------------------|------------------|------|
 | `pettypeid` | `NUMBER`          | `PRIMARY KEY`    | 반려동물 종류 ID |
