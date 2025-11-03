@@ -9,7 +9,7 @@
 | E | 리뷰 및 영양소 관리 | `REVIEW`, `NUTRIENT`, `FOOD_NUTRIENT` |  
 
 
-### --4. table (foodbrand)  + sequence (food_brand_seq)
+### --4. table (foodbrand)  + sequence (foodbrandseq)
 | 컬럼명      | 데이터 타입       | 제약 조건        | 설명 |
 |-------------|-------------------|------------------|------|
 | `brandid`   | `NUMBER`          | `PRIMARY KEY`    | 브랜드 ID |
@@ -40,7 +40,7 @@
 ```
 
 
-### --13. table (foodingredient) + sequence (food_ingredient_seq)
+### --13. table (foodingredient) + sequence (foodingredientseq)
 | 컬럼명      | 데이터 타입       | 제약 조건        | 설명 |
 |----------------------|-------------------|------------------------------------------------------|-----------|
 | `foodingredientid`   | `NUMBER`          | `PRIMARY KEY`                                        | 푸드재료 ID |
