@@ -2,11 +2,11 @@
 
 | 담당자 | 역할 | 주요 테이블 |
 |--------|------|-------------|
-| A | 사용자 및 반려동물 관리 | `USERS`, `PET`, `PETTYPE` |
-| B | 사료 및 브랜드 관리 | `FOOD`, `FOODBRAND`, `FOODINGREDIENT`|
-| C | 질환 정보 및 매핑 | `DISEASE`, `PETDISEASE` |
-| D | 추천 및 즐겨찾기 기능 | `FOODRECOMMEND`, `FAVORITEFOOD` |
-| E | 리뷰 및 영양소 관리 | `REVIEW`, `NUTRIENT`, `FOODNUTRIENT`, 'NUTRIENTRANGE' |
+| A | 사용자 및 반려동물 관리 | `USER`, `PET`, `PET_TYPE` |
+| B | 사료 및 브랜드 관리 | `FOOD`, `FOOD_BRAND`|
+| C | 질환 정보 및 매핑 | `DISEASE`, `PET_DISEASE` |
+| D | 추천 및 즐겨찾기 기능 | `FOOD_RECOMMEND`, `FAVORITE_FOOD` |
+| E | 리뷰 및 영양소 관리 | `REVIEW`, `NUTRIENT`, `FOOD_NUTRIENT` 'NUTRIENTRANGE' |
 
 
 ### --4. table (foodbrand)  + sequence (foodbrandseq)
@@ -19,42 +19,26 @@
 
 ```
 브랜드ID      브랜드이름       제조국
-'1'	       '츄츄는고양이였다'	'대한민국'
-'2'	       '밥쌈없다'        '미국'
+'1'	       '네밥이아니야'	     '미국'
+'2'	       '명냥스티드'	     '캐나다'
 ```
 
 
 ### --5. table (food) + sequence (foodseq)
 | 컬럼명              | 데이터 타입       | 제약 조건                                              | 설명 |
-|---------------------|-------------------|--------------------------------------------------------|------|
-| `foodid`            | `NUMBER`          | `PRIMARY KEY`                                          | 사료 ID |
-| `foodname`          | `VARCHAR2(100)`   | `NOT NULL`                                             | 사료 이름 |
-| `brandid`           | `NUMBER`          | `FOREIGN KEY REFERENCES foodbrand(brandid)`          | 브랜드 ID |
-| `description`       | `VARCHAR2(500)`   | —                                                      | 설명 |
+|---------------------|-------------------|----------------------------------------------------|------|
+| `foodid`            | `NUMBER`          | `PRIMARY KEY`                                       | 사료 ID |
+| `foodname`          | `VARCHAR2(100)`   | `NOT NULL`                                          | 사료 이름 |
+| `brandid`           | `NUMBER`          | `FOREIGN KEY REFERENCES foodbrand(brandid)`         | 브랜드 ID |
+| `description`       | `VARCHAR2(500)`   | `NOT NULL`                                          | 설명 |
+| `mainingredient`     | `VARCHAR2(200)`   | `NOT NULL`                                         | 주 재료    |
+| `subingredient`      | `VARCHAR2(200)`   | —                                                  | 부 재료    |   
 | `targetpettypeid`   | `NUMBER`          | `FOREIGN KEY REFERENCES pettype(pettypeid)`         | 대상 반려동물 종류 |
 
 ```
-푸드ID          푸드네임            브랜드ID                 설명                                            대상반려동물 id
-'1'	         '키튼 치킨 앤 청어'	     '1'	    '성장기 고양이를 위한 치킨과 청어 기반의 고단백 건식 사료입니다.'	       '2'
-'2'	         '어덜트 연어 앤 현미'	   '2'	    '성묘 고양이의 활력과 소화 건강을 위한 연어와 현미 습식 사료입니다.'	    '2'
-```
-
-
-### --13. table (foodingredient) + sequence (foodingredientseq)
-| 컬럼명      | 데이터 타입       | 제약 조건        | 설명 |
-|----------------------|-------------------|------------------------------------------------------|-----------|
-| `foodingredientid`   | `NUMBER`          | `PRIMARY KEY`                                        | 푸드재료 ID |
-| `foodid`             | `NUMBER`          | `FOREIGN KEY REFERENCES food(foodid)`       | 사료 ID    |
-| `mainingredient`     | `VARCHAR2(200)`   | —                                                    | 주 재료    |
-| `subingredient`      | `VARCHAR2(200)`   | —                                                    | 부 재료    |   
-
-```
-푸드재료ID   푸드ID   주재료  부재료
-'1'	        '1'	    '치킨'	'청어'
-'2'	        '2'	    '연어'	'현미'
-```
-
-
+푸드ID          푸드네임                 브랜드ID                      설명                            주재료     부재료   대상반려동물 id
+'5'	   '처방식 관절케어 닭고기 앤 브로콜리' 	'1'	    '관절을 위한 닭고기와 브로콜리, 뛰는 게 즐거워질지도?'	'닭고기'	'브로콜리'	     '2'
+'6'	   '시니어 오리 앤 감자'	              '2'	    '우아한 노년을 위한 오리와 감자, 품격 있는 한 끼!'	    '오리'	  '감자'	       '1'
 
 
 ---
@@ -67,19 +51,20 @@ SELECT
   fb.brandname,
   f.description,
   f.targetpettypeid,
-  fi.mainingredient,
-  fi.subingredient
+  f.mainingredient,
+  f.subingredient,
+  fb.country
 FROM food f
-JOIN foodbrand fb ON f.brandid = fb.brandid
-JOIN foodingredient fi ON f.foodid = fi.foodid;
+JOIN foodbrand fb ON f.brandid = fb.brandid;
+
 ```
 
 ---
 
 ```
-사료ID      사료네임           브랜드네임                  설명                                            대상반려동물ID 주재료 부재료
-'1'	  '키튼 치킨 앤 청어'	    '츄츄는고양이였다'	'성장기 고양이를 위한 치킨과 청어 기반의 고단백 건식 사료입니다.'	      '2'   	치킨	청어
-'2'	  '어덜트 연어 앤 현미'	     '밥쌈없다'	     '성묘 고양이의 활력과 소화 건강을 위한 연어와 현미 습식 사료입니다.'	    '2'	    연어	현미
+사료ID      사료네임                   브랜드네임                            설명                              대상반려동물ID 주재료 부재료   제조국
+'1'	'처방식 신장케어 연어 앤 귀리'	   '네밥이아니야'	    '신장 건강을 위한 연어와 귀리의 조화, 물 많이 마시게 될지도?'	      1	        연어	귀리	  미국
+'2'	'처방식 심장케어 연어 앤 치아씨드'	'네밥이아니야'	   '심장 튼튼 프로젝트, 연어와 치아씨드로 펄떡펄떡!'	               2	       연어	치아씨드	미국
 ```
 
 대상반려동물ID(pettypeid) 를 대상반려동물이름(typename) : `개`, `고양이` 로 교체 하는 것이 자연스러워보입니다
