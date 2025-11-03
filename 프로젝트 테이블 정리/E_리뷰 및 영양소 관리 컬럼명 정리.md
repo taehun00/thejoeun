@@ -89,4 +89,5 @@ AND A.AMOUNT BETWEEN C.MINVALUE AND C.MAXVALUE );
 
 
 **게시판 시안**
-<img src="/thejoeun/프로젝트 테이블 정리/img/review001.png" alt="게시판시안1차">
+<img src="/thejoeun/프로젝트 테이블 정리/img/review001.png" alt="게시판시안1차리스트">
+<img src="/thejoeun/프로젝트 테이블 정리/img/review002.png" alt="게시판시안1차글쓰기">
