@@ -71,4 +71,3 @@ create table favorite food (
 ```
 
 
-
