@@ -20,7 +20,7 @@
 | `userid`          | `NUMBER`          | `FOREIGN KEY REFERENCES user(userid)`            | 사용자 ID |
 | `food_id`         | `NUMBER`          | `FOREIGN KEY REFERENCES food(food_id)`           | 추천 사료 ID |
 | `reason`          | `VARCHAR2(500)`   | —                                                | 추천 사유 |
-| `recommended_at`  | `VARCHAR2(200)`   | —                                                | 추천일 |
+| `recommendedat`   | `VARCHAR2(200)`   | —                                                | 추천일 |
 
 ---
 
@@ -49,9 +49,9 @@ create table foodrecommend (
 | 컬럼명      | 데이터 타입       | 제약 조건                                                | 설명 |
 |-------------|-------------------|----------------------------------------------------------|------|
 | `userid`     | `NUMBER`          | `FOREIGN KEY REFERENCES user(userid)`                   | 사용자 ID |
-| `food_id`    | `NUMBER`          | `FOREIGN KEY REFERENCES food(food_id)`                  | 사료 ID |
-| `added_at`   | `VARCHAR2(200)`   | —                                                        | 즐겨찾기 등록일 |
-| **복합키**   |                   | `PRIMARY KEY (userid, food_id)`                         | 즐겨찾기 매핑 |
+| `foodid`    | `NUMBER`          | `FOREIGN KEY REFERENCES food(foodid)`                  | 사료 ID |
+| `addedat`   | `VARCHAR2(200)`   | —                                                        | 즐겨찾기 등록일 |
+| **복합키**   |                   | `PRIMARY KEY (userid, foodid)`                         | 즐겨찾기 매핑 |
 ---
 
 ```
