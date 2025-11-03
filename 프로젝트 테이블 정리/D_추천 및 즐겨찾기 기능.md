@@ -36,7 +36,7 @@ create table foodrecommend (
    recommended at varchar2(200)  
 );
 
-(임시 컬럼명)
+(임시 컬럼명) 
 추천 id    : 5
 유저 id    : 123
 추천사료 id : 15
