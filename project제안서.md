@@ -1,3 +1,5 @@
+
+
 # 🐾 **반려동물 건강 기반 맞춤 사료 추천 플랫폼 (가제:PetHealth Universe)**
 
 > 반려동물의 질환·영양 상태를 기준으로 사료를 추천하고
@@ -49,28 +51,20 @@ HEALTH_INFO(info_id, category, title, content, thumbnail, created_at)
 ### --1. table (user) + sequence (user_seq)
 | 컬럼명       | 데이터 타입       | 제약 조건        | 설명 |
 |--------------|-------------------|------------------|------|
-| `userid`    | `NUMBER`          | `PRIMARY KEY`    | 사용자 고유 ID |
-| `nickname`   | `VARCHAR2(100)`   | `NOT NULL`       | 닉네임 |
-| `email`      | `VARCHAR2(200)`   | `NOT NULL` ,'unique'      | 이메일 주소 |
-| `pass`       | `VARCHAR2(100)`   | `NOT NULL`       | 비밀번호 |
-| `createdat` | `VARCHAR2(200)`   | `NOT NULL`       | 가입날짜 |
-
-1001    'user1'   'user1@gmail.com'  '1111'   '20251031'  
+| `user_id`    | `NUMBER`          | `PRIMARY KEY`    | 사용자 고유 ID |
+| `name`       | `VARCHAR2(100)`   | `NOT NULL`       | 사용자 이름 |
+| `email`      | `VARCHAR2(200)`   | `NOT NULL`       | 이메일 주소 |
 
 ---
 ### --2-1. table (pet) + sequence (pet_seq)
 | 컬럼명       | 데이터 타입       | 제약 조건        | 설명 |
 |--------------|-------------------|------------------|------|
-| `petid`     | `NUMBER`          | `PRIMARY KEY`    | 반려동물 고유 ID |
-| `userid`    | `NUMBER`          | `NOT NULL`       | 사용자 ID (`user` 테이블 참조) |
+| `pet_id`     | `NUMBER`          | `PRIMARY KEY`    | 반려동물 고유 ID |
+| `user_id`    | `NUMBER`          | `NOT NULL`       | 사용자 ID (`user` 테이블 참조) |
 | `name`       | `VARCHAR2(100)`   | `NOT NULL`       | 반려동물 이름 |
 | `species`    | `VARCHAR2(50)`    | `NOT NULL`       | 반려동물 종 |
 | `age`        | `NUMBER`          | —                | 반려동물 나이 |
-| `createdat` | `VARCHAR2(200)`   | `NOT NULL`       | 등록날짜 |
 | —            | —                 | `FOREIGN KEY`    | `user_id`는 `user(user_id)` 참조 |
-
-1   1001    'cream'   '페르시안'  7   '20251031'    
-
 
 ---
 
@@ -86,8 +80,8 @@ HEALTH_INFO(info_id, category, title, content, thumbnail, created_at)
 ### --3. table (disease_guide) + sequence (disease_guide_seq)
 | 컬럼명           | 데이터 타입       | 제약 조건        | 설명 |
 |------------------|-------------------|------------------|------|
-| `disid`     | `NUMBER`          | `PRIMARY KEY`    | 질환 고유 ID |
-| `disname`   | `VARCHAR2(100)`   | `NOT NULL`       | 질환명 |
+| `disease_id`     | `NUMBER`          | `PRIMARY KEY`    | 질환 고유 ID |
+| `disease_name`   | `VARCHAR2(100)`   | `NOT NULL`       | 질환명 |
 | `protein_min`    | `NUMBER`          | —                | 최소 단백질 수치 |
 | `protein_max`    | `NUMBER`          | —                | 최대 단백질 수치 |
 | `phosphorus_min` | `NUMBER`          | —                | 최소 인 수치 |
@@ -95,8 +89,6 @@ HEALTH_INFO(info_id, category, title, content, thumbnail, created_at)
 | `guide_message`  | `VARCHAR2(500)`   | —                | 건강 가이드 문구 |
 
 ---
-101   '심장병'   10   100     ....  특정질환에서만 보는 필드는 빠지기.....
-
 
 ### --4. table (food) + sequence (food_seq)
 | 컬럼명       | 데이터 타입       | 제약 조건        | 설명 |
@@ -106,18 +98,8 @@ HEALTH_INFO(info_id, category, title, content, thumbnail, created_at)
 | `protein`    | `NUMBER`          | —                | 단백질 함량 |
 | `phosphorus` | `NUMBER`          | —                | 인 함량 |
 | `calorie`    | `NUMBER`          | —                | 칼로리 |
-| `알러지id`    | `NUMBER`          | —                | 외래키 |
+| `allergy_tag`| `VARCHAR2(200)`   | —                | 알러지 태그 (쉼표 구분 문자열) |
 
-
-### --4-1. table (알러지) + sequence (food_seq)
-| 컬럼명       | 데이터 타입       | 제약 조건        | 설명 |
-|--------------|-------------------|------------------|------|
-| `알러지_id`    | `NUMBER`          | `PRIMARY KEY`    | 사료 고유 ID |
-| `알러지name`       | `VARCHAR2(200)`   | `NOT NULL`       | 알러지명 |
-
-
-
-1   '사료명1'   10   100    1000 , '완두콩'
 ---
 
 ### --5. table (recommendation) + sequence (recommendation_seq)
@@ -130,23 +112,19 @@ HEALTH_INFO(info_id, category, title, content, thumbnail, created_at)
 | `created_at` | `DATE`            | `DEFAULT SYSDATE`| 추천 생성일 |
 | —            | —                 | `FOREIGN KEY`    | `pet_id`는 `pet(pet_id)` 참조, `food_id`는 `food(food_id)` 참조 |
 
-
-주재료 단백질 인 기능성 알러지원 질병에 따라 조심해야 한느 항목 등등 
-            단백뇨    OT
-1    101    1        120
-
-고등어 
 ---
 
-### --6. table (health_category) + sequence (health_info_seq)
+### --6. table (health_info) + sequence (health_info_seq)
 | 컬럼명       | 데이터 타입       | 제약 조건        | 설명 |
 |--------------|-------------------|------------------|------|
-| `info_id`    | `NUMBER`          | `PRIMARY KEY`    | 카테고리번호 고유 ID |
-| `category`   | `VARCHAR2(100)`   | —                | 카테고리명 |
-| `title`      | `VARCHAR2(200)`   | `NOT NULL`       | 카테고리 설명 |
+| `info_id`    | `NUMBER`          | `PRIMARY KEY`    | 건강정보 고유 ID |
+| `category`   | `VARCHAR2(100)`   | —                | 정보 카테고리 |
+| `title`      | `VARCHAR2(200)`   | `NOT NULL`       | 정보 제목 |
+| `content`    | `CLOB`            | `NOT NULL`       | 정보 내용 |
+| `thumbnail`  | `VARCHAR2(300)`   | —                | 썸네일 이미지 경로 |
+| `created_at` | `DATE`            | `DEFAULT SYSDATE`| 작성일 |
  
-1   강아지  강아지설명
-강아지 고양지
+
 
 
 
@@ -170,4 +148,31 @@ HEALTH_INFO(info_id, category, title, content, thumbnail, created_at)
 
 * **추천 담당**이 필터링 로직과 결과 출력까지 통합 담당,
   사용자의 선택 조건을 반영해 동적으로 결과를 생성
+
+
+-------------------------------------------------------------------------------
+1.[유저], [동물 등록] 
+
+2. 강아지 [질환아이디+질환이름 ]   + [질환별 필요 필터링 테이블]
+
+3. 고양이 [질환아이디+질환이름 ]   + [질환별 필요 필터링 테이블]
+
+4. [사료 정보] + [알러지원은 따로 빼기]
+
+5. 건강정보 게시판+썸넬이미지 null로
+
+
+고양이	질환 테이블
+-질환아이디:101
+-질환명:신장질환
+
+신장질환	테이블
+-단백질 : 25이하		
+-인수치 : 1.0이하		
+
+심장질환 테이블
+-단백질 : 30 이상
+-나트륨 : 0.3% 이하
+
+
 
