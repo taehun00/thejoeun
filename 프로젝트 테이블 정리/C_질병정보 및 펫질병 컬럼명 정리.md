@@ -2,7 +2,6 @@
 
 | 담당자 | 역할 | 주요 테이블 |
 |--------|------|-------------|
-
 | A | 사용자 및 반려동물 관리 | `USER`, `PET`, `PETTYPE` |
 | B | 사료 및 브랜드 관리 | `FOOD`, `FOODBRAND`, `FOODINGREDIENT`|
 | C | 질환 정보 및 매핑 | `DISEASE`, `PETDISEASE` |
@@ -18,7 +17,7 @@
 | `disname`  | `VARCHAR2(50)`    | `NOT NULL`, `UNIQUE`  | 질병 이름                      |
 | `disex`    | `VARCHAR2(150)`   | `NULL`                 | 질병 설명                      |
 | `kindpet`  | `VARCHAR2(200)`   | `NOT NULL`             | 해당 질병에 걸리는 반려동물 종류 |
-| `infval`   | `VARCHAR2(200)`   | `NULL`                 | 감염 관련 정보 또는 감염 값         |
+| `infval`   | `VARCHAR2(200)`   | `NULL`                 | 감염 관련 정보 또는 감염값       |
 | `mannote`  | `VARCHAR2(200)`   | `NULL`                 | 관리 시 참고 사항              |
 
 # 🧬 DISEASE 테이블 데이터
@@ -47,7 +46,6 @@
 
 # 🧬 PETDISEASE 테이블 데이터
 |DISID       |DISNAME     |FEDM        |PDM         |PROTEINDM|
-
 |-------     |---------   |-------     |---------   |-------- |
 |PET-D-048   |체리아이     |80          |1            |25       |
 
