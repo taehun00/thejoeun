@@ -17,10 +17,10 @@
 | `password`   | `VARCHAR2(100)`   | `NOT NULL`               | 비밀번호 |
 | `createdat` | `VARCHAR2(200)`   | `NOT NULL`               | 가입일 |
 
----
+------
 userid      email                   nickname        password        createdate
 101         'iis07007@naver.com'    '성태훈'         '1234'          '2025-11-03'
----
+------
 
 
 ### --2. table (pettype) + sequence (pet_type_seq)
