@@ -18,14 +18,14 @@
 |------------------|-------------------|--------------------------------------------------|------|
 | `recommendid`     | `NUMBER`          | `PRIMARY KEY`                                    | 추천 ID |
 | `userid`          | `NUMBER`          | `FOREIGN KEY REFERENCES user(userid)`            | 사용자 ID |
-| `foodid`          | `NUMBER`          | `FOREIGN KEY REFERENCES food(food_id)`           | 추천 사료 ID |
+| `foodid`          | `NUMBER`          | `FOREIGN KEY REFERENCES food(foodid)`           | 추천 사료 ID |
 | `reason`          | `VARCHAR2(500)`   | —                                                | 추천 사유 |
 | `recommendedat`   | `VARCHAR2(200)`   | —                                                | 추천일 |
 
 ---
 
 ```
-테이블(SQL )
+테이블(SQL / 추후에 변경사항 있으면 변경할 예정.)
 create sequence recommend seq;
 
 create table foodrecommend (
@@ -55,7 +55,7 @@ create table foodrecommend (
 ---
 
 ```
-테이블 (SQL)
+테이블 (SQL/ 추후에 변경사항 있으면 변경할 예정.)
 create table favoritefood (
    favoriteid  number            primary key,  --추가된 부분/ 추후에 조정가능
    userid      number            foreign key references  user(user id),
