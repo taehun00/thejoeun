@@ -60,7 +60,7 @@
 | 컬럼명         | 데이터 타입       | 제약 조건        | 설명 |
 |----------------|-------------------|------------------|------|
 | `rangeid`    |    `NUMBER`          | `PRIMARY KEY`    | 구간 ID |
-| `pettypeid`    | `NUMBER`          | `FOREIGN KEY REFERENCES PET_TYPE(pettypeid)`    | 고양이/강아지 구분 ID |
+| `pettypeid`    | `NUMBER`          | `FOREIGN KEY REFERENCES PETTYPE(pettypeid)`    | 고양이/강아지 구분 ID |
 | `nutrientid`   | `NUMBER`          | `FOREIGN KEY REFERENCES nutrient(nutrientid)`    | 영양소 ID |
 | `minvalue`      | `NUMBER`    | `NOT NULL` | 최소값|
 | `maxvalue`      | `NUMBER`    | `NOT NULL`      | 최대값 |
