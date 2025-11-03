@@ -16,9 +16,9 @@
 
 | 컬럼명          | 데이터 타입       | 제약 조건                                        | 설명 |
 |------------------|-------------------|--------------------------------------------------|------|
-| `recommend_id`    | `NUMBER`          | `PRIMARY KEY`                                    | 추천 ID |
+| `recommendid`     | `NUMBER`          | `PRIMARY KEY`                                    | 추천 ID |
 | `userid`          | `NUMBER`          | `FOREIGN KEY REFERENCES user(userid)`            | 사용자 ID |
-| `food_id`         | `NUMBER`          | `FOREIGN KEY REFERENCES food(food_id)`           | 추천 사료 ID |
+| `foodid`          | `NUMBER`          | `FOREIGN KEY REFERENCES food(food_id)`           | 추천 사료 ID |
 | `reason`          | `VARCHAR2(500)`   | —                                                | 추천 사유 |
 | `recommendedat`   | `VARCHAR2(200)`   | —                                                | 추천일 |
 
@@ -29,11 +29,11 @@
 create sequence recommend seq;
 
 create table foodrecommend (
-   recommend id      number primary key,
-   user id           number foreign key     references user(user id),
-   food id           number foreign key     references food(food id),
-   reason            varchar2(500), 
-   recommended at varchar2(200)  
+   recommendid        number primary key,
+   userid             number foreign key     references user(user id),
+   foodid             number foreign key     references food(food id),
+   reason             varchar2(500), 
+   recommendedat      varchar2(200)  
 );
 
 (임시) 
@@ -56,11 +56,12 @@ create table foodrecommend (
 
 ```
 테이블 (SQL)
-create table favorite food (
-   user id    number            foreign key references  user(user id),
-   food id    number            foreign key references  food(food id),
-   added at   varchar2(200),
-   hit                          primary key(userid, foodid)
+create table favoritefood (
+   favoriteid  number            primary key
+   userid      number            foreign key references  user(user id),
+   foodid      number            foreign key references  food(food id),
+   addedat     varchar2(200)
+   note        varchar2(500) 
 );
 
 (임시)
