@@ -43,6 +43,7 @@ pettypeid       typename
 | `petbreed`    | `VARCHAR2(100)`   | `NOT NULL`                                | 반려동물 종 |
 | `birthdate`    | `VARCHAR2(100)`   | —                                        | 생년월일 |
 | `pettypeid`  | `NUMBER`          | `FOREIGN KEY REFERENCES pettype(pet_type_id)` | 반려동물 종류 ID |
+| `createdat`  | `DATE`            | `NOT NULL`                                 | 반려동물등록일 |
 
 ```
 petid       userid      petname     petbreed        birthdate       pettypeid
