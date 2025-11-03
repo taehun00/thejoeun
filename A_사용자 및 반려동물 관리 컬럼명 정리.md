@@ -17,10 +17,10 @@
 | `password`   | `VARCHAR2(100)`   | `NOT NULL`               | 비밀번호 |
 | `createdat` | `VARCHAR2(200)`   | `NOT NULL`               | 가입일 |
 
-------
+```
 userid      email                   nickname        password        createdate
 101         'iis07007@naver.com'    '성태훈'         '1234'          '2025-11-03'
-------
+```
 
 
 ### --2. table (pettype) + sequence (pet_type_seq)
@@ -29,10 +29,10 @@ userid      email                   nickname        password        createdate
 | `pettypeid` | `NUMBER`          | `PRIMARY KEY`    | 반려동물 종류 ID |
 | `typename`   | `VARCHAR2(100)`   | `NOT NULL`       | 종류 이름 (강아지, 고양이 등) |
 
----
+```
 pettypeid       typename
 1               '고양이'
----
+```
 
 ### --3. table (pet) + sequence (pet_seq)
 | 컬럼명        | 데이터 타입       | 제약 조건                                | 설명 |
@@ -43,7 +43,7 @@ pettypeid       typename
 | `birthdate`    | `VARCHAR2(100)`   | —                                        | 생년월일 |
 | `pettypeid`  | `NUMBER`          | `FOREIGN KEY REFERENCES pet_type(pet_type_id)` | 반려동물 종류 ID |
 
----
+```
 petid       userid      petname     birthdate       pettypeid
 1001        101         '겨울이'     '2022-06-12'    1
----
+```
