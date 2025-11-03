@@ -2,11 +2,12 @@
 
 | 담당자 | 역할 | 주요 테이블 |
 |--------|------|-------------|
-| A | 사용자 및 반려동물 관리 | `USERS`, `PET`, `PETTYPE` |
+
+| A | 사용자 및 반려동물 관리 | `USER`, `PET`, `PETTYPE` |
 | B | 사료 및 브랜드 관리 | `FOOD`, `FOODBRAND`, `FOODINGREDIENT`|
 | C | 질환 정보 및 매핑 | `DISEASE`, `PETDISEASE` |
 | D | 추천 및 즐겨찾기 기능 | `FOODRECOMMEND`, `FAVORITEFOOD` |
-| E | 리뷰 및 영양소 관리 | `REVIEW`, `NUTRIENT`, `FOODNUTRIENT`, 'NUTRIENTRANGE' |
+| E | 리뷰 및 영양소 관리 | `REVIEW`, `NUTRIENT`, `FOODNUTRIENT` + `NUTRIENTRANGE`|  ✔ 테이블 생성 
 
 ---
 ### --6. table (disease) + sequence (disease_seq)
@@ -46,7 +47,9 @@
 
 # 🧬 PETDISEASE 테이블 데이터
 |DISID       |DISNAME     |FEDM        |PDM         |PROTEINDM|
-|-------     |---------   |-------     |---------   |--------  |
+
+|-------     |---------   |-------     |---------   |-------- |
 |PET-D-048   |체리아이     |80          |1            |25       |
 
 ---
+
