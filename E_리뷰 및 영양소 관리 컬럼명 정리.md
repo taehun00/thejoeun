@@ -12,16 +12,16 @@
 ### --12. table (review) + sequence (review_seq) 리뷰 게시판(사료를 브랜드-제품명 순으로 필터링 후 간단한 한줄평 남기는 게시판이 어떨까요?)
 | 컬럼명      | 데이터 타입       | 제약 조건                                                | 설명 |
 |-------------|-------------------|----------------------------------------------------------|------|
-| `review_id`  | `NUMBER`          | `PRIMARY KEY`                                            | 리뷰 ID |
+| `reviewid`  | `NUMBER`          | `PRIMARY KEY`                                            | 리뷰 ID |
 | `userid`     | `NUMBER`          | `FOREIGN KEY REFERENCES user(userid)`                   | 작성자 |
 | `password`   | `VARCHAR2(50)`     | `not null`                                                | 글 비밀번호|
-| `brand_id`    | `NUMBER`          | `FOREIGN KEY REFERENCES food_brand(brand_id)`            | 브랜드 ID |
-| `food_id`    | `NUMBER`          | `FOREIGN KEY REFERENCES food(food_id)`                  | 사료 ID |
-| `food_img`    | `VARCHAR2(300)`   | `우선 null값 채우기`                                      | 사료 이미지 |
+| `brandid`    | `NUMBER`          | `FOREIGN KEY REFERENCES food_brand(brand_id)`            | 브랜드 ID |
+| `foodid`    | `NUMBER`          | `FOREIGN KEY REFERENCES food(food_id)`                  | 사료 ID |
+| `foodimg`    | `VARCHAR2(300)`   | `우선 null값 채우기`                                      | 사료 이미지 |
 | `rating`     | `NUMBER(1)`       | `CHECK (rating BETWEEN 1 AND 5)`                         | 평점 |
 | `title`     | `VARCHAR2(100)`       |                                                      | 제목 |
 | `review_comment`    | `VARCHAR2(500)`   | —                                                 | 리뷰 내용 |
-| `created_at` | `VARCHAR2(200)`   | —                                                        | 작성일 |
+| `createdat` | `DATE`   | —                                                        | 작성일 |
 
 ```
  리뷰id     작성자닉네임    글비밀번호      브랜드id    사료id      사료이미지      평점        제목            리뷰 내용                              작성일
@@ -67,10 +67,10 @@
 | `rangelabel`   | `VARCHAR2(50)`    | `NOT NULL`       | 중,저,고 등 직관적 구간 설명 |
 
 ```
-펫타입ID    구간id     영양소ID        최소값       최대값      설명
-'1'     '101'           '6'         '15'        '25'      '고양이건사료_저단백'
-'1'     '102'           '6'         '26'        '40'      '고양이건사료_중단백'
-'1'     '103'           '6'         '41'        '55'      '고양이건사료_고단백'
+구간ID   펫타입ID     영양소ID        최소값       최대값      설명
+'101'     '1'           '6'         '15'        '25'      '고양이건사료_저단백'
+'102'     '1'           '6'         '26'        '40'      '고양이건사료_중단백'
+'103'     '1'           '6'         '41'        '55'      '고양이건사료_고단백'
 ```
 
 >영양소 테이블들 조인 예시
