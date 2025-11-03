@@ -45,7 +45,7 @@
 | `Proteindm`  | `NUMBER(10)`      | `NULL`                 | 단백질 관련 수치   |
 
 # 🧬 PETDISEASE 테이블 데이터
-DISID       DISNAME     FEDM        PDM         PROTEINDM
-PET-D-048   체리아이     80          1            25
+|DISID       |DISNAME     |FEDM        |PDM         |PROTEINDM|
+|PET-D-048   |체리아이     |80          |1            |25       |
 
 ---
