@@ -16,7 +16,7 @@ out/
 *.tmp
 *.bak
 
-# OS 자동 생성 파일
+# OS 자동 생성 파일..
 .DS_Store
 Thumbs.db
 
