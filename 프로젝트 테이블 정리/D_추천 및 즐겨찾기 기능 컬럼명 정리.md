@@ -34,14 +34,27 @@ insert into exerciseinfo(execid,
                          updatedat) 
 values ( 1,
         '산책',
-        '가장 기본적인 야외 운동으로 스트레스 해소와 사회성 향상에 효과적입니다.',
+        '기본적인 야외활동/스트레스 해소'      
         80.0,
         30,
         '모든 견종, 노령견 포함',
         '저강도',
-        2010/11/3,
-        2025/11/3);
+        디폴트값,
+        디폴트값
+        );
 ```
+```
+(임시)
+운동코드(execid)   운동유형(exectype)  운동설명(description)             30분당 평균소모칼로리(avgkcal30min)
+     1                  산책           '기본적인 야외활동/스트레스 해소'            80.0
+
+운동권장시간(exectargetmin)           운동추천동물(suitablefor)         운동강도(intensitylevel)
+     30                               '모든 견종, 노령견 포함'                   '저강도'
+
+등록일(createdat)                    글수정일(updatedat) 
+   디폴트값                               디폴트값
+```
+
 
 ---
 ### --10. table (food_recommend) + sequence (recommend_seq)
@@ -62,13 +75,12 @@ create table foodrecommend (
    userid             number foreign key     references user(user id),
    foodid             number foreign key     references food(food id),
 );
-
-(임시) 
-유저 id(userid)       : 123
-추천사료 id(foodid)   : 15
- 
 ```
-
+```
+(임시) 
+유저 id(userid)    추천사료 id(foodid)
+    123                  15
+```   
 
 ---
 ### --11. table (favoritefood)
@@ -86,11 +98,13 @@ create table favoritefood (
    foodid      number            foreign key references  food(foodid),
 );
 
-(임시)
-사용자 id(    userid)           : 123
-사료   id(    foodid)           : 1234
-
 ```
+```
+(임시)
+사용자 id(userid)       사료 id(foodid) 
+    123                   1234
+```
+
 
 
 
