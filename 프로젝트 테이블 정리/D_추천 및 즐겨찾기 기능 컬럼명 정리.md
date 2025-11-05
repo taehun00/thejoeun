@@ -66,7 +66,7 @@ create table foodrecommend (
 (임시) 
 유저 id(userid)       : 123
 추천사료 id(foodid)   : 15
-
+ 
 ```
 
 
