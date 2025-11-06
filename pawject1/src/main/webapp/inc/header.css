@@ -1,0 +1,90 @@
+@charset "UTF-8";
+
+
+	/* ====== 색상 테마 (밝은 옐로 베이지) ====== */
+	:root {
+	  --beige-main: #FFF8D6;    /* 더 밝은 크림 옐로 */
+	  --beige-accent: #FFEB99;  /* 포인트 – 채도 높은 레몬 베이지 */
+	  --beige-dark: #E6C972;    /* hover – 살짝 골드빛 */
+	  --beige-bg: #FFFEFA;      /* 전체 배경 – 거의 흰색에 가까운 따뜻한 톤 */
+	  --text-main: #554A2F;     /* 본문 텍스트 – 조금 더 밝은 브라운 */
+	}
+	
+	body {
+	  background-color: var(--beige-bg);
+	  color: var(--text-main);
+	  font-family: 'Noto Sans KR', sans-serif;
+	}
+	
+	/* ====== 네비게이션 ====== */
+	.navbar {
+	  background-color: var(--beige-main);
+	  box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+	}
+	.navbar-brand {
+	  font-weight: 700;
+	  color: var(--text-main);
+	}
+	.nav-link {
+	  color: var(--text-main);
+	  font-weight: 500;
+	}
+	.nav-link:hover {
+	  color: var(--beige-dark);
+	}
+	
+	/* ====== 배너 ====== */
+	.hero {
+	  background: linear-gradient(135deg, var(--beige-main) 0%, var(--beige-accent) 100%);
+	  color: var(--text-main);
+	  padding: 80px 0;
+	  text-align: center;
+	}
+	.hero h1 {
+	  font-weight: 700;
+	  font-size: 2.2rem;
+	}
+	.hero p {
+	  color: #6B5C3A;
+	}
+	
+	/* ====== 카드/게시판 ====== */
+	.content {
+	  padding: 60px 0;
+	}
+	.card {
+	  border: none;
+	  border-radius: 12px;
+	  background-color: #FFFFFF;
+	  box-shadow: 0 3px 8px rgba(0,0,0,0.04);
+	  transition: transform 0.2s;
+	}
+	.card:hover {
+	  transform: scale(1.02);
+	}
+	
+	/* ====== 버튼 ====== */
+	.btn-beige {
+	  background-color: var(--beige-accent);
+	  color: #4F422A;
+	  border-radius: 50px;
+	  padding: 8px 24px;
+	  border: none;
+	  font-weight: 600;
+	  transition: 0.2s;
+	}
+	.btn-beige:hover {
+	  background-color: var(--beige-dark);
+	  color: white;
+	}
+	
+	/* ====== 푸터 ====== */
+	footer {
+	  background-color: var(--beige-main);
+	  color: var(--text-main);
+	  text-align: center;
+	  padding: 20px 0;
+	  margin-top: 60px;
+	  font-size: 0.9rem;
+	  border-top: 1px solid #FFEFB0;
+	}
