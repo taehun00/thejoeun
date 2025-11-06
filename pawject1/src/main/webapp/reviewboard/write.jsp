@@ -7,7 +7,7 @@
 		<div class="container mt-5">
 		  <h3>리뷰 작성</h3>
 		
-		  	  <form action="<%=request.getContextPath()%>/write.rv"  method="post"> 
+		  	  <form action="${pageContext.request.contextPath}/write.rv"  method="post"> 
 			 <input type="hidden"   name="userid"  value="<%= session.getAttribute("userid") %>">
 		    <div class="row">
 		      
@@ -67,7 +67,7 @@
 		        <button type="submit" class="btn btn-beige me-2">등록</button>
 		        
 				<button type="button" class="btn btn-beige"
-        			onclick="location.href='<%=request.getContextPath()%>/list.rv'">목록보기</button>
+        			onclick="location.href='${pageContext.request.contextPath}/list.rv'">목록보기</button>
 		      </div>	
 		    </div>
 		 <div class="row">

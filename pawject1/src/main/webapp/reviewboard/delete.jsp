@@ -21,7 +21,7 @@
 		
 		    <div class="d-flex justify-content-center gap-3 mt-3">
 		      <button type="button" class="btn btn-beige"
-        			onclick="location.href='<%=request.getContextPath()%>/list.rv'">목록보기</button>
+        			onclick="location.href='${pageContext.request.contextPath}/list.rv'">목록보기</button>
 		      <button type="submit" class="btn btn-beige px-4">삭제</button>
 		    </div>
 
