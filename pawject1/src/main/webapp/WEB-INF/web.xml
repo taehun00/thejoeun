@@ -11,4 +11,15 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.xhtml</welcome-file>
   </welcome-file-list>
+  
+   <servlet>
+    <servlet-name>ReController</servlet-name>
+    <servlet-class>com.pawject.controller.ReController</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>ReController</servlet-name>
+    <url-pattern>*.rv</url-pattern>
+  </servlet-mapping>
+  
 </web-app>
