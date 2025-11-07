@@ -9,7 +9,7 @@
 |   E    | 리뷰 및 영양소 관리     | `REVIEW`, `NUTRIENT`, 'FOOD_NUTRIENT'   |
 
 ---
-### -- 운동정보 (exerciseinfo) 
+### -- 운동정보 (exerciseinfo) + sequence(exerciseinfo_seq)
 ###운동정보 (1단계 CRUD 파트/ 입력시 _(언더바) 및 줄일 수 있는 필드명은 줄일 예정.)
 | 필드명             | 타입           | 설명 |
 |--------------------|----------------|------|
@@ -24,6 +24,9 @@
 | `updated_at`       | DATETIME       | 수정일 |
 
 ```
+
+create sequence exerciseinfo_seq;
+
 insert into exerciseinfo(execid,
                          exectype,
                          description,
