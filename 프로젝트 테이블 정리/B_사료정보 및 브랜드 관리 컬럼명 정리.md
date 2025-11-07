@@ -31,7 +31,7 @@
 | `foodname`          | `VARCHAR2(100)`   | `NOT NULL`                                             | 사료 이름 |
 | `brandid`           | `NUMBER`          | `FOREIGN KEY REFERENCES foodbrand(brandid)`          | 브랜드 ID |
 | `description`       | `VARCHAR2(500)`   | —                                                      | 설명 |
-| `targetpettypeid`   | `NUMBER`          | `FOREIGN KEY REFERENCES pettype(pettypeid)`         | 대상 반려동물 종류 |
+| `pettypeid`   | `NUMBER`          | `FOREIGN KEY REFERENCES pettype(pettypeid)`         | 대상 반려동물 종류 |
 
 ```
 푸드ID          푸드네임            브랜드ID                 설명                                            대상반려동물 id
@@ -66,7 +66,7 @@ SELECT
   f.foodname,
   fb.brandname,
   f.description,
-  f.targetpettypeid,
+  f.pettypeid,
   fi.mainingredient,
   fi.subingredient
 FROM food f
