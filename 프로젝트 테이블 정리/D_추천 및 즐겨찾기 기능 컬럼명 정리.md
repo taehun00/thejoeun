@@ -36,7 +36,7 @@ insert into exerciseinfo(execid,
                          intensitylevel,
                          createdat,
                          updatedat) 
-values ( 1,
+values ( exerciseinfo_seq.nextval,
         '산책',
         '기본적인 야외활동/스트레스 해소'      
         80.0,
