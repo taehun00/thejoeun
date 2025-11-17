@@ -77,8 +77,8 @@ petid       userid      petname      petbreed         birthdate       pettypeid
 | `pettypeid`         | `NUMBER`          | `FOREIGN KEY REFERENCES pettype(pettypeid)`            | 대상 반려동물 종류 |
 
 ```
-푸드ID          푸드네임            브랜드ID                             설명                                  대상반려동물 id
-'1'	         '키튼 치킨 앤 청어'	   '1'	    '성장기 고양이를 위한 치킨과 청어 기반의 고단백 건식 사료입니다.'	       '2'
+푸드ID          푸드네임             브랜드ID                             설명                                       대상반려동물 id
+'1'	         '키튼 치킨 앤 청어'	   '1'	    '성장기 고양이를 위한 치킨과 청어 기반의 고단백 건식 사료입니다.'	         '2'
 '2'	         '어덜트 연어 앤 현미'	   '2'	    '성묘 고양이의 활력과 소화 건강을 위한 연어와 현미 습식 사료입니다.'	    '2'
 ```
 
@@ -92,19 +92,19 @@ petid       userid      petname      petbreed         birthdate       pettypeid
 | `subingredient`      | `VARCHAR2(200)`   | —                                                    | 부 재료    |   
 
 ```
-푸드재료ID   푸드ID   주재료  부재료
+푸드재료ID   푸드ID      주재료      부재료
 '1'	        '1'	    '치킨'	'청어'
 '2'	        '2'	    '연어'	'현미'
 ```
 
 ### --6. table (disease) + sequence (disease_seq)
 
-| 컬럼명     | 데이터 타입          | 제약 조건                  | 설명                           |
+| 컬럼명     | 데이터 타입        | 제약 조건                 | 설명                          |
 |------------|-------------------|---------------------------|-------------------------------|
-| `disno`    | `NUMBER`          | `PRIMARY KEY`, `NOT NULL` | 질병 고유 번호                  |
+| `disno`    | `NUMBER`          | `PRIMARY KEY`, `NOT NULL` | 질병 고유 번호                 |
 | `disname`  | `VARCHAR2(50)`    | `NOT NULL`, `UNIQUE`      | 질병 이름                      |
 | `disex`    | `VARCHAR2(150)`   | `NULL`                    | 질병 설명                      |
-| `kindpet`  | `VARCHAR2(200)`   | `NOT NULL`                | 해당 질병에 걸리는 반려동물 종류  |
+| `kindpet`  | `VARCHAR2(200)`   | `NOT NULL`                | 해당 질병에 걸리는 반려동물 종류 |
 | `infval`   | `VARCHAR2(200)`   | `NULL`                    | 감염 관련 정보 또는 감염값       |
 | `mannote`  | `VARCHAR2(200)`   | `NULL`                    | 관리 시 참고 사항               |
 
@@ -121,8 +121,8 @@ petid       userid      petname      petbreed         birthdate       pettypeid
 ### --7. table (pet_disease)
 
 
-| 컬럼명        | 데이터 타입         | 제약 조건               | 설명                |
-|--------------|-------------------|------------------------|--------------------|
+| 컬럼명       | 데이터 타입       | 제약 조건                 | 설명             |
+|--------------|-------------------|---------------------------|------------------|
 | `pdid`       | `NUMBER`          | `PRIMARY KEY`, `NOT NULL` | 진단 고유번호     |
 | `disid`      | `VARCHAR2(20)`    | FK `NOT NULL`             | 반려동물 질병 ID  |
 | `petid`      | `VARCHAR2(50)`    | FK `NOT NULL`             | 동물id           |
@@ -141,25 +141,25 @@ petid       userid      petname      petbreed         birthdate       pettypeid
 ---
 
 ### --8. table (pet_disease_date)
-| 컬럼명       | 데이터 타입          | 제약 조건                  | 설명              |
+| 컬럼명       | 데이터 타입        | 제약 조건                | 설명              |
 |--------------|-------------------|---------------------------|------------------|
 | `검사ID`      | `NUMBER`          | `PRIMARY KEY`, `NOT NULL` | 검사 고유 번호    |
 | `Fedm`       | `NUMBER(10)`      | `NULL`                    | 철 관련 수치      |
 | `Pdm`        | `NUMBER(10)`      | `NULL`                    | 인 관련 수치      |
-| `Proteindm`  | `NUMBER(10)`      | `NULL`                    | 단백질 관련 수치   |
+| `Proteindm`  | `NUMBER(10)`      | `NULL`                    | 단백질 관련 수치  |
 
 # 🧬 PETDISEASE 테이블 데이터
 
 
-|검사ID     | PDID        |FEDM        |PDM         |PROTEINDM  | DATE      |
-|-------   |-------      |-------     |---------    |--------  |--------   |
-| 1        |  1          |80          |1            |25        |2025-11-03 |
-| 2        |  1          |80          |1            |25        |2025-11-04 |
+|검사ID     | PDID       |FEDM        |PDM          |PROTEINDM  | DATE      |
+|-------   |-------      |-------     |---------    |--------   |--------   |
+| 1        |  1          |80          |1            |25         |2025-11-03 |
+| 2        |  1          |80          |1            |25         |2025-11-04 |
 
 
 ### -- 운동정보 (exerciseinfo) + sequence(exerciseinfo_seq)
 ###운동정보 (1단계 CRUD 파트/ 입력시 _(언더바) 및 줄일 수 있는 필드명은 줄일 예정.)
-| 필드명              | 타입            | 설명 |
+| 필드명             | 타입           | 설명 |
 |--------------------|----------------|------|
 | `exercise_id`      | INT (PK)       | 운동 고유 ID |
 | `exercise_type`    | VARCHAR(50)    | 운동 종류 (예: 산책, 수영, 노즈워크 등) |
@@ -184,14 +184,14 @@ petid       userid      petname      petbreed         birthdate       pettypeid
 
 
 ### --12. table (review) + sequence (review_seq) 리뷰 게시판(사료를 브랜드-제품명 순으로 필터링 후 간단한 한줄평 남기는 게시판이 어떨까요?)
-| 컬럼명               | 데이터 타입         | 제약 조건                                               | 설명 |
+| 컬럼명              | 데이터 타입       | 제약 조건                                              | 설명 |
 |---------------------|-------------------|--------------------------------------------------------|------|
 | `reviewid`          | `NUMBER`          | `PRIMARY KEY`                                          | 리뷰 ID |
 | `userid`            | `NUMBER`          | `FOREIGN KEY REFERENCES user(userid)`                  | 작성자 |
 | `password`          | `VARCHAR2(50)`    | `not null`                                             | 글 비밀번호|
 | `brandid`           | `NUMBER`          | `FOREIGN KEY REFERENCES food_brand(brandid)`           | 브랜드 ID |
 | `foodid`            | `NUMBER`          | `FOREIGN KEY REFERENCES food(foodid)`                  | 사료 ID |
-| `foodimg`           | `VARCHAR2(300)`   | `우선 null값 채우기`                                     | 사료 이미지 |
+| `foodimg`           | `VARCHAR2(300)`   | `우선 null값 채우기`                                    | 사료 이미지 |
 | `rating`            | `NUMBER(1)`       | `CHECK (rating BETWEEN 1 AND 5)`                       | 평점 |
 | `title`             | `VARCHAR2(100)`   |                                                        | 제목 |
 | `review_comment`    | `VARCHAR2(500)`   | —                                                      | 리뷰 내용 |
@@ -205,12 +205,12 @@ petid       userid      petname      petbreed         birthdate       pettypeid
 
 
 ### --9. table (foodnutrient) 단순 사료 라벨 데이터
-| 컬럼명          | 데이터 타입         | 제약 조건                                                     | 설명 |
+| 컬럼명          | 데이터 타입      | 제약 조건                                                     | 설명 |
 |----------------|-------------------|--------------------------------------------------------------|------|
 | `foodid`       | `NUMBER`          | `FOREIGN KEY REFERENCES food(foodid)`                        | 사료 ID |
 | `nutrientid`   | `NUMBER`          | `FOREIGN KEY REFERENCES nutrient(nutrientid)`                | 영양소 ID |
 | `amount`       | `NUMBER`          | —                                                            | 포함량 |
-| **복합키**      |                   | `PRIMARY KEY (foodid, nutrientid)`/미구현                     | 사료-영양소 매핑 |
+| **복합키**     |                   | `PRIMARY KEY (foodid, nutrientid)`/미구현                     | 사료-영양소 매핑 |
 
 ```
 사료id      영양소id       포함량
@@ -218,7 +218,7 @@ petid       userid      petname      petbreed         birthdate       pettypeid
 ```
 
 ### --8. table (nutrient) + sequence (nutrient_seq) 영양소의 단위 
-| 컬럼명           | 데이터 타입         | 제약 조건         | 설명 |
+| 컬럼명          | 데이터 타입       | 제약 조건         | 설명 |
 |-----------------|-------------------|------------------|------|
 | `nutrientid`    | `NUMBER`          | `PRIMARY KEY`    | 영양소 ID |
 | `nutrientname`  | `VARCHAR2(100)`   | `NOT NULL`       | 영양소 이름 |
@@ -231,7 +231,7 @@ petid       userid      petname      petbreed         birthdate       pettypeid
 
 ### --14. table (NUTRIENTRANGE) 영양소 기준 설정 - 영양소에 대한 구체적인 기준 예시와 직관적 설명이 필요해 보여서 추가했습니다
 
-| 컬럼명          | 데이터 타입         | 제약 조건                                       | 설명 |
+| 컬럼명         | 데이터 타입       | 제약 조건                                       | 설명 |
 |----------------|-------------------|------------------------------------------------|------|
 | `rangeid`      |    `NUMBER`       | `PRIMARY KEY`                                  | 구간 ID |
 | `pettypeid`    | `NUMBER`          | `FOREIGN KEY REFERENCES PETTYPE(pettypeid)`    | 고양이/강아지 구분 ID |
