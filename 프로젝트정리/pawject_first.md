@@ -48,8 +48,8 @@ pettypeid       typename
 | `createdat`   | `DATE`            | `NOT NULL`                                    | 반려동물등록일 |
 
 ```
-petid       userid      petname     petbreed        birthdate       pettypeid
-1001        101         '겨울이'     '페르시안'       '2022-06-12'    1
+petid       userid      petname      petbreed         birthdate       pettypeid
+1001        101         '겨울이'     '페르시안'       '2022-06-12'     1
 ```
 
 ### --4. table (foodbrand)  + sequence (foodbrandseq)
