@@ -245,3 +245,8 @@ petid       userid      petname     petbreed        birthdate       pettypeid
 '102'     '1'           '6'         '26'        '40'      '고양이건사료_중단백'
 '103'     '1'           '6'         '41'        '55'      '고양이건사료_고단백'
 ```
+
+
+**게시판 시안**
+<img src="/프로젝트 테이블 정리/img/review001.png" alt="게시판시안1차리스트">
+<img src="/프로젝트 테이블 정리/img/review002.png" alt="게시판시안1차글쓰기">
