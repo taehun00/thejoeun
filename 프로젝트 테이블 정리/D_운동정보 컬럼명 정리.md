@@ -60,54 +60,6 @@ values ( exerciseinfo_seq.nextval,
 ```
 
 
----
-### --10. table (food_recommend) + sequence (recommend_seq)
-#### 일단은 전체적인 흐름(?)만 정해놨고요, 추후에 프로젝트 진행하면서 조정을 더 해야 할 것 같습니다. 
-####  ㄴ보완할 점 있으면 카톡 남겨주세요~.
-
-|    컬럼명        |    데이터 타입    |                  제약 조건                      |     설명     |
-|------------------|-------------------|--------------------------------------------------|--------------|
-| `userid`         | `NUMBER`          | `FOREIGN KEY REFERENCES user(userid)`            | 사용자 ID    |
-| `foodid`         | `NUMBER`          | `FOREIGN KEY REFERENCES food(foodid)`            | 추천 사료 ID |
----
-
-```
-테이블(SQL / 추후에 변경사항 있으면 변경할 예정.)
-create sequence recommend_seq;
-
-create table foodrecommend (
-   userid             number foreign key     references user(user id),
-   foodid             number foreign key     references food(food id),
-);
-```
-```
-(임시) 
-유저 id(userid)    추천사료 id(foodid)
-    123                  15
-```   
-
----
-### --11. table (favoritefood)
-|   컬럼명    |     데이터 타입   |                    제약 조건                            |       설명      |
-|-------------|-------------------|----------------------------------------------------------|-----------------|
-| `userid`    | `NUMBER`          | `FOREIGN KEY REFERENCES user(userid)`                    | 사용자 ID       |
-| `foodid`    | `NUMBER`          | `FOREIGN KEY REFERENCES food(foodid)`                    | 사료 ID         |
-
----
-
-```
-테이블 (SQL/ 추후에 변경사항 있으면 변경할 예정.)
-create table favoritefood (
-   userid      number            foreign key references  user(userid),
-   foodid      number            foreign key references  food(foodid),
-);
-
-```
-```
-(임시)
-사용자 id(userid)       사료 id(foodid) 
-    123                   1234
-```
 
 
 
