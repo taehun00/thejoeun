@@ -24,7 +24,7 @@ userid      email                   nickname        password        createdate
 
 
 ### --2. table (pettype)
-| 컬럼명        | 데이터 타입       | 제약 조건        | 설명 |
+| 컬럼명           | 데이터 타입       | 제약 조건         | 설명 |
 |-----------------|-------------------|------------------|------|
 | `pettypeid`     | `NUMBER`          | `PRIMARY KEY`    | 반려동물 종류 ID |
 | `pettypename`   | `VARCHAR2(100)`   | `NOT NULL`       | 종류 이름 (강아지, 고양이 등) |
