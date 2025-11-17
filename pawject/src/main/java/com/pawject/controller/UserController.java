@@ -56,7 +56,7 @@ public class UserController extends HttpServlet {
 	    	if(result == 1) {
 	    		out.println("<script>alert('회원가입에 성공했습니다.'); location.href='loginView.u'; </script>");
 	    	}else {
-	    		out.println("<script>alert('관리자에게 문의바랍니다.'); location.href='login.u'; </script>");
+	    		out.println("<script>alert('관리자에게 문의바랍니다.'); location.href='loginView.u'; </script>");
 	    	}
 	    } else if(path.equals("/loginView.u")) {
 	    	
