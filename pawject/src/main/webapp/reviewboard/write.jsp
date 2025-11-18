@@ -8,7 +8,7 @@
 		  <h3>리뷰 작성</h3>
 		
 		  	  <form action="${pageContext.request.contextPath}/write.rv"  method="post"> 
-			 <input type="hidden"   name="userid"  value="<%= session.getAttribute("userid") %>">
+			 <input type="hidden"   name="email"  value="<%= session.getAttribute("email") %>">
 		    <div class="row">
 		      
 				<!-- 종 선택 -->
@@ -154,3 +154,4 @@
 		</script>
 <!-- footer -->
 <%@include file="../inc/footer.jsp" %>
+

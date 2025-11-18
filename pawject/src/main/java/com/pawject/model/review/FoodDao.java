@@ -1,4 +1,4 @@
-package com.pawject.model;
+package com.pawject.model.review;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -30,16 +30,11 @@ public class FoodDao {
 	   		
 	   //sql
 	   		//String sql = "select b.brandid as brandid, b.brandname as brandname, d.foodid as foodid, d.foodname as foodname  from foodbrand b join food d on(b.brandid=d.brandid)";
-	   		String sql =
-	   			    "SELECT DISTINCT " +
-	   			    "  f.foodid AS foodid, f.foodname AS foodname, " +
-	   			    "  f.brandid AS brandid, b.brandname AS brandname, " +
-	   			    "  f.pettypeid AS pettypeid, p.pettypename AS pettypename " +
-	   			    "FROM food f " +
-	   			    "JOIN foodbrand b ON f.brandid = b.brandid " +
-	   			    "JOIN pettype p ON f.pettypeid = p.pettypeid " +
-	   			    "ORDER BY b.brandname, f.foodname";
+	   		String sql ="select distinct f.foodid as foodid, f.foodname as foodname, f.brandid as brandid, b.brandname as brandname, f.pettypeid as pettypeid, p.pettypename as pettypename from food f join foodbrand b on f.brandid = b.brandid join pettype p on f.pettypeid = p.pettypeid order by b.brandname, f.foodname";
 
+	   		
+	   		
+	   		
 	   
 	   
 	   try {

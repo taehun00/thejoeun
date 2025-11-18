@@ -22,4 +22,14 @@
     <url-pattern>*.rv</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+  <servlet-name>FoodController</servlet-name>
+  <servlet-class>com.pawject.controller.FoodController</servlet-class>
+</servlet>
+
+<servlet-mapping>
+  <servlet-name>FoodController</servlet-name>
+  <url-pattern>*.jys</url-pattern>
+</servlet-mapping>
+  
 </web-app>

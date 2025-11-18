@@ -1,4 +1,4 @@
-package com.pawject.service;
+package com.pawject.service.review;
 
 import java.io.IOException;
 
@@ -6,14 +6,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.pawject.model.ReDao;
-import com.pawject.model.ReDto;
+import com.pawject.model.review.ReDao;
+import com.pawject.model.review.ReDto;
 
 public class ReInsert implements ReService {
 
 	@Override
 	public void exec(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	       int userid = Integer.parseInt(request.getParameter("userid"));  // 숨겨진 input으로 전달
+	       String email = request.getParameter("email"); // 숨겨진 input으로 전달
 	        String password = request.getParameter("password");
 	        int brandid = Integer.parseInt(request.getParameter("brandid")); 
 	        int foodid = Integer.parseInt(request.getParameter("foodid"));
@@ -25,7 +25,7 @@ public class ReInsert implements ReService {
 			ReDto dto = new ReDto();
 			ReDao dao = new ReDao();
 					
-	        dto.setUserid(userid);
+			dto.setEmail(email);
 	        dto.setPassword(password);
 	        dto.setBrandid(brandid);
 	        dto.setFoodid(foodid);
