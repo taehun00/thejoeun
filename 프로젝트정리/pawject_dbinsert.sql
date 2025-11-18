@@ -74,8 +74,6 @@ INSERT INTO foodbrand (brandid, brandname, country) VALUES (5, '식탁의정체'
 INSERT INTO foodbrand (brandid, brandname, country) VALUES (6, '츄츄는고양이였다', '호주');
 INSERT INTO foodbrand (brandid, brandname, country) VALUES (7, '푸드랑탐탐', '뉴질랜드');
 
-SELECT * FROM foodbrand;
-COMMIT;
 
 
 -- FOOD INSERT
