@@ -6,7 +6,7 @@
 <!-- 	footer		 -->
 
 <div class="mt-5 p-4 bg-dark text-white text-center">
-  <p>Footer</p>
+  <p>© 2025 Team Pawject. Designed & Developed for educational purposes</p>
 </div>
 
 </body>
