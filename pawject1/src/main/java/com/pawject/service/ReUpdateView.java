@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:pawjecttest/src/main/java/com/pawject/service/pet/PetDelete.java
-package com.pawject.service.pet;
-========
 package com.pawject.service;
->>>>>>>> 961999066a4a0c02d9d83aedc3f720f8b5947f2c:pawject1/src/main/java/com/pawject/service/ReList.java
 
 import java.io.IOException;
 
@@ -12,15 +8,26 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.pawject.model.ReDao;
 
-public class ReList implements ReService {
+public class ReUpdateView implements ReService {
 
 	@Override
 	public void exec(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		
-		ReDao dao = new ReDao();
-		request.setAttribute("list", dao.selectAll());
+		//데이터 받고
 		
+		int reviewid=Integer.parseInt(request.getParameter("reviewid"));
+		
+		ReDao dao = new ReDao();
+		FoodList foodlist = new FoodList();
+		foodlist.exec(request, response);
+		
+		
+		request.setAttribute("dto", dao.select(reviewid));
+		request.setAttribute("reviewid", reviewid);
+
+		
+
 	}
 
 }
