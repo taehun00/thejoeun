@@ -1,4 +1,4 @@
-package com.pawject.service;
+package com.pawject.service.review;
 
 import java.io.IOException;
 import java.io.PrintWriter;

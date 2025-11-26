@@ -1,4 +1,4 @@
-package com.pawject.model;
+package com.pawject.model.review;
 
 public class ReDto {
 

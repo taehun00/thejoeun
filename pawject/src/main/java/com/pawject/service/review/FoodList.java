@@ -1,4 +1,4 @@
-package com.pawject.service;
+package com.pawject.service.review;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,8 +7,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.pawject.model.FoodDao;
-import com.pawject.model.FoodDto;
+import com.pawject.model.review.FoodDao;
+import com.pawject.model.review.FoodDto;
 
 public class FoodList implements ReService {
 

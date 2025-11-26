@@ -32,21 +32,21 @@
 		Integer sid= (Integer)session.getAttribute("userid");
       %>
         
-         <%if(email!=null){%>
-        
-          <li class="nav-item"><a class="nav-link" href="#">사료추천</a></li>
-          <li class="nav-item"><a class="nav-link" href="<%=request.getContextPath()%>/list.rv">리뷰</a></li>
+         <% if (email != null) { %>
+          <!-- 로그인한 사용자 메뉴 -->
+          <li class="nav-item"><a class="nav-link" href="<%=request.getContextPath()%>/home.u">홈</a></li>
+          <li class="nav-item"><a class="nav-link" href="<%=request.getContextPath()%>/logout.u">로그아웃</a></li>
+          <li class="nav-item"><a class="nav-link" href="<%=request.getContextPath()%>/list.jys">사료보드</a></li>
+          <li class="nav-item"><a class="nav-link" href="<%=request.getContextPath()%>/Pawjectlist.swc">질환보드</a></li>
+          <li class="nav-item"><a class="nav-link" href="<%=request.getContextPath()%>/execAll.hsh">운동정보보드</a></li>
+          <li class="nav-item"><a class="nav-link" href="<%=request.getContextPath()%>/list.rv">사료리뷰</a></li>
           <li class="nav-item"><a class="nav-link" href="<%=request.getContextPath()%>/member/mypage.jsp?userid=<%=sid%>"><%=email%></a></li>
-          <li class="nav-item"><a class="nav-link" href="#">로그아웃</a></li>
-        
-         <%}else{%>
-        
-          <li class="nav-item"><a class="nav-link" href="#">사료추천</a></li>
-          <li class="nav-item"><a class="nav-link" href="<%=request.getContextPath()%>/list.rv">리뷰</a></li>
-          <li class="nav-item"><a class="nav-link" href="<%=request.getContextPath()%>/member/join.jsp">회원가입</a></li>
-          <li class="nav-item"><a class="nav-link" href="<%=request.getContextPath()%>/member/login.jsp">로그인</a></li>
-          
-          <% }%>
+        <% } else { %>
+          <!-- 비로그인 사용자 메뉴 -->
+          <li class="nav-item"><a class="nav-link" href="<%=request.getContextPath()%>/loginView.u">로그인</a></li>
+          <li class="nav-item"><a class="nav-link" href="<%=request.getContextPath()%>/joinView.u">회원가입</a></li>
+        <% } %>
+
           
         </ul>
       </div>

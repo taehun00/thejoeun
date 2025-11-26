@@ -20,8 +20,8 @@ public class UserDao {
 		Connection conn = null;  PreparedStatement pstmt = null;   ResultSet  rset = null;
 		String driver   = "oracle.jdbc.driver.OracleDriver";
 		String url      = "jdbc:oracle:thin:@localhost:1521:xe";
-		String user     = "system"; 
-		String pass = "1234";
+		String user     = "scott"; 
+		String pass = "tiger";
 		
 		try {
 			Class.forName(driver);
@@ -54,8 +54,8 @@ public class UserDao {
 		Connection conn = null;  PreparedStatement pstmt = null;   ResultSet  rset = null;
 		String driver   = "oracle.jdbc.driver.OracleDriver";
 		String url      = "jdbc:oracle:thin:@localhost:1521:xe";
-		String user     = "system"; 
-		String pass = "1234";
+		String user     = "scott"; 
+		String pass = "tiger";
 		
 		try {
 			Class.forName(driver);
@@ -97,8 +97,8 @@ public class UserDao {
 		Connection conn = null;  PreparedStatement pstmt = null;   ResultSet  rset = null;
 		String driver   = "oracle.jdbc.driver.OracleDriver";
 		String url      = "jdbc:oracle:thin:@localhost:1521:xe";
-		String user     = "system"; 
-		String pass = "1234";
+		String user     = "scott"; 
+		String pass = "tiger";
 		
 		try {
 			Class.forName(driver);
@@ -146,8 +146,8 @@ public class UserDao {
 		Connection conn = null;  PreparedStatement pstmt = null;   ResultSet  rset = null;
 		String driver   = "oracle.jdbc.driver.OracleDriver";
 		String url      = "jdbc:oracle:thin:@localhost:1521:xe";
-		String user     = "system"; 
-		String pass = "1234";
+		String user     = "scott"; 
+		String pass = "tiger";
 		
 		try {
 			Class.forName(driver);

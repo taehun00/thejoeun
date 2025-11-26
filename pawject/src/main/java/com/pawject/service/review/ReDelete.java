@@ -1,4 +1,4 @@
-package com.pawject.service;
+package com.pawject.service.review;
 
 import java.io.IOException;
 
@@ -6,8 +6,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.pawject.model.ReDao;
-import com.pawject.model.ReDto;
+import com.pawject.model.review.ReDao;
+import com.pawject.model.review.ReDto;
 
 public class ReDelete implements ReService {
 

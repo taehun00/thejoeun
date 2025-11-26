@@ -8,14 +8,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.pawject.service.FoodList;
-import com.pawject.service.ReDelete;
-import com.pawject.service.ReDeleteView;
-import com.pawject.service.ReInsert;
-import com.pawject.service.ReList;
-import com.pawject.service.ReService;
-import com.pawject.service.ReUpdate;
-import com.pawject.service.ReUpdateView;
+import com.pawject.service.review.FoodList;
+import com.pawject.service.review.ReDelete;
+import com.pawject.service.review.ReDeleteView;
+import com.pawject.service.review.ReInsert;
+import com.pawject.service.review.ReList;
+import com.pawject.service.review.ReService;
+import com.pawject.service.review.ReUpdate;
+import com.pawject.service.review.ReUpdateView;
 
 
 /**
@@ -73,6 +73,9 @@ public class ReController extends HttpServlet {
 		    service = new ReInsert(); 
 		    service.exec(request, response);
 
+
+
+		    
 		    String result = (String)request.getAttribute("result");
 
 		    response.setContentType("text/html; charset=UTF-8");
