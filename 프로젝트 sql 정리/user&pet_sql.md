@@ -14,6 +14,26 @@ SELECT COUNT(*) FROM users WHERE email=? AND password=?;
 
 SELECT COUNT(*) FROM users WHERE email='iis@naver.com' AND password='123';
 
+### 아이디 찾기(임시)
+
+SELECT email
+FROM users
+WHERE nickname = ?;
+
+SELECT email
+FROM users
+WHERE nickname = 'gg';
+
+### 비밀번호 찾기(임시)
+
+SELECT password
+FROM users
+WHERE nickname = ? AND email = ?;
+
+SELECT password
+FROM users
+WHERE nickname = 'gg' AND email = 'iis@naver.com';
+
 ### 마이페이지
 
 select userid, email, nickname, ufile, createdat from users where email=?;
@@ -39,5 +59,22 @@ WHERE email = 'iis@naver.com';
 delete from users where email = ? and password = ?;
 
 delete from users where email = 'iis55@naver.com' and password = '1234';
+
+### 전체유저 정보확인
+
+SELECT userid, email, nickname, ufile, createdat
+FROM users;
+
+### 해당 유저 검색
+
+<!-- 이메일로 검색 -->
+SELECT userid, email, nickname, ufile, createdat
+FROM users
+WHERE email = ?;
+
+<!-- 닉네임으로 검색 -->
+SELECT userid, email, nickname, ufile, createdat
+FROM users
+WHERE nickname = ?;
 
 # PET 테이블
