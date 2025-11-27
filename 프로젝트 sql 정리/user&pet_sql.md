@@ -1,46 +1,31 @@
 # USERS 테이블
 
-### 회원가입
+### 회원가입(사용자)(관리자)
 
 INSERT INTO users (userid, email, nickname, password, ufile, createdat)
                 VALUES (users_seq.NEXTVAL, ?, ?, ?, ?, SYSDATE);
-                
-INSERT INTO users (userid, email, nickname, password, createdat)
-                VALUES (users_seq.NEXTVAL, 'iis@naver.com', 'gg', '123', SYSDATE);
 
-### 로그인
+### 로그인(사용자)(관리자)
 
 SELECT COUNT(*) FROM users WHERE email=? AND password=?;
 
-SELECT COUNT(*) FROM users WHERE email='iis@naver.com' AND password='123';
+### 마이페이지(사용자)(관리자)
 
-### 아이디 찾기(임시)
+select userid, email, nickname, ufile, createdat from users where email=?;
+
+### 아이디 찾기(사용자)(관리자)(임시)
 
 SELECT email
 FROM users
 WHERE nickname = ?;
 
-SELECT email
-FROM users
-WHERE nickname = 'gg';
-
-### 비밀번호 찾기(임시)
+### 비밀번호 찾기(사용자)(관리자)(임시)
 
 SELECT password
 FROM users
 WHERE nickname = ? AND email = ?;
 
-SELECT password
-FROM users
-WHERE nickname = 'gg' AND email = 'iis@naver.com';
-
-### 마이페이지
-
-select userid, email, nickname, ufile, createdat from users where email=?;
-
-select userid, email, nickname, ufile, createdat from users where email='iis@naver.com';
-
-### (사용자) 정보수정
+### 정보수정(사용자)
 
 UPDATE users
 SET email    = ?,
@@ -48,33 +33,134 @@ SET email    = ?,
     password = ?
 WHERE email = ?;
 
-UPDATE users
-SET email    = 'iis55@naver.com',
-    nickname = 'qwer', 
-    password = '1234'
-WHERE email = 'iis@naver.com';
-
-### 회원탈퇴
+### 회원탈퇴(사용자)(관리자)
 
 delete from users where email = ? and password = ?;
 
-delete from users where email = 'iis55@naver.com' and password = '1234';
-
-### 전체유저 정보확인
+### 전체유저 정보확인(관리자)
 
 SELECT userid, email, nickname, ufile, createdat
-FROM users;
+FROM users
+ORDER BY createdat desc;
 
-### 해당 유저 검색
+### 해당 유저 검색(관리자)
 
 <!-- 이메일로 검색 -->
-SELECT userid, email, nickname, ufile, createdat
-FROM users
-WHERE email = ?;
+SELECT u.userid,
+       u.email,
+       u.nickname,
+       u.createdat
+FROM users u
+WHERE u.email LIKE '%' || ? || '%'
+ORDER BY u.createdat DESC;
+
 
 <!-- 닉네임으로 검색 -->
-SELECT userid, email, nickname, ufile, createdat
-FROM users
-WHERE nickname = ?;
+SELECT u.userid,
+       u.email,
+       u.nickname,
+       u.createdat
+FROM users u
+WHERE u.nickname LIKE '%' || ? || '%'
+ORDER BY u.createdat DESC;
+
 
 # PET 테이블
+
+### 펫 정보 작성(사용자)
+
+INSERT INTO pet (petid, userid, petname, petbreed, birthdate, pettypeid, createdat, ufile)
+VALUES (pet_seq.NEXTVAL, ?, ?, ?, ?, ?, SYSDATE, ?);
+
+INSERT INTO pet (petid, userid, petname, petbreed, birthdate, pettypeid, createdat, ufile)
+VALUES (pet_seq.NEXTVAL, 1, '겨울이', '페르시안', '2022-06-12', 1, SYSDATE, DEFAULT);
+
+### 펫 페이지(로그인 시 해당유저의 전체펫 조회)(사용자)
+
+SELECT p.petid,
+       p.petname,
+       p.petbreed,
+       p.birthdate,
+       p.pettypeid,
+       p.createdat,
+       p.ufile
+FROM pet p
+JOIN users u ON p.userid = u.userid
+WHERE u.email = ?   -- 로그인한 유저 이메일
+ORDER BY p.createdat DESC;
+
+### 전체 펫 페이지(관리자)
+
+SELECT p.petid,
+       u.email,
+       p.petname,
+       p.petbreed,
+       p.birthdate,
+       p.pettypeid,
+       p.createdat,
+       p.ufile
+FROM pet p
+JOIN users u ON p.userid = u.userid
+ORDER BY p.createdat DESC;
+
+### 상세페이지(로그인 시 해당유저의 상세펫 조회)(사용자)
+
+SELECT p.petid,
+       p.petname,
+       p.petbreed,
+       p.birthdate,
+       p.pettypeid,
+       p.createdat,
+       p.ufile
+FROM pet p
+JOIN users u ON p.userid = u.userid
+WHERE u.email = ?   -- 로그인한 유저 이메일
+  AND p.petid = ?;  -- 선택한 펫 ID
+
+### 펫 정보 수정(사용자)(관리자)
+
+<!-- 사용자 -->
+UPDATE pet
+SET petname   = ?,
+    petbreed  = ?,
+    birthdate = ?,
+    pettypeid = ?,
+    ufile     = ?
+WHERE petid   = ?
+  AND userid  = (SELECT userid FROM users WHERE email = ?);
+
+<!-- 관리자 -->
+UPDATE pet
+SET petname   = ?,
+    petbreed  = ?,
+    birthdate = ?,
+    pettypeid = ?,
+    ufile     = ?
+WHERE petid   = ?;
+
+### 펫 정보 삭제(사용자)(관리자)
+
+<!-- 사용자 -->
+DELETE FROM pet
+WHERE petid = ?
+  AND userid = (SELECT userid FROM users WHERE email = ?);
+
+<!-- 관리자 -->
+DELETE FROM pet
+WHERE petid = ?;
+
+### 검색 기능(관리자)
+
+#### (이메일)
+SELECT p.petid, u.email, p.petname, p.petbreed, p.birthdate, p.pettypeid, p.createdat, p.ufile
+FROM pet p
+JOIN users u ON p.userid = u.userid
+WHERE u.email LIKE '%' || ? || '%'
+ORDER BY u.createdat DESC;
+
+#### (펫이름)
+SELECT p.petid, u.email, p.petname, p.petbreed, p.birthdate, p.pettypeid, p.createdat, p.ufile
+FROM pet p
+JOIN users u ON p.userid = u.userid
+WHERE p.petname LIKE '%' || ? || '%'
+ORDER BY u.createdat DESC;

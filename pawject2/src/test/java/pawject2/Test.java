@@ -16,5 +16,11 @@ public class Test {
 	@Autowired DataSource ds;
 	@Autowired SqlSession session;
 	// 여기까지 테스트 완료
+	
+	@org.junit.Test
+	public void testDataSource() {
+        System.out.println(ds);
+    }
+
 
 }
