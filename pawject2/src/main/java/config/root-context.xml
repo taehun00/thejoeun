@@ -35,7 +35,7 @@
 		<constructor-arg ref="SqlSessionFactory"/>
 	</bean>
 	
-	<!-- <context:property-placeholder 
+	<context:property-placeholder 
       location="classpath:config/db.properties" />
 	
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
@@ -43,10 +43,10 @@
    <property name="url" value="${db.url}"></property>
    <property name="username" value="${db.username}"></property>
    <property name="password" value="${db.password}"></property>
-   </bean> -->
+   </bean>
    <!-- 1대1 -->
    
-   <context:property-placeholder 
+<!--    <context:property-placeholder 
       location="classpath:config/db.properties" />
 	
 	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource">
@@ -54,7 +54,7 @@
    <property name="jdbcUrl" value="${db.url}"></property>
    <property name="username" value="${db.username}"></property>
    <property name="password" value="${db.password}"></property>
-   </bean>
+   </bean> -->
    <!-- 분산연결 -->
 
 </beans>
