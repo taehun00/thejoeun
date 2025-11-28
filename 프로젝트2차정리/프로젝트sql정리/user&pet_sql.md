@@ -160,3 +160,7 @@ ORDER BY u.createdat DESC;
 
 #### (펫이름)
 SELECT p.petid, u.email, p.petname, p.petbreed, p.birthdate, p.pettypeid, p.createdat, p.ufile
+FROM pet p
+JOIN users u ON p.userid = u.userid
+WHERE p.petname LIKE '%' || ? || '%'
+ORDER BY u.createdat DESC;
