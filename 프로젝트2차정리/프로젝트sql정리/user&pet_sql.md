@@ -1,4 +1,14 @@
-# USERS 테이블
+# USERS 테이블 + sequence (user_seq)
+
+| 컬럼명        | 데이터 타입         | 제약 조건                 | 설명 |
+|--------------|-------------------|--------------------------|------|
+| `userid`     | `NUMBER`          | `PRIMARY KEY`            | 사용자 고유 ID |
+| `email`      | `VARCHAR2(200)`   | `NOT NULL`, `UNIQUE`     | 이메일 주소 |
+| `nickname`   | `VARCHAR2(100)`   | `NOT NULL`               | 닉네임 |
+| `password`   | `VARCHAR2(100)`   | `NOT NULL`               | 비밀번호 |
+| `ufile`      | `VARCHAR2(255)`   | `DEFAULT 'default.png'`  | 이미지파일 |
+| `createdat`  | `DATE`            | `NOT NULL`               | 가입일 |
+
 
 ### 회원가입(사용자)(관리자)
 
@@ -65,7 +75,24 @@ WHERE u.nickname LIKE '%' || ? || '%'
 ORDER BY u.createdat DESC;
 
 
-# PET 테이블
+# PET 테이블 + sequence (pet_seq)
+
+| 컬럼명        | 데이터 타입       | 제약 조건                                | 설명 |
+|---------------|-------------------|------------------------------------------|------|
+| `petid`       | `NUMBER`          | `PRIMARY KEY`                            | 반려동물 고유 ID |
+| `userid`       | `NUMBER`          | `FOREIGN KEY REFERENCES user(userid)`    | 사용자 ID |
+| `petname`     | `VARCHAR2(100)`   | `NOT NULL`                               | 반려동물 이름 |
+| `petbreed`    | `VARCHAR2(100)`   | `NOT NULL`                                | 반려동물 종 |
+| `birthdate`    | `VARCHAR2(100)`   | —                                        | 생년월일 |
+| `pettypeid`  | `NUMBER`          | `FOREIGN KEY REFERENCES pettype(pet_type_id)` | 반려동물 종류 ID |
+| `ufile`      | `VARCHAR2(255)`   | `DEFAULT 'default.png'`                    | 반려동물 이미지파일 |
+| `createdat`  | `DATE`            | `NOT NULL`                                 | 반려동물등록일 |
+
+# PETTYPE 테이블
+| 컬럼명           | 데이터 타입       | 제약 조건         | 설명 |
+|-----------------|-------------------|------------------|------|
+| `pettypeid`     | `NUMBER`          | `PRIMARY KEY`    | 반려동물 종류 ID |
+| `pettypename`   | `VARCHAR2(100)`   | `NOT NULL`       | 종류 이름 (강아지, 고양이 등) |
 
 ### 펫 정보 작성(사용자)
 
