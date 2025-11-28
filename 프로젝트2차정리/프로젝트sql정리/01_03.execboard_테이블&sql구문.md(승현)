@@ -1,6 +1,23 @@
 --반려동물운동정보게시판
 1. 테이블정리
 (※ 외래키는 1차프로젝트 테이블을 참조하였습니다.)
+-------운동정보게시판-------------
+desc execboard;
+--------------------------------
+이름        널?       유형            
+--------- -------- ------------- 
+POSTID    NOT NULL NUMBER(38)    
+EHIT               NUMBER(38)    
+EXECID             NUMBER(38)   (exerciseinfo/외래키) 
+USERID             NUMBER(38)   (users/외래키) 
+PETTYPEID          NUMBER(38)   (pettype/외래키)  
+ETITLE             VARCHAR2(100) 
+ECONTENT           CLOB          
+EIMG               VARCHAR2(255) 
+CREATEDAT          DATE          
+UPDATEDAT          DATE  
+
+
 -----운동정보게시판-----
 desc execboard;
 ----------------------------------
