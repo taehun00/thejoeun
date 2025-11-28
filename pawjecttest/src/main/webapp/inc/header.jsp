@@ -32,6 +32,7 @@
 		Integer sid= (Integer)session.getAttribute("userid");
       %>
         
+<<<<<<<< HEAD:pawjecttest/src/main/webapp/inc/header.jsp
          <% if (email != null) { %>
           <!-- 로그인한 사용자 메뉴 -->
           <li class="nav-item"><a class="nav-link" href="<%=request.getContextPath()%>/home.u">홈</a></li>
@@ -46,6 +47,23 @@
           <li class="nav-item"><a class="nav-link" href="<%=request.getContextPath()%>/joinView.u">회원가입</a></li>
         <% } %>
 
+========
+         <%if(email!=null){%>
+        
+          <li class="nav-item"><a class="nav-link" href="#">사료추천</a></li>
+          <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/list.rv">리뷰</a></li>
+          <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/member/mypage.jsp?userid=<%=sid%>"><%=email%></a></li>
+          <li class="nav-item"><a class="nav-link" href="#">로그아웃</a></li>
+        
+         <%}else{%>
+        
+          <li class="nav-item"><a class="nav-link" href="#">사료추천</a></li>
+          <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/list.rv">리뷰</a></li>
+          <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/member/join.jsp">회원가입</a></li>
+          <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/member/login.jsp">로그인</a></li>
+          
+          <% }%>
+>>>>>>>> 961999066a4a0c02d9d83aedc3f720f8b5947f2c:pawject1/src/main/webapp/inc/header.jsp
           
         </ul>
       </div>
