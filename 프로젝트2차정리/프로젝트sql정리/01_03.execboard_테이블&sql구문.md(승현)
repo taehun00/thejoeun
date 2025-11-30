@@ -45,14 +45,15 @@ insert into execboard  (postid, execid, userid,   etitle,  econtent, eimg)
 2) 글 전체보기 (selectAll)
 select * from execboard order by postid;
 
-※ 페이징필요.
-select  *
-from  (
-  select     row_number()   over (  order by  created_at desc )  as  rnum , 
-  id  , app_user_id , btitle, bcontent, bpass, bfile,  bip , bhit, created_at
-  from sboard1
-)  A
-where   A.rnum  between  #{start}   and #{end}
+--※ 페이징필요.
+select *
+from (
+    select row_number() over (order by createdat desc) as rnum,
+           postid, execid, userid, etitle, econtent, eimg, ehit,
+           createdat, updatedat
+    from execboard
+) A
+where A.rnum between 1 and 10;
 
 
 3) 글 상세보기 (select)
