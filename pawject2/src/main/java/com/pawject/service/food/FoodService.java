@@ -57,7 +57,7 @@ public interface FoodService {
 	
 	
 	
-	public List<FoodDto> foodselect10(int pstartno);
+	public List<FoodDtoForList> foodselect10(int pstartno); 
 	
 	public int foodselectcnt();
 

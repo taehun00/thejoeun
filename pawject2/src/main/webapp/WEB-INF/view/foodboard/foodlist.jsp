@@ -2,7 +2,6 @@
     pageEncoding="UTF-8"%>
 
 <%@include file="../inc/header.jsp"%>
-
 <script>
 	$(function () {
 	    let result = '${success}';
@@ -11,6 +10,7 @@
 	    }
 	});
 </script>
+
 
 <div class="container my-5">
 
@@ -44,7 +44,7 @@
 	      		</c:if>
 	      		<c:forEach var="i"  begin="${foodpaging.start}" end="${foodpaging.end}">
 	      			<li class="page-item  <c:if test="${i==foodpaging.current}"> active </c:if>">
-		      			<a  class="page-link"  href="?pstartno=${i}">${i}</a>
+		      			<a href="#" onclick="foodList(${i})" class="page-link">${i}</a>
 	      			</li>
 	      		 
 	      		</c:forEach>
@@ -67,80 +67,76 @@
 </div>
 
 <script>
-	$(function() {
-		foodList();
-		foodquikdelete();
-	});
+$(function() {
+    let currentPage = $("#currentPage").val() || 1;
+    foodList($("#currentPage").val() || 1);
+    foodquikdelete();
+});
 
-	function foodList() {
-		$.ajax({
-			url : "foodselectForList",
-			type : "GET", //data는 생략
-			success : foodListResult,
-			error : function() {
-				alert("error");
-			}
-
-		})
-
-	}
-
-	function foodListResult(json) {
-		console.log(json);
-		$(".foodTable tbody").empty();
-		let total = json.length;
-
-		$
-				.each(
-						json,
-						function(idx, food) {
-							$("<tr>")
-									.append($("<td>").html(total - idx))
-									.append($("<td>").html(pettypename(food.pettypeid)))
-									.append($("<td>").html(food.brandname))
-									.append($("<td>").html( "<a href='fooddetail.fn?foodid="+ food.foodid +"' style='text-decoration:none; color:black; font-weight:bold;'>" + food.foodname + "</a>" ) )
-									.append($("<td>").html(food.createdat))
-									.append($("<td>").html(food.updatedat))
-									.append($("<td>") .html( "<button class='btn btn-mint foodquikdelete' data-foodid='"+ food.foodid +"'>빠른삭제</button>")) 
-									.appendTo(".foodTable tbody");
-						});
-	}
-	
-	function foodquikdelete(json) {
-		$("body").on("click", ".foodquikdelete", function() {
-
-			let foodid = $(this).data("foodid");
-			if (confirm("삭제하시겠습니까?")) {
-				$.ajax({
-					url : "foodquikdelete",
-					type : "POST",
-					data : {
-						foodid : foodid,
-						 pstartno : currentPage
-					},
-					success : function() {
-					    let currentPage = $("#currentPage").val();   // 리스트 여기서 불러옴!
-					    foodList(currentPage);                      
-					},
-					error : function() {
-						alert("error");
-					}
-
-				});
-
-			}
-
-		});
-
-	}
-	
-function pettypename(pettypeid){
-	if(pettypeid == 1) return "고양이";
-	else if(pettypeid == 2) return "강아지";
-	
+function foodList(pstartno) {
+    $.ajax({
+        url: "foodselectForList",
+        type: "GET",
+        data: { pstartno: pstartno },  //조심!
+        success: foodListResult,
+        error: function() {
+            alert("error");
+        }
+    });
 }
-	
-	
+
+function foodListResult(json) {
+    console.log(json);
+    $(".foodTable tbody").empty();
+    let total = json.length;
+
+    $.each(json, function(idx, food) {
+        $("<tr>")
+            .append($("<td>").html(total - idx))
+            .append($("<td>").html(pettypename(food.pettypeid)))
+            .append($("<td>").html(food.brandname))
+            .append($("<td>").html("<a href='fooddetail.fn?foodid=" 
+                   + food.foodid 
+                   + "' style='text-decoration:none; color:black; font-weight:bold;'>"
+                   + food.foodname + "</a>"))
+            .append($("<td>").html(food.createdat))
+            .append($("<td>").html(food.updatedat))
+            .append($("<td>").html("<button class='btn btn-mint foodquikdelete' data-foodid='"
+                   + food.foodid + "'>빠른삭제</button>"))
+            .appendTo(".foodTable tbody");
+    });
+}
+
+function foodquikdelete() {
+    $("body").on("click", ".foodquikdelete", function() {
+
+        let foodid = $(this).data("foodid");
+        let currentPage = $("#currentPage").val() || 1;
+
+        if (confirm("삭제하시겠습니까?")) {
+            $.ajax({
+                url: "foodquikdelete",
+                type: "POST",
+                data: {
+                    foodid: foodid,
+                    pstartno: currentPage  
+                },
+                success: function() {
+                    foodList(currentPage); 
+                },
+                error: function() {
+                    alert("error");
+                }
+            });
+        }
+
+    });
+}
+
+function pettypename(pettypeid){
+    if(pettypeid == 1) return "고양이";
+    else if(pettypeid == 2) return "강아지";    
+}
 </script>
 
 

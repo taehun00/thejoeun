@@ -112,14 +112,15 @@ public class FoodServiceImpl implements FoodService {
 		}
 
 		@Override
-		public List<FoodDto> foodselect10(int pstartno) {
-			HashMap<String, Object> para = new HashMap<>();
-			int start = (pstartno-1)*10+1;
-			int end = start+9;
-			para.put("start", start);
-			para.put("end", end);
-			
-			return fdao.foodselect10(para);
+		public List<FoodDtoForList> foodselect10(int pstartno) {
+		    HashMap<String, Object> para = new HashMap<>();
+		    int start = (pstartno - 1) * 10 + 1;
+		    int end = start + 9;
+
+		    para.put("start", start);
+		    para.put("end", end);
+
+		    return fdao.foodselect10(para); 
 		}
 
 		@Override
