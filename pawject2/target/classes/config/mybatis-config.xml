@@ -9,6 +9,7 @@
 		<typeAlias type="com.pawject.dto.food.NutriDto"	alias="NutriDto"/>
 		<typeAlias type="com.pawject.dto.food.BrandDto"	alias="BrandDto"/>
 		<typeAlias type="com.pawject.dto.food.FoodDtoForList"	alias="FoodDtoForList"/>
+		<typeAlias type="com.pawject.dto.review.ReviewDto"	alias="ReviewDto"/>
 
 	</typeAliases>
 	

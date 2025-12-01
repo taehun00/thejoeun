@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="com.pawject.dao.review.ReviewDao">
+	<resultMap type="ReviewDto" id="ReviewMap">
+		<result property="reviewid"	column="REVIEWID"/>
+		<result property="nickname"	column="NICKNAME"/>
+		<result property="brandid"	column="BRANDID"/>
+		<result property="foodid"	column="FOODID"/>
+		<result property="reviewimg"	column="REVIEWIMG"/>
+		<result property="rating"	column="RATING"/>
+		<result property="title"	column="TITLE"/>
+		<result property="reviewcomment"	column="REVIEWCOMMENT"/>
+		<result property="createdat"	column="CREATEDAT"/>
+		<result property="updatedat"	column="UPDATEDAT"/>
+
+		<result property="nickname"	column="NICKNAME"/>
+		<result property="brandname"	column="BRANDNAME"/>
+		<result property="foodname"	column="FOODNAME"/>
+		<result property="foodimg"	column="FOODIMG"/>
+		<result property="pettypeid"	column="PETTYPEID"/>
+		
+	</resultMap>
+	
+	
+</mapper>
