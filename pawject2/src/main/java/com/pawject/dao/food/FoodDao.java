@@ -7,7 +7,6 @@ import com.pawject.dao.MyDao;
 import com.pawject.dto.food.FoodDto;
 import com.pawject.dto.food.FoodDtoForList;
 
-
 @MyDao
 public interface FoodDao {
 

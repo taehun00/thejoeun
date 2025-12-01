@@ -19,6 +19,7 @@
         <h3 class="card-header mb-3">사료 정보</h3>
 
         <table class="table table-hover text-center align-middle">
+        <input type="hidden" id="currentPage" value="${foodpaging.pstartno}">
 			<caption class="visually-hidden">사료 관리자 페이지</caption>
             <thead class="table-light">
                 <tr>
@@ -114,10 +115,12 @@
 					url : "foodquikdelete",
 					type : "POST",
 					data : {
-						foodid : foodid
+						foodid : foodid,
+						 pstartno : currentPage
 					},
 					success : function() {
-						foodList();
+					    let currentPage = $("#currentPage").val();   // 리스트 여기서 불러옴!
+					    foodList(currentPage);                      
 					},
 					error : function() {
 						alert("error");

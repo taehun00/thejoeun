@@ -35,8 +35,13 @@ public class FoodController {
 	    model.addAttribute("foodlist", service.foodselect10(paging.getCurrent()));
 	    model.addAttribute("foodpaging", paging);
 
+
 	    return "foodboard/foodlist";
 	}
+	
+
+	
+	
 	
 	@RequestMapping("/foodwrite.fn")
 	public String write_get(Model model) { //신규사료+영양입력폼
