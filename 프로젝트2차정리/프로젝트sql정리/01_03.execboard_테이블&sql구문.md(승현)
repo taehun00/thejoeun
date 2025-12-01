@@ -30,9 +30,9 @@ USERID             NUMBER(38)   (users/외래키)
 ETITLE             VARCHAR2(100) 
 ECONTENT           CLOB          
 EIMG               VARCHAR2(255) 
-EHIT               NUMBER(38)    
-CREATEDAT          DATE          
-UPDATEDAT          DATE  
+EHIT               NUMBER(38)     기본값
+CREATEDAT          DATE           기본값
+UPDATEDAT          DATE       기본값
 
 
 2. sql구문정리
@@ -58,12 +58,14 @@ where A.rnum between 1 and 10;
 
 3) 글 상세보기 (select)
 select * from execboard where postid='23';  
+update execboard set ehit = ehit+1 where postid='23';
 
 <!-- UPDATE -->
 4) 글 수정하기 (update)
-update execboard set etitle='반려동물과 함께하는 노즈워크', 
-                     econtent='노즈워크는 반려동물이 참을성을 길러줍니다.' ,
-                execid=1,   eimg = '1.png'
+update execboard 
+set etitle='반려동물과 함께하는 노즈워크', 
+     econtent='노즈워크는 반려동물이 참을성을 길러줍니다.' ,
+     execid=1,   eimg = '1.png'
 where postid='23';
 
 <!-- DELETE -->
