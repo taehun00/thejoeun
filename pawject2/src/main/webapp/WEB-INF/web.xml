@@ -31,11 +31,11 @@
   
   <!-- 1. 스프링 구동 -->
   <!-- location / 붙여서 절대경로 써야됨! -->
-<!-- 	<context-param>
+ 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>classpath:/config/*-context.xml</param-value>
 	</context-param>
-	
+<!--	
 	<filter>
 	 <filter-name>springSecurityFilterChain</filter-name>
 	 <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -44,10 +44,10 @@
 		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	
+	 -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-	</listener> -->
+	</listener>
 	
    <!-- 이미지 업로드 관련 필터 -->
    <!-- filter multipartFilter -->

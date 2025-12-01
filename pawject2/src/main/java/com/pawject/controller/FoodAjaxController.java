@@ -18,11 +18,20 @@ import com.pawject.service.food.FoodService;
 	public class FoodAjaxController {
 		@Autowired FoodService service;
 		
-		//foodselectForList - 게시판용 전체 리스트 출력 페이지
+//		//foodselectForList - 게시판용 전체 리스트 출력 페이지
+//		@RequestMapping("/foodselectForList")
+//		public List<FoodDtoForList> foodselectForList(){	
+//			return service.foodselectForList();
+//		}
+//		
+		//페이징 적용 버전
 		@RequestMapping("/foodselectForList")
-		public List<FoodDtoForList> foodselectForList(){	
-			return service.foodselectForList();
+		public List<FoodDtoForList> foodselectForList(
+		    @RequestParam(defaultValue="1") int pstartno
+		){
+		    return service.foodselect10(pstartno);
 		}
+		
 		
 		@RequestMapping("/foodquikdelete")
 		public Map<String, Object> foodquikdelete(@RequestParam int foodid){

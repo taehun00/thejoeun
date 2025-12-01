@@ -8,17 +8,7 @@
 	    </script>
 </c:if>
 
-<script>
-	$(function(){
-		let result = '${success}';
-		console.log(result);
-		console.log(result.length);
-		
-		if(result=="사료 수정 성공"){alert(result); }
-		}		
-	);
-	
-	</script>
+
 
 <div class="container card my-5 p-4">
 

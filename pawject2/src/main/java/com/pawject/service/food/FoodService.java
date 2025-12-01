@@ -24,7 +24,7 @@ public interface FoodService {
 	
 	//<delete id="fooddelete" parameterType="int">
 	public int fooddelete(int foodid);
-	
+		
 	//<insert id="nutriinsert" parameterType="NutriDto">
 	public int nutriinsert(NutriDto dto);
 	
@@ -57,7 +57,7 @@ public interface FoodService {
 	
 	
 	
-	public List<FoodDto> foodselect10(int pstartno);
+	public List<FoodDtoForList> foodselect10(int pstartno); 
 	
 	public int foodselectcnt();
 
