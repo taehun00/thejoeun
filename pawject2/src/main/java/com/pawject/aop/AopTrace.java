@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Aspect
 public class AopTrace {
-	@Around("execution(public * com.thejoeun703..*(..))") //com.thejoeun703.. 모든패키지
+	@Around("execution(public * com.pawject..*(..))") //com.thejoeun703.. 모든패키지
 	public Object trace(ProceedingJoinPoint joinPoint) throws Throwable {
 		// 타겟메서드의 정보
 		String signature = joinPoint.getSignature().toShortString();
