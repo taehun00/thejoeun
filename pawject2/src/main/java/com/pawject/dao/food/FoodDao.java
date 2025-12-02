@@ -7,7 +7,6 @@ import com.pawject.dao.MyDao;
 import com.pawject.dto.food.FoodDto;
 import com.pawject.dto.food.FoodDtoForList;
 
-
 @MyDao
 public interface FoodDao {
 
@@ -36,7 +35,7 @@ public interface FoodDao {
 
 	//페이징
 	//<select resultMap="FoodMap"  id="foodselect10" parameterType="java.util.Map">
-	public List<FoodDto> foodselect10(HashMap<String, Object> para);
+	public List<FoodDtoForList> foodselect10(HashMap<String, Object> para);
 	
 	//<select resultType="int" id="foodselectcnt" >
 	public int foodselectcnt();

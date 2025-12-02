@@ -9,9 +9,14 @@
 		<typeAlias type="com.pawject.dto.food.NutriDto"	alias="NutriDto"/>
 		<typeAlias type="com.pawject.dto.food.BrandDto"	alias="BrandDto"/>
 		<typeAlias type="com.pawject.dto.food.FoodDtoForList"	alias="FoodDtoForList"/>
+<<<<<<< HEAD
 		<typeAlias type="com.pawject.dto.user.UserDto"	alias="UserDto"/>
 		<typeAlias type="com.pawject.dto.user.AuthDto"        alias="AuthDto"/>
 		<typeAlias type="com.pawject.dto.user.UserAuthDto"    alias="UserAuthDto"/>
+=======
+		<typeAlias type="com.pawject.dto.review.ReviewDto"	alias="ReviewDto"/>
+
+>>>>>>> c68fdad6b1b885f6cc480b573c4e81f56ac93090
 	</typeAliases>
 	
 </configuration>

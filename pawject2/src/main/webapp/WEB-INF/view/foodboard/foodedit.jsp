@@ -5,10 +5,6 @@
 
 <script>
 	$(function(){
-		let result = '${success}';
-		console.log(result);
-		console.log(result.length);
-		
 		if(result=="사료 수정 실패"){alert(result); }
 		}		
 	);
