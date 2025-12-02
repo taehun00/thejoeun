@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<!-- 운동린지게시판 -->
+	<bean id="execboardSecurity" 	class="com.pawject.security.exec.ExecBoardSecurity"/>
+	
+	<!-- 운동정보 -->
+	<bean id="execinfoSecurity"	    class="com.pawject.security.exec.ExecInfoSecurity"/>
+	
+	
+	
+	<security:http>
+		<security:intercept-url pattern="/security/admin" 	access="hasRole('ROLE_ADMIM')" />
+		<security:intercept-url pattern="/security/member"  access="hasRole('ROLE_MEMBER')" />		
+		
+		<!-- 게시판 작성시 로그인한 사용자만 이용가능 -->
+		<security:intercept-url pattern="/security/"  access="isAuthenticated" />
+		
+   <!-- 사용할때 풀어주기	
+		<security:form-login  
+			login-page="/security/login"
+			authentication-success-handler-ref="successHandler"
+			authentication-failure-forward-url="/security/fail"
+		/>
+		<security:logout
+			logout-url="/security/logout"
+			logout-success-url="/security/login"
+			invalidate-session="true"
+		/> -->	
+ 	</security:http>
+	
+<!-- 사용할때 풀어주기.
+	<security:authentication-manager>
+		<security:authentication-provider user-service-ref="#">
+			<security:password-encoder ref="#"/>
+		</security:authentication-provider>
+	</security:authentication-manager>	-->	
+</beans>
+
+
+
+
+
