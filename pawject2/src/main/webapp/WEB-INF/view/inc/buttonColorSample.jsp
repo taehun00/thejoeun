@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
     
 <%@include file="../inc/header.jsp" %>
+   <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/butten.css">
 
 
 
