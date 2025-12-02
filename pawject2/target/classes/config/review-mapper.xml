@@ -5,21 +5,7 @@
 	<mapper namespace="com.pawject.dao.review.ReviewDao">
 	<resultMap type="ReviewDto" id="ReviewMap">
 		<result property="reviewid"	column="REVIEWID"/>
-		<result property="userid"	column="USERID"/>
-		<result property="brandid"	column="BRANDID"/>
-		<result property="foodid"	column="FOODID"/>
-		<result property="reviewimg"	column="REVIEWIMG"/>
-		<result property="rating"	column="RATING"/>
-		<result property="title"	column="TITLE"/>
-		<result property="reviewcomment"	column="REVIEWCOMMENT"/>
-		<result property="createdat"	column="CREATEDAT"/>
-		<result property="updatedat"	column="UPDATEDAT"/>
 
-		<result property="nickname"	column="NICKNAME"/>
-		<result property="brandname"	column="BRANDNAME"/>
-		<result property="foodname"	column="FOODNAME"/>
-		<result property="foodimg"	column="FOODIMG"/>
-		<result property="pettypeid"	column="PETTYPEID"/>
 		
 	</resultMap>
 	
@@ -30,7 +16,6 @@
 		 		f.foodid as foodid,
 		 		f.foodname as foodname, 
 		 		f.foodimg as foodimg, 
-		 		r.reviewimg as reviewimg, 
 		 		r.rating as rating, 
 		 		r.title as title, 
 		 		r.reviewcomment as reviewcomment, 
@@ -50,13 +35,17 @@
 	
 	<!-- 신규 -->
 	<insert id="reviewInsert" parameterType="ReviewDto">
-	insert into review (reviewid, userid, brandid, foodid, reviewimg, rating, title, reviewcomment)
-            values(review_seq.nextval, #{userid},#{brandid},#{foodid},#{reviewimg, jdbcType=VARCHAR},#{rating},#{title},#{reviewcomment})
-	</insert>
+	    <selectKey keyProperty="reviewid" order="AFTER" resultType="int">
+	        SELECT review_seq.currval FROM dual
+	    </selectKey>
+		insert into review (reviewid, userid, brandid, foodid, rating, title, reviewcomment)
+        values(review_seq.nextval, #{userid},#{brandid},#{foodid},#{rating},#{title},#{reviewcomment})
+	</insert>	
+
 	
 	<!-- 수정 -->
 	<update id="reviewUpdate" parameterType="ReviewDto">
-		update review set brandid=#{brandid}, foodid=#{foodid}, reviewimg=#{reviewimg, jdbcType=VARCHAR}, 
+		update review set brandid=#{brandid}, foodid=#{foodid}, 
 						rating=#{rating}, title=#{title}, 
 						reviewcomment=#{reviewcomment}, updatedat=sysdate
 			where reviewid=#{reviewid} 
@@ -66,5 +55,6 @@
 	<delete id="reviewDelete" parameterType="int">
 		delete from review where reviewid=#{reviewid} 
 	</delete>
+	
 	
 </mapper>

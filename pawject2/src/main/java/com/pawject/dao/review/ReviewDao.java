@@ -10,7 +10,7 @@ public interface ReviewDao {
 		public List<ReviewDto> reviewSelectAll();
 	
 	//	<select resultMap="ReviewMap" id="reviewSelect" parameterType="int">
-		public int reviewSelect(int reviewid);
+		public ReviewDto reviewSelect(int reviewid);
 
 	//	<insert id="reviewInsert" parameterType="ReviewDto">
 		public int reviewInsert(ReviewDto dto);
@@ -20,5 +20,6 @@ public interface ReviewDao {
 		
 	//	<delete id="reviewDelete" parameterType="int">
 		public int reviewDelete(int reviewid);
+
 }
 
