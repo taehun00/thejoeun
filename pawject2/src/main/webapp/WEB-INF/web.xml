@@ -31,7 +31,7 @@
   
   <!-- 1. 스프링 구동 -->
   <!-- location / 붙여서 절대경로 써야됨! -->
- 	<context-param>
+	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>classpath:/config/*-context.xml</param-value>
 	</context-param>
