@@ -32,6 +32,7 @@
                 <value>classpath:config/food-mapper.xml</value>
                 <value>classpath:config/nutri-mapper.xml</value>
                 <value>classpath:config/brand-mapper.xml</value>
+                <value>classpath:config/users-mapper.xml</value>
             </list>
 	</property>
 	</bean>
