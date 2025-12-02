@@ -68,3 +68,5 @@ values ( exerciseinfo_seq.nextval,
 
 
 
+
+

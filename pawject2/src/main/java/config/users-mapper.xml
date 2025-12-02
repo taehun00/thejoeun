@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pawject.dao.user.UserMapper">
+	<!-- 회원가입 -->
+	<insert id="join" parameterType="UserDto">
+		INSERT INTO users (userid, email, nickname, password, ufile, mobile, createdat)
+        VALUES (users_seq.NEXTVAL, #{email}, #{nickname}, #{password}, #{ufile, jdbcType=VARCHAR}, #{mobile}, SYSDATE)
+	</insert>
+	<!-- 권한 부여 -->
+	<insert id="joinAuth" parameterType="AuthDto">
+		insert into authorities (email, auth) values (#{email}, #{auth})
+	</insert>
+	
+	<resultMap type="UserDto" id="userMap">
+  	<result    property="userId"  column="USERID" />
+  	<result    property="email"  	 column="EMAIL" />
+  	<result    property="password"   column="PASSWORD" />
+  	<result    property="createdAt"  column="CREATEDAT" />
+  	<result    property="ufile"  	 column="UFILE" />
+  	<result    property="mobile"  	 column="MOBILE" />
+  	<result    property="nickname"   column="NICKNAME" />
+  	</resultMap>
+  	
+  	<resultMap type="AuthDto" id="authMap">
+  	<result    property="email"  	 column="EMAIL" />
+  	<result    property="auth"  	 column="AUTH" />
+    </resultMap> 
+    
+    <resultMap type="UserAuthDto" id="userAuthMap">
+  		<result    property="email"  	 	 column="EMAIL" />
+  		<result    property="password"  	 column="PASSWORD" />
+  		<collection    property="authList"  	 resultMap="authMap" />
+  	</resultMap> 
+    
+    <!-- 로그인 -->
+    <select  resultMap="userAuthMap" id="readAuth" parameterType="UserDto">
+    	select     u.email, password, auth
+    	from       users u    left join   authorities a   on  u.email = a.email  
+    	where      u.email=#{email} 
+  	</select>
+  	<!-- 마이페이지 -->
+  	<select   resultMap="userMap" id="myPage" parameterType="UserDto">
+  		select * from users  where  email=#{email} 
+  	</select>
+  	<!-- 아이디 찾기 -->
+  	<select   resultType="string" id="findId" parameterType="UserDto">
+  		SELECT email
+		FROM users
+		WHERE nickname = #{nickname}
+  	</select>
+  	<!-- 비밀번호 찾기 -->
+  	<select   resultType="string" id="findPassword" parameterType="UserDto">
+  		SELECT password FROM users
+		WHERE nickname = #{nickname} AND email = #{email}
+  	</select>
+  	<!-- 정보수정 (사용자) -->
+  	<update id="update" parameterType="UserDto">
+  		UPDATE users
+		SET email = #{email}, nickname = #{nickname},
+		    password  = #{password}, ufile = #{ufile, jdbcType=VARCHAR} ,
+		    mobile    = #{mobile}
+		WHERE userid  = #{userId}
+  	</update>
+  	<!-- 회원탈퇴 (사용자) -->
+  	<delete  id="deleteMember" parameterType="UserDto">
+  		DELETE FROM users
+		WHERE userid = #{userId}
+  	</delete>
+  	<!-- 회원탈퇴 (관리자) -->
+  	<delete  id="deleteAdmin" parameterType="UserDto">
+  		DELETE from users
+		WHERE email = #{email}
+  	</delete>
+	<!-- 전체유저 정보확인(관리자) + 페이징 -->
+	<select resultMap="userMap" id="" parameterType="UserDto">
+	
+	</select>
+	
+</mapper>
