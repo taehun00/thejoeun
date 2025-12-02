@@ -5,12 +5,16 @@
 <mapper namespace="com.pawject.dao.user.UserMapper">
 	<!-- 회원가입 -->
 	<insert id="join" parameterType="UserDto">
-		INSERT INTO users (userid, email, nickname, password, ufile, mobile, createdat)
-        VALUES (users_seq.NEXTVAL, #{email}, #{nickname}, #{password}, #{ufile, jdbcType=VARCHAR}, #{mobile}, SYSDATE)
+	    INSERT INTO users (userid, email, nickname, password, ufile, mobile, createdat)
+	    VALUES (users_seq.NEXTVAL, #{email}, #{nickname}, #{password}, #{ufile, jdbcType=VARCHAR}, #{mobile}, SYSDATE)
+	    <selectKey keyProperty="userId" resultType="int" order="AFTER">
+	        SELECT users_seq.CURRVAL FROM dual
+	    </selectKey>
 	</insert>
+
 	<!-- 권한 부여 -->
 	<insert id="joinAuth" parameterType="AuthDto">
-		insert into authorities (email, auth) values (#{email}, #{auth})
+		insert into authorities (userid, auth) values (#{userId}, #{auth})
 	</insert>
 	
 	<resultMap type="UserDto" id="userMap">
@@ -24,21 +28,28 @@
   	</resultMap>
   	
   	<resultMap type="AuthDto" id="authMap">
-  	<result    property="email"  	 column="EMAIL" />
   	<result    property="auth"  	 column="AUTH" />
+  	<result    property="userId"  column="USERID" />
     </resultMap> 
     
     <resultMap type="UserAuthDto" id="userAuthMap">
   		<result    property="email"  	 	 column="EMAIL" />
   		<result    property="password"  	 column="PASSWORD" />
+  		<result    property="userId"  column="USERID" />
   		<collection    property="authList"  	 resultMap="authMap" />
   	</resultMap> 
     
-    <!-- 로그인 -->
+    <!-- 로그인 , 이메일을 기준으로 사용자 정보와 권한 보여줌 -->
     <select  resultMap="userAuthMap" id="readAuth" parameterType="UserDto">
-    	select     u.email, password, auth
-    	from       users u    left join   authorities a   on  u.email = a.email  
-    	where      u.email=#{email} 
+    	select     u.userid, u.email, u.password, a.auth
+    	from       users u    left join   authorities a   on  u.userid = a.userid 
+    	where      u.email = #{email}
+  	</select>
+  	<!-- 로그인(userid(유저가 업데이트할 때) -->
+  	<select  resultMap="userAuthMap" id="readAuth1" parameterType="UserDto">
+    	select     u.userid, u.email, u.password, a.auth
+    	from       users u    left join   authorities a   on  u.userid = a.userid  
+    	where      u.userid  = #{userId}
   	</select>
   	<!-- 마이페이지 -->
   	<select   resultMap="userMap" id="myPage" parameterType="UserDto">
@@ -63,16 +74,22 @@
 		    mobile    = #{mobile}
 		WHERE userid  = #{userId}
   	</update>
+
+  	
   	<!-- 회원탈퇴 (사용자) -->
   	<delete  id="deleteMember" parameterType="UserDto">
   		DELETE FROM users
 		WHERE userid = #{userId}
   	</delete>
   	<!-- 회원탈퇴 (관리자) -->
+  	<delete id="deleteAuthoritiesByUserId" parameterType="int">
+	    DELETE FROM authorities WHERE userid = #{userId}
+	</delete>
   	<delete  id="deleteAdmin" parameterType="UserDto">
   		DELETE from users
 		WHERE email = #{email}
   	</delete>
+  	<!-- 여기까지 -->
 	<!-- 전체유저 정보확인(관리자) + 페이징 -->
 	<select resultMap="userMap" id="" parameterType="UserDto">
 	

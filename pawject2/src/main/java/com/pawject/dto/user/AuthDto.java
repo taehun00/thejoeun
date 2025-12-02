@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class AuthDto {
-	private String email;
 	private String auth;
+	private int userId;
 }
 
 //'1@1'  'ROLE_ADMIN'
