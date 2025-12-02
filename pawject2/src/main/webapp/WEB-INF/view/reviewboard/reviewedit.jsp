@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@include file="../inc/header.jsp"%>
+   <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/review.css">
 
 <c:if test="${not empty success}">
 	<script>
@@ -84,9 +85,9 @@
 		
 		      <!-- 버튼 -->
 		      <div class="col-3 d-flex justify-content-end align-items-end mt-4">	
-		        <button type="submit" class="btn btn-beige me-2">등록</button>
+		        <button type="submit" class="btn btn-slateBlue me-2">등록</button>
 		        
-				<button type="button" class="btn btn-beige"
+				<button type="button" class="btn btn-mint"
         			onclick="location.href='${pageContext.request.contextPath}/reviewlist.fn'">목록보기</button>
 		      </div>	
 		    </div>
@@ -105,17 +106,28 @@
 		        placeholder="리뷰를 작성해 주세요 (250자 이내)">${rdto.reviewcomment}</textarea>
 		    </div>
 		    
-		    <div class="row">
-		    
+			<div class="row">
+			    
+			    <!-- 새로 첨부할 사진 -->
 			    <div class="mb-3 mt-4 col-3">
-			      <label for="file" class="form-label">후기사진:</label>
-			      <input type="file" class="form-control" id="file" name="file">
+			        <label for="files" class="form-label">후기 사진:</label>
+			        <input type="file" class="form-control" id="files" name="files" multiple>
 			    </div>  
-		   		<div class="mb-3 mt-4 col-3">
-		      		<label for="reviewimg" class="form-label">현재 사진:</label>
-		      		<input type="text" class="form-control" id="reviewimg" name="reviewimg" value="${rdto.reviewimg}">
-		    	</div>
-		    </div>
+			    
+			    <div class="mb-3 mt-4 col-9">
+			        <label class="form-label"></label>
+			        
+			        <div class="review-img-wrap">
+			            <c:forEach var="img" items="${imglist}">
+			                <div class="review-img-box">
+			                    <img src="${pageContext.request.contextPath}/upload/${img.reviewimgname}" 
+			                         alt="리뷰이미지" 
+			                         class="review-img">
+			                </div>
+			            </c:forEach>
+			        </div>
+			    </div>
+			</div>
 		  </form>
 		</div>
 

@@ -1,7 +1,6 @@
 package com.pawject.service.review;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,10 +9,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.pawject.dao.review.ReviewDao;
+import com.pawject.dao.review.ReviewImgDao;
 import com.pawject.dto.review.ReviewDto;
+import com.pawject.dto.review.ReviewImgDto;
 @Service
 public class ReviewServiceImpl implements ReviewService {
 	@Autowired ReviewDao rdao;
+	@Autowired ReviewImgDao idao;
 	
 	@Override
 	public List<ReviewDto> reviewSelectAll() {
@@ -21,46 +23,17 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 	@Override
-	public int reviewSelect(int reviewid) {
+	public ReviewDto  reviewSelect(int reviewid) {
 		return rdao.reviewSelect(reviewid);
 	}
 
 	@Override
-	public int reviewInsert(ReviewDto dto, MultipartFile file) {
-		if(!file.isEmpty()) {
-			String uuid = UUID.randomUUID().toString();
-			String originName=file.getOriginalFilename();
-			String fileName=uuid + "_" + originName;
-			String uploadPath="C:/file/";
-			File img = new File(uploadPath+fileName);
-			
-			try {
-				file.transferTo(img);
-				dto.setReviewimg(fileName);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
+	public int reviewInsert(ReviewDto dto) {
 		return rdao.reviewInsert(dto);
 	}
 
 	@Override
-	public int reviewUpdate(ReviewDto dto, MultipartFile file) {
-		if(!file.isEmpty()) {
-			String fileName=file.getOriginalFilename();
-			String uploadPath="C:/file/";
-			File img = new File(uploadPath+fileName);
-			
-			try {
-			file.transferTo(img);
-			dto.setReviewimg(fileName);
-			}catch(Exception e) {
-				e.printStackTrace();
-			}
-			
-		}
-		
+	public int reviewUpdate(ReviewDto dto) {
 		return rdao.reviewUpdate(dto);
 	}
 
@@ -69,4 +42,88 @@ public class ReviewServiceImpl implements ReviewService {
 		return rdao.reviewDelete(reviewid);
 	}
 
+	@Override
+	public List<ReviewImgDto> reviewimgselectAll() {
+		return idao.reviewimgselectAll();
+	}
+
+	@Override
+	public List<ReviewImgDto> reviewimgSelect(int reviewid) {
+		return idao.reviewimgSelect(reviewid);
+	}
+
+	public int reviewimginsert(int reviewid, List<MultipartFile> files) {
+		
+		int successcnt=0;
+		
+	    for (MultipartFile file : files) {
+	        if (file.isEmpty()) { continue; }  //!아님 이미지 없으면 스킵하고 업로드
+	        String uuid = UUID.randomUUID().toString();
+	        String originName = file.getOriginalFilename();
+	        String fileName = uuid + "_" + originName; //이거 안하면 db에서 이미지 이름 중복 시 충돌남
+	        String uploadPath = "C:/file/";
+
+	        File img = new File(uploadPath + fileName);
+
+	        try {
+	            file.transferTo(img);
+	            successcnt++;  //빼먹으면 카운트 0이됨 영원히....
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+
+	        ReviewImgDto dto = new ReviewImgDto();
+	        dto.setReviewid(reviewid);
+	        dto.setReviewimgname(fileName);
+
+	        idao.reviewimginsert(dto);
+	    }//for
+	    return successcnt;
+	}
+	
+	@Override
+	public int reviewimgupdate(int reviewid, List<MultipartFile> files) {
+	
+		int successcnt=0;
+		
+	    for (MultipartFile file : files) {
+	        if (file.isEmpty()) { continue; }
+	        String uuid = UUID.randomUUID().toString();
+	        String originName = file.getOriginalFilename();
+	        String fileName = uuid + "_" + originName;
+	        String uploadPath = "C:/file/";
+
+	        File img = new File(uploadPath + fileName);
+
+	        try {
+	            file.transferTo(img);
+	            successcnt++;  
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+
+	        ReviewImgDto dto = new ReviewImgDto();
+	        dto.setReviewid(reviewid);
+	        dto.setReviewimgname(fileName);
+
+	        idao.reviewimgupdate(dto);
+	    }//for
+	    return successcnt;
+	}
+
+	@Override
+	public int reviewimgdeleteAll(int reviewid) {
+		return idao.reviewimgdeleteAll(reviewid);
+	}
+
+	@Override
+	public int reviewimgdelete(int reviewimgid) {
+		return idao.reviewimgdelete(reviewimgid);
+	}
+
+	
+	
+	
+	
+	
 }

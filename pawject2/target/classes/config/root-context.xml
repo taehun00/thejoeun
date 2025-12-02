@@ -18,6 +18,7 @@
                 <value>classpath:config/nutri-mapper.xml</value>
                 <value>classpath:config/brand-mapper.xml</value>
                 <value>classpath:config/review-mapper.xml</value>
+                <value>classpath:config/reviewimg-mapper.xml</value>
                 <value>classpath:config/users-mapper.xml</value>
             </list>
 	</property>
@@ -33,6 +34,23 @@
 		<property name="basePackage" value="com.pawject.dao"></property>
 		<property name="annotationClass" value="com.pawject.dao.MyDao"></property>
 	</bean>
+
+	<!-- 2. mybatis -->
+	<context:component-scan base-package="com.pawject"></context:component-scan>
+		<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="configLocation"  value="classpath:config/mybatis-config.xml"></property>
+		<property name="mapperLocations">
+			<list> <!-- DB테스트시 잠그고 하기 -->
+				<value>classpath:config/food-mapper.xml</value>
+				<value>classpath:config/nutri-mapper.xml</value>
+				<value>classpath:config/brand-mapper.xml</value>
+				<value>classpath:config/review-mapper.xml</value>
+				<value>classpath:config/execboard-mapper.xml</value>
+		   <!-- <value>classpath:config/execinfo-mapper.xml</value> -->
+			</list>
+		</property>
+		</bean>
 
 
 

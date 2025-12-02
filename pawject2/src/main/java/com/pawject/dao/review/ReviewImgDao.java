@@ -1,0 +1,29 @@
+package com.pawject.dao.review;
+
+import java.util.List;
+
+import com.pawject.dao.MyDao;
+import com.pawject.dto.review.ReviewImgDto;
+
+@MyDao
+public interface ReviewImgDao {
+	
+	//	<select resultMap="ReviewImgMap"  id="reviewimgselectAll" >
+		public List<ReviewImgDto> reviewimgselectAll();
+	
+	//<select resultMap="ReviewImgMap" id="reviewimgSelect" parameterType="int">
+		public List<ReviewImgDto> reviewimgSelect(int reviewid);
+	
+	//	<insert id="reviewimginsert" parameterType="ReviewImgDto">
+		public int reviewimginsert(ReviewImgDto dto);
+	
+	//<update id="reviewimgupdate" parameterType="ReviewImgDto">
+		public int reviewimgupdate(ReviewImgDto dto);
+		
+	//<delete id="reviewimgdeleteAll" parameterType="int">
+		public int reviewimgdeleteAll(int reviewid);
+	
+	//	<delete id="reviewimgdelete" parameterType="int">
+		public int reviewimgdelete(int reviewimgid);
+
+}
