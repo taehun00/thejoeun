@@ -80,7 +80,6 @@ public class FoodController {
 	            service.nutriinsert(ndto);
 	        }
 	    }	
-	    System.out.println("foodinsert 후 fdto.foodid = " + fdto.getFoodid());
 	    
 	    if(result1 > 0){
 	        rttr.addFlashAttribute("success", "사료 등록 성공");
