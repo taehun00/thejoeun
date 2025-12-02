@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.pawject.dao.user.UserMapper;
@@ -12,7 +13,7 @@ import com.pawject.dto.user.AuthDto;
 import com.pawject.dto.user.UserAuthDto;
 import com.pawject.dto.user.UserDto;
 
-
+@Service
 public class UserSecurityServiceImpl implements UserSecurityService{
 	@Autowired  UserMapper  dao;  
 	@Autowired  PasswordEncoder  pwencoder;
