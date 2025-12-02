@@ -2,6 +2,7 @@ package com.pawject.service.user;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,8 +42,59 @@ public class UserSecurityServiceImpl implements UserSecurityService{
 	}
 
 	@Override
+	public int joinAuth(AuthDto dto) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	@Override
 	public UserAuthDto readAuth(String email) {
+        UserDto dto = new UserDto();
+        dto.setEmail(email);
+        return dao.readAuth(dto);
+    }
+
+	@Override
+	public UserDto myPage(String email) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public String findId(String nickname) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String findPassword(String nickname, String email) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int update(UserDto dto) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteMember(int userId) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteAdmin(String email) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public List<UserDto> listUsers(int start, int end) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+
 }
