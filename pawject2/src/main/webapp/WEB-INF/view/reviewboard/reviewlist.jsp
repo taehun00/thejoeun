@@ -70,54 +70,28 @@
 
                         <table class="detail-inner-table">
                             <tr>
-                              
                                 <td class="detail-img">
-								<c:choose>
-								    
-								   
-								    <c:when test="${not empty r.reviewimg}">
-								        <img class="review-thumb"
-								             src="${pageContext.request.contextPath}/upload/${r.reviewimg}"
-								             onclick="openImg('${pageContext.request.contextPath}/upload/${r.reviewimg}')">
-								    </c:when>
-								
-								    
-								    <c:otherwise>
-								
-								        <c:choose>
-								
-								            <c:when test="${empty r.reviewimg and r.foodid < 10}">
-								                <img class="review-thumb"
-								                     src="${pageContext.request.contextPath}/static/foodimg/food_00${r.foodid}.png"
-								                     onclick="openImg('${pageContext.request.contextPath}/static/foodimg/food_00${r.foodid}.png')">
-								            </c:when>
-								
-								
-								            <c:when test="${empty r.reviewimg and r.foodid < 100}">
-								                <img class="review-thumb"
-								                     src="${pageContext.request.contextPath}/static/foodimg/food_0${r.foodid}.png"
-								                     onclick="openImg('${pageContext.request.contextPath}/static/foodimg/food_0${r.foodid}.png')">
-								            </c:when>
-								
-								            <c:otherwise>
-								                <img class="review-thumb"
-								                     src="${pageContext.request.contextPath}/static/foodimg/food_${r.foodid}.png"
-								                     onclick="openImg('${pageContext.request.contextPath}/static/foodimg/food_${r.foodid}.png')">
-								            </c:otherwise>
-								
-								        </c:choose>
-								
-								    </c:otherwise>
-								
-								</c:choose>
+								     <img class="review-thumb"
+				                         src="${pageContext.request.contextPath}/static/foodimg/${r.foodimg}"
+				                         alt="사료 이미지"
+				                         onclick="openImg('${pageContext.request.contextPath}/static/foodimg/${r.foodimg}')">
                                 </td>
-
                                 <!-- 리뷰 내용 -->
                                 <td class="detail-content">
-                                    <p class="detail-text">
-                                        <b>리뷰 내용:</b><br>
-                                        ${r.reviewcomment}
-                                    </p>
+									<div class="review-img-wrap">
+									    <c:forEach var="img" items="${imglist}">
+									    	<c:if test="${img.reviewid eq r.reviewid}">
+										    	<div class="review-img-box">
+										            <img src="${pageContext.request.contextPath}/upload/${img.reviewimgname}" 
+										                  alt="리뷰이미지" 
+										                  class="review-img"	
+										                  onclick="openImg('${pageContext.request.contextPath}/upload/${img.reviewimgname}')">
+										        </div>
+									    	</c:if>
+									    </c:forEach>
+									</div>
+									
+                                    <p class="detail-text"> ${r.reviewcomment} </p>
 
                                     <div class="detail-btns">
                                         <button type="button" class="btn btn-green"

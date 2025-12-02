@@ -83,6 +83,7 @@
         			onclick="location.href='${pageContext.request.contextPath}/reviewlist.fn'">목록보기</button>
 		      </div>	
 		    </div>
+		    
 		 <div class="row">	
 	
 		    <div class="mb-3 mt-4 col-6">
@@ -90,8 +91,8 @@
 		      <input type="text" class="form-control" id="title" name="title" placeholder="제목을 입력해 주세요">
 		    </div>
 		    <div class="mb-3 mt-4 col-3 justify-content-end">
-		      <label for="file" class="form-label">후기사진:</label>
-		      <input type="file" class="form-control" id="file" name="file">
+		      <label for="files" class="form-label">후기사진:</label>
+		      <input type="file" class="form-control" id="files" name="files" multiple>
 		    </div>
 		
 

@@ -13,6 +13,7 @@
 		<typeAlias type="com.pawject.dto.user.AuthDto"        alias="AuthDto"/>
 		<typeAlias type="com.pawject.dto.user.UserAuthDto"    alias="UserAuthDto"/>
 		<typeAlias type="com.pawject.dto.review.ReviewDto"	alias="ReviewDto"/>
+		<typeAlias type="com.pawject.dto.review.ReviewImgDto"	alias="ReviewImgDto"/>
 	</typeAliases>
-	
+
 </configuration>
