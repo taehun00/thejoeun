@@ -17,6 +17,7 @@ public interface UserSecurityService {
     
     // 권한 조회
 	public UserAuthDto  readAuth(String email);
+	public UserAuthDto  readAuth1(int userId);
 	
 	 // 마이페이지 조회
     public UserDto myPage(String email);
@@ -28,7 +29,7 @@ public interface UserSecurityService {
     public String findPassword(String nickname, String email);
 
     // 회원 정보 수정
-    public int update(UserDto dto);
+    public int update(MultipartFile file, UserDto dto);
 
     // 회원탈퇴 (사용자)
     public int deleteMember(int userId);
