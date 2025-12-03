@@ -9,13 +9,20 @@
 		<result property="reviewimgname"	column="REVIEWIMGNAME"/>
 			<result property="createdat"	column="CREATEDAT"/>
 	</resultMap>
-
+	
+	<!-- 전체 이미지파일 -->
 	<select resultMap="ReviewImgMap"  id="reviewimgselectAll" >
 	select * from reviewimg order by reviewimgid desc
 	</select>
-
+	
+	<!-- 특정 리뷰의 이미지 묶음 -->
 	<select resultMap="ReviewImgMap" id="reviewimgSelect" parameterType="int">
 	select * from reviewimg	where reviewid=#{reviewid} order by reviewimgid desc
+	</select>
+	
+	<!-- 개별 이미지파일 -->
+	<select resultMap="ReviewImgMap" id="reviewimgIdSelect" parameterType="int">
+	select * from reviewimg	where reviewimgid=#{reviewimgid} 
 	</select>
 	
 	<insert id="reviewimginsert" parameterType="ReviewImgDto">
