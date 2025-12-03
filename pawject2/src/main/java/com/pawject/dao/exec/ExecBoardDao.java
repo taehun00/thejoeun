@@ -16,9 +16,9 @@ public interface ExecBoardDao {
 	public ExecBoardDto select1(int postId);
 	
 	//운동정보(운동챌린지게시판 작성시 참고용)
-	public int insert2(ExecInfoDto dto);
-	public List<ExecInfoDto> selectAll2();
-	public ExecInfoDto select2(int execId);
+//	public int insert2(ExecInfoDto dto);
+//	public List<ExecInfoDto> selectAll2();
+//	public ExecInfoDto select2(int execId);
 
 	
 	

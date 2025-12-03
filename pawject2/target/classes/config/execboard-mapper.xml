@@ -5,7 +5,7 @@
 <mapper namespace="com.pawject.dao.exec.ExecBoardDao">
 	<!-- 명시적매핑 -->
 
-	<resultMap id="ExecBoardMap" type="ExecBoardDto">
+<!-- 	<resultMap id="ExecBoardMap" type="ExecBoardDto">
 		<result property="postid" column="POSTID" />
 		<result property="execid" column="EXECID" />
 		<result property="userid" column="USERID" />
@@ -26,7 +26,7 @@
 		<result property="suitablefor"    column="SUITABLEFOR"/>
 		<result property="intensitylevel" column="INTENSITYLEVEL"/>
 	</resultMap>
-
+ -->
 
 	<insert id="insert1" parameterType="ExecBoardDto">
 		insert into execboard (postid,
@@ -68,7 +68,7 @@
 		resultType="int" id="selectTotalCnt"> select cnt(*) from execboard </select> -->
 
 	<!-- 운동정보(운동챌린지게시판 작성시 참고용) -->
-	<insert id="insert2" parameterType="ExecInfoDto">
+<!-- 	<insert id="insert2" parameterType="ExecInfoDto">
 		insert into exerciseinfo (execid, exectype, description, avgkcal30min, exectargetmin, suitablefor, intensitylevel ) 
 		values(exerciseinfo_seq.nextval, #{exectype}, #{description}, #{avgkcal30min}, #{exectargetmin}, #{suitablefor}, #{intensitylevel} )
 	</insert>
@@ -79,7 +79,7 @@
 	<select resultType="ExecInfoDto" id="select2" parameterType="int">
 		select * from exerciseinfo where execid=#{execid}
 	</select>
-
+ -->
 
 </mapper>
 

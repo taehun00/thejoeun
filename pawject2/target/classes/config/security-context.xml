@@ -8,9 +8,9 @@
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.2.xsd">
 
 	<!-- 암호화 -->
-	<bean  id="passwordEncoder"   
+<!-- 	<bean  id="passwordEncoder"   
 		   class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"  />
-	<!-- 로그인성공시 -->
+ -->	<!-- 로그인성공시 -->
 	<bean  id="successHandler"  class="com.pawject.security.LoginSuccessHandler"/>
 	
 	<!-- 로그인실패시 -->

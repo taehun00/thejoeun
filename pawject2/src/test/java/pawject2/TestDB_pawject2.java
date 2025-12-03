@@ -7,11 +7,14 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.pawject.dao.exec.ExecBoardDao;
+import com.pawject.dao.exec.ExecInfoDao;
 import com.pawject.dto.exec.ExecBoardDto;
 import com.pawject.dto.exec.ExecInfoDto;
 
@@ -23,14 +26,15 @@ public class TestDB_pawject2 {
 	@Autowired DataSource ds;
 	@Autowired SqlSession sqlSession;
 	@Autowired ExecBoardDao dao;
-	
+	@Autowired ExecInfoDao idao;
+
    //운동정보게시판 service테스트(운동챌린지 게시판 작성시 참고용)
 
 	
    //운동정보게시판dao테스트(테스트완료/운동챌린지 게시판 작성시 참고용)
-	@Ignore public void test5() {
+	@Test public void test5() {
 		//3. select
-//		System.out.println(dao.select2(45));
+//		System.out.println(idao.select2(25));
 		
 		//2. insert
 //		ExecInfoDto dto = new ExecInfoDto();
@@ -65,14 +69,14 @@ public class TestDB_pawject2 {
 //		dto.setIntensitylevel("중강도");
 	
 //		System.out.println(dto);
-//		System.out.println(dao.insert2(dto));
+//		System.out.println(idao.insert2(dto));
 		
 		//1. selectAll
-//		System.out.println(dao.selectAll2()); 
+//		System.out.println(idao.selectAll2()); 
 	}
 	
   //운동챌린지 게시판 service 테스트
-	@Test public void test6() {
+	@Ignore public void test6() {
 		
 	}
 	
