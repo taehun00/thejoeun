@@ -11,7 +11,11 @@
 	        SELECT users_seq.CURRVAL FROM dual
 	    </selectKey>
 	</insert>
-
+	
+	<select id="countByMobile" parameterType="string" resultType="int">
+    	SELECT COUNT(*) FROM users WHERE mobile = #{mobile}
+	</select>
+	
 	<!-- 권한 부여 -->
 	<insert id="joinAuth" parameterType="AuthDto">
 		insert into authorities (userid, auth) values (#{userId}, #{auth})

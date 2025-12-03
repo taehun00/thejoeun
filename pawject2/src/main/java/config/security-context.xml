@@ -14,7 +14,9 @@
 	<bean  id="successHandler"  class="com.pawject.security.LoginSuccessHandler"/>
 	
 	<!-- 로그인실패시 -->
-	<bean  id="deninedHandler"  class="com.pawject.security.DeninedHandler"/>
+	<!-- 로그인실패시 -->
+	<bean id="loginFailureHandler" class="com.pawject.security.LoginFailureHandler"/>
+	<!-- <bean  id="deninedHandler"  class="com.pawject.security.DeninedHandler"/> -->
 	
 	<!-- 유저정보    --> 
 	<bean  id="customUserDetailsService"  class="com.pawject.security.CustomUserDetailsService"/>
@@ -31,10 +33,13 @@
 		<security:intercept-url pattern="/security/**" 			access="isAuthenticated()"/>
 
 		<security:form-login  
-			login-page="/security/login"
-			authentication-success-handler-ref="successHandler"
-			authentication-failure-forward-url="/security/fail"
+	    login-page="/security/login"
+	    login-processing-url="/security/doLogin"
+	    authentication-success-handler-ref="successHandler"
+	    authentication-failure-handler-ref="loginFailureHandler"
+
 		/>
+		<!-- authentication-failure-url="/security/fail" -->
 		<security:logout     
 			logout-url="/security/logout"
 			logout-success-url="/security/login"
