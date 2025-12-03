@@ -29,15 +29,7 @@
 		  <div class="mb-3">
 		    <label for="file" class="form-label">프로필사진 (추후에 업데이트가능합니다!) </label>
 		    <input type="file" class="form-control" id="file" placeholder="파일을 입력해주세요" name="file">
-		  </div>			
-		<div class="mb-3">
-			<label class="form-check-label"  for="mbti">MBTI TYPE : </label>  
-			<select   name="mbtiTypeId"  id="mbti"  class="form-control">
-				<option value="1">ISTJ</option>
-				<option value="2">ISFJ</option>
-				<option value="3">INFJ</option>
-			</select> 
-		</div>
+		  </div>
 		<button type="submit" class="btn btn-primary">회원가입</button>
 	</form>
 	<script>

@@ -15,11 +15,14 @@ import com.pawject.dao.user.UserMapper;
 import com.pawject.dto.user.AuthDto;
 import com.pawject.dto.user.UserAuthDto;
 import com.pawject.dto.user.UserDto;
+import com.pawject.service.user.UserSecurityService;
+import org.springframework.mock.web.*;  //## 가짜이미지파일
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:config/root-context.xml"})
+@ContextConfiguration(locations = {"classpath:config/root-context.xml" , "classpath:config/security-context.xml"})
 public class Testth {
 	@Autowired UserMapper dao;
+	@Autowired  UserSecurityService service; 
 	
 	@Ignore @Test
 	public void test1() {
@@ -35,7 +38,6 @@ public class Testth {
 	@Ignore @Test
 	public void test2() {
 		AuthDto auth = new AuthDto();
-		auth.setEmail("1@1");
 		auth.setAuth("ROLE_MEMBER");
 		System.out.println(dao.joinAuth(auth));
 	}
@@ -77,12 +79,55 @@ public class Testth {
         dto.setUserId(57); // 실제 DB에 맞는 PK 값 넣어야 함
         System.out.println(dao.update(dto));
 	}
-	@Test
+	@Ignore @Test
 	public void test8() {
 		 UserDto dto = new UserDto();
 	     dto.setUserId(57);
 	     
 	     System.out.println(dao.deleteMember(dto));
 	     
+	}
+	@Ignore@Test
+	public void test9() {
+		UserDto dto = new UserDto();
+		dto.setUserId(88);
+		dto.setEmail("b@b");
+		dto.setNickname("cc");
+		dto.setPassword("123");
+		MockMultipartFile  file = new MockMultipartFile( "file" , "file.txt" , "text/plain" , "dummy".getBytes());		
+		dto.setMobile("010");
+		System.out.println(service.update(file, dto));
+		//System.out.println(service.readAuth("1@1"));
+	}
+	@Ignore@Test
+	public void test10() {
+		UserDto dto = new UserDto();
+        dto.setEmail("a@a");
+        dto.setNickname("hh");
+        dto.setPassword("b");
+        dto.setMobile("0101");
+        MockMultipartFile  file = new MockMultipartFile( "file" , "file.txt" , "text/plain" , "".getBytes());		
+		System.out.println(service.join(file, dto));
+		//System.out.println(service.myPage("1@1"));
+		//System.out.println(service.findId("gg"));
+		//System.out.println(service.findPassword("gg", "1@1"));
+	}
+	@Test
+	public void test11() {
+		
+		UserDto dto = new UserDto(); String email = "a@a";
+		System.out.println(service.deleteAdmin(email));
+		
+		
+		//System.out.println(service.deleteMember(88));
+	}
+	
+	@Ignore@Test
+	public void test12() {
+		//System.out.println(service.readAuth("a@a"));
+		//System.out.println(service.readAuth1(88));
+		//System.out.println(service.myPage("a@a"));
+		//System.out.println(service.findId("hh"));
+		//System.out.println(service.findPassword("hh", "a@a"));
 	}
 }

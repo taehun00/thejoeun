@@ -26,4 +26,6 @@ public interface ReviewImgDao {
 	//	<delete id="reviewimgdelete" parameterType="int">
 		public int reviewimgdelete(int reviewimgid);
 
+		//	<select resultMap="ReviewImgMap" id="reviewimgIdSelect" parameterType="int">
+		public ReviewImgDto  reviewimgIdSelect(int reviewimgid);
 }

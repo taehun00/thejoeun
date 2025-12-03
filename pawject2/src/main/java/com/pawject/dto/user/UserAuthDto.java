@@ -8,5 +8,6 @@ import lombok.Data;
 public class UserAuthDto {
 	private String email;
 	private String password;
+	private int userId;
 	private List<AuthDto> authList;
 }
