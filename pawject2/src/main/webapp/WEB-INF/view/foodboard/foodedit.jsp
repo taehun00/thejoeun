@@ -203,7 +203,7 @@
 				뒤로가기 </a> <a href="${pageContext.request.contextPath}/foodlist.fn"
 				class="btn btn-navy"> 목록보기</a>
 		</div>
-
+	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 	</form>
 </div>
 

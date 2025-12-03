@@ -1,9 +1,9 @@
-package com.pawject2.dao;
+package com.pawject.dao.oxdis;
 
 import java.util.List;
 import java.util.Map;
 
-import com.pawject2.dto.Disease_ox;
+import com.pawject.dto.oxdis.Disease_ox;
 
 @OXDisDao
 public interface OXDisMapper {

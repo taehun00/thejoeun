@@ -19,7 +19,8 @@ public interface ReviewService {
 	//이미지테이블
 	public List<ReviewImgDto> reviewimgselectAll();
 	public List<ReviewImgDto> reviewimgSelect(int reviewid);
-	public int reviewimginsert(int reviewid, List<MultipartFile> files);
+//	public int reviewimginsert(int reviewid, List<MultipartFile> files);	//mvc용
+	public ReviewImgDto reviewimginsert(int reviewid, MultipartFile file);  //아작스용
 	public int reviewimgupdate(int reviewid, List<MultipartFile> files);
 	public int reviewimgdeleteAll(int reviewid);
 	public int reviewimgdelete(int reviewimgid);

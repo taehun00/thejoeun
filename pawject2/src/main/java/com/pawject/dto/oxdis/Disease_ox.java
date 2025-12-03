@@ -1,4 +1,4 @@
-package com.pawject2.dto;
+package com.pawject.dto.oxdis;
 
 import lombok.Data;
 

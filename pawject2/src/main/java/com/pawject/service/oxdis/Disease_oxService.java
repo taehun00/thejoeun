@@ -1,9 +1,9 @@
-package com.pawject2.service;
+package com.pawject.service.oxdis;
 
 import java.util.List;
 import java.util.Map;
 
-import com.pawject2.dto.Disease_ox;
+import com.pawject.dto.oxdis.Disease_ox;
 
 public interface Disease_oxService {
 	

@@ -62,7 +62,7 @@
             <a href="${pageContext.request.contextPath}/foodwrite.fn"
                class="btn btn-slateBlue">사료 등록</a>
         </div>
-
+	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
     </div>
 </div>
 
@@ -103,6 +103,7 @@ function foodListResult(json) {
             .append($("<td>").html(food.updatedat))
             .append($("<td>").html("<button class='btn btn-mint foodquikdelete' data-foodid='"
                    + food.foodid + "'>빠른삭제</button>"))
+                 
             .appendTo(".foodTable tbody");
     });
 }
@@ -117,6 +118,9 @@ function foodquikdelete() {
             $.ajax({
                 url: "foodquikdelete",
                 type: "POST",
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },  //토큰 여기!!
                 data: {
                     foodid: foodid,
                     pstartno: currentPage  

@@ -131,7 +131,7 @@
 
 
 	</div>
-
+<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 </div>
 
 <%@include file="../inc/footer.jsp"%>
