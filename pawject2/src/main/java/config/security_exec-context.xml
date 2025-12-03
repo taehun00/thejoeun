@@ -15,14 +15,14 @@
 	
 	
 	
-	<security:http>
+<!-- 	<security:http>
 		<security:intercept-url pattern="/security/admin" 	access="hasRole('ROLE_ADMIM')" />
 		<security:intercept-url pattern="/security/member"  access="hasRole('ROLE_MEMBER')" />		
 		
-		<!-- 게시판 작성시 로그인한 사용자만 이용가능 -->
+		게시판 작성시 로그인한 사용자만 이용가능
 		<security:intercept-url pattern="/security/"  access="isAuthenticated" />
 		
-   <!-- 사용할때 풀어주기	
+   사용할때 풀어주기	
 		<security:form-login  
 			login-page="/security/login"
 			authentication-success-handler-ref="successHandler"
@@ -32,9 +32,10 @@
 			logout-url="/security/logout"
 			logout-success-url="/security/login"
 			invalidate-session="true"
-		/> -->	
+		/>	
  	</security:http>
-	
+ -->	
+ 
 <!-- 사용할때 풀어주기.
 	<security:authentication-manager>
 		<security:authentication-provider user-service-ref="#">
