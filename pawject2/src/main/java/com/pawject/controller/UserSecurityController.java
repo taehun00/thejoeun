@@ -1,6 +1,8 @@
 package com.pawject.controller;
 
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -146,6 +149,5 @@ public class UserSecurityController {
         // 관리자 삭제 후 관리자 목록 페이지로 이동 (상황에 맞게 수정 가능)
         return "redirect:/security/adminList";
     }
-
 	
 }

@@ -64,6 +64,7 @@ public class UserSecurityServiceImpl implements UserSecurityService{
 	   return result; 
 	}
 
+
 	@Override
 	public int joinAuth(AuthDto dto) {
 		// TODO Auto-generated method stub
@@ -143,6 +144,11 @@ public class UserSecurityServiceImpl implements UserSecurityService{
 			return result;
 
 	}
+	
+	@Override
+	public int updateNickname(UserDto dto) {
+		return dao.updateNickname(dto);
+	}
 
 	@Override
 	public int deleteMember(int userId) {
@@ -171,9 +177,20 @@ public class UserSecurityServiceImpl implements UserSecurityService{
 
 	@Override
 	public List<UserDto> listUsers(int start, int end) {
-		// TODO Auto-generated method stub
-		return null;
+		return dao.listUsers(start, end);
+	}
+
+
+	@Override
+	public UserDto selectUser(int userId) {
+		return dao.selectUser(userId);
+
 	}
 	
+	@Override
+    public List<UserDto> searchUsers(String keyword) {
+        return dao.searchUsers(keyword);
+    }
+
 
 }

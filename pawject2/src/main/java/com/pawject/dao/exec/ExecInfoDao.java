@@ -2,8 +2,7 @@ package com.pawject.dao.exec;
 
 import java.util.List;
 
-import com.pawject.dao.MyDao;
-import com.pawject.dto.exec.ExecBoardDto;
+import com.pawject.dao.MyDao; 
 import com.pawject.dto.exec.ExecInfoDto;
 
 @MyDao

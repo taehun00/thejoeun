@@ -30,6 +30,21 @@
 		<security:intercept-url pattern="/security/login" 		access="permitAll"/>
 		<security:intercept-url pattern="/security/join" 		access="permitAll"/>
 		<security:intercept-url pattern="/security/iddouble"			 	access="permitAll"/>
+		
+		<!-- 관리자 전용 URL -->
+	    <security:intercept-url pattern="/security/adminList" access="hasRole('ROLE_ADMIN')" />
+	    <security:intercept-url pattern="/security/selectAll" access="hasRole('ROLE_ADMIN')" />
+	    <security:intercept-url pattern="/security/select" access="hasRole('ROLE_ADMIN')" />
+	    <security:intercept-url pattern="/security/updateAdmin" access="hasRole('ROLE_ADMIN')" />
+	    <security:intercept-url pattern="/security/deleteAdmin" access="hasRole('ROLE_ADMIN')" />
+
+		<!-- 일반 사용자 URL -->
+	    <security:intercept-url pattern="/security/mypage" access="isAuthenticated()" />
+	    <security:intercept-url pattern="/security/update" access="isAuthenticated()" />
+	    <security:intercept-url pattern="/security/deleteMember" access="isAuthenticated()" />
+
+		
+		
 		<security:intercept-url pattern="/security/**" 			access="isAuthenticated()"/>
 
 		<security:form-login  

@@ -1,5 +1,7 @@
 package pawject;
 
+import java.util.List;
+
 import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSession;
@@ -112,7 +114,7 @@ public class Testth {
 		//System.out.println(service.findId("gg"));
 		//System.out.println(service.findPassword("gg", "1@1"));
 	}
-	@Test
+	@Ignore @Test
 	public void test11() {
 		
 		UserDto dto = new UserDto(); String email = "a@a";
@@ -130,4 +132,16 @@ public class Testth {
 		//System.out.println(service.findId("hh"));
 		//System.out.println(service.findPassword("hh", "a@a"));
 	}
+	@Test
+	public void testSearchUsers() {
+	    String keyword = "th"; // 이메일 또는 닉네임 일부
+	    List<UserDto> list = service.searchUsers(keyword);
+
+	    for(UserDto u : list) {
+	        System.out.println("검색 결과: " + u.getUserId() + ", " + u.getEmail() + ", " + u.getNickname());
+	    }
+	}
+
+
+
 }
