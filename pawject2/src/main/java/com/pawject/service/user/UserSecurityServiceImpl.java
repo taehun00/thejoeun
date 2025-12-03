@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,7 @@ public class UserSecurityServiceImpl implements UserSecurityService{
 	@Autowired  UserMapper  dao;  
 	@Autowired  PasswordEncoder  pwencoder;
 	
+	@Transactional
 	@Override public int join(MultipartFile file, UserDto dto) { //##
 	   
 	   //1.파일올리기
@@ -38,10 +40,18 @@ public class UserSecurityServiceImpl implements UserSecurityService{
 	   dto.setUfile(fileName); 
 	   //2. 암호화 ###
 	   dto.setPassword(  pwencoder.encode(  dto.getPassword() )  );
-	   // 3. users 테이블 insert
+	   
+	   // 3. mobile 중복 체크
+	    int count = dao.countByMobile(dto.getMobile());
+	    if (count > 0) {
+	        // 이미 존재하면 예외 발생시켜 컨트롤러에서 처리
+	        throw new DuplicateKeyException("이미 등록된 휴대폰 번호입니다.");
+	    }
+
+	   // 4. users 테이블 insert
 	    int result = dao.join(dto);
 
-	    // 4. authorities 테이블 insert (users가 성공한 뒤)
+	    // 5. authorities 테이블 insert (users가 성공한 뒤)
 	    if (result > 0) {
 	        AuthDto adto = new AuthDto();
 	        adto.setUserId(dto.getUserId());
@@ -103,7 +113,16 @@ public class UserSecurityServiceImpl implements UserSecurityService{
 		UserAuthDto dbUser = dao.readAuth1(dto);
 		if(dbUser == null) {return 0;}
 		
-			//1.파일올리기
+		// 비밀번호 암호화 처리
+	    if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+	        dto.setPassword(pwencoder.encode(dto.getPassword()));
+	    } else {
+	        // 비밀번호를 수정하지 않은 경우 기존 비밀번호 유지
+	        dto.setPassword(dbUser.getPassword());
+	    }
+
+	    
+			//파일올리기
 			String fileName   = null;
 			if(  !file.isEmpty() ) {  // 파일이 비어있는게 아니라면
 				fileName   = file.getOriginalFilename(); // 원본파일이름

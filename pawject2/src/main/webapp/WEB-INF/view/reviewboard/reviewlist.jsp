@@ -113,7 +113,7 @@
             </c:forEach>
         </tbody>
     </table>
-
+	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
     <div class="write-btn-area">
         <button class="btn btn-slateBlue" onclick="location.href='${pageContext.request.contextPath}/reviewwrite.fn'">리뷰 작성</button>
     </div>

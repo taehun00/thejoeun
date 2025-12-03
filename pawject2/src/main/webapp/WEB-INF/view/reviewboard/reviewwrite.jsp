@@ -91,7 +91,7 @@
 		</div>
 
 		<div id="previewBox" class="preview-img-wrap"></div>
-
+	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
   </form>
 </div>
 
@@ -223,6 +223,7 @@ function uploadImages(reviewid) {
     let fd = new FormData();
     fd.append("file", realFiles[i]);
     fd.append("reviewid", reviewid);
+    fd.append("${_csrf.parameterName}", "${_csrf.token}");
 
     $.ajax({
     	url: "${pageContext.request.contextPath}/reviewimg/upload",
