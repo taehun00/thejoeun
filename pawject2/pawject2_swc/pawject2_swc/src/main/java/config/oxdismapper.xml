@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pawject2.dao.OXDisMapper">
+
+ <!-- 명시적 매핑 -->
+	  <resultMap id="Disease_oxMap" type="Disease_ox">
+	    <result property="oxno" column="OXNO"/>
+	    <result property="disno" 	  column="DISNO"/>
+	    <result property="oxquestion"    	  column="OXQUESTION"/>
+	    <result property="oxanswer"  	  column="OXANSWER"/>
+	    <result property="oxcomment"     column="OXCOMMENT"/>
+	    <result property="oxbhit" 	  column="OXBHIT"/>
+	    <result property="createdat" 	  	  column="CREATEDAT"/>
+	  </resultMap>
+
+
+
+	<insert id="insert" parameterType="Disease_ox">
+	INSERT INTO disease_ox (
+	oxno, disno, oxquestion, oxanswer, oxcomment, oxbhit,createdat
+	) VALUES (
+				disease_ox_seq.NEXTVAL
+				, #{disno}, #{oxquestion}
+				, #{oxanswer}, #{oxcomment}
+				, #{oxbhit},SYSDATE
+	)
+	
+	</insert>
+	
+	<update id="update" parameterType="Disease_ox">
+	UPDATE disease_ox
+	SET
+		disno = #{disno},
+		oxquestion = #{oxquestion},
+		oxanswer = #{oxanswer},
+		oxcomment = #{oxcomment}
+	WHERE oxno = #{oxno}
+	</update>
+	
+	<delete id="delete" parameterType="Disease_ox">
+	DELETE FROM disease_ox
+	WHERE oxno = #{oxno}
+	</delete>
+	
+	<!-- <select resultType="Disease_ox" id="selectAll" parameterType="map">
+	select *
+	from (
+	select row_number() over (order by createdat desc) as rnum,
+	oxno, disno, oxquestion, oxanswer, oxcomment, oxbhit, createdat
+	from disease_ox
+	) A
+	where A.rnum between #{start} and #{end}
+	</select> -->
+	
+	<select id="selectAll" resultType="com.pawject2.dto.Disease_ox" parameterType="map">
+    select *
+    from (
+        select row_number() over (order by createdat desc) as rnum,
+               oxno, disno, oxquestion, oxanswer, oxcomment, oxbhit, createdat
+        from disease_ox
+    ) A
+    where A.rnum between #{start} and #{end}
+</select>
+	
+	<select resultType="Disease_ox"  id="select" parameterType="Disease_ox">
+	SELECT *
+	FROM disease_ox
+	WHERE oxno = #{oxno}
+	</select>
+	
+</mapper>
