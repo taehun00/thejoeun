@@ -24,6 +24,7 @@
 <p class="mb-0">반려동물을 위한 사료·건강 데이터 통합 서비스</p>
 </div>
 
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
   <div class="container-fluid">
     <a class="navbar-brand fw-bold" href="">HOME</a>
@@ -48,7 +49,32 @@
         <li class="nav-item">
           <a class="nav-link" href="">게시판3</a>
         </li>
+		
+		<!-- 로그인한 사용자만 보이는 메뉴 -->
+        <sec:authorize access="isAuthenticated()">
+          <li class="nav-item">
+            <a class="nav-link" href="${pageContext.request.contextPath}/security/mypage">
+              <sec:authentication property="principal.dto.email" />
+            </a>
+          </li>
+          <li class="nav-item">
+            <form action="${pageContext.request.contextPath}/security/logout" method="post">
+              <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+              <input type="submit" value="로그아웃" class="btn btn-danger" />
+            </form>
+          </li>
+        </sec:authorize>
 
+        <!-- 비로그인 사용자만 보이는 메뉴 -->
+        <sec:authorize access="isAnonymous()">
+          <li class="nav-item">
+            <a class="nav-link" href="${pageContext.request.contextPath}/security/doLogin">LOGIN</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="${pageContext.request.contextPath}/security/join">JOIN</a>
+          </li>
+        </sec:authorize>
+		
       </ul>
     </div>
   </div>

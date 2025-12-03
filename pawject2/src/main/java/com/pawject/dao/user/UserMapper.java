@@ -10,6 +10,8 @@ import com.pawject.dto.user.UserDto;
 @MyDao
 public interface UserMapper {
 	public int join(UserDto dto);
+	public int countByMobile(String mobile);
+
 	public int joinAuth(AuthDto dto);
 	public UserAuthDto readAuth(UserDto dto );
 	public UserAuthDto readAuth1(UserDto dto );
