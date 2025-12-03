@@ -28,15 +28,11 @@
 		  <tbody class="table-info">
 		    <tr>
 		      <!-- 왼쪽 이미지 셀: 3줄 병합 -->
-		      <td rowspan="5">
+		      <td rowspan="4">
 		        <img src="${pageContext.request.contextPath}/upload/${dto.ufile}"   alt="" style="width:100%" />
 		      </td>
 		      <th scope="row">Email</th>
 		      <td>${dto.email}</td>
-		    </tr>
-		    <tr>
-		      <th scope="row">MBTI TYPE</th>
-		      <td>${dto.mbtiTypeId}</td>
 		    </tr>
 		    <tr>
 		      <th scope="row">NICKNAME</th>

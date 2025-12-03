@@ -40,36 +40,36 @@ public class ReviewController {
 	} 
 	
 	//글쓰기 post
-	@RequestMapping(value="/reviewwrite.fn", method=RequestMethod.POST)
-	public String write_post(@RequestParam("files") List<MultipartFile> files, 
-							 ReviewDto rdto, 
-							 RedirectAttributes rttr) {
-
-		int result1 = service.reviewInsert(rdto);
-		if(result1<=0) {
-			rttr.addFlashAttribute("success", "리뷰 등록 실패");
-			return "redirect:/reviewlist.fn";
-		}
-	
-		int reviewid= rdto.getReviewid();
-		int imgcount = service.reviewimginsert(reviewid, files);
-		
-		int uploadcount = 0;
-		for (MultipartFile f : files) {
-		    if (!f.isEmpty()) {
-		    	uploadcount++;
-		    }
-		}
-		
-		//글은 써졌는데 이미지 덜 올라가거나 안올라감
-		if(result1>0 && !(imgcount==uploadcount)){
-			rttr.addFlashAttribute("success", "첨부하신 사진을 다시 확인해 주세요");
-			return "redirect:/reviewlist.fn";
-			
-		}else {rttr.addFlashAttribute("success", "리뷰 등록 성공");
-			return "redirect:/reviewlist.fn";
-		}
-	}
+//	@RequestMapping(value="/reviewwrite.fn", method=RequestMethod.POST)
+//	public String write_post(@RequestParam("files") List<MultipartFile> files, 
+//							 ReviewDto rdto, 
+//							 RedirectAttributes rttr) {
+//
+//		int result1 = service.reviewInsert(rdto);
+//		if(result1<=0) {
+//			rttr.addFlashAttribute("success", "리뷰 등록 실패");
+//			return "redirect:/reviewlist.fn";
+//		}
+//	
+//		int reviewid= rdto.getReviewid();
+//		int imgcount = service.reviewimginsert(reviewid, files);
+//		
+//		int uploadcount = 0;
+//		for (MultipartFile f : files) {
+//		    if (!f.isEmpty()) {
+//		    	uploadcount++;
+//		    }
+//		}
+//		
+//		//글은 써졌는데 이미지 덜 올라가거나 안올라감
+//		if(result1>0 && !(imgcount==uploadcount)){
+//			rttr.addFlashAttribute("success", "첨부하신 사진을 다시 확인해 주세요");
+//			return "redirect:/reviewlist.fn";
+//			
+//		}else {rttr.addFlashAttribute("success", "리뷰 등록 성공");
+//			return "redirect:/reviewlist.fn";
+//		}
+//	}
 	
 	//수정 get
 	@RequestMapping("/reviewedit.fn")
@@ -81,43 +81,44 @@ public class ReviewController {
 
 		return "reviewboard/reviewedit";		
 	}
-	
-	@RequestMapping(value="/reviewedit.fn", method=RequestMethod.POST)
-		public String edit_post(@RequestParam("files") List<MultipartFile> files, 
-								ReviewDto rdto,
-								RedirectAttributes rttr) {
-		int result1 = service.reviewUpdate(rdto);
-		//실패
-		if(result1<=0) {
-			rttr.addFlashAttribute("success", "수정 실패");
-			return "redirect:/reviewedit.fn";
-			}
-
-		int reviewid= rdto.getReviewid();
-		int imgcount = service.reviewimginsert(reviewid, files);
-		
-		int uploadcount = 0;
-		for (MultipartFile f : files) {
-		    if (!f.isEmpty()) {
-		    	uploadcount++;
-		    }
-		}
-		if(result1>0 && !(imgcount==uploadcount)){
-			rttr.addFlashAttribute("success", "첨부하신 사진을 다시 확인해 주세요");
-			return "redirect:/reviewedit.fn";
-			
-		}else {rttr.addFlashAttribute("success", "수정 성공");
-			return "redirect:/reviewlist.fn";
-		}
-	}
+//	
+//	@RequestMapping(value="/reviewedit.fn", method=RequestMethod.POST)
+//		public String edit_post(@RequestParam("files") List<MultipartFile> files, 
+//								ReviewDto rdto,
+//								RedirectAttributes rttr) {
+//		int result1 = service.reviewUpdate(rdto);
+//		//실패
+//		if(result1<=0) {
+//			rttr.addFlashAttribute("success", "수정 실패");
+//			return "redirect:/reviewedit.fn";
+//			}
+//
+//		int reviewid= rdto.getReviewid();
+//		int imgcount = service.reviewimginsert(reviewid, files);
+//		
+//		int uploadcount = 0;
+//		for (MultipartFile f : files) {
+//		    if (!f.isEmpty()) {
+//		    	uploadcount++;
+//		    }
+//		}
+//		if(result1>0 && !(imgcount==uploadcount)){
+//			rttr.addFlashAttribute("success", "첨부하신 사진을 다시 확인해 주세요");
+//			return "redirect:/reviewedit.fn";
+//			
+//		}else {rttr.addFlashAttribute("success", "수정 성공");
+//			return "redirect:/reviewlist.fn";
+//		}
+//	}
 	
 	//삭제-버튼만 연결
 	@RequestMapping("/reviewdelete.fn")
 	public String delete(@RequestParam int reviewid,  RedirectAttributes rttr) {
+		 //순서 주의! 이미지->리뷰 순 삭제
+		 int delete1 = service.reviewimgdeleteAll(reviewid); 
+		 int delete2 = service.reviewDelete(reviewid);
 		 
-		 int delete = service.reviewDelete(reviewid);
-		 
-			if(delete>0) {
+			if(delete1>0 && delete2>0) {
 				String result="삭제 성공";
 				rttr.addFlashAttribute("success", result);
 				return "redirect:/reviewlist.fn";
@@ -128,5 +129,15 @@ public class ReviewController {
 			}
 	}
 	
-	
 }
+
+
+//if(delete>0) {
+//	String result="삭제 성공";
+//	rttr.addFlashAttribute("success", result);
+//	return "redirect:/reviewlist.fn";
+//} else {
+//	String result="삭제 실패";
+//	rttr.addFlashAttribute("success", result);
+//	return "redirect:/reviewlist.fn";
+//}

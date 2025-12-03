@@ -12,15 +12,11 @@
 	<result property="brandtype"	column="BRANDTYPE"/>
 	<result property="origin"	column="ORIGIN"/>
 	<result property="brandinfo"	column="BRANDINFO"/>
-	
 
-	
 	</resultMap>
-	
-		
+
 		<select resultMap="brandMap" id="brandSelectAll" >
 		select * from foodbrand
 		</select>
-
 
 	</mapper>

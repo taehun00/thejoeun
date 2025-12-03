@@ -5,9 +5,7 @@
    <script>
    $(function(){
 	   let result = '${success}';
-	   console.log(result); 
 	   if(result == "회원가입 실패"){   alert( result );   history.go(-1); }
-	   else if(result == '비밀번호를 확인해주세요'){  alert( result  );  history.go(-1); } 
 	   else if(result.length  != 0 ){  alert(result); }  //아까 처음 값이없을때 공백 
    }); 
    </script>
@@ -19,7 +17,7 @@
 
 <div class="container mt-5">
 	<h3> 로그인</h3>
-	<form action="${pageContext.request.contextPath}/login"  method="post">
+	<form action="${pageContext.request.contextPath}/security/doLogin"  method="post">
 	  <div class="mb-3 mt-3">
 	    <label for="username" class="form-label">Email:</label>
 	    <input type="email" class="form-control" id="username" 
@@ -36,6 +34,9 @@
 	    </label>
 	  </div> -->
 	  <button type="submit" class="btn btn-primary">로그인</button>
+	  <div class="text-end">
+	  <a href="${pageContext.request.contextPath}/security/join"  class="btn btn-danger">회원가입</a>
+	  </div>
 	  <input  type="hidden" name="${_csrf.parameterName}"  value="${_csrf.token}" />
 	</form>
 </div>

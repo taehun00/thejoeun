@@ -14,6 +14,7 @@
 	<bean id="execinfoSecurity"	    class="com.pawject.security.exec.ExecInfoSecurity"/>
 	
 	
+<<<<<<< HEAD
 	
 	<security:http>
 		<security:intercept-url pattern="/security/admin" 	access="hasRole('ROLE_ADMIM')" />
@@ -35,6 +36,9 @@
 		/>	
  	</security:http>
  -->	
+=======
+
+>>>>>>> b72f973dc3c2d02874324921daeeb662cd57d646
 <!-- 사용할때 풀어주기.
 	<security:authentication-manager>
 		<security:authentication-provider user-service-ref="#">
