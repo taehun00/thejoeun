@@ -20,7 +20,7 @@ public class ReviewAjaxController {
     @Autowired
     ReviewService service;
 
-    // 글 업로드 
+    // 글 업로드 - get은 기존 컨트롤러 활용
     @PostMapping("/reviewwrite.fn")
     public int writeAjax(ReviewDto dto) {
         service.reviewInsert(dto);
@@ -42,5 +42,35 @@ public class ReviewAjaxController {
 
         return result;
     }
+    
+    //글 수정
+    @PostMapping("/reviewedit.fn")
+    public int updateAjax(ReviewDto dto) {
+    	service.reviewUpdate(dto);
+    	return dto.getReviewid();
+    }
+    
+   //이미지 수정
+    @PostMapping("/reviewimg/update")
+    public Map<String, Object> reviewUpdate(
+            @RequestParam("reviewimgid") int reviewimgid,
+            @RequestParam("file") MultipartFile file) {
+
+        ReviewImgDto dto = service.reviewimgupdate(reviewimgid, file);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("success", true);
+        result.put("reviewimgname", dto.getReviewimgname());
+        result.put("reviewimgid", dto.getReviewimgid());
+
+        return result;
+    }
+    
+    //이미지 삭제
+    @PostMapping("/reviewimg/delete")
+    public int deletereviewimg( @RequestParam("reviewimgid") int reviewimgid) {
+    	return service.reviewimgdelete(reviewimgid);
+    }
+    
 }
     
