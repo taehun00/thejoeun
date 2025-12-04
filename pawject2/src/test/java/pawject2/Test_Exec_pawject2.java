@@ -12,25 +12,44 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.pawject.dao.exec.ExecBoardDao;
+import com.pawject.dao.exec.ExecInfoDao;
 import com.pawject.dto.exec.ExecBoardDto;
 import com.pawject.dto.exec.ExecInfoDto;
+import com.pawject.service.exec.ExecBoardService;
+import com.pawject.service.exec.ExecInfoService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:config/root-context.xml")
 
-public class TestDB_pawject2 {
+public class Test_Exec_pawject2 {
 	@Autowired ApplicationContext context;
 	@Autowired DataSource ds;
 	@Autowired SqlSession sqlSession;
 	@Autowired ExecBoardDao dao;
+	@Autowired ExecInfoDao idao;
+	@Autowired ExecBoardService service;
+	@Autowired ExecInfoService  iservice;
 	
    //운동정보게시판 service테스트(운동챌린지 게시판 작성시 참고용)
-
+	@Test public void test7() {
+		//3. select
+//		System.out.println(iservice.select2(69));
+		//2. insert
+//		ExecInfoDto dto = new ExecInfoDto();
+//		dto.setExectype("노즈워크"); dto.setDescription("간식을 숨겨두고 냄새로 찾게 하는 놀이로, 정신 자극과 집중력 향상에 좋습니다.");
+//		dto.setAvgkcal30min(60);
+//		dto.setExectargetmin(20); dto.setSuitablefor("실내 생활견, 고양이도 가능"); 
+//		dto.setIntensitylevel("저강도");
+//		System.out.println(iservice.insert2(dto));
+		
+		//1. selectAll
+//		System.out.println(iservice.selectAll2());
+	}
 	
-   //운동정보게시판dao테스트(테스트완료/운동챌린지 게시판 작성시 참고용)
+   //운동정보게시판dao테스트(테스트완료/운동챌린지 게시판 작성시 참고용)	
 	@Ignore public void test5() {
 		//3. select
-//		System.out.println(dao.select2(45));
+//		System.out.println(idao.select2(46));
 		
 		//2. insert
 //		ExecInfoDto dto = new ExecInfoDto();
@@ -63,51 +82,76 @@ public class TestDB_pawject2 {
 //		dto.setAvgkcal30min(50);
 //		dto.setExectargetmin(10); dto.setSuitablefor("고양이 전용, 실내 생활 반려동물"); 
 //		dto.setIntensitylevel("중강도");
-	
-//		System.out.println(dto);
-//		System.out.println(dao.insert2(dto));
 		
+//		System.out.println(idao.insert2(dto));
+
 		//1. selectAll
-//		System.out.println(dao.selectAll2()); 
+//		System.out.println(idao.selectAll2()); 
 	}
 	
-  //운동챌린지 게시판 service 테스트
-	@Test public void test6() {
+  //운동챌린지 게시판 service 테스트(완료)
+  //※ 지금 상태로 돌려도 이상은 없으나, 
+  //혹시나 insert가 안되면 ExecInfoServiceImpl에서 insert파트 try/catch부분 지우기.	(dao테스트도 동일)
+	@Ignore public void test6() {
+		//5. delete
+//		ExecBoardDto dto = new ExecBoardDto();
+//		dto.setPostid(32); dto.setExecid(46);
+//		System.out.println(dao.delete1(dto));
+
+		//4. update
+//		ExecBoardDto dto = new ExecBoardDto();
+//		dto.setEtitle("반려동물과 함께하는 노즈워크");
+//		dto.setEcontent("노즈워크는 반려동물이 참을성을 길러줍니다."); 
+//		dto.setExecid(46); dto.setEimg("노즈워크.png");
+//		dto.setPostid(32);
+//		
+//		System.out.println(dao.update1(dto));
+//		System.out.println();
 		
+		//3. select
+//		System.out.println(dao.select1(32));
+		
+		//2.insert
+//		ExecBoardDto dto = new ExecBoardDto();
+//		dto.setExecid(46); dto.setUserid(1);
+//		dto.setEtitle("반려동물과 함께하는 산책"); dto.setEcontent("반려동물과 함께하는 산책은 주인과 반려동물 모두에게 긍정적인영향을 줍니다.");
+//		dto.setEimg("산책.png");
+//				
+//		System.out.println(dao.insert1(dto));
+		
+		//1. selectAll
+//		System.out.println(service.selectAll1());
 	}
 	
   //운동챌린지 게시판 dao 테스트(완료)
 	@Ignore public void test4() {
 		//5. delete
 //		ExecBoardDto dto = new ExecBoardDto();
-//		dto.setPostid(28); dto.setExecid(41);
+//		dto.setPostid(31); dto.setExecid(46);
 //		System.out.println(dao.delete1(dto));
 		
 		//4. update
 //		ExecBoardDto dto = new ExecBoardDto();
 //		dto.setEtitle("반려동물과 함께하는 노즈워크");
 //		dto.setEcontent("노즈워크는 반려동물이 참을성을 길러줍니다."); 
-//		dto.setExecid(41); dto.setEimg("노즈워크.png");
-//		dto.setPostid(29);
+//		dto.setExecid(46); dto.setEimg("노즈워크.png");
+//		dto.setPostid(31);
 //		System.out.println(dao.update1(dto));
 //		System.out.println();
 
-
 		//3. select
-//		System.out.println(dao.select1(29));
+//		System.out.println(dao.select1(31));
 		
-		//2. insert
+//		//2. insert
 //		ExecBoardDto dto = new ExecBoardDto();
-//		dto.setExecid(41); dto.setUserid(1);
+//		dto.setExecid(46); dto.setUserid(1);
 //		dto.setEtitle("반려동물과 함께하는 산책"); dto.setEcontent("반려동물과 함께하는 산책은 주인과 반려동물 모두에게 긍정적인영향을 줍니다.");
 //		dto.setEimg("산책.png");
-//		
-//		System.out.println(dto);
 //		
 //		System.out.println(dao.insert1(dto));
 		
 		//1. selectAll
-//		System.out.println(dao.selectAll1());
+		System.out.println(dao.selectAll1());
 		
 	}
 	
