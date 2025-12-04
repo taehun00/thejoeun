@@ -13,6 +13,13 @@
 		<result property="suitablefor"    column="SUITABLEFOR"/>
 		<result property="intensitylevel" column="INTENSITYLEVEL"/>
 	</resultMap>
+	
+	<!-- 운동챌린지게시판 참조용 -->
+	<resultMap  type="ExecBoardDto" id="ExecBoardMap" >
+	  <result property="execid" column="EXECID"/>
+	</resultMap>
+	
+	
 	<!-- 운동정보(운동챌린지게시판 작성시 참고용) -->
 	<insert id="insert2" parameterType="ExecInfoDto">
 		insert into exerciseinfo (execid, exectype, description, avgkcal30min, exectargetmin, suitablefor, intensitylevel ) 
@@ -27,7 +34,28 @@
 		select * from exerciseinfo where execid=#{execid}
 	</select>
 
+	<!-- paging -->
+	<select resultMap="ExecInfoMap" id="select10"
+		parameterType="java.util.HashMap">
+		select * from ( select row_number() over (order by createdat desc) as rnum,
+		execid, exectype, description, avgkcal30min, exectargetmin, suitablefor, 
+		intensitylevel
+		from exerciseinfo ) A where A.rnum between #{start} and #{end}
+	</select>
 
+	<select resultType="int" id="selectTotalCnt">
+		select count(*) from exerciseinfo
+	</select>
+
+	<update id="update2" parameterType="ExecInfoDto">
+		update exerciseinfo set exectype=#{exectype}, description=#{description}, avgkcal30min=#{avgkcal30min}, 
+	     exectargetmin=#{exectargetmin}, suitablefor=#{suitablefor}, intensitylevel=#{intensitylevel}  
+		where  execid=#{execid}
+	</update>
+
+	<delete id="delete2" parameterType="ExecInfoDto">
+		delete from exerciseinfo   where  execid=#{execid}
+	</delete>
 
 </mapper>
 
@@ -49,11 +77,11 @@
 	from execboard ) A where A.rnum between #{start} and #{end}; -->
 
 <!-- UPDATE -->
-<!-- update execboard set etitle=#{etitle}, econtent=#{econtent} , execid=#{execid}, 
-	eimg=#{eimg} where postid=#{postid} -->
-
-<!-- DELETE -->
-<!-- delete from execboard where postid=#{postid} and execid=#{execid} -->
-
+<!-- update exerciseinfo set exectype=#{exectype}, description=#{description}, avgkcal30min=#{avgkcal30min}, 
+exectargetmin=#{exectargetmin}, suitablefor=#{suitablefor}, intensitylevel=#{intensitylevel}  
+   where  execid=#{execid}-->
+   
+ <!-- DELETE -->
+<!-- delete from exerciseinfo   where  execid=#{execid}-->
 
 

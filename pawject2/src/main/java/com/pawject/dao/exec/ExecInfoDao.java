@@ -11,9 +11,11 @@ import com.pawject.dto.exec.ExecInfoDto;
 public interface ExecInfoDao {	
 	//운동정보(운동챌린지게시판 작성시 참고용)
 	public int insert2(ExecInfoDto dto);
+	public int update2(ExecInfoDto dto);
+	public int delete2(ExecInfoDto dto);
 	public List<ExecInfoDto> selectAll2();
 	public ExecInfoDto select2(int execId);
-
+	
 
 	/* UPLOAD */
 	public int insert2(ExecBoardDto dto);
