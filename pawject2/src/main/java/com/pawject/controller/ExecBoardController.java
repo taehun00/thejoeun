@@ -26,12 +26,12 @@ public class ExecBoardController {
 			) {
 		model.addAttribute("list", service.select10(pstartno));  //
 		model.addAttribute("paging", new ExecPagingDto( service.selectTotalCnt(), pstartno));
-		return "execboard/list";
+		return "execboard/boardlist";
 	}
 	///////////////////////////////////////////////////////
 	//글쓰기폼
 	@RequestMapping(value="/write.execboard", method=RequestMethod.GET)
-	public String write_get() { return "/execboard/write.jsp"; }
+	public String write_get() { return "/execboard/boardwrite.jsp"; }
 	//글쓰기기능
 	//@PreAuthorize("isAthenticated()")
 	@RequestMapping(value="/write.execboard", method=RequestMethod.POST)
@@ -46,18 +46,18 @@ public class ExecBoardController {
 	@RequestMapping("/detail.execboard")
 	public String detail_get(int postid, Model model) {
 		model.addAttribute("dto", service.select1(postid));
-		return "execboard/detail";
+		return "execboard/boarddetail";
 	}
 	///////////////////////////////////////////////////////
 	//수정폼
 	@RequestMapping(value="", method=RequestMethod.GET)
 	public String edit_get(int postid, Model model) {
 		model.addAttribute("dto", service.selectUpdateForm(postid));
-		return "execboard/edit";
+		return "execboard/boardedit";
 	}
 	//수정기능
 	//@PreAuthorize("isAthenticated()")
-	@RequestMapping(value="", method=RequestMethod.POST)
+	@RequestMapping(value="/edit.execboard", method=RequestMethod.POST)
 	public String edit_post( ExecBoardDto dto,  RedirectAttributes rttr ) {
 		String result = "사용자 아이디를 확인해주세요.";
 		if( service.update1(dto) > 0 ) { result = "수정이 왼료되었습니다."; }
@@ -67,7 +67,7 @@ public class ExecBoardController {
 	///////////////////////////////////////////////////////
 	//삭제폼
 	@RequestMapping(value="/delete.execboard", method=RequestMethod.GET)
-	public String delete_get() { return "execboard/delete"; }
+	public String delete_get() { return "execboard/boarddelete"; }
 	
 	//삭제기능
 	//@PreAuthorize("isAthenticated()")
@@ -103,11 +103,11 @@ public class ExecBoardController {
 	
 }
 /*
- /list.execboard            /view/execboard/list.jsp     (전체보기)
- /write.execboard           /view/execboard/write.jsp    (글쓰기폼)
- /detail.execboard          /view/execboard/detail.jsp    (상세보기)
- /edit.execboard            /view/execboard/edit.jsp     (수정하기폼)
- /delete.execboard         /view/execboard/delete.jsp   (삭제하기폼)
+ /list.execboard            /view/execboard/boardlist.jsp     (전체보기)
+ /write.execboard           /view/execboard/boardwrite.jsp    (글쓰기폼)
+ /detail.execboard          /view/execboard/boarddetail.jsp    (상세보기)
+ /edit.execboard            /view/execboard/boardedit.jsp     (수정하기폼)
+ /delete.execboard         /view/execboard/boarddelete.jsp   (삭제하기폼)
 */
 
 

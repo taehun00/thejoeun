@@ -21,19 +21,19 @@ public class ExecInfoController {
 			) {
 		model.addAttribute("list", iservice.select10(pstartno));  //
 		model.addAttribute("paging", new ExecPagingDto( iservice.selectTotalCnt(), pstartno));
-		return "/execinfo/list";
+		return "execinfo/infolist";
 	}
 	////////////////////////////////////
 	//상세보기
 	@RequestMapping("/detail.execinfo")
 	public String detail_get(int execid, Model model) {
 		model.addAttribute("dto", iservice.select2(execid));
-		return "execboard/detail";
+		return "execinfo/infodetail";
 	}
 	////////////////////////////////////
 }
 
 /*
- /list.execinfo            /view/execinfo/list.jsp 
- /detail.execinfo        /view/execinfo/detail.jsp    (상세보기)
+ /list.execinfo            /view/execinfo/infolist.jsp 
+ /detail.execinfo        /view/execinfo/infodetail.jsp    (상세보기)
 */

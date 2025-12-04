@@ -52,14 +52,19 @@
 	</select>
 
 	<!-- paging -->
-	<!-- <select resultMap="ExecBoardMap" id="select10" parameterType="java.util.HashMap"> 
+	<select resultMap="ExecBoardMap" id="select10" parameterType="java.util.HashMap"> 
 		select * from ( select row_number() over (order by createdat desc) as rnum, 
 		postid, execid, userid, etitle, econtent, eimg, ehit, createdat, updatedat 
 		from execboard ) A where A.rnum between #{start} and #{end} </select> <select 
-		resultType="int" id="selectTotalCnt"> select cnt(*) from execboard </select> -->
+		resultType="int" id="selectTotalCnt"> select cnt(*) from execboard 
+	</select>
 
 
 </mapper>
+
+
+
+
 
 <!-- CREATE(insert) -->
 <!-- insert into execboard (postid, execid, userid, etitle, econtent, eimg 
