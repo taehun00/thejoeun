@@ -1,5 +1,7 @@
 package com.pawject.dto.review;
 
+import java.util.List;
+
 import lombok.Data;
 
 @Data
@@ -23,6 +25,9 @@ public class ReviewDto {
 	 private String foodimg;
 	 private int pettypeid;
 	 
+	 
+	 //아작스
+	 private List<ReviewImgDto> reviewimglist;
 
 }
 

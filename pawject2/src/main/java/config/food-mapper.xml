@@ -137,6 +137,67 @@
 			select count(*) from food
 		</select>
 		
+		<!-- 서치 -->
+		
+	<select resultMap="FoodMap" id="foodsearch" parameterType="java.util.HashMap">
+	    select f.foodid as foodid, f.foodname as foodname, 
+	        b.brandid as brandid, b.brandname as brandname,
+	        f.pettypeid as pettypeid,
+	        TO_CHAR(f.createdat, 'YYYY-MM-DD') as createdat, 
+	        TO_CHAR(f.updatedat , 'YYYY-MM-DD') as updatedat
+	    from food f join foodbrand b on(f.brandid=b.brandid)
+	    <where>
+	        <choose>
+	            <when test="searchType == 'brandname'">
+	                b.brandname like #{keyword} 
+	            </when>
+	            
+	            <when test="searchType == 'foodname'">
+	                f.foodname like #{keyword} 
+	            </when>
+	            
+	            <when test="searchType == 'pettypeid'">
+	                f.pettypeid like #{keyword} 
+	            </when>
+	            
+	            <when test="searchType == 'description'">
+	                f.description like #{keyword} 
+	            </when>
+	
+	            <when test="searchType == 'mainingredient'">
+	                f.mainingredient like #{keyword} 
+	            </when>
+	
+	            <when test="searchType == 'subingredient'">
+	                f.subingredient like #{keyword} 
+	            </when>
+	
+	            <when test="searchType == 'nutrient'">
+	                exists (
+	                    select 1
+	                    from foodnutrient fn join nutrient n on(fn.nutrientid=n.nutrientid)
+	                    where fn.foodid=f.foodid
+	                      and n.nutrientname like #{keyword} 
+	                )
+	            </when>
+	
+	            <otherwise>
+	                (
+	                    f.foodname like #{keyword} 
+	                    or f.description like #{keyword} 
+	                    or f.mainingredient like #{keyword} 
+	                    or f.subingredient like #{keyword} 
+	                    or exists ( select 1
+	                                from foodnutrient fn join nutrient n on fn.nutrientid = n.nutrientid
+	                                where fn.foodid = f.foodid
+	                                   and n.nutrientname like #{keyword} 	)
+	                )
+	            </otherwise>
+	        </choose>
+	    </where>
+	    order by f.foodid desc
+	</select>
+
 	
 
 
