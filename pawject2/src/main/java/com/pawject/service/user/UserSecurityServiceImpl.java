@@ -21,7 +21,7 @@ import com.pawject.dto.user.UserDto;
 @Service
 public class UserSecurityServiceImpl implements UserSecurityService{
 	@Autowired  UserMapper  dao;  
-//	@Autowired  PasswordEncoder  pwencoder;
+	@Autowired  PasswordEncoder  pwencoder;
 	
 	@Transactional
 	@Override public int join(MultipartFile file, UserDto dto) { //##

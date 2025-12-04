@@ -114,7 +114,51 @@
 
 	<script>
 		$(function(){
-			$("search").on()
+			$("search").on("keyup", function(){ //keyup (키보드떴을때)
+				console.log($(this).val().trim());
+				let keyword = $(this).val().trim();
+				///////////////////////////////////////
+				if(keyword === ""){ //빈칸일때
+					$("#resultArea tbody")
+							.empty()
+							.append( "<tr><td colspan='5'>검색어를 입력하세요.</td></tr>" );
+				} else{ //빈칸이 아니라면? 서버요청
+					$.ajax({
+						url:"${pageContext.request.contextPath}/selectSearch",
+						type:"GET", //GET, POST, PUT
+						data:{ search : keyword },
+						success : function( res ){
+							console.log(res);
+							$("#resultArea tbody")
+									.empty(); //초기화
+							$.each(res, function(index, dto){
+								let row = "<tr>"
+										+ "<td>"
+										+ (res.length - index)
+										+ "</td>"
+										+ "<td><a href='${pageContext.request.contexPath}/detail.execboard?id="
+										+ dto.id
+										+ "'>"
+										+ dto.etitle
+										+ "</a></td>"
+										+ "<td>"
+										+ dto.postId
+										+ "</td>"
+										+ "<td>"
+										+ dto.creatdAt
+										+ "</td>"
+										+ "<td>"
+										+ dto.ehit
+										+ "</td>"
+										+ "</tr>"
+								$( "#resultArea tbody" )
+									.append(row);
+							});		
+						}
+					})
+				}
+				///////////////////////////////////////
+			});
 		});
 	</script>
 

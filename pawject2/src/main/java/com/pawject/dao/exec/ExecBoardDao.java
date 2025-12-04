@@ -18,19 +18,14 @@ public interface ExecBoardDao {
 	public ExecBoardDto select1(int postId);
 		
 	
-<<<<<<< HEAD
-	//운동정보(운동챌린지게시판 작성시 참고용)
-//	public int insert2(ExecInfoDto dto);
-//	public List<ExecInfoDto> selectAll2();
-//	public ExecInfoDto select2(int execId);
-=======
+
 	/* UPLOAD */
 	public int insert2(ExecBoardDto dto);
 	public int update2(ExecBoardDto dto); 
 	
 	/*Ajax*/
 	public List<ExecBoardDto> selectSearch1 (HashMap<String, String> para);
->>>>>>> b72f973dc3c2d02874324921daeeb662cd57d646
+
 
 	/*paging*/
 	public List<ExecBoardDto> select10(HashMap<String, Object> para);

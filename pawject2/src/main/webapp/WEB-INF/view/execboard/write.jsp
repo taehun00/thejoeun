@@ -3,14 +3,14 @@
     
 <%@include file="../inc/header.jsp" %> 
    <div class="container card  my-5 p-4">
-      <h3 class="card-header"> MBTI 글쓰기</h3>
-      <!-- APP_USER_ID , BTITLE , BCONTENT , BPASS  -->
-	  <form action="${pageContext.request.contextPath}/upload.quest"  
+      <h3 class="card-header"> 운동챌린지게시판 글쓰기</h3>
+      <!-- POSTID, ETITLE , ECONTENT  -->
+	  <form action="${pageContext.request.contextPath}/upload.execboard"  
 	  		method="post"  encType="multipart/form-data" > 
 	      <input type="hidden"   name="appUserId"  value="1"> 
 		  <div class="mb-3 mt-3">
-		    <label for="btitle" class="form-label">TITLE:</label>
-		    <input type="text" class="form-control" id="btitle" placeholder="내용을 입력해주세요" name="btitle">
+		    <label for="etitle" class="form-label">TITLE:</label>
+		    <input type="text" class="form-control" id="etitle" placeholder="내용을 입력해주세요" name="etitle">
 		  </div>
 		  <div class="mb-3">
 		    <label for="bpass" class="form-label">PASS:</label>
