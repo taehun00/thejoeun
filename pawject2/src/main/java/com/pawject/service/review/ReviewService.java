@@ -1,5 +1,6 @@
 package com.pawject.service.review;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -26,5 +27,8 @@ public interface ReviewService {
 	public int reviewimgdeleteAll(int reviewid);
 	public int reviewimgdelete(int reviewimgid);
 	public ReviewImgDto  reviewimgIdSelect(int reviewimgid);
+	
+	public List<ReviewDto> reviewSelect10(int pstartno);	
+	public int reviewSelectCnt();
 
 }

@@ -1,5 +1,6 @@
 package com.pawject.service.food;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.pawject.dto.food.BrandDto;
@@ -55,11 +56,13 @@ public interface FoodService {
 	public List<NutriDto> nutriselectWithInfo(int foodid);
 
 	
-	
-	
+
 	public List<FoodDtoForList> foodselect10(int pstartno); 
 	
 	public int foodselectcnt();
+	
+	//dao랑 다름!!
+	public List<FoodDtoForList> foodsearch(String keyword);
 
 	
 	

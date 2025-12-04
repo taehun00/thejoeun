@@ -5,7 +5,21 @@
 	<mapper namespace="com.pawject.dao.review.ReviewDao">
 	<resultMap type="ReviewDto" id="ReviewMap">
 		<result property="reviewid"	column="REVIEWID"/>
+		<result property="userid"	column="USERID"/>
+		<result property="brandid"	column="BRANDID"/>
+		<result property="foodid"	column="FOODID"/>
+		<result property="reviewimg"	column="REVIEWIMG"/>
+		<result property="rating"	column="RATING"/>
+		<result property="title"	column="TITLE"/>
+		<result property="reviewcomment"	column="REVIEWCOMMENT"/>
+		<result property="createdat"	column="CREATEDAT"/>
+		<result property="updatedat"	column="UPDATEDAT"/>
 
+		<result property="nickname"	column="NICKNAME"/>
+		<result property="brandname"	column="BRANDNAME"/>
+		<result property="foodname"	column="FOODNAME"/>
+		<result property="foodimg"	column="FOODIMG"/>
+		<result property="pettypeid"	column="PETTYPEID"/>
 		
 	</resultMap>
 	
@@ -20,8 +34,8 @@
 		 		r.title as title, 
 		 		r.reviewcomment as reviewcomment, 
 		 		u.nickname as nickname, 
-		        TO_CHAR(f.createdat, 'YYYY-MM-DD') as createdat, 
-        		TO_CHAR(f.updatedat , 'YYYY-MM-DD') as updatedat
+		        TO_CHAR(r.createdat, 'YYYY-MM-DD') as createdat, 
+        		TO_CHAR(r.updatedat , 'YYYY-MM-DD') as updatedat
 			from review r left join food f on(r.foodid=f.foodid)
                join foodbrand fb on(r.brandid=fb.brandid)
                left join users u on(u.userid=r.userid)
@@ -60,7 +74,7 @@
 	<!-- 페이징 -->
 	<select resultMap="ReviewMap" id="reviewSelect10"  parameterType="java.util.Map">
 	    select *
-        from(select row_number() over(order by r.createdat desc) as rnum,
+        from(select row_number() over(order by r.createdat desc, r.reviewid desc) as rnum,
                     r.reviewid as reviewid, 
                             fb.brandname as brandname, 
                             f.foodid as foodid,
@@ -70,8 +84,8 @@
                             r.title as title, 
                             r.reviewcomment as reviewcomment, 
                             u.nickname as nickname, 
-                            TO_CHAR(f.createdat, 'YYYY-MM-DD') as createdat, 
-                            TO_CHAR(f.updatedat , 'YYYY-MM-DD') as updatedat
+                            TO_CHAR(r.createdat, 'YYYY-MM-DD') as createdat, 
+                            TO_CHAR(r.updatedat , 'YYYY-MM-DD') as updatedat
                         from review r left join food f on(r.foodid=f.foodid)
                            join foodbrand fb on(r.brandid=fb.brandid)
                            left join users u on(u.userid=r.userid)        ) a
@@ -79,7 +93,7 @@
 	</select>
 	
 	<select resultType="int" id="reviewSelectCnt">
-		select count(*) from review;
+		select count(*) from review
 	</select>
 	
 </mapper>

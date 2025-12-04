@@ -24,6 +24,7 @@
     <h2 class="review-title">🐶사료 후기🐱</h2>
 
    <table class="review-table table table-bordered table-hover align-middle text-center">
+        <input type="hidden" id="currentPage" value="${reviewpaging.pstartno}">
         <caption class="visually-hidden">사료 후기</caption>
         <thead class="table-light">
             <tr>
@@ -40,78 +41,43 @@
         </thead>
 
         <tbody>
-            <c:set var="total" value="${fn:length(reviewlist)}" />
-            <c:forEach var="r" items="${reviewlist}" varStatus="st">
-
-                <!-- 리스트 행 -->
-                <tr class="review-row" onclick="toggleContent(${r.reviewid})">
-                    <td style="display:none;">${r.reviewid}</td>
-                    <td>${total - st.index}</td>
-                    <td>${r.brandname}</td>
-                    <td>${r.foodname}</td>
-                    <td>
-                        <c:choose>
-                            <c:when test="${r.rating == 5}">★★★★★</c:when>
-                            <c:when test="${r.rating == 4}">★★★★☆</c:when>
-                            <c:when test="${r.rating == 3}">★★★☆☆</c:when>
-                            <c:when test="${r.rating == 2}">★★☆☆☆</c:when>
-                            <c:otherwise>★☆☆☆☆</c:otherwise>
-                        </c:choose>
-                    </td>
-                    <td>${r.title}</td>
-                    <td>${r.nickname}</td>
-                    <td>${r.createdat}</td>
-                    <td>${r.updatedat}</td>
-                </tr>
-
-                <!-- 상세 행 -->
-                <tr id="content-${r.reviewid}" class="review-detail">
-                    <td colspan="9">
-
-                        <table class="detail-inner-table">
-                            <tr>
-                                <td class="detail-img">
-								     <img class="review-thumb"
-				                         src="${pageContext.request.contextPath}/static/foodimg/${r.foodimg}"
-				                         alt="사료 이미지"
-				                         onclick="openImg('${pageContext.request.contextPath}/static/foodimg/${r.foodimg}')">
-                                </td>
-                                <!-- 리뷰 내용 -->
-                                <td class="detail-content">
-									<div class="review-img-wrap">
-									    <c:forEach var="img" items="${imglist}">
-									    	<c:if test="${img.reviewid eq r.reviewid}">
-										    	<div class="review-img-box">
-										            <img src="${pageContext.request.contextPath}/upload/${img.reviewimgname}" 
-										                  alt="리뷰이미지" 
-										                  class="review-img"	
-										                  onclick="openImg('${pageContext.request.contextPath}/upload/${img.reviewimgname}')">
-										        </div>
-									    	</c:if>
-									    </c:forEach>
-									</div>
-									
-                                    <p class="detail-text"> ${r.reviewcomment} </p>
-
-                                    <div class="detail-btns">
-                                        <button type="button" class="btn btn-green"
-                                            onclick="location.href='${pageContext.request.contextPath}/reviewedit.fn?reviewid=${r.reviewid}'">
-                                            수정
-                                        </button>
-
-                                        <button type="button" class="btn btn-olive"
-                                            onclick="location.href='${pageContext.request.contextPath}/reviewdelete.fn?reviewid=${r.reviewid}'">
-                                            삭제
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-
-                    </td>
-                </tr>
-            </c:forEach>
         </tbody>
+		<tfoot>
+		<tr>
+		<td colspan="9">
+		    <ul class="pagination justify-content-center">
+		
+		        <!-- 이전 -->
+		        <c:if test="${reviewpaging.start > 10}">
+		            <li class="page-item">
+		                <a href="#" class="page-link"
+		                   onclick="reviewPaging(${reviewpaging.start - 1})">이전</a>
+		            </li>
+		        </c:if>
+		
+		        <!-- 페이지 숫자 -->
+		        <c:forEach var="i" begin="${reviewpaging.start}" end="${reviewpaging.end}">
+		            <li class="page-item <c:if test='${i == reviewpaging.current}'>active</c:if>'">
+		                <a href="#" class="page-link"
+		                   onclick="reviewPaging(${i})">${i}</a>
+		            </li>
+		        </c:forEach>
+		
+		        <!-- 다음 -->
+		        <c:if test="${reviewpaging.pagetotal > reviewpaging.end}">
+		            <li class="page-item">
+		                <a href="#" class="page-link"
+		                   onclick="reviewPaging(${reviewpaging.end + 1})">다음</a>
+		            </li>
+		        </c:if>
+		
+		    </ul>
+		</td>
+		</tr>
+		</tfoot>
+        
+        
+        
     </table>
 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
     <div class="write-btn-area">
@@ -120,9 +86,154 @@
 </div>
 
 <script>
+$(function () {
+    let currentPage = $("#currentPage").val() || 1;
+    reviewPaging($("#currentPage").val() || 1);
+});
+	
+function reviewPaging(pstartno){
+	$.ajax({
+		url:"reviewPaging",
+        type: "GET",
+        data: { pstartno: pstartno },
+        success: function(json) {
+        	reviewPagingResult(json, pstartno);  // 페이징 기능때매 필요
+        },
+		error:function (xhr) {
+		    console.error("ERROR:", xhr.responseText);
+		    alert("에러 발생: " + xhr.status);}
+	})
+}
+
+function ratingToStar(rating){
+	if(rating==5) return "★★★★★";
+	if(rating==4) return "★★★★☆";
+	if(rating==3) return "★★★☆☆";
+	if(rating==2) return "★★☆☆☆";
+	if(rating==1) return "★☆☆☆☆";
+	
+}
+
+function reviewPagingResult(json, pstartno) {
+    console.log(json);
+ 
+    let contextPath = "${pageContext.request.contextPath}";  //자꾸 문자열로 오류 나서 따로 빼주기
+    let list = json.list;
+    let total = json.total;
+    
+    let tbody = $(".review-table tbody");
+    tbody.empty();
+
+    $.each(list, function(idx, review)  {
+    	let number = total - ((pstartno - 1) * 10 + idx);
+    	
+    	//요약-바로 보이는 행
+		let summary = $("<tr>")
+			.addClass("review-row")
+			.attr("onclick", "toggleContent(" + review.reviewid + ")")
+			.append($("<td>").css("display","none").text(review.reviewid))
+			.append($("<td>").text(number))
+			.append($("<td>").text(review.brandname))
+			.append($("<td>").text(review.foodname))
+			.append($("<td>").html(ratingToStar(review.rating)))
+			.append($("<td>").text(review.title))
+			.append($("<td>").text(review.nickname))
+			.append($("<td>").text(review.createdat))
+			.append($("<td>").text(review.updatedat));
+
+		tbody.append(summary);
+
+    	
+    	//여기서부터 스불재 시작
+		let detail = $("<tr>")
+		    .attr("id", "content-" + review.reviewid)
+		    .addClass("review-detail")
+		    .css("display", "none");
+		
+		let td = $("<td>").attr("colspan", 9);
+		
+		// detail-inner-table
+		let innerTable = $("<table>").addClass("detail-inner-table");
+		
+		// inner table row
+		let innerTr = $("<tr>");
+		
+		//이미지
+		let foodImgTd = $("<td>")
+		    .addClass("detail-img");
+		
+		let foodImg = $("<img>")
+		    .addClass("review-thumb")
+		    .attr("src", contextPath + "/static/foodimg/" + review.foodimg)
+		    .attr("onclick", "openImg('" + contextPath + "/static/foodimg/" + review.foodimg + "')");
+		
+		foodImgTd.append(foodImg);
+		
+		let contentTd = $("<td>")
+		    .addClass("detail-content");
+		
+		let imgWrap = $("<div>").addClass("review-img-wrap");
+		
+		review.reviewimglist.forEach(function(img) {
+		    let imgBox = $("<div>").addClass("review-img-box");
+		
+		    let reviewImg = $("<img>")
+		        .addClass("review-img")
+		        .attr("src", contextPath + "/upload/" + img.reviewimgname)
+		        .attr("onclick", "openImg('" + contextPath + "/upload/" + img.reviewimgname + "')");
+		
+		    imgBox.append(reviewImg);
+		    imgWrap.append(imgBox);
+		});
+		
+		let comment = $("<p>")
+		    .addClass("detail-text")
+		    .text(review.reviewcomment);
+		
+		let btns = $("<div>").addClass("detail-btns")
+		    .append(
+		        $("<button>")
+		            .addClass("btn btn-green")
+		            .text("수정")
+		            .attr("onclick", "location.href='reviewedit.fn?reviewid=" + review.reviewid + "'")
+		    )
+		    .append(
+		        $("<button>")
+		            .addClass("btn btn-olive")
+		            .text("삭제")
+		            .attr("onclick", "location.href='reviewdelete.fn?reviewid=" + review.reviewid + "'")
+		    );
+		
+		// contentTd 구성
+		contentTd.append(imgWrap);
+		contentTd.append(comment);
+		contentTd.append(btns);
+		
+		// inner row 조립
+		innerTr.append(foodImgTd);
+		innerTr.append(contentTd);
+		
+		// innerTable 조립
+		innerTable.append(innerTr);
+		
+		// td에 innerTable 삽입
+		td.append(innerTable);
+		
+		// detail row 완성
+		detail.append(td);
+		
+		// tbody에 detail 추가
+		tbody.append(detail);
+
+    });   //$.each 닫음
+
+}   // function reviewPagingResult 닫음
+
+
 function toggleContent(id) {
-    const row = document.getElementById("content-" + id);
-    row.style.display = (row.style.display === "table-row") ? "none" : "table-row";
+    let row = document.getElementById("content-" + id);
+    if (!row) return;  // 안전장치
+    row.style.display = (row.style.display === "none") ? "table-row" : "none";
 }
 
 function openImageModal(src){

@@ -145,4 +145,24 @@
 	  color: #fff !important;
 	}
 	
-	
+	.clickable {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+
+.filterToggle {
+    position: relative;
+    cursor: pointer;
+}
+.filter-panel {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 150px;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 8px;
+    z-index: 99;
+}

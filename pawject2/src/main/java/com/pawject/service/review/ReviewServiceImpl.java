@@ -1,6 +1,7 @@
 package com.pawject.service.review;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -113,7 +114,7 @@ public class ReviewServiceImpl implements ReviewService {
 //	}
 	
 	
-	@Override
+	@Override  //다 만들고 나니까 깨달은 건데 이거 필요없엉..... 왜했지
 	public ReviewImgDto reviewimgupdate(int reviewimgid,MultipartFile file) {
 		if (file == null || file.isEmpty()) {
 		    return null;
@@ -219,6 +220,36 @@ public class ReviewServiceImpl implements ReviewService {
 	@Override
 	public ReviewImgDto reviewimgIdSelect(int reviewimgid) {
 		return idao.reviewimgIdSelect(reviewimgid);
+	}
+
+	
+	
+	//페이징
+	@Override
+	public List<ReviewDto> reviewSelect10(int pstartno) {
+		HashMap<String, Object> para = new HashMap<>();
+		
+		int start = (pstartno-1)*10+1;
+		int end = start+9;
+		
+		para.put("start", start);
+		para.put("end", end);
+		
+		List<ReviewDto> list = rdao.reviewSelect10(para);
+		
+		
+		//아작스용 - 리뷰별 아이디 매칭되는 이미지 여기서 던져주기 
+		for(ReviewDto r : list) {
+			List<ReviewImgDto> imgs = idao.reviewimgSelect(r.getReviewid());
+			r.setReviewimglist(imgs);
+						}
+		
+		return list;
+	}
+
+	@Override
+	public int reviewSelectCnt() {
+		return rdao.reviewSelectCnt();
 	}
 
 	

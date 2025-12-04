@@ -1,11 +1,14 @@
 package com.pawject.dao.review;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.pawject.dao.MyDao;
 import com.pawject.dto.review.ReviewDto;
 @MyDao
 public interface ReviewDao {
+	
+		//기초 crud
 	//	<select  resultMap="ReviewMap" id="reviewSelectAll">
 		public List<ReviewDto> reviewSelectAll();
 	
@@ -20,6 +23,13 @@ public interface ReviewDao {
 		
 	//	<delete id="reviewDelete" parameterType="int">
 		public int reviewDelete(int reviewid);
-
+		
+		
+		//페이징
+	//<select resultMap="ReviewMap" id="reviewSelect10"  parameterType="java.util.Map">
+		public List<ReviewDto> reviewSelect10(HashMap<String, Object> para);
+		
+	//<select resultType="int" id="reviewSelectCnt">	
+		public int reviewSelectCnt();
 }
 
