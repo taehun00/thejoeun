@@ -1,11 +1,11 @@
-package com.pawject.dto.food;
+package com.pawject.dto.paging;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class FoodPagingDto {
+public class PagingDto10 {
 	private int listtotal;
 	private int onepagelist;
 	private int pagetotal;
@@ -16,7 +16,7 @@ public class FoodPagingDto {
 	private int start;
 	private int end;
 	
-	public FoodPagingDto(int listtotal, int pstartno) {
+	public PagingDto10(int listtotal, int pstartno) {
 		super();
 		this.listtotal = listtotal;
 			if(listtotal<=0) {listtotal=1;}
