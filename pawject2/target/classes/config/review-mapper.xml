@@ -5,11 +5,25 @@
 	<mapper namespace="com.pawject.dao.review.ReviewDao">
 	<resultMap type="ReviewDto" id="ReviewMap">
 		<result property="reviewid"	column="REVIEWID"/>
+		<result property="userid"	column="USERID"/>
+		<result property="brandid"	column="BRANDID"/>
+		<result property="foodid"	column="FOODID"/>
+		<result property="reviewimg"	column="REVIEWIMG"/>
+		<result property="rating"	column="RATING"/>
+		<result property="title"	column="TITLE"/>
+		<result property="reviewcomment"	column="REVIEWCOMMENT"/>
+		<result property="createdat"	column="CREATEDAT"/>
+		<result property="updatedat"	column="UPDATEDAT"/>
 
+		<result property="nickname"	column="NICKNAME"/>
+		<result property="brandname"	column="BRANDNAME"/>
+		<result property="foodname"	column="FOODNAME"/>
+		<result property="foodimg"	column="FOODIMG"/>
+		<result property="pettypeid"	column="PETTYPEID"/>
 		
 	</resultMap>
 	
-	<!-- 전체 리스트 -->
+	<!-- 전체 리스트+디테일 -->
 	<select  resultMap="ReviewMap" id="reviewSelectAll">
 		 select r.reviewid as reviewid, 
 		 		fb.brandname as brandname, 
@@ -20,15 +34,15 @@
 		 		r.title as title, 
 		 		r.reviewcomment as reviewcomment, 
 		 		u.nickname as nickname, 
-		        TO_CHAR(f.createdat, 'YYYY-MM-DD') as createdat, 
-        		TO_CHAR(f.updatedat , 'YYYY-MM-DD') as updatedat
+		        TO_CHAR(r.createdat, 'YYYY-MM-DD') as createdat, 
+        		TO_CHAR(r.updatedat , 'YYYY-MM-DD') as updatedat
 			from review r left join food f on(r.foodid=f.foodid)
                join foodbrand fb on(r.brandid=fb.brandid)
                left join users u on(u.userid=r.userid)
             order by reviewid desc
 	</select>
 	
-	<!-- 특정 리뷰 -->
+	<!-- 특정 리뷰 선택 -->
 	<select resultType="ReviewDto"  id="reviewSelect" parameterType="int">
 		select * from review where reviewid=#{reviewid}
 	</select>
@@ -56,5 +70,30 @@
 		delete from review where reviewid=#{reviewid} 
 	</delete>
 	
+	
+	<!-- 페이징 -->
+	<select resultMap="ReviewMap" id="reviewSelect10"  parameterType="java.util.Map">
+	    select *
+        from(select row_number() over(order by r.createdat desc, r.reviewid desc) as rnum,
+                    r.reviewid as reviewid, 
+                            fb.brandname as brandname, 
+                            f.foodid as foodid,
+                            f.foodname as foodname, 
+                            f.foodimg as foodimg, 
+                            r.rating as rating, 
+                            r.title as title, 
+                            r.reviewcomment as reviewcomment, 
+                            u.nickname as nickname, 
+                            TO_CHAR(r.createdat, 'YYYY-MM-DD') as createdat, 
+                            TO_CHAR(r.updatedat , 'YYYY-MM-DD') as updatedat
+                        from review r left join food f on(r.foodid=f.foodid)
+                           join foodbrand fb on(r.brandid=fb.brandid)
+                           left join users u on(u.userid=r.userid)        ) a
+                           where a.rnum between #{start} and #{end}
+	</select>
+	
+	<select resultType="int" id="reviewSelectCnt">
+		select count(*) from review
+	</select>
 	
 </mapper>

@@ -20,11 +20,7 @@ public class ExecBoardServiceImpl implements ExecBoardService {
 	@Autowired ExecBoardDao dao;
 	
 	/*운동챌린지게시판 - CRUD*/
-	@Override public int insert1(ExecBoardDto dto) { // 이미지관련.... 업로드처리, 중간단위에서 필요중간로직
-		try { dto.setEtitle(InetAddress.getLocalHost().getHostAddress());} 
-		catch ( UnknownHostException e ) { e.printStackTrace(); }
-		return dao.insert1(dto); 
-	}
+	@Override public int insert1(ExecBoardDto dto) { return dao.insert1(dto); }
 	@Override public int update1(ExecBoardDto dto) { return dao.update1(dto);}
 	@Override public int delete1(ExecBoardDto dto) {return dao.delete1(dto);}
 	@Override public List<ExecBoardDto> selectAll1() {return dao.selectAll1();}
@@ -37,16 +33,14 @@ public class ExecBoardServiceImpl implements ExecBoardService {
 			String fileName = file.getOriginalFilename(); //원본파일이름
 			String uploadPath = "C:/file/";
 			File    img       = new File(uploadPath + fileName); //java.io.File
-			
 			try {
 				file.transferTo(img);
 				dto.setEimg(fileName);
 			}  catch (IOException e) { e.printStackTrace(); }
 		}
-		try { dto.setEtitle( InetAddress.getLocalHost().getHostAddress() );}  
-		catch (UnknownHostException e) {e.printStackTrace();}
-		return 0;
+		return dao.insert2(dto);
 	}
+	
 	@Override public int update2( MultipartFile file,ExecBoardDto dto) {
 		if( !file.isEmpty() ) { //파일이 비어있는게 아니라면,
 			String fileName = file.getOriginalFilename(); //원본파일 이름

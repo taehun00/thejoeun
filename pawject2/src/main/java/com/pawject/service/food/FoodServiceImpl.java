@@ -119,6 +119,7 @@ public class FoodServiceImpl implements FoodService {
 
 		    para.put("start", start);
 		    para.put("end", end);
+		    
 
 		    return fdao.foodselect10(para); 
 		}
@@ -126,6 +127,13 @@ public class FoodServiceImpl implements FoodService {
 		@Override
 		public int foodselectcnt() {
 			return fdao.foodselectcnt();
+		}
+
+		@Override
+		public List<FoodDtoForList> foodsearch(String keyword) {
+			HashMap<String, Object> para = new HashMap<>();
+			para.put("search", "%"+keyword+"%");
+			return fdao.foodsearch(para);
 		}
 
 		

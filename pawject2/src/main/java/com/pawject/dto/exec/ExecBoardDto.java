@@ -21,5 +21,7 @@ public class ExecBoardDto {
     private LocalDateTime createdat;
   //private String updatedat;
     private LocalDateTime updatedat;
-}
+		
+	}
+
 //LocalDateTime이 안되면 String으로 바꿔서 실행해주세요.
