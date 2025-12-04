@@ -26,21 +26,34 @@ import com.pawject.service.food.FoodService;
 //		
 		//페이징 적용 버전
 		@RequestMapping("/foodselectForList")
-		public List<FoodDtoForList> foodselectForList(
-		    @RequestParam(defaultValue="1") int pstartno
-		){
-		    return service.foodselect10(pstartno);
+		public Map<String, Object> foodselectForList(
+		    @RequestParam(defaultValue="1") int pstartno){	
+			Map<String, Object> result = new HashMap<>();
+			
+			int total=service.foodselectcnt();
+			List<FoodDtoForList> list = service.foodselect10(pstartno);
+			
+			result.put("total", total);
+			result.put("list", list);
+			
+		    return result;
 		}
 		
-		
+		//빠른 삭제
 		@RequestMapping("/foodquikdelete")
 		public Map<String, Object> foodquikdelete(@RequestParam int foodid){
 			Map<String, Object> result = new HashMap<>();
 			FoodDto fdto = new FoodDto();
 			fdto.setFoodid(foodid);
 			result.put("result", service.fooddelete(foodid));
-			
 			return result;
+		}
+		
+		
+		//검색 기능
+		@RequestMapping("/foodsearch")
+		public List<FoodDtoForList> foodsearch(@RequestParam("search") String search){
+			return service.foodsearch(search);
 		}
 	
 	}

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.pawject.dto.paging.PagingDto10;
 import com.pawject.dto.review.ReviewDto;
 import com.pawject.dto.review.ReviewImgDto;
 import com.pawject.service.food.FoodService;
@@ -24,11 +25,24 @@ public class ReviewController {
 
 	//전체 리스트 페이지
 	@RequestMapping("/reviewlist.fn")
-		public String reviewlist(Model model) {
-		model.addAttribute("reviewlist", service.reviewSelectAll());
-		model.addAttribute("imglist", service.reviewimgselectAll());
-		return "reviewboard/reviewlist";
+	public String reviewlist(Model model,
+							@RequestParam(value="pstartno", defaultValue = "1") int pstartno ) {
+	int total = service.reviewSelectCnt();
+	 PagingDto10 paging = new PagingDto10(total, pstartno);
+	model.addAttribute("reviewlist", service.reviewSelect10(paging.getCurrent()));
+	model.addAttribute("reviewpaging", paging);
+//	model.addAttribute("imglist", service.reviewimgselectAll());-서비스에서 해결
+	return "reviewboard/reviewlist";
 	}
+	
+//	@RequestMapping("/reviewlist.fn")
+//		public String reviewlist(Model model) {
+//		model.addAttribute("reviewlist", service.reviewSelectAll());
+//		model.addAttribute("imglist", service.reviewimgselectAll());
+//		return "reviewboard/reviewlist";
+//	}
+//	
+
 	
 	//글쓰기 get
 	@RequestMapping("/reviewwrite.fn")
