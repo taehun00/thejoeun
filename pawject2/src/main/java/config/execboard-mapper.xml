@@ -5,32 +5,58 @@
 <mapper namespace="com.pawject.dao.exec.ExecBoardDao">
 
 	<insert id="insert1" parameterType="ExecBoardDto">
-		insert into execboard (postid,
-		execid, userid, etitle, econtent, eimg )
-		values (execboard_seq.nextval,
+		insert into execboard
+		(postid,
+		execid, userid, etitle, econtent, eimg)
+		values
+		(execboard_seq.nextval,
 		#{execid} , #{userid}, #{etitle},
-		#{econtent}, #{eimg})
+		#{econtent},
+		#{eimg})
+	</insert>
+	
+	<insert id="insert2" parameterType="ExecBoardDto">
+		insert into execboard
+		(postid,
+		execid, userid, etitle, econtent, eimg)
+		values
+		(execboard_seq.nextval,
+		#{execid} , #{userid}, #{etitle},
+		#{econtent},
+		#{eimg})
 	</insert>
 
 	<update id="update1" parameterType="ExecBoardDto">
 		update execboard
-		set etitle=#{etitle},
-		econtent=#{econtent} ,
+		set
+		etitle=#{etitle},
+		econtent=#{econtent},
 		execid=#{execid}, eimg=#{eimg}
 		where postid=#{postid}
 	</update>
-	<update id="updateHit" parameterType="int"> 
-	  update execboard set ehit 
-		= ehit+1 where postid=#{postid}
+	
+	<update id="update2" parameterType="ExecBoardDto">
+		update execboard
+		set
+		etitle=#{etitle},
+		econtent=#{econtent},
+		execid=#{execid}, eimg=#{eimg}
+		where postid=#{postid}
 	</update>
 	
+	
+	<update id="updateHit" parameterType="int">
+		update execboard set ehit
+		= ehit+1 where postid=#{postid}
+	</update>
+
 	<delete id="delete1" parameterType="ExecBoardDto">
 		delete from execboard where
 		postid=#{postid} and execid=#{execid}
 	</delete>
-	
-		<!-- 명시적매핑 -->
- 	<resultMap type="ExecBoardDto" id="ExecBoardMap" >
+
+	<!-- 명시적매핑 -->
+	<resultMap type="ExecBoardDto" id="ExecBoardMap">
 		<result property="postid" column="POSTID" />
 		<result property="execid" column="EXECID" />
 		<result property="userid" column="USERID" />
@@ -41,22 +67,27 @@
 		<result property="createdAt" column="CREATEAT" />
 		<result property="updatedat" column="UPDATEDAT" />
 	</resultMap>
-	
+
 	<select resultMap="ExecBoardMap" id="selectAll1">
 		select * from execboard
 		order by postid desc
 	</select>
 
-	<select resultMap="ExecBoardMap" id="select1" parameterType="int">
+	<select resultMap="ExecBoardMap" id="select1"
+		parameterType="int">
 		select * from execboard where postid=#{postid}
 	</select>
 
 	<!-- paging -->
-	<select resultMap="ExecBoardMap" id="select10" parameterType="java.util.HashMap"> 
-		select * from ( select row_number() over (order by createdat desc) as rnum, 
-		postid, execid, userid, etitle, econtent, eimg, ehit, createdat, updatedat 
-		from execboard ) A where A.rnum between #{start} and #{end} </select> <select 
-		resultType="int" id="selectTotalCnt"> select cnt(*) from execboard 
+	<select resultMap="ExecBoardMap" id="select10"
+		parameterType="java.util.HashMap">
+		select * from ( select row_number() over (order by createdat desc) as rnum,
+		postid, execid, userid, etitle, econtent, eimg, ehit, createdat,
+		updatedat
+		from execboard ) A where A.rnum between #{start} and #{end}
+	</select>
+	<select resultType="int" id="selectTotalCnt">
+		select count(*) from execboard
 	</select>
 
 

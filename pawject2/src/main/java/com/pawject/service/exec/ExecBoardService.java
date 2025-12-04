@@ -8,7 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.pawject.dto.exec.ExecBoardDto;
 
 public interface ExecBoardService {
-	//운동챌린지게시판 (ADMIN, MEMBER)
 	public int insert1(ExecBoardDto dto);
 	public int update1(ExecBoardDto dto);
 	public int delete1(ExecBoardDto dto);
@@ -17,6 +16,7 @@ public interface ExecBoardService {
 	public ExecBoardDto       selectUpdateForm(int postid);
 
 
+	
 	/* UPLOAD */
 	public int insert2( MultipartFile file, ExecBoardDto dto);
 	public int update2( MultipartFile file, ExecBoardDto dto); 

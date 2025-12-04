@@ -11,36 +11,46 @@
 	
 	</script>
    <div class="container card  my-5 p-4">
-      <h3 class="card-header"> MBTI  QUEST 상세보기  <%-- ${dto} --%></h3>
+      <h3 class="card-header"> 글상세보기  <%-- ${dto} --%></h3>
 	  <div> 
-	      <input type="hidden"   name="app_user_id"  value=""> 
+	      <input type="hidden"   name="postId"  value=""> 
+		  
+		  <!-- 외래키로 가지고 올 것들. / placeholder="내용을 입력해주세요" ← 사용해야 될 수도 있으니 임시보관 -->
 		  <div class="mb-3 mt-3">
-		    <label for="hit" class="form-label">조회수</label>
-		    <input type="text" class="form-control" id="hit" name="hit"  readonly   value="${dto.bhit}">
-		  </div> 
+		    <label for="postid" class="form-label">게시글아이디:</label>
+		    <input type="text" class="form-control" id="postid"  name="postid">
+		  </div>
 		  <div class="mb-3 mt-3">
-		    <label for="title" class="form-label">TITLE:</label>
-		    <input type="text" class="form-control" id="title" 
-		    		placeholder="내용을 입력해주세요" name="title"  readonly  value="${dto.btitle}">
-		  </div>  
+		    <label for="execid" class="form-label">운동아이디:</label>
+		    <input type="text" class="form-control" id="execid"  name="execid">
+		  </div>
+ 	  	  <div class="mb-3">
+		    <label for="userid" class="form-label">사용자아이디:</label>
+		    <input type="text" class="form-control" id="userid" name="userid">
+		  </div>
+		  <!-- 외래키로 가지고 올 것들. -->		   
+		  <div class="mb-3 mt-3">
+		    <label for="etitle" class="form-label">제목:</label>
+		    <input type="text" class="form-control" id="etitle" placeholder="제목을 입력해주세요" name="etitle" readonly  value="${dto.etitle}">
+		  </div>
 		  <div class="mb-3">
-		    <label for="content" class="form-label">CONTENT:</label>
-		    <textarea class="form-control" id="content" placeholder="내용을 입력해주세요"   
-		    	readonly name="content">${dto.bcontent}</textarea>
+		    <label for="econtent" class="form-label">내용:</label>
+		    <textarea class="form-control" id="econtent" placeholder="내용을 입력해주세요" name="econtent">${econtent}</textarea>
 		  </div> 
+		  
 		  <div class="mb-3">
-		    <label for="bfile" class="form-label">파일:</label>
-		  	<img src="${pageContext.request.contextPath}/upload/${dto.bfile}" alt=""/>
+		    <label for="eimg" class="form-label">파일:</label>
+		  	<img src="${pageContext.request.contextPath}/upload/${dto.eimg}" alt=""/>
 		  </div> 
 		 
 			<div class="mb-3">
-			<a href="${pageContext.request.contextPath}/edit.quest?id=${dto.id}" class="btn btn-success form-control">글수정</a>
+			<a href="${pageContext.request.contextPath}/edit.execboard?postid=${dto.postid}" class="btn btn-lavender form-control">글수정</a>
 			</div>
 			<div class="mb-3">
-			<a href="${pageContext.request.contextPath}/delete.quest?id=${dto.id}" class="btn btn-secondary form-control">글삭제</a>
+			<a href="${pageContext.request.contextPath}/delete.execboard?postid=${dto.postid}" class="btn btn-roseRed form-control">글삭제</a>
 			</div> 
 		  <div class="mb-3">
-		  	<a href="#" class="btn btn-primary form-control">목록보기</a>
+		  	<a href="${pageContext.request.contextPath}/list.execboard?postid=${dto.postid}" class="btn btn-mustard form-control">목록보기</a>
 		  </div>
 	 </div>
    </div> 
