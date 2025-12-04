@@ -7,18 +7,13 @@
 	<insert id="insert1" parameterType="ExecBoardDto">
 		insert into execboard
 		(postid,
-<<<<<<< HEAD
-		execid, userid, etitle, econtent, eimg )
-=======
 		execid, userid, etitle, econtent, eimg)
->>>>>>> f18fb881f656af023dc2b96524c238690c5a6b45
 		values
 		(execboard_seq.nextval,
 		#{execid} , #{userid}, #{etitle},
 		#{econtent},
 		#{eimg})
-<<<<<<< HEAD
-=======
+
 	</insert>
 	
 	<insert id="insert2" parameterType="ExecBoardDto">
