@@ -11,6 +11,11 @@
 	});
 </script>
 
+<script>
+    const csrfHeader = "${_csrf.headerName}";
+    const csrfToken = "${_csrf.token}";
+</script>
+
 
 <div class="container my-5">
 
@@ -215,7 +220,7 @@ function foodquikdelete() {
 
         if (confirm("삭제하시겠습니까?")) {
             $.ajax({
-                url: "foodquikdelete",
+                url: "${pageContext.request.contextPath}/foodquikdelete",
                 type: "POST",
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader(csrfHeader, csrfToken);

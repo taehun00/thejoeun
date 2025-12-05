@@ -3,11 +3,13 @@ package com.pawject.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.pawject.dto.food.FoodDto;
@@ -17,6 +19,7 @@ import com.pawject.service.food.FoodService;
 
 
 @Controller
+@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 public class FoodController {
 	@Autowired FoodService service;
 	
@@ -57,10 +60,11 @@ public class FoodController {
 		    FoodDto fdto,
 		    @RequestParam(required = false) List<String> nutrientid,  //Integer 했더니 오류남 -> String 
 		    @RequestParam(required = false) List<String> amount,
+		    @RequestParam("file") MultipartFile	file,  //이미지
 		    RedirectAttributes rttr) {
 
 	    // 사료 입력
-	    int result1 = service.foodinsert(fdto);  
+	    int result1 = service.foodinsert(fdto, file);
 	    // 여기서 fdto.foodid 가 채워져 있어야 함!
 
 	    // 영양소 입력
@@ -150,10 +154,11 @@ public class FoodController {
 	        FoodDto fdto,
 	        @RequestParam(required = false) List<Integer> nutrientid,
 	        @RequestParam(required = false) List<String> amount,
+	        @RequestParam("file") MultipartFile file,
 	        RedirectAttributes rttr) {
 
 	    // 푸드 먼저
-	    int result1 = service.foodupdate(fdto);
+	    int result1 = service.foodupdate(fdto, file);
 
 	    // 기존 영양소 전체 삭제** - 골라서 수정하기 빡셈 걍 해당 사료 영양소 다 날리고 새로 넣기로...
 	    service.nutrideleteAll(fdto.getFoodid());

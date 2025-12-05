@@ -1,10 +1,15 @@
 package com.pawject.service.food;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
+
+import javax.servlet.ServletContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.pawject.dao.food.BrandDao;
 import com.pawject.dao.food.FoodDao;
@@ -18,11 +23,27 @@ public class FoodServiceImpl implements FoodService {
 	@Autowired FoodDao fdao;
 	@Autowired BrandDao bdao;
 	@Autowired NutriDao ndao;
+	@Autowired	ServletContext context;
 
 
 		@Override
-		public int foodinsert(FoodDto dto) {
-			return fdao.foodinsert(dto);
+		public int foodinsert(FoodDto dto,  MultipartFile file) {
+		    String fileName = "";
+
+		    if (!file.isEmpty()) {
+		        fileName = file.getOriginalFilename();
+		        String uploadPath = context.getRealPath("/static/foodimg/");
+		        File img = new File(uploadPath + fileName);
+
+		        try {
+		            file.transferTo(img);
+		        } catch (Exception e) {
+		            e.printStackTrace();
+		        }
+		    }
+
+		    dto.setFoodimg(fileName); // 항상 파일명을 설정
+		    return fdao.foodinsert(dto);
 		}
 
 		@Override
@@ -36,9 +57,25 @@ public class FoodServiceImpl implements FoodService {
 		}
 
 		@Override
-		public int foodupdate(FoodDto dto) {
-			return fdao.foodupdate(dto);
+		public int foodupdate(FoodDto dto, MultipartFile file) {
+		    String fileName = dto.getFoodimg();
+
+		    if (!file.isEmpty()) {
+		        fileName = file.getOriginalFilename();
+		        String uploadPath = context.getRealPath("/static/foodimg/");
+		        File img = new File(uploadPath + fileName);
+
+		        try {
+		            file.transferTo(img);
+		        } catch (Exception e) {
+		            e.printStackTrace();
+		        }
+		    }
+
+		    dto.setFoodimg(fileName); 
+		    return fdao.foodupdate(dto);
 		}
+		
 
 		@Override
 		public int fooddelete(int foodid) {

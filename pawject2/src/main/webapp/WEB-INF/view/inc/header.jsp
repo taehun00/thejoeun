@@ -35,9 +35,14 @@
     <div class="collapse navbar-collapse" id="navMenu">
       <ul class="navbar-nav ms-auto">
 
-        <li class="nav-item">
-          <a class="nav-link" href="${pageContext.request.contextPath}/foodlist.fn">사료 관리</a>
-        </li>
+
+		<sec:authorize access="hasRole('ADMIN')">
+		    <li class="nav-item">
+		        <a class="nav-link" href="${pageContext.request.contextPath}/foodlist.fn">사료 관리</a>
+		    </li>
+		</sec:authorize>
+		
+		
         <li class="nav-item">
           <a class="nav-link" href="${pageContext.request.contextPath}/reviewlist.fn">사료 리뷰</a>
         </li>
