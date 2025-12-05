@@ -87,7 +87,13 @@
 		
 		      <!-- 버튼 -->
 		      <div class="col-3 d-flex justify-content-end align-items-end mt-4">	
+		      
+		      <c:if test="${sessionScope.user.role == 'ROLE_ADMIN'
+		          or sessionScope.user.userid == review.userid}">
+		      
 				<button type="button" class="btn btn-slateBlue me-2" onclick="submitReview()">등록</button>
+				
+			</c:if>		
 				<button type="button" class="btn btn-mint"
         			onclick="location.href='${pageContext.request.contextPath}/reviewlist.fn'">목록보기</button>
 		      </div>	

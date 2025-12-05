@@ -1,8 +1,10 @@
 package com.pawject.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,26 +16,41 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.pawject.dto.paging.PagingDto10;
 import com.pawject.dto.review.ReviewDto;
 import com.pawject.dto.review.ReviewImgDto;
+import com.pawject.dto.user.UserAuthDto;
+import com.pawject.dto.user.UserDto;
 import com.pawject.service.food.FoodService;
 import com.pawject.service.review.ReviewService;
+import com.pawject.service.user.UserSecurityService;
 
 @Controller
 public class ReviewController {
 
 @Autowired ReviewService service;
 @Autowired FoodService fservice;
+@Autowired UserSecurityService uservice;
 
-	//전체 리스트 페이지
-	@RequestMapping("/reviewlist.fn")
-	public String reviewlist(Model model,
-							@RequestParam(value="pstartno", defaultValue = "1") int pstartno ) {
-	int total = service.reviewSelectCnt();
-	 PagingDto10 paging = new PagingDto10(total, pstartno);
-	model.addAttribute("reviewlist", service.reviewSelect10(paging.getCurrent()));
-	model.addAttribute("reviewpaging", paging);
-//	model.addAttribute("imglist", service.reviewimgselectAll());-서비스에서 해결
-	return "reviewboard/reviewlist";
-	}
+		//전체 리스트 페이지+시큐리티
+		@RequestMapping("/reviewlist.fn")
+		public String reviewlist(Model model,
+		                       @RequestParam(value="pstartno", defaultValue = "1") int pstartno,
+		                       Principal principal) {
+		
+		  int total = service.reviewSelectCnt();
+		  PagingDto10 paging = new PagingDto10(total, pstartno);
+		  model.addAttribute("reviewlist", service.reviewSelect10(paging.getCurrent()));
+		  model.addAttribute("reviewpaging", paging);
+		
+	
+		  if (principal != null) {
+		      // principal.getName() → username(email 또는 userid)
+		      UserAuthDto user = uservice.readAuth(principal.getName());
+		
+		      model.addAttribute("userid", user.getUserId());
+		      model.addAttribute("author", user.getAuthList().get(0).getAuth()); // ROLE_ADMIN / ROLE_MEMBER
+		  }
+		
+		  return "reviewboard/reviewlist";
+		}
 	
 //	@RequestMapping("/reviewlist.fn")
 //		public String reviewlist(Model model) {
@@ -46,6 +63,7 @@ public class ReviewController {
 	
 	//글쓰기 get
 	@RequestMapping("/reviewwrite.fn")
+	@PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER')") 
 	public String write_get(Model model) {
 	    model.addAttribute("brandlist", fservice.brandSelectAll());
 	    model.addAttribute("foodlist", fservice.foodselectAll());
@@ -87,6 +105,7 @@ public class ReviewController {
 	
 	//수정 get
 	@RequestMapping("/reviewedit.fn")
+	@PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER')") 
 	public String edit_get(@RequestParam("reviewid") int reviewid, Model model) { //여기는 안고쳐도됨
 		model.addAttribute("rdto", service.reviewSelect(reviewid));
 		model.addAttribute("brandlist", fservice.brandSelectAll());
@@ -127,6 +146,7 @@ public class ReviewController {
 	
 	//삭제-버튼만 연결
 	@RequestMapping("/reviewdelete.fn")
+	@PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER')") 
 	public String delete(@RequestParam int reviewid,  RedirectAttributes rttr) {
 		 //순서 주의! 이미지->리뷰 순 삭제
 		 int delete1 = service.reviewimgdeleteAll(reviewid); 

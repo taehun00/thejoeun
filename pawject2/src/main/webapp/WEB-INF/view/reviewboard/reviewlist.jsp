@@ -17,7 +17,10 @@
 	);
 	
 	</script>
-
+	<script>
+	    const loginUserId = "${userid}";
+	    const loginRole   = "${author}";
+	</script>
 
 <div class="review-container">
 
@@ -25,6 +28,7 @@
 
    <table class="review-table table table-bordered table-hover align-middle text-center">
         <input type="hidden" id="currentPage" value="${reviewpaging.pstartno}">
+		 <input type="hidden" name="userid" value="${rdto.userid}">
         <caption class="visually-hidden">사료 후기</caption>
         
        <div class="row my-3">
@@ -106,11 +110,16 @@
 		
 		
 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
-    <div class="write-btn-area">
-        <button class="btn btn-slateBlue" 
-        		 id="writeBtn" onclick="location.href='${pageContext.request.contextPath}/reviewwrite.fn'">리뷰 작성</button>
-        		 
-    </div>
+	
+		<c:if test="${author == 'ROLE_ADMIN' or author == 'ROLE_MEMBER'}">
+		    <div class="write-btn-area">
+		        <button class="btn btn-slateBlue" 
+		        		 id="writeBtn" onclick="location.href='${pageContext.request.contextPath}/reviewwrite.fn'">리뷰 작성</button>
+		        		 
+		    </div>
+		</c:if>
+	
+
 </div>
 
 <script>
@@ -196,6 +205,13 @@ function reviewPagingResult(json, pstartno) {
     $.each(list, function(idx, review)  {
     	let number = total - ((pstartno - 1) * 10 + idx);
     	
+        console.log("🔎 DEBUG:",
+                "reviewid=", review.reviewid,
+                "userid=", review.userid,
+                "loginUserId=", loginUserId,
+                "loginRole=", loginRole);
+    	
+    	
     	//요약-바로 보이는 행
 		let summary = $("<tr>")
 			.addClass("review-row")
@@ -258,20 +274,43 @@ function reviewPagingResult(json, pstartno) {
 		let comment = $("<p>")
 		    .addClass("detail-text")
 		    .text(review.reviewcomment);
-		
-		let btns = $("<div>").addClass("detail-btns")
-		    .append(
+		let btns = $("<div>").addClass("detail-btns");
+
+		// 관리자는 전체 버튼 표시
+		if (loginRole === "ROLE_ADMIN") {
+
+		    btns.append(
 		        $("<button>")
 		            .addClass("btn btn-green")
 		            .text("수정")
 		            .attr("onclick", "location.href='reviewedit.fn?reviewid=" + review.reviewid + "'")
-		    )
-		    .append(
+		    );
+
+		    btns.append(
 		        $("<button>")
 		            .addClass("btn btn-olive")
 		            .text("삭제")
 		            .attr("onclick", "location.href='reviewdelete.fn?reviewid=" + review.reviewid + "'")
 		    );
+		}
+
+		// 일반 회원이면 본인 글만 버튼 표시
+		else if (loginRole === "ROLE_MEMBER" && review.userid == loginUserId) {
+
+		    btns.append(
+		        $("<button>")
+		            .addClass("btn btn-green")
+		            .text("수정")
+		            .attr("onclick", "location.href='reviewedit.fn?reviewid=" + review.reviewid + "'")
+		    );
+
+		    btns.append(
+		        $("<button>")
+		            .addClass("btn btn-olive")
+		            .text("삭제")
+		            .attr("onclick", "location.href='reviewdelete.fn?reviewid=" + review.reviewid + "'")
+		    );
+		}
 		
 		// contentTd 구성
 		contentTd.append(imgWrap);
