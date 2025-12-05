@@ -21,6 +21,11 @@
 		<result property="foodimg"	column="FOODIMG"/>
 		<result property="pettypeid"	column="PETTYPEID"/>
 		
+		    <!-- 이미지 리스트 매핑 추가 -->
+		<collection property="reviewimglist"
+            ofType="com.pawject.dto.review.ReviewImgDto"
+            select="com.pawject.dao.review.ReviewImgDao.reviewimgSelect"
+            column="reviewid"/>
 	</resultMap>
 	
 	<!-- 전체 리스트+디테일 -->
@@ -95,5 +100,94 @@
 	<select resultType="int" id="reviewSelectCnt">
 		select count(*) from review
 	</select>
+	
+	
+	<!-- 서치 -->
+		<select  resultMap="ReviewMap" id="reviewsearch" parameterType="java.util.HashMap">
+		 select r.reviewid as reviewid, 
+		 		fb.brandname as brandname, 
+		 		f.foodid as foodid,
+		 		f.foodname as foodname, 
+		 		f.foodimg as foodimg, 
+		 		r.rating as rating, 
+		 		r.title as title, 
+		 		r.reviewcomment as reviewcomment, 
+		 		u.nickname as nickname, 
+		        TO_CHAR(r.createdat, 'YYYY-MM-DD') as createdat, 
+        		TO_CHAR(r.updatedat , 'YYYY-MM-DD') as updatedat
+			from review r left join food f on(r.foodid=f.foodid)
+               join foodbrand fb on(r.brandid=fb.brandid)
+               left join users u on(u.userid=r.userid)
+	    <where>
+	        <choose>
+	            <when test="searchType == 'brandname'">
+	              lower(fb.brandname) like #{search}
+	            </when>
+	            
+	            <when test="searchType == 'foodname'">
+	                f.foodname like #{search} 
+	            </when>
+	            
+				<when test="searchType == 'pettypeid'">
+					 f.pettypeid = #{search}
+				</when>
+	            
+	            <when test="searchType == 'reviewcomment'">
+	                r.reviewcomment like #{search} 
+	            </when>
+
+	
+	            <otherwise>
+	                (
+	                    lower(fb.brandname) like #{search}
+	                    or f.foodname like #{search} 
+	    				or r.reviewcomment like #{search} 
+				    
+	                )
+	            </otherwise>
+	        </choose>
+	    </where>
+	    order by r.reviewid desc
+	</select>
+	
+	
+	
+		<select  resultMap="ReviewMap" id="reviewsearchcnt" parameterType="java.util.HashMap">
+			select count(*)
+			from review r left join food f on(r.foodid=f.foodid)
+               join foodbrand fb on(r.brandid=fb.brandid)
+               left join users u on(u.userid=r.userid)
+	    <where>
+	        <choose>
+	            <when test="searchType == 'brandname'">
+	              lower(fb.brandname) like #{search}
+	            </when>
+	            
+	            <when test="searchType == 'foodname'">
+	                f.foodname like #{search} 
+	            </when>
+	            
+				<when test="searchType == 'pettypeid'">
+					 f.pettypeid = #{search}
+				</when>
+	            
+	            <when test="searchType == 'reviewcomment'">
+	                r.reviewcomment like #{search} 
+	            </when>
+
+	
+	            <otherwise>
+	                (
+	                    lower(fb.brandname) like #{search}
+	                    or f.foodname like #{search} 
+	    				or r.reviewcomment like #{search} 
+						or f.pettypeid = #{search}
+				    
+	                )
+	            </otherwise>
+	        </choose>
+	    </where>
+	    order by r.reviewid desc
+	</select>	
 	
 </mapper>

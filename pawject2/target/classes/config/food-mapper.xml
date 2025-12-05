@@ -149,27 +149,27 @@
 	    <where>
 	        <choose>
 	            <when test="searchType == 'brandname'">
-	                b.brandname like #{keyword} 
+	              lower(b.brandname) like #{search}
 	            </when>
 	            
 	            <when test="searchType == 'foodname'">
-	                f.foodname like #{keyword} 
+	                f.foodname like #{search} 
 	            </when>
 	            
-	            <when test="searchType == 'pettypeid'">
-	                f.pettypeid like #{keyword} 
-	            </when>
+				<when test="searchType == 'pettypeid'">
+				    f.pettypeid = #{search}
+				</when>
 	            
 	            <when test="searchType == 'description'">
-	                f.description like #{keyword} 
+	                f.description like #{search} 
 	            </when>
 	
 	            <when test="searchType == 'mainingredient'">
-	                f.mainingredient like #{keyword} 
+	                f.mainingredient like #{search} 
 	            </when>
 	
 	            <when test="searchType == 'subingredient'">
-	                f.subingredient like #{keyword} 
+	                f.subingredient like #{search} 
 	            </when>
 	
 	            <when test="searchType == 'nutrient'">
@@ -177,20 +177,21 @@
 	                    select 1
 	                    from foodnutrient fn join nutrient n on(fn.nutrientid=n.nutrientid)
 	                    where fn.foodid=f.foodid
-	                      and n.nutrientname like #{keyword} 
+	                      and n.nutrientname = #{search} 
 	                )
 	            </when>
 	
 	            <otherwise>
 	                (
-	                    f.foodname like #{keyword} 
-	                    or f.description like #{keyword} 
-	                    or f.mainingredient like #{keyword} 
-	                    or f.subingredient like #{keyword} 
+	                    f.foodname like #{search} 
+	                    or f.description like #{search} 
+	                    or f.mainingredient like #{search} 
+	                    or f.subingredient like #{search} 
+				    	or lower(b.brandname) like #{search}
 	                    or exists ( select 1
 	                                from foodnutrient fn join nutrient n on fn.nutrientid = n.nutrientid
 	                                where fn.foodid = f.foodid
-	                                   and n.nutrientname like #{keyword} 	)
+	                                   and n.nutrientname like #{search} 	)
 	                )
 	            </otherwise>
 	        </choose>
@@ -198,7 +199,60 @@
 	    order by f.foodid desc
 	</select>
 
+		<select resultType="int" id="foodsearchcnt" parameterType="java.util.HashMap">
+	    select count(*)
+	     from food f join foodbrand b on(f.brandid=b.brandid)
+	    <where>
+	        <choose>
+	            <when test="searchType == 'brandname'">
+	               lower(b.brandname) like #{search}
+	            </when>
+	            
+	            <when test="searchType == 'foodname'">
+	                f.foodname like #{search} 
+	            </when>
+	            
+				<when test="searchType == 'pettypeid'">
+				    f.pettypeid = #{search}
+				</when>
+	            
+	            <when test="searchType == 'description'">
+	                f.description like #{search} 
+	            </when>
 	
+	            <when test="searchType == 'mainingredient'">
+	                f.mainingredient like #{search} 
+	            </when>
+	
+	            <when test="searchType == 'subingredient'">
+	                f.subingredient like #{search} 
+	            </when>
+	
+	            <when test="searchType == 'nutrient'">
+	                exists (
+	                    select 1
+	                    from foodnutrient fn join nutrient n on(fn.nutrientid=n.nutrientid)
+	                    where fn.foodid=f.foodid
+	                      and n.nutrientname = #{search} 
+	                )
+	            </when>
+	
+	            <otherwise>
+	                (
+	                    f.foodname like #{search} 
+	                    or f.description like #{search} 
+	                    or f.mainingredient like #{search} 
+	                    or f.subingredient like #{search} 
+	                    or exists ( select 1
+	                                from foodnutrient fn join nutrient n on fn.nutrientid = n.nutrientid
+	                                where fn.foodid = f.foodid
+	                                   and n.nutrientname like #{search} 	)
+	                )
+	            </otherwise>
+	        </choose>
+	    </where>
+	    order by f.foodid desc
+	</select>
 
 
 	</mapper>

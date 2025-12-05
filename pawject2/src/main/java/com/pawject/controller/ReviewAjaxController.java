@@ -95,7 +95,24 @@ public class ReviewAjaxController {
 
     	return result;
     }
-	
+    
+    
+    //서치
+    @RequestMapping("/reviewsearch")
+    public Map<String, Object> reviewsearch(
+	        @RequestParam("keyword") String keyword,
+	        @RequestParam("searchType") String searchType){
+    	
+	    Map<String, Object> result = new HashMap<>();
+
+	    List<ReviewDto> list = service.reviewsearch(keyword, searchType);
+
+	    result.put("list", list);
+	    result.put("total", list.size());
+	    result.put("pstartno", 1);
+
+	    return result;
+	}
 
 }
 
