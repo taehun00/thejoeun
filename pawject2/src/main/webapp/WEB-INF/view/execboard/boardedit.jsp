@@ -23,11 +23,9 @@
 	  <div class="mb-3 mt-3">
 	    <label for="userid" class="form-label">사용자아이디:</label>
 	    <input type="text" class="form-control" id="userid" 
-<<<<<<< HEAD
+
 	    	  placeholder="사용자아이디 입력해주세요." name="userid"  readonly  value="${dto.userid}">
-=======
-	    	  placeholder="사용자아이디 입력해주세요" name="userid"  value="${dto.userid}">
->>>>>>> 8229c01e4a164a1e7969c039b4ee1bd00d7c3dde
+
 	  </div>
 	  
 	  
