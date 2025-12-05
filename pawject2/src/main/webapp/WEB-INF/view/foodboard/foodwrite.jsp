@@ -26,7 +26,8 @@
 	<h3 class="card-header">신규 사료 등록</h3>
 
 	<form action="${pageContext.request.contextPath}/foodwrite.fn"
-		method="post">
+		method="post"
+		enctype="multipart/form-data">
 
 		<div class="row mt-4">
 
@@ -163,9 +164,11 @@
 
 
 		<!-- 이미지 URL -->
-		<div class="mb-3 mt-3">
-			<label class="form-label">사료 이미지 URL :</label> <input type="text"
-				class="form-control" name="foodimg">
+		<div class="row">
+		   <div class="mb-3 mt-4 col-3 justify-content-end">
+		      <label for="file" class="form-label">제품 이미지:</label>
+		      <input type="file" class="form-control" id="file" name="file">
+		   </div>
 		</div>
 
 		<div class="mb-3 text-end">

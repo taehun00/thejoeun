@@ -39,6 +39,7 @@
 		 		r.title as title, 
 		 		r.reviewcomment as reviewcomment, 
 		 		u.nickname as nickname, 
+		 		u.userid as userid,
 		        TO_CHAR(r.createdat, 'YYYY-MM-DD') as createdat, 
         		TO_CHAR(r.updatedat , 'YYYY-MM-DD') as updatedat
 			from review r left join food f on(r.foodid=f.foodid)
@@ -78,7 +79,20 @@
 	
 	<!-- 페이징 -->
 	<select resultMap="ReviewMap" id="reviewSelect10"  parameterType="java.util.Map">
-	    select *
+		    select 
+                    		a.reviewid as reviewid, 
+                            a.brandname as brandname, 
+                            a.foodid as foodid,
+                            a.foodname as foodname, 
+                            a.foodimg as foodimg, 
+                            a.rating as rating, 
+                            a.title as title, 
+                            a.reviewcomment as reviewcomment, 
+                            a.nickname as nickname, 
+                            a.userid as userid,
+                            a.createdat as createdat, 
+                            a.updatedat  as updatedat,
+                            a.rnum as rnum
         from(select row_number() over(order by r.createdat desc, r.reviewid desc) as rnum,
                     r.reviewid as reviewid, 
                             fb.brandname as brandname, 
@@ -89,6 +103,7 @@
                             r.title as title, 
                             r.reviewcomment as reviewcomment, 
                             u.nickname as nickname, 
+                            u.userid as userid,
                             TO_CHAR(r.createdat, 'YYYY-MM-DD') as createdat, 
                             TO_CHAR(r.updatedat , 'YYYY-MM-DD') as updatedat
                         from review r left join food f on(r.foodid=f.foodid)
@@ -113,6 +128,7 @@
 		 		r.title as title, 
 		 		r.reviewcomment as reviewcomment, 
 		 		u.nickname as nickname, 
+		 		u.userid as userid,
 		        TO_CHAR(r.createdat, 'YYYY-MM-DD') as createdat, 
         		TO_CHAR(r.updatedat , 'YYYY-MM-DD') as updatedat
 			from review r left join food f on(r.foodid=f.foodid)

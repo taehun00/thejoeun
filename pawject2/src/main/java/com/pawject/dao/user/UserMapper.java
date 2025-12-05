@@ -1,6 +1,5 @@
 package com.pawject.dao.user;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,18 +40,12 @@ public interface UserMapper {
 	
 	
 	//UserAdminController 사용
-	public List<UserDto> listUsers(HashMap<String, Object> para);
-	public int selectTotalCnt();
+	public List<UserDto> listUsers(@Param("start") int start, @Param("end") int end);
 	public UserDto selectUser(@Param("userId") int userId);
     // 정보 수정(관리자가 닉네임만 수정)
  	public int updateNickname(UserDto dto);
  	//
- 	
- 	public List<UserDto> searchUsers(Map<String, Object> params);
-
-
-
-	
+ 	List<UserDto> searchUsers(@Param("keyword") String keyword);
 
 
 

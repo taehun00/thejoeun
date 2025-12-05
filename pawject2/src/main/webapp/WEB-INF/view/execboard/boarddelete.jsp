@@ -12,18 +12,25 @@
 		  
 <!--  		  <div class="my-3">
 		    <label for="postid" class="form-label">게시글아이디:</label>
+<<<<<<< HEAD
 		    <input type="text" class="form-control"
 		    	id="postid"  placeholder="게시글아이디를 입력해주세요." name="postid">
 		  </div> -->
           <div class="my-3">
+=======
+		    <input type="text" class="form-control" 
+		    	id="postid"  placeholder="게시글아이디를 입력해주세요" name="postid">
+		  </div> 
+		  <div class="my-3">
+>>>>>>> 8229c01e4a164a1e7969c039b4ee1bd00d7c3dde
 		    <label for="execid" class="form-label">운동아이디:</label>
 		    <input type="text" class="form-control" 
-		    	id="execid"  placeholder="운동아이디를 입력해주세요." name="execid">
+		    	id="execid"  placeholder="운동아이디를 입력해주세요" name="execid">
 		  </div> 
 		  <div class="my-3">
 		    <label for="userid" class="form-label">사용자아이디:</label>
 		    <input type="text" class="form-control" 
-		    	id="userid"  placeholder="사용자아이디를 입력해주세요." name="userid">
+		    	id="userid"  placeholder="사용자아이디를 입력해주세요" name="userid">
 		  </div> 
 		  
 		  <div class="my-3  text-end">

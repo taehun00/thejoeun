@@ -29,17 +29,17 @@ public interface ExecBoardService {
 	public 		int   selectTotalCnt();
 	
 	/* idouble */
-//	public int iddouble1(int postid);
+//	public int iddouble(int postid);
 	
 	/* admin  - 전체유저정보 selectAll 
 	           / 게시글아이디(postid) 주면 해당게시글 찾기
 	           / 수정하기 / updateMember
 	           / 삭제하기 deleteAdmin / deleteMember*/
-//	public int updateAdmin1(ExecBoardDto dto);
-//	public int deleteAdmin1(ExecBoardDto dto);
+//	public int updateAdmin(ExecBoardDto dto);
+//	public int deleteAdmin(ExecBoardDto dto);
 	
-//	public int updateMember1(ExecBoardDto dto);
-//	public int deleteMember1(ExecBoardDto dto);
+//	public int updateMember(ExecBoardDto dto);
+//	public int deleteMember(ExecBoardDto dto);
 	
 	/* security */
 //	 public int insertAuth(ExecAuthDto dto); public ExecBoardAuthDto

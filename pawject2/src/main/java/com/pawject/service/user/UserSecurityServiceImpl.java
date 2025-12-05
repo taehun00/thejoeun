@@ -199,10 +199,10 @@ public class UserSecurityServiceImpl implements UserSecurityService{
     }
 
 
-//	@Override
-//	public List<UserDto> listUsers(int start, int end) {
-//		return dao.listUsers(start, end);
-//	}
+	@Override
+	public List<UserDto> listUsers(int start, int end) {
+		return dao.listUsers(start, end);
+	}
 
 
 	@Override
@@ -212,30 +212,31 @@ public class UserSecurityServiceImpl implements UserSecurityService{
 	}
 
 
-	@Override
-	public List<UserDto> searchUsers(String keyword, String type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//	@Override
+//	public List<UserDto> searchUsers(String keyword, String type) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+//
+//	@Override
+//	public List<UserDto> listUsers(int pstartno) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 
-	@Override
-	public List<UserDto> listUsers(int pstartno) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public int selectTotalCnt() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+//	@Override
+//	public int selectTotalCnt() {
+//		// TODO Auto-generated method stub
+//		return 0;
+//	}
 	
 //	@Override
-//    public List<UserDto> searchUsers(String keyword) {
-//        return dao.searchUsers(keyword);
-//    }
+    public List<UserDto> searchUsers(String keyword) {
+        return dao.searchUsers(keyword);
+    }
+
 
 
 }

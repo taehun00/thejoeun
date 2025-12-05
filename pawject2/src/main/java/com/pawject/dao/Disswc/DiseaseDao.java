@@ -4,11 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.pawject.dao.MyDao;
 import com.pawject.dto.Disswc.DisswcDto;
 
 
 
-@DisDao
+@MyDao
 public interface DiseaseDao {
 	public int       insert(DisswcDto dto);
 	public int       update(DisswcDto dto);

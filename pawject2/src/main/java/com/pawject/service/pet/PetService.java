@@ -14,9 +14,6 @@ public interface PetService {
     // 펫 정보 수정(사용자)
     public int updatePetByUser(MultipartFile file, PetDto pet, int userId);
 
-    // 펫 정보 수정 상세페이지(관리자)
-    public PetDto selectPetDetailByAdmin(int petId);
-    
     // 펫 정보 수정(관리자)
     public int updatePetByAdmin(PetDto pet);
 
@@ -28,9 +25,5 @@ public interface PetService {
 
     // 검색
     public List<PetDto> searchPets(String keyword);
-    
-    // paging
-    public List<PetDto> selectPet10(int pstartno);
-    public int selectTotalPetCnt();
 
 }

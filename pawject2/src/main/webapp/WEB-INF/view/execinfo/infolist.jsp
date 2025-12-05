@@ -19,11 +19,13 @@
 </script>
  <div class="container card  my-5 p-4">
 	<h3 class="card-header">운동정보게시판</h3>
+	<div>${list}</div>
+	<div>${paging}</div>
 	<table class="table table-striped table-bordered table-hover">
 		<caption>운동정보</caption>
 		<thead>
 			<tr>
-		    	<th scope="col">번호</th> 
+		    	<th scope="col">운동아이디</th> 
 				<th scope="col">운동유형</th>
 		   <%-- <th scope="col">설명</th>  --%>
 		   <%-- <th scope="col">평균칼로리소모량(30분기준)</th> --%>
@@ -138,7 +140,7 @@
 									$
 											.ajax({
 												url : "${pageContext.request.contextPath}/selectSearch2",
-												type : "POST", //GET, POST,PUT
+												type : "GET", //GET, POST,PUT
 												data : {
 													search : keyword
 												},
