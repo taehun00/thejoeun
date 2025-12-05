@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.pawject.dto.food.FoodDtoForList;
 import com.pawject.dto.review.ReviewDto;
 import com.pawject.dto.review.ReviewImgDto;
 
@@ -30,5 +31,8 @@ public interface ReviewService {
 	
 	public List<ReviewDto> reviewSelect10(int pstartno);	
 	public int reviewSelectCnt();
+	
 
+	public List<ReviewDto> reviewsearch(String keyword, String searchType);
+	public int reviewsearchcnt(String keyword, String searchType);
 }

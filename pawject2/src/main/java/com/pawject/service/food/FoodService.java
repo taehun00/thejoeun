@@ -62,8 +62,9 @@ public interface FoodService {
 	public int foodselectcnt();
 	
 	//dao랑 다름!!
-	public List<FoodDtoForList> foodsearch(String keyword);
-
+	public List<FoodDtoForList> foodsearch(String keyword, String searchType);
+	
+	public int foodsearchcnt(String keyword, String searchType);
 	
 	
 	
