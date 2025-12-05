@@ -5,16 +5,22 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import com.pawject.dto.paging.PagingDto10;
 import com.pawject.dto.pet.PetDto;
 import com.pawject.dto.user.UserAuthDto;
 import com.pawject.dto.user.UserDto;
@@ -66,7 +72,7 @@ public class PetController {
 
 
 
-    // 펫 상세 페이지 (조회)
+    // 펫 상세 페이지 (조회) (사용자)
     @RequestMapping("/detail")
     public String petDetailPage(@RequestParam("petId") int petId,
 	            Principal principal,
@@ -83,6 +89,19 @@ public class PetController {
 	
 	return "pet/detail";
 	}
+    
+    // 관리자 펫 상세 조회
+    @RequestMapping("/detail/admin")
+    public String petDetailAdminPage(@RequestParam("petId") int petId, Model model) {
+        // 관리자라면 userId 조건 없이 petId만으로 조회
+        PetDto pet = pservice.selectPetDetailByAdmin(petId);
+        model.addAttribute("pet", pet);
+
+        System.out.println("admin petId=" + petId);
+
+        return "pet/detail";  // 같은 JSP를 재사용 가능
+    }
+
 
 
     // 펫 수정 페이지 (사용자)
@@ -117,48 +136,97 @@ public class PetController {
 
     // 펫 수정 페이지 (관리자)
     @RequestMapping("/update/admin")
-    public String petUpdateAdminPage() {
-        return "pet/updateAdmin"; 
+    public String petUpdateAdminPage(@RequestParam("petId") int petId, Model model) {
+        // 수정할 펫 정보 조회
+        PetDto pet = pservice.selectPetDetailByAdmin(petId);
+        model.addAttribute("pet", pet);
+        return "pet/updateAdmin";  // /WEB-INF/view/pet/updateAdmin.jsp
     }
+
+    // 펫 이름 수정 처리 (관리자) - POST
+    @RequestMapping(value="/update/admin", method=RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> petUpdateAdmin(@RequestParam("petId") int petId,
+                                              @RequestParam("petName") String petName) {
+        Map<String, Object> result = new HashMap<>();
+        PetDto pet = new PetDto();
+        pet.setPetId(petId);
+        pet.setPetName(petName);
+
+        int updated = pservice.updatePetByAdmin(pet);  //  이름만 수정
+
+        if (updated > 0) {
+            result.put("result", 1);
+            result.put("message", "펫 이름 수정 성공");
+        } else {
+            result.put("result", 0);
+            result.put("message", "펫 이름 수정 실패");
+        }
+        return result;   // JSON 응답
+    }
+
 
     // 펫 검색 페이지
+    // 검색 페이지 이동 (검색 폼을 보여줄 때)
     @RequestMapping("/search")
     public String petSearchPage() {
-        return "pet/list";
+        return "pet/list";  // /WEB-INF/view/pet/list.jsp
     }
 
-    // 펫 삭제 페이지 (사용자)
+    // 검색 실행 (Ajax 요청 처리)
+    @RequestMapping(value="/search", method=RequestMethod.GET)
+    @ResponseBody
+    public List<PetDto> searchPets(@RequestParam("keyword") String keyword) {
+        // 서비스 호출
+        List<PetDto> pets = pservice.searchPets(keyword);
+        return pets;  // JSON 응답
+    }
+
+
+    // 펫 삭제 폼 (뷰 반환)
     @RequestMapping("/delete")
-    public String deletePetFrom(@RequestParam("petId") int petId,
-            Principal principal,HttpSession session,
-            Model model) {
-    	int userid = (int) session.getAttribute("userid");
-    	model.addAttribute("pet", pservice.selectPetDetail(userid, petId));
-    	
-    	return "pet/delete";
+    public String deletePetForm(@RequestParam("petId") int petId,
+                                HttpSession session,
+                                Model model) {
+        int userid = (int) session.getAttribute("userid");
+        model.addAttribute("pet", pservice.selectPetDetail(userid, petId));
+        return "pet/delete";   // /WEB-INF/view/pet/delete.jsp
     }
-    
+
+    // 펫 삭제 처리 (AJAX JSON 반환)
+    @ResponseBody
     @RequestMapping(value="/delete", method=RequestMethod.POST)
-    public String deletePet(@RequestParam("petId") int petId,
-                            HttpSession session,
-                            RedirectAttributes rttr) {
-
-        String result = "펫 삭제 실패";
-
+    public Map<String, Object> deletePet(@RequestParam("petId") int petId,
+                                         HttpSession session) {
+        Map<String, Object> result = new HashMap<>();
         Integer userId = (Integer) session.getAttribute("userid");
 
         if (userId != null && pservice.deletePetByUser(petId, userId) > 0) {
-            // 로그아웃은 필요 없지만, 형식을 맞추려면 그대로 둘 수 있음
-            
-
-            result = "펫 삭제 성공";
-            rttr.addFlashAttribute("success1", result);
-            return "redirect:/security/mypage";
+            result.put("result", 1);   // ✅ 삭제 성공
         } else {
-            rttr.addFlashAttribute("deleteError", result);
-            return "redirect:/security/mypage";
+            result.put("result", 0);   // ❌ 삭제 실패
         }
+        return result;   // JSON 응답
     }
 
+    
+    @RequestMapping("/listPetPage")
+    public String adminListPage(Model model,
+                                @RequestParam(value="pstartno", defaultValue="1") int pstartno) {
+       
+        model.addAttribute("list", pservice.selectPet10(pstartno));
+        model.addAttribute("paging", new PagingDto10(pservice.selectTotalPetCnt(), pstartno));
+        return "pet/list";
+    }
 
+    @ResponseBody
+    @RequestMapping("list")
+    public Map<String, Object> list(Model model,
+    		@RequestParam( value="pstartno", defaultValue="1" ) int pstartno
+    		) {
+    	Map<String, Object> result = new HashMap<>();
+    	result.put("list", pservice.selectPet10(pstartno));
+        result.put("paging", new PagingDto10(pservice.selectTotalPetCnt(), pstartno));
+        return result;
+    }
 }
