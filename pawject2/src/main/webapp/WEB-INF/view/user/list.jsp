@@ -21,6 +21,9 @@
    <div class="container card  my-5 p-4  userTable">
       <h3 class="card-header"> 관리자 USER BOARD</h3>  
       <table class="table table-striped table-bordered table-hover">
+      <meta name="_csrf" content="${_csrf.token}"/>
+	  <meta name="_csrf_header" content="${_csrf.headerName}"/>
+      
       	<caption>USERS </caption>   	
       	<thead>
       		<tr>
@@ -46,9 +49,10 @@
 $(function(){        
     userList();   // 전체리스트
     //userSelect(); // 1명분의 정보
-    userUpdate(); // 유저정보수정
+    //userUpdate(); // 유저정보수정
     userDelete(); // 유저정보삭제
 });
+
 
 // 전체 유저 리스트
 function userList(){
@@ -69,11 +73,14 @@ function userList(){
 function userListResult(json){
     $(".userTable tbody").empty();
     let total = json.length;
+    var contextPath = "${pageContext.request.contextPath}";
 
     $.each(json, function(idx, user){
         $("<tr>")
             .append($("<td>").html(total-idx))
-            .append($("<td>").html('<img src="upload/'+user.ufile+'" alt="" style="width:80px" />'))
+            
+            .append($("<td>").html('<img src="'+contextPath+'/upload/'+user.ufile+'" alt="" style="width:80px" />'))
+
             .append($("<td>").html(user.userId))
             .append($("<td>").html(user.email))
             .append($("<td>").html(user.nickname))
@@ -81,6 +88,7 @@ function userListResult(json){
             // 수정 버튼 → 상세 페이지 이동
             .append($("<td>").html("<a href='/pawject2/security/detail?userId="+user.userId+"' class='btn btn-primary'>수정</a>"))
             .append($("<td>").html("<input type='button' class='btn btn-danger deleteUser' value='삭제' />"))
+            .append($("<input type='hidden' class='hidden_id'/>").val(user.userId))
             .append($("<input type='hidden' class='hidden_email'/>").val(user.email))
             .appendTo(".userTable tbody");
     });
@@ -93,19 +101,25 @@ function userDelete(){
     $("body").on("click", ".deleteUser", function(){
         let userId = $(this).closest("tr").find(".hidden_id").val();
         let email = $(this).closest("tr").find(".hidden_email").val();
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
 
         if(confirm(email + " 유저를 삭제하시겠습니까?")){
             $.ajax({
-                url: "/pawject2/security/deleteUser",
+            	url: "/pawject2/security/deleteUser",
                 type: "POST",
-                data: { userId:userId },   // userId로 통일
+                data: { email: email },
+                dataType: "json", 
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader(header, token); // ✅ CSRF 토큰 헤더 추가
+                },
                 success: function(json){
                     console.log("✅ deleteAdmin 응답:", json);
                     if(json.result == 1){
                         alert("삭제 완료");
                         userList();
                     } else {
-                        alert("해당 유저의 글이 남아 있어 삭제할 수 없습니다.");
+                        alert("삭제 실패");
                     }
                 },
                 error: function(xhr, status, msg){

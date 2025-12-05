@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.pawject.dao.pet.PetMapper;
 import com.pawject.dao.user.UserMapper;
 import com.pawject.dto.user.AuthDto;
 import com.pawject.dto.user.UserAuthDto;
@@ -22,6 +23,7 @@ import com.pawject.dto.user.UserDto;
 public class UserSecurityServiceImpl implements UserSecurityService{
 	@Autowired  UserMapper  dao;  
 	@Autowired  PasswordEncoder  pwencoder;
+	@Autowired  PetMapper pdao;
 	
 	@Transactional
 	@Override public int join(MultipartFile file, UserDto dto) { //##
@@ -152,28 +154,50 @@ public class UserSecurityServiceImpl implements UserSecurityService{
 
 	@Override
 	public int deleteMember(int userId) {
+		// 1. 권한 삭제
 		dao.deleteAuthoritiesByUserId(userId);
+		
+		// 2. 유저가 가진 모든 펫 삭제 (사용자 메서드 활용)
+		pdao.deletePetsByUser(userId);
 
+	    //3. 유저 삭제
 		UserDto dto = new UserDto();
         dto.setUserId(userId);
         return dao.deleteMember(dto);
 	}
 
 	@Override
-	public int deleteAdmin(String email) {
-		UserDto dto = new UserDto();
-        dto.setEmail(email);
-
-        UserAuthDto dbUser = dao.readAuth(dto);
-        if (dbUser == null) {
+	/*
+	 * public int deleteAdmin(String email) { UserDto dto = new UserDto();
+	 * dto.setEmail(email);
+	 * 
+	 * UserAuthDto dbUser = dao.readAuth(dto); if (dbUser == null) { return 0; //
+	 * 사용자 없음 } dao.deleteAuthoritiesByUserId(dbUser.getUserId());
+	 * 
+	 * 
+	 * return dao.deleteAdmin(dto);
+	 * 
+	 * }
+	 */
+	public int deleteUser(String email) {
+        // 1. 이메일로 유저 조회
+        UserDto user = dao.findUserByEmail(email);
+        if (user == null) {
             return 0; // 사용자 없음
         }
-        dao.deleteAuthoritiesByUserId(dbUser.getUserId());
 
+        int userId = user.getUserId();
+
+        // 2. 권한 삭제
+        dao.deleteAuthoritiesByUserId(userId);
+
+        // 3. 유저의 모든 펫 삭제
+        pdao.deletePetsByUser(userId);
         
-        return dao.deleteAdmin(dto);
+        // 4. 유저 삭제
+        return dao.deleteMember(user);
+    }
 
-	}
 
 	@Override
 	public List<UserDto> listUsers(int start, int end) {

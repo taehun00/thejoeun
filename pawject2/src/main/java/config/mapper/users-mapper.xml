@@ -92,15 +92,20 @@
   		DELETE FROM users
 		WHERE userid = #{userId}
   	</delete>
+  	
   	<!-- 회원탈퇴 (관리자) -->
+  	<!-- (email로 userId 가져오기 위해서) -->
+	<select id="findUserByEmail" parameterType="string" resultMap="userMap">
+	    SELECT USERID, EMAIL, PASSWORD, CREATEDAT, UFILE, MOBILE, NICKNAME
+	    FROM users
+	    WHERE EMAIL = #{email}
+	</select>
   	<delete id="deleteAuthoritiesByUserId" parameterType="int">
 	    DELETE FROM authorities WHERE userid = #{userId}
 	</delete>
-  	<delete  id="deleteAdmin" parameterType="UserDto">
-  		DELETE from users
-		WHERE email = #{email}
-  	</delete>
   	<!-- 여기까지 -->
+  	
+  	
 	<!-- 전체유저 정보확인(관리자) + 페이징  -->
 	<select id="listUsers" resultMap="userMap" parameterType="UserDto">
 		SELECT *
@@ -135,7 +140,8 @@
 	    SELECT u.userid,
 	           u.email,
 	           u.nickname,
-	           u.createdat
+	           u.createdat,
+	           u.ufile
 	    FROM users u
 	    WHERE u.email LIKE CONCAT(CONCAT('%', #{keyword}), '%')
 	       OR u.nickname LIKE CONCAT(CONCAT('%', #{keyword}), '%')

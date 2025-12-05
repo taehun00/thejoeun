@@ -44,8 +44,9 @@ public interface UserSecurityService {
     public int deleteMember(int userId);
 
     // 회원탈퇴 (관리자)
-    public int deleteAdmin(String email);
-    
+    //public int deleteAdmin(String email);
+    public int deleteUser(String email);
+
     // 검색(이메일, 닉네임)
     public List<UserDto> searchUsers(String keyword);
 

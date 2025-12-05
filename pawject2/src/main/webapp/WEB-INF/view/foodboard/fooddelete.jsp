@@ -18,7 +18,7 @@
 		  </div>
 	 </form>
    </div>
-   
+   <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 <%@include file="../inc/footer.jsp" %>
 
 <!-- [ mbtiBoard - list.jsp ]  -->

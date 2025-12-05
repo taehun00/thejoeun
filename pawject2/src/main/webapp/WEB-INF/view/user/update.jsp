@@ -38,6 +38,7 @@
 		  	<input type="text" class="form-control" id="ufile"   readonly  name="ufile"  value="${dto.ufile}">
 		  </div>
 		<button type="submit" class="btn btn-primary">정보수정-비밀번호/MBTI TYPE</button>
+		<a href="${pageContext.request.contextPath}/security/mypage" class="btn btn-secondary">목록으로</a>
 	</form>
 </div>
 <!-- ctrl + shift + f -->

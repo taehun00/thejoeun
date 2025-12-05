@@ -12,12 +12,14 @@
 		<typeAlias type="com.pawject.dto.user.UserDto"	alias="UserDto"/>
 		<typeAlias type="com.pawject.dto.user.AuthDto"        alias="AuthDto"/>
 		<typeAlias type="com.pawject.dto.user.UserAuthDto"    alias="UserAuthDto"/>
+		<typeAlias type="com.pawject.dto.pet.PetDto" alias="PetDto"/>
 		<typeAlias type="com.pawject.dto.review.ReviewDto"	alias="ReviewDto"/>
 		<typeAlias type="com.pawject.dto.review.ReviewImgDto"	alias="ReviewImgDto"/>
-		<typeAlias type="com.pawject.dto.exec.ExecBoardAuthDto"      alias="ExecBoardAuthDto"/>
 		<typeAlias type="com.pawject.dto.exec.ExecBoardDto"      alias="ExecBoardDto"/>
- 		<typeAlias type="com.pawject.dto.exec.ExecInfoAuthDto"      alias="ExecInfoAuthDto"/>
 		<typeAlias type="com.pawject.dto.exec.ExecInfoDto"          alias="ExecInfoDto"/>  		
+		<!-- Exec에 해당되는 security가 따로 필요하면 사용할 예정. -->
+<!-- 	<typeAlias type="com.pawject.dto.exec.ExecBoardAuthDto"      alias="ExecBoardAuthDto"/> -->
+<!--  	<typeAlias type="com.pawject.dto.exec.ExecInfoAuthDto"      alias="ExecInfoAuthDto"/> -->
 
 	</typeAliases>
 

@@ -26,13 +26,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.pawject.dao.user.UserMapper;
 import com.pawject.dto.user.UserDto;
 import com.pawject.service.user.UserSecurityService;
 
 @Controller
 @RequestMapping("/security")
 public class UserAdminController {
-
+	@Autowired private UserMapper dao;
+	
     @Autowired
     private UserSecurityService userService;
 
@@ -84,14 +86,20 @@ public class UserAdminController {
 
 
     // 유저 삭제 (관리자용)
-    @RequestMapping(value="/deleteUser", method=RequestMethod.POST)
+    @PostMapping("/deleteUser")
     @ResponseBody
-    public Map<String, Object> deleteAdmin(@RequestParam("userId") int userId) {
+    public Map<String, Object> deleteUser(@RequestParam("email") String email) {
         Map<String, Object> result = new HashMap<>();
-        int deleted = userService.deleteMember(userId);
-        result.put("result", deleted); // 1이면 성공, 0이면 실패
+        int deleted = userService.deleteUser(email);
+
+        if (deleted > 0) {
+            result.put("result", 1);
+        } else {
+            result.put("result", 0);
+        }
         return result;
     }
+
     
     // 검색 (이메일/닉네임)
     @RequestMapping(value="/search", method=RequestMethod.GET)

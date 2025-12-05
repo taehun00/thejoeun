@@ -12,7 +12,7 @@
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   
    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/butten.css">
-  
+     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/review.css">
 </head>
 <body>
 

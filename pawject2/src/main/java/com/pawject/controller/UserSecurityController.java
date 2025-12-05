@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -23,12 +24,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.pawject.dto.user.UserDto;
+import com.pawject.service.pet.PetService;
 import com.pawject.service.user.UserSecurityService;
 
 @Controller
 @RequestMapping("/security/*")
 public class UserSecurityController {
 	@Autowired UserSecurityService service;
+	@Autowired PetService pservice;
 	
 	@RequestMapping("/join")	// 회원가입 폼
 	public String joinForm() {
@@ -63,6 +66,7 @@ public class UserSecurityController {
 		return "/user/login";
 	}
 	
+	
 	@RequestMapping("/fail")	// 로그인실패 폼
 	public String fail(HttpServletResponse response, RedirectAttributes rttr) {
 		String result ="로그인 실패";
@@ -75,6 +79,10 @@ public class UserSecurityController {
 	public String mypage(Principal principal, Model model) {
 		model.addAttribute("dto", service.myPage(principal.getName()));
 		
+		model.addAttribute("pets", pservice.selectPetsByUserId(
+		        service.myPage(principal.getName()).getUserId()
+		    ));
+
 		return "/user/mypage";
 	}
 	
@@ -91,7 +99,7 @@ public class UserSecurityController {
 		
 		String result = "비밀번호를 확인해주세요";
 		if(service.update(file, dto) > 0) {
-			result="수정 성공";
+			result="유저 수정 성공";
 		}
 		rttr.addFlashAttribute("success", result);
 		
@@ -131,23 +139,6 @@ public class UserSecurityController {
         }
     }
 
-    // 회원 탈퇴 (관리자)
-    @PreAuthorize("hasRole('ADMIN')")
-    @RequestMapping(value="/deleteAdmin", method=RequestMethod.POST)
-    public String deleteAdmin(UserDto dto, RedirectAttributes rttr) {
 
-        String result = "삭제 실패";
-
-        // 서비스에서 email 기반 삭제
-        if(service.deleteAdmin(dto.getEmail()) > 0) {
-            result = "관리자 계정 삭제 성공";
-            rttr.addFlashAttribute("success", result);
-        } else {
-            rttr.addFlashAttribute("deleteError", result);
-        }
-
-        // 관리자 삭제 후 관리자 목록 페이지로 이동 (상황에 맞게 수정 가능)
-        return "redirect:/security/adminList";
-    }
 	
 }

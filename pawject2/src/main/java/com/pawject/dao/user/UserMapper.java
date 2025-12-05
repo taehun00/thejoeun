@@ -34,7 +34,8 @@ public interface UserMapper {
 
     // 회원탈퇴 (사용자, 관리자)
 	public int deleteMember(UserDto dto);
-	public int deleteAdmin(UserDto dto);
+	// 이메일로 유저 조회 (userId 가져오기)
+    public UserDto findUserByEmail(String email);
 	public int deleteAuthoritiesByUserId(int userId);
 	
 	

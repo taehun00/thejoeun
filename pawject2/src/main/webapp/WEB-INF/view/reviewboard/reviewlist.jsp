@@ -46,7 +46,7 @@
                 <!-- 리스트 행 -->
                 <tr class="review-row" onclick="toggleContent(${r.reviewid})">
                     <td style="display:none;">${r.reviewid}</td>
-                    <td>${total - status.index}</td>
+                    <td>${total - st.index}</td>
                     <td>${r.brandname}</td>
                     <td>${r.foodname}</td>
                     <td>
@@ -113,9 +113,9 @@
             </c:forEach>
         </tbody>
     </table>
-
+	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
     <div class="write-btn-area">
-        <button class="btn btn-slateBlue" onclick="location.href='${pageContext.request.contextPath}/reviewwrite.fn?reviewid=${r.reviewid}'">리뷰 작성</button>
+        <button class="btn btn-slateBlue" onclick="location.href='${pageContext.request.contextPath}/reviewwrite.fn'">리뷰 작성</button>
     </div>
 </div>
 
