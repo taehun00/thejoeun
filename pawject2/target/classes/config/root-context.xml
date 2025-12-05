@@ -8,9 +8,22 @@
 		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.3.xsd">
 
 
+<<<<<<< HEAD
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg ref="sqlSessionFactory"></constructor-arg>
 	</bean>	
+=======
+			
+				
+				 <!-- Mapper 인터페이스 자동 스캔  -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+	
+		<property name="basePackage" value="com.pawject.dao.Disswc" />
+		<property name="sqlSessionFactoryBeanName"
+			value="sqlSessionFactory" />
+	</bean>
+
+>>>>>>> 7dd35b5 (dis upload)
 
 	<!-- 3. mapper 여기는 아이디 생략-->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">

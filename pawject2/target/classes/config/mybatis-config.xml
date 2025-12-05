@@ -3,6 +3,10 @@
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration> 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7dd35b5 (dis upload)
 	
 	<settings>
         <setting name="mapUnderscoreToCamelCase" value="true"/>
@@ -20,6 +24,7 @@
 		<typeAlias type="com.pawject.dto.review.ReviewDto"	alias="ReviewDto"/>
 		<typeAlias type="com.pawject.dto.review.ReviewImgDto"	alias="ReviewImgDto"/>
 		<typeAlias type="com.pawject.dto.exec.ExecBoardDto"      alias="ExecBoardDto"/>
+<<<<<<< HEAD
 		<typeAlias type="com.pawject.dto.exec.ExecInfoDto"          alias="ExecInfoDto"/>  	
 <<<<<<< HEAD
 
@@ -29,11 +34,23 @@
 >>>>>>> e1b1c63 (질환 fv0)
 		<typeAlias type="com.pawject.dto.Disswc.DisswcDto"     alias="DisswcDto"/>	
 
+=======
+		<typeAlias type="com.pawject.dto.exec.ExecInfoDto"          alias="ExecInfoDto"/>  
+		<typeAlias type="com.pawject.dto.Disswc.DisswcDto"  alias="DisswcDto"/>		
+>>>>>>> 7dd35b5 (dis upload)
 		<!-- Exec에 해당되는 security가 따로 필요하면 사용할 예정. -->
 <!-- 	<typeAlias type="com.pawject.dto.exec.ExecBoardAuthDto"      alias="ExecBoardAuthDto"/> -->
 <!--  	<typeAlias type="com.pawject.dto.exec.ExecInfoAuthDto"      alias="ExecInfoAuthDto"/> -->
 
+<<<<<<< HEAD
 
 	</typeAliases>
 
 </configuration>
+=======
+		</typeAliases>
+		
+		
+		
+</configuration>
+>>>>>>> 7dd35b5 (dis upload)
