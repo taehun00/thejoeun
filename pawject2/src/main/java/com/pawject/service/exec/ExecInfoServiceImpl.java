@@ -22,7 +22,6 @@ public class ExecInfoServiceImpl implements ExecInfoService {
 	@Override public int delete2(ExecInfoDto dto) {return dao.delete2(dto);}
 	@Override public ExecInfoDto selectUpdateForm(int execid) {return dao.select2(execid);}
 
-
 	//Search - ajax
 	@Override public List<ExecInfoDto> selectSearch2(String keyword) {
 		HashMap<String, String> para = new HashMap<>();
@@ -41,12 +40,12 @@ public class ExecInfoServiceImpl implements ExecInfoService {
 	@Override public int selectTotalCnt() {return dao.selectTotalCnt();}
 
 	//iddouble
-	@Override public int iddouble(int execid) {return 0;}
+//	@Override public int iddouble2(int execid) {return 0;}
 
 	
 	//MEMBER
-	@Override public int updateMember(ExecInfoDto dto) {return 0;}
-	@Override public int deleteMember(ExecInfoDto dto) {return 0;}
+//	@Override public int updateMember2(ExecInfoDto dto) {return 0;}
+//	@Override public int deleteMember2(ExecInfoDto dto) {return 0;}
 
 
 }
