@@ -9,11 +9,17 @@
 	  		method="post"  encType="multipart/form-data" > 
 	      <input type="hidden"   name="userId"  value="1"> 
 		 
-		  <div class="mb-3 mt-3">
+<!-- 	  <div class="mb-3 mt-3">
 		    <label for="execid" class="form-label">운동아이디:</label>
+<<<<<<< HEAD
+		    <input type="text" class="form-control" placeholder="운동아이디 입력해주세요." id="execid"  name="execid">
+		  </div>-->		  
+ 		  <div class="mb-3 mt-3">
+=======
 		    <input type="text" class="form-control" placeholder="운동아이디 입력해주세요" id="execid"  name="execid">
 		  </div>
 		  <div class="mb-3 mt-3">
+>>>>>>> 8229c01e4a164a1e7969c039b4ee1bd00d7c3dde
 		    <label for="exectype" class="form-label">운동유형:</label>
 		    <input type="text" class="form-control" placeholder="운동유형 입력해주세요" id="exectype"  name="exectype">
 		  </div>

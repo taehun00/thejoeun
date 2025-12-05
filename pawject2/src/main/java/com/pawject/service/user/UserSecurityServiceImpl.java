@@ -210,11 +210,33 @@ public class UserSecurityServiceImpl implements UserSecurityService{
 		return dao.selectUser(userId);
 
 	}
+
+
+//	@Override
+//	public List<UserDto> searchUsers(String keyword, String type) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+//
+//	@Override
+//	public List<UserDto> listUsers(int pstartno) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+
+
+//	@Override
+//	public int selectTotalCnt() {
+//		// TODO Auto-generated method stub
+//		return 0;
+//	}
 	
-	@Override
+//	@Override
     public List<UserDto> searchUsers(String keyword) {
         return dao.searchUsers(keyword);
     }
+
 
 
 }

@@ -135,15 +135,15 @@ public class Testth {
 		//System.out.println(service.findId("hh"));
 		//System.out.println(service.findPassword("hh", "a@a"));
 	}
-	@Ignore@Test
-	public void testSearchUsers() {
-	    String keyword = "th"; // 이메일 또는 닉네임 일부
-	    List<UserDto> list = service.searchUsers(keyword);
-
-	    for(UserDto u : list) {
-	        System.out.println("검색 결과: " + u.getUserId() + ", " + u.getEmail() + ", " + u.getNickname());
-	    }
-	}
+//	@Ignore@Test
+//	public void testSearchUsers() {
+//	    String keyword = "th"; // 이메일 또는 닉네임 일부
+//	    List<UserDto> list = service.searchUsers(keyword);
+//
+//	    for(UserDto u : list) {
+//	        System.out.println("검색 결과: " + u.getUserId() + ", " + u.getEmail() + ", " + u.getNickname());
+//	    }
+//	}
 	@Ignore@Test
 	public void test13() {
 		PetDto pet = new PetDto();

@@ -1,5 +1,7 @@
 package pawject2;
 
+import java.util.HashMap;
+
 import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSession;
@@ -31,8 +33,22 @@ public class Test_Exec_pawject2 {
 	@Autowired ExecBoardService service;
 	@Autowired ExecInfoService  iservice;
 	
+	//운동정보게시판 paging_Test
+	
+	
+	//운동챌린지게시판 paging_Test
+	@Ignore public void test8() {
+		HashMap<String, Object> para = new HashMap<>();
+		para.put("start", 1); para.put("end", 10);
+		System.out.println(dao.select10(para));
+		
+		System.out.println(dao.selectAll1());
+	}
+	
+	
+	
    //운동정보게시판 service테스트(운동챌린지 게시판 작성시 참고용)
-	@Ignore public void test7() {
+	@Test public void test7() {
 		//5. delete
 //		ExecInfoDto dto = new ExecInfoDto();
 //		dto.setExecid(71);
@@ -178,7 +194,7 @@ public class Test_Exec_pawject2 {
 //		System.out.println( service.insert2( file ,dto) );
 		
 		//1. selectAll
-		System.out.println(service.selectAll1());
+//		System.out.println(service.selectAll1());
 	}
 	
   //운동챌린지 게시판 dao 테스트(완료)

@@ -10,18 +10,34 @@
 	      <input type="hidden"   name="postId"  value="1"> 
 		 
 		  <!-- 외래키로 가지고 올 것들. / placeholder="내용을 입력해주세요" ← 사용해야 될 수도 있으니 임시보관 -->
-		  <div class="mb-3 mt-3">
+<!-- 		  <div class="mb-3 mt-3">
 		    <label for="postid" class="form-label">게시글아이디:</label>
+<<<<<<< HEAD
+		    <input type="text" class="form-control" id="postid" 
+		    		placeholder="게시글아이디를 입력해주세요." name="postid">
+		  </div> -->		
+ 		  
+ 		  <div class="mb-3 mt-3">
+=======
 		    <input type="text" class="form-control" id="postid"  name="postid">
 		  </div>
 		  <div class="mb-3 mt-3">
+>>>>>>> 8229c01e4a164a1e7969c039b4ee1bd00d7c3dde
 		    <label for="execid" class="form-label">운동아이디:</label>
 		    <input type="text" class="form-control" id="execid"  name="execid">
 		  </div>
- 	  	  <div class="mb-3">
+		  
+<!--  게시판 기능테스트때는 풀어서 사용하고, 합본때에네는 잠그고 사용하시면 됩니다.-->	  
+		  <div class="mb-3">
 		    <label for="userid" class="form-label">사용자아이디:</label>
+<<<<<<< HEAD
+		    <input type="text" class="form-control" id="userid" 
+		    		placeholder="사용자아이디를 입력해주세요.(※회원가입후에 이용해주세요.)" name="userid">
+		  </div>  
+=======
 		    <input type="text" class="form-control" id="userid" name="userid">
 		  </div>
+>>>>>>> 8229c01e4a164a1e7969c039b4ee1bd00d7c3dde
 		  <!-- 외래키로 가지고 올 것들. -->
 
 		  <div class="mb-3 mt-3">
