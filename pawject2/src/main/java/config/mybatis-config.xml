@@ -4,6 +4,10 @@
   "https://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration> 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7dd35b5 (dis upload)
 =======
 
 >>>>>>> 7dd35b5 (dis upload)
@@ -25,6 +29,7 @@
 		<typeAlias type="com.pawject.dto.review.ReviewImgDto"	alias="ReviewImgDto"/>
 		<typeAlias type="com.pawject.dto.exec.ExecBoardDto"      alias="ExecBoardDto"/>
 <<<<<<< HEAD
+<<<<<<< HEAD
 		<typeAlias type="com.pawject.dto.exec.ExecInfoDto"          alias="ExecInfoDto"/>  	
 <<<<<<< HEAD
 
@@ -38,16 +43,23 @@
 		<typeAlias type="com.pawject.dto.exec.ExecInfoDto"          alias="ExecInfoDto"/>  
 		<typeAlias type="com.pawject.dto.Disswc.DisswcDto"  alias="DisswcDto"/>		
 >>>>>>> 7dd35b5 (dis upload)
+=======
+		<typeAlias type="com.pawject.dto.exec.ExecInfoDto"          alias="ExecInfoDto"/>  
+		<typeAlias type="com.pawject.dto.Disswc.DisswcDto"  alias="DisswcDto"/>		
+>>>>>>> 7dd35b5 (dis upload)
 		<!-- Exec에 해당되는 security가 따로 필요하면 사용할 예정. -->
 <!-- 	<typeAlias type="com.pawject.dto.exec.ExecBoardAuthDto"      alias="ExecBoardAuthDto"/> -->
 <!--  	<typeAlias type="com.pawject.dto.exec.ExecInfoAuthDto"      alias="ExecInfoAuthDto"/> -->
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 	</typeAliases>
 
 </configuration>
 =======
+=======
+>>>>>>> 7dd35b5 (dis upload)
 		</typeAliases>
 		
 		
