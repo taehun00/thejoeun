@@ -3,7 +3,6 @@
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration> 
-<<<<<<< HEAD
 	
 	<settings>
         <setting name="mapUnderscoreToCamelCase" value="true"/>
@@ -25,13 +24,7 @@
 		<!-- Exec에 해당되는 security가 따로 필요하면 사용할 예정. -->
 <!-- 	<typeAlias type="com.pawject.dto.exec.ExecBoardAuthDto"      alias="ExecBoardAuthDto"/> -->
 <!--  	<typeAlias type="com.pawject.dto.exec.ExecInfoAuthDto"      alias="ExecInfoAuthDto"/> -->
-=======
->>>>>>> 2d1cd78 (재다운)
 
-        <typeAliases>
-			<typeAlias type="com.pawject.dto.Disswc.DisswcDto"  alias="DisswcDto"/>
-		</typeAliases>
-		
-		
-		
+	</typeAliases>
+
 </configuration>
