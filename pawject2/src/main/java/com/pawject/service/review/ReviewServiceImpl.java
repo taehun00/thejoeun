@@ -252,6 +252,88 @@ public class ReviewServiceImpl implements ReviewService {
 		return rdao.reviewSelectCnt();
 	}
 
+	@Override
+	public List<ReviewDto> reviewsearch(String keyword, String searchType) {
+		HashMap<String, Object> para = new HashMap<>();
+		keyword = keyword.toLowerCase(); //대소문자 구분 x
+		String searchLike = "%" + keyword + "%";
+		
+		switch(searchType) {
+		case "pettypeid" :	            
+			para.put("searchType", "pettypeid");
+				//분기1.펫타입
+		        if ("고양이".equals(keyword)) {
+		            para.put("search", "1");
+		        } else if ("강아지".equals(keyword)) {
+		            para.put("search", "2");
+		        } else {
+		            para.put("search", "-1");
+		        }
+		        break;
+		        
+				//분기2. 브랜드
+				case "brandname" : para.put("searchType", "brandname");
+				 				   para.put("search", searchLike);	break;
+
+				//분기3. 사료이름
+				case "foodname" : para.put("searchType", "foodname"); 
+								  para.put("search", searchLike);	break;
+		
+				//분기4. 제목+내용+브랜드
+				case "all" : para.put("searchType", "all");
+							para.put("search", searchLike);	break;
+				
+		
+				}//switch
+				    List<ReviewDto> list = rdao.reviewsearch(para);
+			
+				    // 이미지도 여기서 넣어줘야됨!!
+				    for (ReviewDto r : list) {
+				        List<ReviewImgDto> imgs = idao.reviewimgSelect(r.getReviewid());
+				        r.setReviewimglist(imgs);
+				    }
+			
+				    return list;
+	}
+
+	@Override
+	public int reviewsearchcnt(String keyword, String searchType) {
+		HashMap<String, Object> para = new HashMap<>();
+		keyword = keyword.toLowerCase(); //대소문자 구분 x
+		String searchLike = "%" + keyword + "%";
+		
+		switch(searchType) {
+		case "pettypeid" :	            
+			para.put("searchType", "pettypeid");
+				//분기1.펫타입
+		        if ("고양이".equals(keyword)) {
+		            para.put("search", "1");
+		        } else if ("강아지".equals(keyword)) {
+		            para.put("search", "2");
+		        } else {
+		            para.put("search", "-1");
+		        }
+		        break;
+		        
+				//분기2. 브랜드
+				case "brandname" : para.put("searchType", "brandname");
+				 				   para.put("search", searchLike);	break;
+
+				//분기3. 사료이름
+				case "foodname" : para.put("searchType", "foodname"); 
+								  para.put("search", searchLike);	break;
+		
+				//분기4. 제목+내용+브랜드
+				case "all" : para.put("searchType", "all");
+							para.put("search", searchLike);	break;
+				
+		
+				}//switch
+
+		
+		return rdao.reviewsearchcnt(para);
+	}
+
 	
 	
 	
