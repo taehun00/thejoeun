@@ -23,7 +23,7 @@ public class ExecInfoController {
 	public String list( Model model,
 			@RequestParam(value="pstartno", defaultValue="1") int pstartno
 			) {
-		model.addAttribute("list", iservice.select10(pstartno));  //
+		model.addAttribute("list", iservice.select10(pstartno));  
 		model.addAttribute("paging", new PagingDto10( iservice.selectTotalCnt(), pstartno));
 		return "execinfo/infolist";
 	}

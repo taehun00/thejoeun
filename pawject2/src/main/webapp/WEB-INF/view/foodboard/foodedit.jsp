@@ -16,7 +16,8 @@
 	<h3 class="card-header">사료 정보 수정</h3>
 
 	<form action="${pageContext.request.contextPath}/foodedit.fn"
-		method="post">
+		method="post"
+		enctype="multipart/form-data">
 
 		<div class="row mt-4">
 
@@ -24,7 +25,8 @@
 
 			<div class="col-4 mb-3">
 				<label class="form-label">브랜드 :</label> <select name="brandid"
-					class="form-control">
+					class="form-control"
+					enctype="multipart/form-data">
 					<c:forEach var="b" items="${brandlist}">
 						<option value="${b.brandid}"
 							<c:if test="${b.brandid == fdto.brandid}">selected</c:if>>
@@ -191,11 +193,18 @@
 		</div>
 
 		<!-- 이미지 URL -->
-		<div class="mb-3 mt-3">
-			<label class="form-label">사료 이미지 URL :</label> <input type="text"
-				class="form-control" name="foodimg" value="${fdto.foodimg}">
-		</div>
+		<div class="row">
+			<div class="col-4 mb-3">
+			        <label for="file" class="form-label">제품 이미지 :</label>
+			        <input type="file" class="form-control" id="file" name="file" >
+			</div> 	
 
+			<div class="col-4 mb-3">
+			<label class="form-label">등록된 제품 이미지:</label> <input type="text"
+				class="form-control" name="foodimg" value="${fdto.foodimg}">
+			</div>
+		</div>
+		
 		<div class="mb-3 text-end">
 			<button type="submit" class="btn btn-mint">사료 정보 수정</button>
 

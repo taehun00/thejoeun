@@ -8,11 +8,13 @@
      <!--  <input type="hidden"   name="app_user_id"  value="">  -->
      <input type="hidden"   name="execId"  value="${dto.execid}">
      <input  type="hidden" name="${_csrf.parameterName}"  value="${_csrf.token}" />	
-	  <div class="mb-3 mt-3">
+   	  <div class="mb-3 mt-3">
 	    <label for="execid" class="form-label">운동아이디:</label>
 	    <input type="text" class="form-control" id="execid" 
-	    	  placeholder="운동아이디 입력해주세요" name="execid"  value="${dto.execid}">
-	  </div>
+
+	    	  placeholder="운동아이디 입력해주세요." name="execid" readonly value="${dto.execid}">
+	  </div> 
+
 	  <div class="mb-3 mt-3">
 	    <label for="exectype" class="form-label">운동유형:</label>
 	    <input type="text" class="form-control" id="exectype" 

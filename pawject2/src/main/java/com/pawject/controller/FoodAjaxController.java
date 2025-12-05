@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,7 @@ import com.pawject.service.food.FoodService;
 
 	
 	@RestController
+	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 	public class FoodAjaxController {
 		@Autowired FoodService service;
 		
@@ -50,10 +52,21 @@ import com.pawject.service.food.FoodService;
 		}
 		
 		
-		//검색 기능
+		//검색 기능+검색페이징
 		@RequestMapping("/foodsearch")
-		public List<FoodDtoForList> foodsearch(@RequestParam("search") String search){
-			return service.foodsearch(search);
+		public Map<String, Object> foodsearch(
+		        @RequestParam("keyword") String keyword,
+		        @RequestParam("searchType") String searchType) {
+
+		    Map<String, Object> result = new HashMap<>();
+
+		    List<FoodDtoForList> list = service.foodsearch(keyword, searchType);
+
+		    result.put("list", list);
+		    result.put("total", list.size());
+		    result.put("pstartno", 1);
+
+		    return result;
 		}
 	
 	}

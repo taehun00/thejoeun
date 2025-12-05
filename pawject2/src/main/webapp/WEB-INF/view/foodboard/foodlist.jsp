@@ -11,6 +11,11 @@
 	});
 </script>
 
+<script>
+    const csrfHeader = "${_csrf.headerName}";
+    const csrfToken = "${_csrf.token}";
+</script>
+
 
 <div class="container my-5">
 
@@ -24,52 +29,23 @@
             <thead class="table-light">
                 <tr>
                     <th scope="col">NO</th>
-					<th scope="col" id="pettypeFilterToggle" class="filterToggle">
-					    <div class="filter-head">펫타입 ▼</div>
-					    <div class="filter-panel" style="display:none;"></div>
-					</th>
-					
-					<th scope="col" id="brandFilterToggle" class="filterToggle">
-					    <div class="filter-head">브랜드 ▼</div>
-					    <div class="filter-panel" style="display:none;"></div>
-					</th>       
+                    <th scope="col">펫타입</th>
+                    <th scope="col">브랜드</th> 
                     <th scope="col">사료명</th>
                     <th scope="col">등록일</th>
                     <th scope="col">수정일</th>
                     <th scope="col">빠른삭제</th>
                 </tr>
-                
-                <div id="filterBox" style="display:none;" class="mt-3">
-				    <div id="filterContent"></div>
-				</div>
+
                 
                 
             </thead>
 
             <tbody>
-            </tbody>
-            
-
-            <div class="row">
-			  <div class="col-3">
-			  	<select id="searchType">
-				    <option value="all">전체</option>
-				    <option value="foodname">사료명</option>
-				    <option value="description">내용</option>
-				    <option value="pettypeid">강아지/고양이</option>
-				    <option value="brandname">브랜드명</option>
-				</select>
-			  </div>
-		      <div class="col-6"><input type="text" id="searchKeyword" placeholder="검색어를 입력해 주세요"></div>
-			  <div class="col-2"><button class="btn btn-mint" onclick="searchFood()">검색</button></div>
-		
-		    </div>
-            
-            
-            
+            </tbody>   
 		<tfoot>
 		<tr>
-		<td colspan="9">
+		<td colspan="7">
 		    <ul class="pagination justify-content-center">
 		
 		        <!-- 이전 -->
@@ -99,13 +75,38 @@
 		    </ul>
 		</td>
 		</tr>
-		</tfoot>            
+		</tfoot>
+		</table>
 
-        </table>
-         
+			<div class="row my-3">
+			  <div class="col d-flex justify-content-end gap-2">
+			    <select id="searchType" class="form-select" style="width:150px;">
+			      <option value="all">전체</option>
+			      <option value="pettypeid">강아지/고양이</option>
+			      <option value="brandname">브랜드명</option>
+			      <option value="foodname">사료명</option>
+			    </select>
+			
+			    <input type="text" id="searchKeyword" placeholder="검색어 입력" class="form-control" style="width:300px;">
+			    <button class="btn btn-mint" onclick="searchFood()">검색</button>
+			
+			    <!-- 목록보기 버튼도 같은 flex 컨테이너 안에 -->
+			    <a href="${pageContext.request.contextPath}/foodlist.fn"
+			       id="searchlistBtn"
+			       class="btn btn-slateBlue"
+			       style="display:none;">목록보기</a>
+			  </div>
+			</div>
+
+
+
+		
+
+		<div id="pagingArea" class="mt-3"></div>
 
         <div class="text-end">
             <a href="${pageContext.request.contextPath}/foodwrite.fn"
+            	id="writeBtn"
                class="btn btn-slateBlue">사료 등록</a>
         </div>
 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
@@ -113,93 +114,69 @@
 </div>
 
 <script>
+// 전역 상태
+let currentMode = "list";       
+let currentSearchType = "";
+let currentKeyword = "";
+
+// 첫 로딩
 $(function() {
-    let currentPage = $("#currentPage").val() || 1;
-    foodList($("#currentPage").val() || 1);
+    const currentPage = $("#currentPage").val() || 1;
+    foodList(currentPage);
     foodquikdelete();
 });
 
-//검색
-function doFoodSearch(type, keyword, pstartno = 1){
+
+function doFoodSearch(searchType, keyword){
+    currentMode = "search";
+    currentSearchType = searchType;
+    currentKeyword = keyword;
+
     $.ajax({
-        url: "/foodsearch",
+        url: "${pageContext.request.contextPath}/foodsearch",
         type: "GET",
-        data: { keyword:keyword, searchType:type, pstartno:pstartno },
+        data: { keyword: keyword, searchType: searchType },
         success: function(json){
-            foodListResult(json, pstartno);
+
+            // 검색 결과 출력 + 목록보기 버튼
+            foodListResult(json, 1);
+            $("#searchlistBtn").show();
+            // 검색 모드에서는 JSP 페이징 숨김
+            $("tfoot").hide();
+            $("#writeBtn").hide();
         }
     });
 }
 
-//검색창
-function searchfood(){
-    let keyword = $("#searchKeyword").val().trim();
-    let type = $("#searchType").val().trim();
+function searchFood(){
+    const keyword = $("#searchKeyword").val().trim();
+    const searchType = $("#searchType").val();
 
-    doFoodSearch(type, keyword);
-}
-
-
-//리스트에서 클릭으로 검색
-/* function searchByType(type, keyword){
-    doFoodSearch(type, keyword);
-} */
-
-//펫타입 필터
-$("#pettypeFilterToggle").on("click", function() {
-    let panel = $(this).find(".filter-panel");
-    panel.html(`
-        <select id="pettypeSelect" class="form-select form-select-sm">
-            <option value="">전체</option>
-            <option value="1">고양이</option>
-            <option value="2">강아지</option>
-        </select>
-        <button class="btn btn-sm btn-mint mt-2" onclick="applyFilter('pettype')">검색</button>
-    `);
-
-    panel.slideToggle(120);
-});
-
-
-/*         <select name="brandid" id="brandid" class="form-select">
-<option value="">브랜드 선택</option>
-<c:forEach var="b" items="${brandlist}">
-  <option value="${b.brandid}">${b.brandname}</option>
-</c:forEach>
-</select> */
-
-function applyFilter(type){
-    let keyword = "";
-
-    if(type === "pettype"){
-        keyword = $("#pettypeSelect").val();
-    } else if(type === "brandname"){
-        keyword = $("#brandSelect").val();
+    if(keyword.length === 0){
+        alert("검색어를 입력해주세요.");
+        return;
     }
 
-    doFoodSearch(type, keyword);
-
-    // 모든 드롭다운 닫기
-    $(".filter-panel").slideUp(100);
+    doFoodSearch(searchType, keyword);
 }
 
 
+function foodList(pstartno = 1) {
+    currentMode = "list";
 
-$(".filter-panel").on("click", function(e){
-    e.stopPropagation();
-});
-
-
-function foodList(pstartno) {
     $.ajax({
-        url: "foodselectForList",
+        url: "${pageContext.request.contextPath}/foodselectForList",
         type: "GET",
         data: { pstartno: pstartno },
         success: function(json) {
+
+            // 리스트 출력
             foodListResult(json, pstartno);
+            // JSP 페이징 다시 보이게
+            $("tfoot").show();
         },
         error: function() {
-            alert("error");
+            alert("목록 불러오기 실패");
         }
     });
 }
@@ -213,25 +190,28 @@ function foodListResult(json, pstartno) {
     $(".foodTable tbody").empty();
 
     $.each(list, function(idx, food) {
-
         let number = total - ((pstartno - 1) * 10 + idx);
 
         $("<tr>")
-            .append($("<td>").html(number))
-			.append($("<td>").html(pettypename(food.pettypeid)))
-			.append($("<td>").html(food.brandname))
-			.append($("<td>").html("<a href='fooddetail.fn?foodid=" 
-                   + food.foodid 
-                   + "' style='text-decoration:none; color:black; font-weight:bold;'>"
-                   + food.foodname + "</a>"))
-            .append($("<td>").html(food.createdat))
-            .append($("<td>").html(food.updatedat))
-            .append($("<td>").html("<button class='btn btn-mint foodquikdelete' data-foodid='"
-                   + food.foodid + "'>빠른삭제</button>"))
-                 
+            .append($("<td>").text(number))
+            .append($("<td>").text(pettypename(food.pettypeid)))
+            .append($("<td>").text(food.brandname))
+            .append($("<td>").html(
+                "<a href='fooddetail.fn?foodid=" + food.foodid +
+                "' style='text-decoration:none; color:black; font-weight:bold;'>" +
+                food.foodname + "</a>"
+            ))
+            .append($("<td>").text(food.createdat))
+            .append($("<td>").text(food.updatedat))
+            .append($("<td>").html(
+                "<button class='btn btn-mint foodquikdelete' data-foodid='" +
+                food.foodid + "'>빠른삭제</button>"
+            ))
             .appendTo(".foodTable tbody");
     });
 }
+
+
 function foodquikdelete() {
     $("body").on("click", ".foodquikdelete", function() {
 
@@ -240,14 +220,14 @@ function foodquikdelete() {
 
         if (confirm("삭제하시겠습니까?")) {
             $.ajax({
-                url: "foodquikdelete",
+                url: "${pageContext.request.contextPath}/foodquikdelete",
                 type: "POST",
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader(csrfHeader, csrfToken);
-                },  //토큰 여기!!
+                },
                 data: {
                     foodid: foodid,
-                    pstartno: currentPage  
+                    pstartno: currentPage
                 },
                 success: function() {
                     foodList(currentPage); 
@@ -257,7 +237,6 @@ function foodquikdelete() {
                 }
             });
         }
-
     });
 }
 
@@ -266,7 +245,6 @@ function pettypename(pettypeid){
     else if(pettypeid == 2) return "강아지";    
 }
 </script>
-
 
 
 

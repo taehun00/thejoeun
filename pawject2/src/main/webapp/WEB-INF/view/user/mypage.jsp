@@ -7,9 +7,16 @@
 	   let result = '${success}';
 	   console.log(result); 
 	   if(result == "비밀번호를 확인해주세요"){   alert( result );   history.go(-1); } 
+	   else if(result == "수정 실패"){   alert( result );   history.go(-1); }
 	   else if(result.length  != 0 ){  alert(result); }  //아까 처음 값이없을때 공백 
    }); 
    </script>
+<!-- 펫 정보 수정 성공 시 alert -->
+<c:if test="${not empty success1}">
+    <script>
+        alert("${success1}");
+    </script>
+</c:if>
 
    <c:if test="${not empty deleteError}">
     <script>
@@ -48,10 +55,55 @@
 		    </tr>
 		  </tbody>
 		</table>
-	  	<div class="text-end">
-	  		<a href="${pageContext.request.contextPath}/security/update"  class="btn btn-danger">UPDATE</a>
+		<div class="text-end">
+		<a href="${pageContext.request.contextPath}/security/update"  class="btn btn-danger">UPDATE</a>
             <a href="${pageContext.request.contextPath}/security/delete"  
  					class="btn btn-primary">DELETE</a>
+		</div>
+		
+		<h4 class="mt-4">등록된 펫 정보</h4>
+		    <table class="table table-bordered table-hover align-middle">
+		        <thead class="table-light">
+		            <tr>
+		                <th>사진</th>
+		                <th>이름</th>
+		                <th>품종</th>
+		                <th>생일</th>
+		                <th>타입</th>
+		                <th>등록일</th>
+		            </tr>
+		        </thead>
+		        <tbody>
+		            <c:forEach var="pet" items="${pets}">
+		                <tr>
+		                    <td>
+		                        <img src="${pageContext.request.contextPath}/upload/${pet.pfile}" alt="" style="width:80px; height:80px;" />
+		                    </td>
+		                    <td>
+					            <a href="${pageContext.request.contextPath}/pet/detail?petId=${pet.petId}">
+					                ${pet.petName}
+					            </a>
+					        </td>
+
+		                    <td>${pet.petBreed}</td>
+		                    <td>${pet.birthDate}</td>
+		                    <td>
+		                        <c:choose>
+		                            <c:when test="${pet.petTypeId == 1}">고양이</c:when>
+		                            <c:when test="${pet.petTypeId == 2}">강아지</c:when>
+		                            <c:otherwise>기타</c:otherwise>
+		                        </c:choose>
+		                    </td>
+		                    <td>${pet.createdAt}</td>
+		                </tr>
+		            </c:forEach>
+		        </tbody>
+		    </table>
+		
+		
+	  	<div class="text-end">
+ 			<a href="${pageContext.request.contextPath}/pet/join" class="btn btn-success">펫 작성하기</a>
+ 			
  		 </div>
 	</div>
 <%@ include file="../inc/footer.jsp" %>

@@ -68,12 +68,24 @@
         <!-- 비로그인 사용자만 보이는 메뉴 -->
         <sec:authorize access="isAnonymous()">
           <li class="nav-item">
-            <a class="nav-link" href="${pageContext.request.contextPath}/security/doLogin">LOGIN</a>
+            <a class="nav-link" href="${pageContext.request.contextPath}/security/login">LOGIN</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="${pageContext.request.contextPath}/security/join">JOIN</a>
           </li>
         </sec:authorize>
+        
+        <sec:authorize access="hasRole('ADMIN')">
+		  <li class="nav-item">
+		    <a class="nav-link fw-bold text-warning" href="${pageContext.request.contextPath}/security/listPage">
+		      관리자 USER
+		    </a>
+		    <a class="nav-link fw-bold text-warning" href="${pageContext.request.contextPath}/pet/listPetPage">
+		      관리자 PET
+		    </a>
+		  </li>
+		</sec:authorize>
+        
 		
       </ul>
     </div>

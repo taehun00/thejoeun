@@ -2,5 +2,4 @@
 <%-- <% response.sendRedirect(request.getContextPath() + "/list.execinfo");%> 
  --%>
 
-<% response.sendRedirect(request.getContextPath() + "/list.execboard"); %>	
-
+<% response.sendRedirect(request.getContextPath() + "/list.execboard"); %>

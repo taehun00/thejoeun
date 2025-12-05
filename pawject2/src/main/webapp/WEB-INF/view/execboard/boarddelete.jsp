@@ -7,15 +7,22 @@
       <h3 class="card-header"> 운동챌린지게시판 글삭제</h3>
 	  <%-- <form action="${pageContext.request.contextPath}/delete.do?id=${param.id}"     method="post">  --%> 
 	  <form action="${pageContext.request.contextPath}/delete.execboard"  method="post">  
-	      <input type="hidden"   name="userId"  value="${param.userid}"> 
+	      <input type="hidden"   name="postid"  value="${param.postid}"> 
 		  <input  type="hidden" name="${_csrf.parameterName}"  value="${_csrf.token}" />			  
 		  
-		  <div class="my-3">
+<!--  		  <div class="my-3">
 		    <label for="postid" class="form-label">게시글아이디:</label>
+<<<<<<< HEAD
+		    <input type="text" class="form-control"
+		    	id="postid"  placeholder="게시글아이디를 입력해주세요." name="postid">
+		  </div> -->
+          <div class="my-3">
+=======
 		    <input type="text" class="form-control" 
 		    	id="postid"  placeholder="게시글아이디를 입력해주세요" name="postid">
 		  </div> 
 		  <div class="my-3">
+>>>>>>> 8229c01e4a164a1e7969c039b4ee1bd00d7c3dde
 		    <label for="execid" class="form-label">운동아이디:</label>
 		    <input type="text" class="form-control" 
 		    	id="execid"  placeholder="운동아이디를 입력해주세요" name="execid">
@@ -26,10 +33,9 @@
 		    	id="userid"  placeholder="사용자아이디를 입력해주세요" name="userid">
 		  </div> 
 		  
-		  
 		  <div class="my-3  text-end">
 		  	<button type="submit" class="btn btn-roseRed">글삭제</button>
-		  	<a href="javascript:history.go(-1)"  class="btn btn-rosePink">BACK</a>
+		  	<a href="javascript:history.go(-1)"  class="btn btn-mint">BACK</a>
 		  </div>
 	 </form>
    </div>

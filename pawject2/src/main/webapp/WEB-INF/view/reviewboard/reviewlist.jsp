@@ -17,7 +17,10 @@
 	);
 	
 	</script>
-
+	<script>
+	    const loginUserId = "${userid}";
+	    const loginRole   = "${author}";
+	</script>
 
 <div class="review-container">
 
@@ -25,7 +28,34 @@
 
    <table class="review-table table table-bordered table-hover align-middle text-center">
         <input type="hidden" id="currentPage" value="${reviewpaging.pstartno}">
+		 <input type="hidden" name="userid" value="${rdto.userid}">
         <caption class="visually-hidden">사료 후기</caption>
+        
+       <div class="row my-3">
+		    <!-- 가운데 정렬 영역 -->
+		    <div class="col d-flex justify-content-center gap-2">
+		        <select id="searchType" class="form-select" style="width:150px;">
+		            <option value="all">전체</option>
+		            <option value="pettypeid">강아지/고양이</option>
+		            <option value="brandname">브랜드명</option>
+		            <option value="foodname">사료명</option>
+		        </select>
+		
+		        <input type="text" id="searchKeyword" placeholder="검색어 입력" class="form-control" style="width:300px;">
+		        <button class="btn btn-mint" onclick="searchReview()">검색</button>
+		        <button class="btn btn-slateBlue"
+		    	   id="searchlistBtn"
+				   style="display:none;"
+			        onclick="location.href='${pageContext.request.contextPath}/reviewlist.fn'">
+				    목록보기
+				</button>
+
+		        
+		    </div>
+		
+
+		</div>
+		
         <thead class="table-light">
             <tr>
                 <th style="display:none;"></th>
@@ -75,29 +105,77 @@
 		</td>
 		</tr>
 		</tfoot>
-        
-        
-        
-    </table>
+       </table>
+      
+		
+		
 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
-    <div class="write-btn-area">
-        <button class="btn btn-slateBlue" onclick="location.href='${pageContext.request.contextPath}/reviewwrite.fn'">리뷰 작성</button>
-    </div>
+	
+		<c:if test="${author == 'ROLE_ADMIN' or author == 'ROLE_MEMBER'}">
+		    <div class="write-btn-area">
+		        <button class="btn btn-slateBlue" 
+		        		 id="writeBtn" onclick="location.href='${pageContext.request.contextPath}/reviewwrite.fn'">리뷰 작성</button>
+		        		 
+		    </div>
+		</c:if>
+	
+
 </div>
 
 <script>
-$(function () {
-    let currentPage = $("#currentPage").val() || 1;
-    reviewPaging($("#currentPage").val() || 1);
+
+//전역 상태
+let currentMode = "list";       
+let currentSearchType = "";
+let currentKeyword = "";
+
+//첫 로딩
+$(function() {
+ const currentPage = $("#currentPage").val() || 1;
+ reviewPaging(currentPage);
 });
-	
+
+
+
+function doReviewSearch(searchType, keyword) {
+    currentMode = "search";
+    currentSearchType = searchType;
+    currentKeyword = keyword;
+
+    $.ajax({
+        url: "${pageContext.request.contextPath}/reviewsearch",
+        type: "GET",
+        data: { keyword: keyword, searchType: searchType },
+        success: function(json) {
+            reviewPagingResult(json, 1);
+            $("#searchlistBtn").show();
+            $("tfoot").hide();
+            $("#writeBtn").hide();
+        }
+    }); 
+}
+
+function searchReview(){
+    const keyword = $("#searchKeyword").val().trim();
+    const searchType = $("#searchType").val();
+
+    if(keyword.length === 0){
+        alert("검색어를 입력해주세요.");
+        return;
+    }
+
+    doReviewSearch(searchType, keyword);
+}
+
 function reviewPaging(pstartno){
+    currentMode = "list";
 	$.ajax({
-		url:"reviewPaging",
+		url:"${pageContext.request.contextPath}/reviewPaging",
         type: "GET",
         data: { pstartno: pstartno },
         success: function(json) {
         	reviewPagingResult(json, pstartno);  // 페이징 기능때매 필요
+        	 $("tfoot").show();  //페이징 다시 보이기
         },
 		error:function (xhr) {
 		    console.error("ERROR:", xhr.responseText);
@@ -126,6 +204,13 @@ function reviewPagingResult(json, pstartno) {
 
     $.each(list, function(idx, review)  {
     	let number = total - ((pstartno - 1) * 10 + idx);
+    	
+        console.log("🔎 DEBUG:",
+                "reviewid=", review.reviewid,
+                "userid=", review.userid,
+                "loginUserId=", loginUserId,
+                "loginRole=", loginRole);
+    	
     	
     	//요약-바로 보이는 행
 		let summary = $("<tr>")
@@ -189,20 +274,43 @@ function reviewPagingResult(json, pstartno) {
 		let comment = $("<p>")
 		    .addClass("detail-text")
 		    .text(review.reviewcomment);
-		
-		let btns = $("<div>").addClass("detail-btns")
-		    .append(
+		let btns = $("<div>").addClass("detail-btns");
+
+		// 관리자는 전체 버튼 표시
+		if (loginRole === "ROLE_ADMIN") {
+
+		    btns.append(
 		        $("<button>")
 		            .addClass("btn btn-green")
 		            .text("수정")
 		            .attr("onclick", "location.href='reviewedit.fn?reviewid=" + review.reviewid + "'")
-		    )
-		    .append(
+		    );
+
+		    btns.append(
 		        $("<button>")
 		            .addClass("btn btn-olive")
 		            .text("삭제")
 		            .attr("onclick", "location.href='reviewdelete.fn?reviewid=" + review.reviewid + "'")
 		    );
+		}
+
+		// 일반 회원이면 본인 글만 버튼 표시
+		else if (loginRole === "ROLE_MEMBER" && review.userid == loginUserId) {
+
+		    btns.append(
+		        $("<button>")
+		            .addClass("btn btn-green")
+		            .text("수정")
+		            .attr("onclick", "location.href='reviewedit.fn?reviewid=" + review.reviewid + "'")
+		    );
+
+		    btns.append(
+		        $("<button>")
+		            .addClass("btn btn-olive")
+		            .text("삭제")
+		            .attr("onclick", "location.href='reviewdelete.fn?reviewid=" + review.reviewid + "'")
+		    );
+		}
 		
 		// contentTd 구성
 		contentTd.append(imgWrap);

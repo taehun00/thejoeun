@@ -3,6 +3,8 @@ package com.pawject.service.food;
 import java.util.HashMap;
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.pawject.dto.food.BrandDto;
 import com.pawject.dto.food.FoodDto;
 import com.pawject.dto.food.FoodDtoForList;
@@ -12,7 +14,7 @@ import com.pawject.dto.food.NutriDto;
 public interface FoodService {
 
 	//<insert id="fooodinsert" parameterType="FoodDto">
-	public int foodinsert(FoodDto dto);
+	public int foodinsert(FoodDto dto,  MultipartFile file);
 	
 	//<select resultType="FoodDto" id="foodselectAll">
 	public List<FoodDto> foodselectAll();
@@ -21,7 +23,7 @@ public interface FoodService {
 	public FoodDto foodselect(int foodid);
 	
 	//<update id="foodupdate" parameterType="FoodDto">
-	public int foodupdate(FoodDto dto);
+	public int foodupdate(FoodDto dto, MultipartFile file);
 	
 	//<delete id="fooddelete" parameterType="int">
 	public int fooddelete(int foodid);
@@ -62,8 +64,9 @@ public interface FoodService {
 	public int foodselectcnt();
 	
 	//dao랑 다름!!
-	public List<FoodDtoForList> foodsearch(String keyword);
-
+	public List<FoodDtoForList> foodsearch(String keyword, String searchType);
+	
+	public int foodsearchcnt(String keyword, String searchType);
 	
 	
 	
