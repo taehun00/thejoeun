@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.pawject.dao.exec.ExecInfoDao;
+import com.pawject.dto.exec.ExecBoardDto;
 import com.pawject.dto.exec.ExecInfoDto;
 
 @Service
@@ -17,6 +18,10 @@ public class ExecInfoServiceImpl implements ExecInfoService {
 	@Override public int insert2(ExecInfoDto dto) {return dao.insert2(dto);}
 	@Override public List<ExecInfoDto> selectAll2() {return dao.selectAll2() ;}
 	@Override public ExecInfoDto select2(int execId) {return dao.select2(execId);}
+	@Override public int update2(ExecInfoDto dto) {return dao.update2(dto);}
+	@Override public int delete2(ExecInfoDto dto) {return dao.delete2(dto);}
+	@Override public ExecInfoDto selectUpdateForm(int execid) {return dao.select2(execid);}
+
 
 	//Search - ajax
 	@Override public List<ExecInfoDto> selectSearch2(String keyword) {

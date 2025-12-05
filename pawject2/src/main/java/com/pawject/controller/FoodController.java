@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.pawject.dto.food.FoodDto;
-import com.pawject.dto.food.FoodPagingDto;
 import com.pawject.dto.food.NutriDto;
+import com.pawject.dto.paging.PagingDto10;
 import com.pawject.service.food.FoodService;
 
 
@@ -31,7 +31,7 @@ public class FoodController {
 	public String list(Model model,
 						@RequestParam(value="pstartno", defaultValue = "1") int pstartno ) { //전체 목록 게시판 뷰
 	    int total = service.foodselectcnt(); // 총 개수
-	    FoodPagingDto paging = new FoodPagingDto(total, pstartno);
+	    PagingDto10 paging = new PagingDto10(total, pstartno);
 	    model.addAttribute("foodlist", service.foodselect10(paging.getCurrent()));
 	    model.addAttribute("foodpaging", paging);
 

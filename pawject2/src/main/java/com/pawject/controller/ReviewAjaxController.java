@@ -1,19 +1,21 @@
 package com.pawject.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.pawject.dto.food.FoodDtoForList;
 import com.pawject.dto.review.ReviewDto;
 import com.pawject.dto.review.ReviewImgDto;
 import com.pawject.service.review.ReviewService;
-
 @RestController
 public class ReviewAjaxController {
 
@@ -72,5 +74,29 @@ public class ReviewAjaxController {
     	return service.reviewimgdelete(reviewimgid);
     }
     
-}
+    //페이징 
+//	@RequestMapping("/reviewPaging")
+//	public List<ReviewDto> reviewPaging(
+//	    @RequestParam(defaultValue="1") int pstartno
+//	){
+//	    return service.reviewSelect10(pstartno);
+//	}
     
+    @RequestMapping("/reviewPaging")
+    public Map<String, Object> reviewPaging(
+    		@RequestParam(defaultValue="1") int pstartno){	
+    	Map<String, Object> result = new HashMap<>();
+    	
+    	int total= service.reviewSelectCnt();
+    	List<ReviewDto> list = service.reviewSelect10(pstartno);
+    	
+    	result.put("total", total);
+    	result.put("list", list);
+
+    	return result;
+    }
+	
+
+}
+
+
