@@ -25,15 +25,15 @@ public interface ExecInfoService {
 
 	
 	/* idouble */
-	public int iddouble(int execid);
+//	public int iddouble2(int execid);
 	
 	/* admin  - 전체유저정보 selectAll 
 	           / 게시글아이디(postid) 주면 해당게시글 찾기
 	           / 수정하기 updateMember
 	           / 삭제하기 deleteMember*/
 	
-	public int updateMember(ExecInfoDto dto);
-	public int deleteMember(ExecInfoDto dto);
+//	public int updateMember2(ExecInfoDto dto);
+//	public int deleteMember2(ExecInfoDto dto);
 	
 	/* security */
 //	public int insertAuth(ExecAuthDto dto);

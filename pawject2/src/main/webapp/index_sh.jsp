@@ -1,4 +1,7 @@
-<%@  page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%-- <% response.sendRedirect(request.getContextPath() + "/list.execinfo");%> 
+ --%>
 
 <% response.sendRedirect(request.getContextPath() + "/list.execboard"); %>	
 
