@@ -2,23 +2,21 @@
 	pageEncoding="UTF-8"%>
 
 <%@include file="../inc/header.jsp"%>
-<script>
+<!-- <script>
 	$(function(){
 		let result = '${success}';
 		console.log(result);
-		if(resut == '글쓰기실패'){
+		if(resut == '글쓰기에 실패했습니다.'){
 			alert(result); history.go(-1);
-		}else if( result == '사용자 아이디를 확인해주세요.' ){
+		}else if( result == '사용자아이디를 확인해주세요.' ){
 			alert(result); history.go(-1);
 		}else if(result.length !=0){
 			alert(result);
 		}
 	});
-</script>
+</script>-->
 <div class="container card  my-5 p-4">
 	<h3 class="card-header">운동챌린지게시판</h3>
-	<div>${list}</div>
-	<div>${paging}</div>
 	<table class="table table-striped table-bordered table-hover">
 		<caption>운동챌린지게시판</caption>
 		<thead>
@@ -49,7 +47,10 @@
 			   <%-- <td>${dto.userId}</td>  --%>
 			
 			   <%-- <td>${dto.econtent}</td> --%>
-					<td>${dto.eimg}</td>
+					<td> 
+						<img src="${pageContext.request.contextPath}/upload/${dto.eimg}"
+							 alt="${dto.eimg}"  style="width:100px"  />
+					</td>
 					<td>${dto.createdat}</td>
 			   <%-- <td>${dto.updatedat}</td>  --%>
 				<tr>
@@ -82,14 +83,12 @@
 			</tr>
 		</tfoot>
 	</table>
- 	<sec:authorize access="isAuthenticated()">	</sec:authorize>
-		<p class="text-end">
+<%--  	<sec:authorize access="isAuthenticated()"></sec:authorize> --%>		<p class="text-end">
 			<a href="${pageContext.request.contextPath}/list.execinfo"
 				class="btn btn-green">운동정보</a>
 		</p>
  	
- 	<sec:authorize access="isAuthenticated()">	</sec:authorize>
-		<p class="text-end">
+<%--  	<sec:authorize access="isAuthenticated()"></sec:authorize> --%>		<p class="text-end">
 			<a href="${pageContext.request.contextPath}/write.execboard"
 				class="btn btn-mint">글쓰기</a>
 		</p>
@@ -125,7 +124,7 @@
 		<!--                    -->
 	</div>
 
-	<script>
+<!-- 	<script>
 		$(function(){
 			$("search").on("keyup", function(){ //keyup (키보드떴을때)
 				console.log($(this).val().trim());
@@ -150,18 +149,18 @@
 										+ (res.length - index)
 										+ "</td>"
 										+ "<td><a href='${pageContext.request.contextPath}/detail.execboard?postid="
-										+ dto.id
+										+ dto.postId
 										+ "'>"
 										+ dto.etitle
 										+ "</a></td>"
 										+ "<td>"
-										+ dto.postId
+										+ dto.econtent
 										+ "</td>"
 										+ "<td>"
-										+ dto.creatdAt
+										+ dto.eimg
 										+ "</td>"
 										+ "<td>"
-										+ dto.ehit
+										+ dto.createdat
 										+ "</td>"
 										+ "</tr>"
 								$( "#resultArea tbody" )
@@ -173,8 +172,7 @@
 				///////////////////////////////////////
 			});
 		});
-	</script>
-
+	</script> -->
 </div>
 
 <%@include file="../inc/footer.jsp"%>

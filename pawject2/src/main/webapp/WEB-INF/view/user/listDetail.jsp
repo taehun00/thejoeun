@@ -26,7 +26,7 @@
     </div>
     
     <div class="mt-3">
-        <a href="${pageContext.request.contextPath}/security/list"  class="btn btn-danger">목록으로</a>
+        <a href="${pageContext.request.contextPath}/security/listPage"  class="btn btn-danger">목록으로</a>
     </div>
 </div>
 

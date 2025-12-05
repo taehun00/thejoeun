@@ -2,6 +2,7 @@ package com.pawject.service.pet;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +77,11 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
+    public PetDto selectPetDetailByAdmin(int petId) {
+        return pdao.selectPetDetailByAdmin(petId);
+    }
+
+    @Override
     public int updatePetByAdmin(PetDto pet) {
         return pdao.updatePetByAdmin(pet);
     }
@@ -94,5 +100,25 @@ public class PetServiceImpl implements PetService {
     public List<PetDto> searchPets(String keyword) {
         return pdao.searchPets(keyword);
     }
+
+
+	@Override
+	public List<PetDto> selectPet10(int pstartno) {
+		HashMap<String, Object> para = new HashMap();
+		int start = (pstartno - 1) * 10 + 1;
+		para.put("start", start);
+		para.put("end", start + 10 - 1);
+		
+		return pdao.selectPet10(para);
+	}
+
+
+	@Override
+	public int selectTotalPetCnt() {
+		
+		return pdao.selectTotalPetCnt();
+	}
+    
+    
 
 }
