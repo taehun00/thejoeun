@@ -32,4 +32,8 @@ public class CustomUser  extends User{
 		);
 		this.dto = dto;
 	} 
+	public int getUserId() {
+        return dto.getUserId();
+    }
+
 }

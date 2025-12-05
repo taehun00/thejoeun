@@ -43,7 +43,7 @@
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="">게시판2</a>
+          <a class="nav-link" href="${pageContext.request.contextPath}/list.execboard">운동 챌린지게시판</a>
         </li>
 
         <li class="nav-item">
@@ -74,6 +74,15 @@
             <a class="nav-link" href="${pageContext.request.contextPath}/security/join">JOIN</a>
           </li>
         </sec:authorize>
+        
+        <sec:authorize access="hasRole('ADMIN')">
+		  <li class="nav-item">
+		    <a class="nav-link fw-bold text-warning" href="${pageContext.request.contextPath}/security/list">
+		      관리자 USER BOARD
+		    </a>
+		  </li>
+		</sec:authorize>
+        
 		
       </ul>
     </div>

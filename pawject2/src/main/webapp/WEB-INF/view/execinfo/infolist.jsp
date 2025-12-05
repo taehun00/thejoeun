@@ -9,7 +9,7 @@
 		if (result == "글쓰기 실패") {
 			alert(result);
 			history.go(-1);
-		} else if (result == '비밀번호를 확인해주세요') {
+		} else if (result == '운동아이디를 확인해주세요.') {
 			alert(result);
 			history.go(-1);
 		} else if (result.length != 0) {
@@ -17,19 +17,21 @@
 		} //아까 처음 값이없을때 공백 
 	});
 </script>
-<div class="container card  my-5 p-4">
-	<h3 class="card-header">MBTI QUEST BOARD</h3>
+ <div class="container card  my-5 p-4">
+	<h3 class="card-header">운동정보게시판</h3>
 	<div>${list}</div>
 	<div>${paging}</div>
 	<table class="table table-striped table-bordered table-hover">
-		<caption>mbti</caption>
+		<caption>운동정보</caption>
 		<thead>
 			<tr>
-				<th scope="col">NO</th>
-				<th scope="col">TITLE</th>
-				<th scope="col">NAME</th>
-				<th scope="col">DATE</th>
-				<th scope="col">HIT</th>
+		    	<th scope="col">운동아이디</th> 
+				<th scope="col">운동유형</th>
+		   <%-- <th scope="col">설명</th>  --%>
+		   <%-- <th scope="col">평균칼로리소모량(30분기준)</th> --%>
+				<th scope="col">권장운동시간</th>
+		   <%-- <th scope="col">운동추천동물</th>  --%>
+				<th scope="col">운동강도</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -40,11 +42,14 @@
 					<%-- 	<td>${list.size()-status.index}</td> --%>
 					<!-- 3-0=3  3-1=2  3=2=1  -->
 					<td><a
-						href="${pageContext.request.contextPath}/detail.quest?id=${dto.id}">
-							${dto.btitle} </a></td>
-					<td>${dto.appUserId}</td>
-					<td>${dto.createdAt}</td>
-					<td>${dto.bhit}</td>
+						href="${pageContext.request.contextPath}/detail.execinfo?execid=${dto.execid}">
+						${dto.exectype}</a></td>
+			   <%-- <td>${dto.description}</td>  --%>
+			   <%-- <td>${dto.avgkcal30min}</td> --%>
+					<td>${dto.exectargetmin}</td>
+			   <%-- <td>${dto.suitablefor}</td>  --%>
+					<td>${dto.intensitylevel}</td>
+				<tr>
 				<tr>
 			</c:forEach>
 		</tbody>
@@ -75,30 +80,30 @@
 			</tr>
 		</tfoot>
 	</table>
-	<sec:authorize access="isAuthenticated()">	
+	<sec:authorize access="isAuthenticated()">	</sec:authorize>
 		<p class="text-end">
-			<a href="${pageContext.request.contextPath}/write.quest"
-				class="btn btn-primary">글쓰기</a>
+			<a href="${pageContext.request.contextPath}/write.execinfo?execid=${dto.execid}"
+				class=" text-white btn btn-navy">글쓰기</a>
 		</p>
-	</sec:authorize>
-	<p class="text-end alert alert-primary">로그인을 하면 글쓰기가능합니다.</p>
+	
+	<p class="text-end alert alert-info">운동정보 참고용 게시판입니다.</p>
 
-	<div class="mb-3 mt-3 alert alert-primary">
-		<label for="search" class="form-label"> SEARCH</label> <input
+	<div class="mb-3 mt-3 alert alert-info">
+		<label for="search" class="form-label"> SEARCH</label> 
+		<input
 			type="search" class="form-control" id="search"
 			placeholder="검색어를 입력해주세요" name="search">
 		<!--                    -->
 		<!--                    -->
 		<div id="resultArea">
 			<table class="table table-striped table-bordered table-hover  my-3">
-				<caption>mbti</caption>
+				<caption>운동정보</caption>
 				<thead>
 					<tr>
-						<th scope="col">NO</th>
-						<th scope="col">TITLE</th>
-						<th scope="col">NAME</th>
-						<th scope="col">DATE</th>
-						<th scope="col">HIT</th>
+						<th scope="col">번호</th>
+						<th scope="col">운동유형</th>
+						<th scope="col">권장운동시간</th>
+						<th scope="col">운동강도</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -127,7 +132,7 @@
 								} else { // 빈칸이 아니면? 서버요청
 									$
 											.ajax({
-												url : "${pageContext.request.contextPath}/selectSearch",
+												url : "${pageContext.request.contextPath}/selectSearch2",
 												type : "GET", //GET, POST,PUT
 												data : {
 													search : keyword
@@ -146,7 +151,7 @@
 																				+ "<td>"
 																				+ (res.length - index)
 																				+ "</td>"
-																				+ "<td><a href='${pageContext.request.contextPath}/detail.quest?id="
+																				+ "<td><a href='${pageContext.request.contextPath}/detail.execinfo?id="
 																				+ dto.id
 																				+ "'>"
 																				+ dto.btitle
@@ -173,9 +178,8 @@
 							});
 		});
 	</script>
-
-</div>
-
+	
+</div> 
 <%@include file="../inc/footer.jsp"%>
 
 <!-- [ mbtiBoard - list.jsp ]  -->

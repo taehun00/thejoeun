@@ -5,9 +5,10 @@
 <mapper namespace="com.pawject.dao.user.UserMapper">
 	<!-- 회원가입 -->
 	<insert id="join" parameterType="UserDto">
+		
 	    INSERT INTO users (userid, email, nickname, password, ufile, mobile, createdat)
 	    VALUES (users_seq.NEXTVAL, #{email}, #{nickname}, #{password}, #{ufile, jdbcType=VARCHAR}, #{mobile}, SYSDATE)
-	    <selectKey keyProperty="userId" resultType="int" order="AFTER">
+		<selectKey keyProperty="userId" resultType="int" order="AFTER">
 	        SELECT users_seq.CURRVAL FROM dual
 	    </selectKey>
 	</insert>
@@ -49,7 +50,6 @@
     	from       users u    left join   authorities a   on  u.userid = a.userid 
     	where      u.email = #{email}
   	</select>
-  	<!-- 로그인(userid(유저가 업데이트할 때) -->
   	<select  resultMap="userAuthMap" id="readAuth1" parameterType="UserDto">
     	select     u.userid, u.email, u.password, a.auth
     	from       users u    left join   authorities a   on  u.userid = a.userid  
@@ -78,6 +78,13 @@
 		    mobile    = #{mobile}
 		WHERE userid  = #{userId}
   	</update>
+  	<!-- 정보수정 (관리자) 닉네임만 수정 -->
+  	<update id="updateNickname" parameterType="UserDto">
+	    UPDATE users
+	    SET nickname = #{nickname}
+	    WHERE userid = #{userId}
+	</update>
+  	
 
   	
   	<!-- 회원탈퇴 (사용자) -->
@@ -85,18 +92,63 @@
   		DELETE FROM users
 		WHERE userid = #{userId}
   	</delete>
+  	
   	<!-- 회원탈퇴 (관리자) -->
+  	<!-- (email로 userId 가져오기 위해서) -->
+	<select id="findUserByEmail" parameterType="string" resultMap="userMap">
+	    SELECT USERID, EMAIL, PASSWORD, CREATEDAT, UFILE, MOBILE, NICKNAME
+	    FROM users
+	    WHERE EMAIL = #{email}
+	</select>
   	<delete id="deleteAuthoritiesByUserId" parameterType="int">
 	    DELETE FROM authorities WHERE userid = #{userId}
 	</delete>
-  	<delete  id="deleteAdmin" parameterType="UserDto">
-  		DELETE from users
-		WHERE email = #{email}
-  	</delete>
   	<!-- 여기까지 -->
-	<!-- 전체유저 정보확인(관리자) + 페이징 -->
-	<select resultMap="userMap" id="" parameterType="UserDto">
-	
+  	
+  	
+	<!-- 전체유저 정보확인(관리자) + 페이징  -->
+	<select id="listUsers" resultMap="userMap" parameterType="UserDto">
+		SELECT *
+        FROM (
+            SELECT ROW_NUMBER() OVER (ORDER BY createdat DESC) AS rnum,
+                   userid,
+                   email,
+                   nickname,
+                   password,
+                   ufile,
+                   createdat,
+                   mobile
+            FROM users
+        ) A
+        WHERE A.rnum BETWEEN #{start} AND #{end}
 	</select>
+	<!-- 특정 유저 조회 (관리자용) -->
+	<select id="selectUser" resultMap="userMap" parameterType="int">
+	    SELECT userid,
+	    	   email,
+	           nickname,
+	           password,
+	           ufile,
+	           createdat,
+	           mobile
+	    FROM users
+	    WHERE userid = #{userId}
+	</select>
+	<!-- 이메일로 검색 -->
+	<!-- 닉네임으로 검색 -->
+	<select id="searchUsers" resultMap="userMap" parameterType="string">
+	    SELECT u.userid,
+	           u.email,
+	           u.nickname,
+	           u.createdat,
+	           u.ufile
+	    FROM users u
+	    WHERE u.email LIKE CONCAT(CONCAT('%', #{keyword}), '%')
+	       OR u.nickname LIKE CONCAT(CONCAT('%', #{keyword}), '%')
+	    ORDER BY u.createdat DESC
+	</select>
+
+
+	
 	
 </mapper>
