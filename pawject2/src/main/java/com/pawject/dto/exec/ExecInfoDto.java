@@ -11,4 +11,6 @@ public class ExecInfoDto {
 	private int exectargetmin;
 	private String suitablefor;
 	private String intensitylevel;
+    private String createdat;
+    private String updatedat;
 }
