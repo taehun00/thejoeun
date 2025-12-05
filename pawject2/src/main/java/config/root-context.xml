@@ -3,34 +3,12 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
-	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
-	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.3.xsd
-		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.3.xsd">
 
 		
-<<<<<<< HEAD
 
-=======
-	<context:component-scan base-package="com.pawject"></context:component-scan>
-	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-	<property name="dataSource" ref="dataSource"></property>
-	<property name="configLocation"  value="classpath:config/mybatis-config.xml"></property>
-	<property name="mapperLocations">
-            <list>
-                <value>classpath:config/food-mapper.xml</value>
-                <value>classpath:config/nutri-mapper.xml</value>
-                <value>classpath:config/brand-mapper.xml</value>
-                <value>classpath:config/review-mapper.xml</value>
-                <value>classpath:config/reviewimg-mapper.xml</value>
-                <value>classpath:config/users-mapper.xml</value>
-				<value>classpath:config/execboard-mapper.xml</value>
-		        <value>classpath:config/execinfo-mapper.xml</value>
-            </list>
-	</property>
-	</bean>
->>>>>>> 051d616 (update)
 	
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg ref="sqlSessionFactory"></constructor-arg>
@@ -42,7 +20,6 @@
 		<property name="annotationClass" value="com.pawject.dao.MyDao"></property>
 	</bean>
 
-<<<<<<< HEAD
 	<!-- 2. mybatis -->
 	<context:component-scan base-package="com.pawject"></context:component-scan>
 		<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -62,9 +39,6 @@
 			</list>
 		</property>
 		</bean>
-=======
-	 
->>>>>>> 051d616 (update)
 
 
 	<!-- 1. db연동 한 번에 하나씩 -->

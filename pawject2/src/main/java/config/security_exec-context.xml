@@ -14,13 +14,7 @@
 	<bean id="execinfoSecurity"	    class="com.pawject.security.exec.ExecInfoSecurity"/>
 	
 	
-<<<<<<< HEAD
 
-=======
-	
-
-	
->>>>>>> 051d616 (update)
 <!-- 사용할때 풀어주기.
 	<security:authentication-manager>
 		<security:authentication-provider user-service-ref="#">

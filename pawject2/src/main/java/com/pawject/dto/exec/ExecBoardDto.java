@@ -1,5 +1,7 @@
 package com.pawject.dto.exec;
 
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,8 +17,10 @@ public class ExecBoardDto {
 	private String econtent;
 	private String eimg;
 	private int ehit;
-    private String createdat;
-    private String updatedat;
+  //private String createdat;
+    private LocalDateTime createdat;
+  //private String updatedat;
+    private LocalDateTime updatedat;
 		
 	}
 

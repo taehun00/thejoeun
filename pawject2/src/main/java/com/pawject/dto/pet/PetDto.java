@@ -12,6 +12,5 @@ public class PetDto {
     private int petTypeId;  
     private String createdAt;  
     private String pfile;
-    private String email;
 
 }
