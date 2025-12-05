@@ -4,4 +4,3 @@
  --%>
 
 <% response.sendRedirect(request.getContextPath() + "/list.execboard"); %>	
-

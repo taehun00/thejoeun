@@ -26,6 +26,32 @@
    <table class="review-table table table-bordered table-hover align-middle text-center">
         <input type="hidden" id="currentPage" value="${reviewpaging.pstartno}">
         <caption class="visually-hidden">사료 후기</caption>
+        
+       <div class="row my-3">
+		    <!-- 가운데 정렬 영역 -->
+		    <div class="col d-flex justify-content-center gap-2">
+		        <select id="searchType" class="form-select" style="width:150px;">
+		            <option value="all">전체</option>
+		            <option value="pettypeid">강아지/고양이</option>
+		            <option value="brandname">브랜드명</option>
+		            <option value="foodname">사료명</option>
+		        </select>
+		
+		        <input type="text" id="searchKeyword" placeholder="검색어 입력" class="form-control" style="width:300px;">
+		        <button class="btn btn-mint" onclick="searchReview()">검색</button>
+		        <button class="btn btn-slateBlue"
+		    	   id="searchlistBtn"
+				   style="display:none;"
+			        onclick="location.href='${pageContext.request.contextPath}/reviewlist.fn'">
+				    목록보기
+				</button>
+
+		        
+		    </div>
+		
+
+		</div>
+		
         <thead class="table-light">
             <tr>
                 <th style="display:none;"></th>
@@ -75,29 +101,72 @@
 		</td>
 		</tr>
 		</tfoot>
-        
-        
-        
-    </table>
+       </table>
+      
+		
+		
 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
     <div class="write-btn-area">
-        <button class="btn btn-slateBlue" onclick="location.href='${pageContext.request.contextPath}/reviewwrite.fn'">리뷰 작성</button>
+        <button class="btn btn-slateBlue" 
+        		 id="writeBtn" onclick="location.href='${pageContext.request.contextPath}/reviewwrite.fn'">리뷰 작성</button>
+        		 
     </div>
 </div>
 
 <script>
-$(function () {
-    let currentPage = $("#currentPage").val() || 1;
-    reviewPaging($("#currentPage").val() || 1);
+
+//전역 상태
+let currentMode = "list";       
+let currentSearchType = "";
+let currentKeyword = "";
+
+//첫 로딩
+$(function() {
+ const currentPage = $("#currentPage").val() || 1;
+ reviewPaging(currentPage);
 });
-	
+
+
+
+function doReviewSearch(searchType, keyword) {
+    currentMode = "search";
+    currentSearchType = searchType;
+    currentKeyword = keyword;
+
+    $.ajax({
+        url: "${pageContext.request.contextPath}/reviewsearch",
+        type: "GET",
+        data: { keyword: keyword, searchType: searchType },
+        success: function(json) {
+            reviewPagingResult(json, 1);
+            $("#searchlistBtn").show();
+            $("tfoot").hide();
+            $("#writeBtn").hide();
+        }
+    }); 
+}
+
+function searchReview(){
+    const keyword = $("#searchKeyword").val().trim();
+    const searchType = $("#searchType").val();
+
+    if(keyword.length === 0){
+        alert("검색어를 입력해주세요.");
+        return;
+    }
+
+    doReviewSearch(searchType, keyword);
+}
+
 function reviewPaging(pstartno){
+    currentMode = "list";
 	$.ajax({
-		url:"reviewPaging",
+		url:"${pageContext.request.contextPath}/reviewPaging",
         type: "GET",
         data: { pstartno: pstartno },
         success: function(json) {
         	reviewPagingResult(json, pstartno);  // 페이징 기능때매 필요
+        	 $("tfoot").show();  //페이징 다시 보이기
         },
 		error:function (xhr) {
 		    console.error("ERROR:", xhr.responseText);

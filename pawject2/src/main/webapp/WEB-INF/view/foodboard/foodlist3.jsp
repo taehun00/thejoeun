@@ -37,90 +37,65 @@
             </thead>
 
             <tbody>
-            </tbody>   
-		<tfoot>
-		<tr>
-		<td colspan="7">
-		    <ul class="pagination justify-content-center">
-		
-		        <!-- 이전 -->
-		        <c:if test="${foodpaging.start > 10}">
-		            <li class="page-item">
-		                <a href="#" class="page-link"
-		                   onclick="foodList(${foodpaging.start - 1})">이전</a>
-		            </li>
-		        </c:if>
-		
-		        <!-- 페이지 숫자 -->
-		        <c:forEach var="i" begin="${foodpaging.start}" end="${foodpaging.end}">
-		            <li class="page-item <c:if test='${i == foodpaging.current}'>active</c:if>'">
-		                <a href="#" class="page-link"
-		                   onclick="foodList(${i})">${i}</a>
-		            </li>
-		        </c:forEach>
-		
-		        <!-- 다음 -->
-		        <c:if test="${foodpaging.pagetotal > foodpaging.end}">
-		            <li class="page-item">
-		                <a href="#" class="page-link"
-		                   onclick="foodList(${foodpaging.end + 1})">다음</a>
-		            </li>
-		        </c:if>
-		
-		    </ul>
-		</td>
-		</tr>
-		</tfoot>
-		</table>
+            </tbody>
+            <tfoot>
+            <tr><td colspan="5"><ul class="pagination  justify-content-center">
+            	<c:if   test="${foodpaging.start >10}">
+	      			<li  class="page-item">
+	      				<a  class="page-link"  href="?pstartno=${foodpaging.start-1}">이전</a>
+	      			</li>
+	      		</c:if>
+	      		<c:forEach var="i"  begin="${foodpaging.start}" end="${foodpaging.end}">
+	      			<li class="page-item  <c:if test="${i==foodpaging.current}"> active </c:if>">
+		      			<a href="#" onclick="foodList(${i})" class="page-link">${i}</a>
+	      			</li>
+	      		 
+	      		</c:forEach>
+	      		<c:if   test="${foodpaging.pagetotal>foodpaging.end}">
+	      			<li  class="page-item">
+	      				<a  class="page-link"  href="?pstartno=${foodpaging.end+1}">다음</a>
+	      			</li>
+	      		</c:if>             
+            </ul></td></tr>
+            </tfoot>
+        </table>
 
-			<div class="row my-3">
-			  <div class="col d-flex justify-content-end gap-2">
-			    <select id="searchType" class="form-select" style="width:150px;">
-			      <option value="all">전체</option>
-			      <option value="pettypeid">강아지/고양이</option>
-			      <option value="brandname">브랜드명</option>
-			      <option value="foodname">사료명</option>
-			    </select>
-			
-			    <input type="text" id="searchKeyword" placeholder="검색어 입력" class="form-control" style="width:300px;">
-			    <button class="btn btn-mint" onclick="searchFood()">검색</button>
-			
-			    <!-- 목록보기 버튼도 같은 flex 컨테이너 안에 -->
-			    <a href="${pageContext.request.contextPath}/foodlist.fn"
-			       id="searchlistBtn"
-			       class="btn btn-slateBlue"
-			       style="display:none;">목록보기</a>
-			  </div>
-			</div>
-
-
-
+		<div class="row my-3">
+		    <div class="search-bar d-flex gap-2">
+		        <select id="searchType" class="form-select" style="width:150px;">
+		            <option value="all">전체</option>
+		            <option value="pettypeid">강아지/고양이</option>
+		            <option value="brandname">브랜드명</option>
+		            <option value="foodname">사료명</option>
+		        </select>
+		
+		        <input type="text" id="searchKeyword" placeholder="검색어 입력" class="form-control" style="width:300px;">
+		        <button class="btn btn-mint" onclick="searchFood()">검색</button>
+		    </div>
+		</div>
 		
 
 		<div id="pagingArea" class="mt-3"></div>
 
         <div class="text-end">
             <a href="${pageContext.request.contextPath}/foodwrite.fn"
-            	id="writeBtn"
                class="btn btn-slateBlue">사료 등록</a>
         </div>
 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
     </div>
 </div>
-
 <script>
 // 전역 상태
-let currentMode = "list";       
+let currentMode = "list";       // 리스트/서치 구분
 let currentSearchType = "";
 let currentKeyword = "";
 
-// 첫 로딩
+// 페이지 첫 로딩
 $(function() {
     const currentPage = $("#currentPage").val() || 1;
     foodList(currentPage);
     foodquikdelete();
 });
-
 
 function doFoodSearch(searchType, keyword){
     currentMode = "search";
@@ -132,17 +107,14 @@ function doFoodSearch(searchType, keyword){
         type: "GET",
         data: { keyword: keyword, searchType: searchType },
         success: function(json){
-
-            // 검색 결과 출력 + 목록보기 버튼
             foodListResult(json, 1);
-            $("#searchlistBtn").show();
-            // 검색 모드에서는 JSP 페이징 숨김
-            $("tfoot").hide();
-            $("#writeBtn").hide();
+            $("#pagingArea").empty();   // 검색 시 페이징 제거
+            $("tfoot").hide();         // JSP 페이징도 숨김
         }
     });
 }
 
+// 검색창 + 버튼
 function searchFood(){
     const keyword = $("#searchKeyword").val().trim();
     const searchType = $("#searchType").val();
@@ -155,27 +127,22 @@ function searchFood(){
     doFoodSearch(searchType, keyword);
 }
 
-
 function foodList(pstartno = 1) {
     currentMode = "list";
+    $("tfoot").show();  // JSP 페이징 다시 보이게
 
     $.ajax({
         url: "${pageContext.request.contextPath}/foodselectForList",
         type: "GET",
         data: { pstartno: pstartno },
         success: function(json) {
-
-            // 리스트 출력
             foodListResult(json, pstartno);
-            // JSP 페이징 다시 보이게
-            $("tfoot").show();
         },
         error: function() {
             alert("목록 불러오기 실패");
         }
     });
 }
-
 
 function foodListResult(json, pstartno) {
 
@@ -222,10 +189,10 @@ function foodquikdelete() {
                 },
                 data: {
                     foodid: foodid,
-                    pstartno: currentPage
+                    pstartno: currentPage  
                 },
                 success: function() {
-                    foodList(currentPage); 
+                    foodList(currentPage);
                 },
                 error: function() {
                     alert("error");
@@ -235,11 +202,13 @@ function foodquikdelete() {
     });
 }
 
+
 function pettypename(pettypeid){
     if(pettypeid == 1) return "고양이";
     else if(pettypeid == 2) return "강아지";    
 }
 </script>
+
 
 
 

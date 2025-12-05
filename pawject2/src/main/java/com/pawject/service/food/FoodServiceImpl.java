@@ -130,10 +130,77 @@ public class FoodServiceImpl implements FoodService {
 		}
 
 		@Override
-		public List<FoodDtoForList> foodsearch(String keyword) {
+		public List<FoodDtoForList> foodsearch(String keyword, String searchType) {
+
 			HashMap<String, Object> para = new HashMap<>();
-			para.put("search", "%"+keyword+"%");
+			keyword = keyword.toLowerCase(); //대소문자 구분 x
+			String searchLike = "%" + keyword + "%";
+			
+			switch(searchType) {
+			//분기1. 펫타입
+	        case "pettypeid":
+	            para.put("searchType", "pettypeid");
+
+	            if ("고양이".equals(keyword)) {
+	                para.put("search", "1");
+	            } else if ("강아지".equals(keyword)) {
+	                para.put("search", "2");
+	            } else {
+	                para.put("search", "-1");
+	            }
+	            break;
+			//분기2. 브랜드
+			case "brandname" : para.put("searchType", "brandname");
+			 				   para.put("search", searchLike);	break;
+
+			//분기3. 사료이름
+			case "foodname" : para.put("searchType", "foodname"); 
+							  para.put("search", searchLike);	break;
+	
+			//분기4. 제목+내용+브랜드
+			case "all" : para.put("searchType", "all");
+						para.put("search", searchLike);	break;
+			
+	
+			}//switch
+			
 			return fdao.foodsearch(para);
+		}
+
+		@Override
+		public int foodsearchcnt(String keyword, String searchType) {
+			HashMap<String, Object> para = new HashMap<>();
+			String searchLike = "%" + keyword + "%";
+			
+			switch(searchType) {
+			//분기1. 펫타입
+	        case "pettypeid":
+	            para.put("searchType", "pettypeid");
+
+	            if ("고양이".equals(keyword)) {
+	                para.put("search", "1");
+	            } else if ("강아지".equals(keyword)) {
+	                para.put("search", "2");
+	            } else {
+	                para.put("search", "-1");
+	            }
+	            break;
+			//분기2. 브랜드
+			case "brandname" : para.put("searchType", "brandname");
+			 				   para.put("search", searchLike);	break;
+
+			//분기3. 사료이름
+			case "foodname" : para.put("searchType", "foodname"); 
+							  para.put("search", searchLike);	break;
+	
+			//분기4. 제목+내용
+			case "all" : para.put("searchType", "all");
+						para.put("search", searchLike);	break;
+			
+	
+			}//switch
+			
+			return fdao.foodsearchcnt(para);
 		}
 
 		

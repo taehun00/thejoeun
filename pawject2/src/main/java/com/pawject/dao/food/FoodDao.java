@@ -44,5 +44,7 @@ public interface FoodDao {
 	//검색
 	//	<select resultMap="FoodMap" id="foodsearch" parameterType="java.util.HashMap">
 	public List<FoodDtoForList> foodsearch(HashMap<String, Object> para);
-
+	
+	//		<select resultType="int" id="foodsearchcnt" parameterType="java.util.HashMap">
+	public int foodsearchcnt(HashMap<String, Object> para);
 }
