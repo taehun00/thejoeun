@@ -122,9 +122,6 @@
         ) A
         WHERE A.rnum BETWEEN #{start} AND #{end}
 	</select>
-	<select id="selectTotalCnt" resultType="int">
-		select count(*) from users
-	</select>
 	<!-- 특정 유저 조회 (관리자용) -->
 	<select id="selectUser" resultMap="userMap" parameterType="int">
 	    SELECT userid,
@@ -139,26 +136,15 @@
 	</select>
 	<!-- 이메일로 검색 -->
 	<!-- 닉네임으로 검색 -->
-	<select id="searchUsers" resultMap="userMap" parameterType="map">
+	<select id="searchUsers" resultMap="userMap" parameterType="string">
 	    SELECT u.userid,
 	           u.email,
 	           u.nickname,
 	           u.createdat,
 	           u.ufile
 	    FROM users u
-	    WHERE 
-	        <choose>
-	            <when test="type == 'email'">
-	                u.email LIKE '%' || #{keyword} || '%'
-	            </when>
-	            <when test="type == 'nickname'">
-	                u.nickname LIKE '%' || #{keyword} || '%'
-	            </when>
-	            <otherwise>
-	                u.email LIKE '%' || #{keyword} || '%'
-	                OR u.nickname LIKE '%' || #{keyword} || '%')
-	            </otherwise>
-	        </choose>
+	    WHERE u.email LIKE CONCAT(CONCAT('%', #{keyword}), '%')
+	       OR u.nickname LIKE CONCAT(CONCAT('%', #{keyword}), '%')
 	    ORDER BY u.createdat DESC
 	</select>
 

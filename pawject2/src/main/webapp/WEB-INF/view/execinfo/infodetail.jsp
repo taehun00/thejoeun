@@ -2,13 +2,14 @@
     pageEncoding="UTF-8"%>
     
 <%@include file="../inc/header.jsp" %>
-  <script>
-		$(function(){
-			let result = '${success}';
-			if(result.length== '운동아이디를 확인해주세요.'){ alert( result ); history.go(-1); }
-			else if(result.length > 0){ alert(result) } //아까 처음 갋이없을때 공백
-		})
-  </script>
+<%-- 	
+	<script>
+	$(function(){
+		let result = '${success}';
+		if(result.length== '비밀번호를 확인해주세요'){ alert( result ); history.go(-1); }
+		else if(result.length > 0){ alert(result) } //아까 처음 갋이없을때 공백
+	})
+	</script> --%> 
   <div class="container card  my-5 p-4">
       <h3 class="card-header"> 운동정보 상세보기  <%-- ${dto} --%></h3>
 	  <div> 
@@ -49,16 +50,13 @@
 		    <input type="text" class="form-control" id="intensitylevel" 
 		    		placeholder="내용을 입력해주세요" name="intensitylevel"  readonly  value="${dto.intensitylevel}">
 		  </div>  
-		  
-<%--  		<sec:authorize access="isAuthenticated() and hasRole('ROLE_ADMIN')"></sec:authorize> --%>
- 			<div class="mb-3">
+		 
+			<div class="mb-3">
 				<a href="${pageContext.request.contextPath}/edit.execinfo?execid=${dto.execid}" class="btn btn-olive form-control">글수정</a>
 			</div>
-<%-- 		<sec:authorize access="isAuthenticated() and hasRole('ROLE_ADMIN')"></sec:authorize>--%>
- 			<div class="mb-3">
+			<div class="mb-3">
 				<a href="${pageContext.request.contextPath}/delete.execinfo?execid=${dto.execid}" class="btn btn-burgundy form-control">글삭제</a>
-			</div>	
-					
+			</div>			
 		  <div class="mb-3">
 		  	<a href="${pageContext.request.contextPath}/list.execinfo?execid=${dto.execid}" class="btn btn-sage form-control">목록보기</a>
 		  </div>

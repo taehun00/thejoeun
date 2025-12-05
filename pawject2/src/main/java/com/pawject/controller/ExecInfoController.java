@@ -29,15 +29,15 @@ public class ExecInfoController {
 	}
 	////////////////////////////////////
 	@RequestMapping(value="/write.execinfo", method=RequestMethod.GET)
-	public String write_get() { return "execinfo/infowrite"; }
+	public String write_get() { return "/execboard/infowrite"; }
 	//글쓰기기능
-	//@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')") //2. 로그인 → ADMIN 권한이 있다면
+	//@PreAuthorize("isAthenticated() and hasRole('ROLE_ADMIN')") //2. 로그인 → ADMIN 권한이 있다면 
 	@RequestMapping(value="/write.execinfo", method=RequestMethod.POST)
-	public String write_post(ExecInfoDto dto, RedirectAttributes rttr) {
-	    String result = "글쓰기에 실패했습니다.";
-	    if(iservice.insert2(dto) > 0) { result = "글쓰기가 완료되었습니다."; }
-	    rttr.addFlashAttribute("success", result);
-	    return "redirect:/list.execinfo";
+	public String write_post(ExecInfoDto dto,  RedirectAttributes rttr ) {
+		String result = " 글쓰기실패";
+		if(iservice.insert2(dto)> 0) { result="글쓰기가 완료되었습니다."; }
+		rttr.addFlashAttribute("success", result);
+		return "redirect:/list.execinfo";
 	}
 	////////////////////////////////////
 	//상세보기
@@ -54,13 +54,13 @@ public class ExecInfoController {
 		return "execinfo/infoedit";
 	}
 	//수정기능
-	//@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')") //2. 로그인 → ADMIN 권한이 있다면
+	//@PreAuthorize("isAthenticated() and hasRole('ROLE_ADMIN')") //2. 로그인 → ADMIN 권한이 있다면 
 	@RequestMapping(value="/edit.execinfo", method=RequestMethod.POST)
-	public String edit_post(ExecInfoDto dto, RedirectAttributes rttr) {
-	    String result = "운동아이디를 확인해주세요.";
-	    if(iservice.update2(dto) > 0) { result = "수정이 완료되었습니다."; }
-	    rttr.addFlashAttribute("success", result);
-	    return "redirect:/detail.execinfo?execid=" + dto.getExecid();
+	public String edit_post( ExecInfoDto dto,  RedirectAttributes rttr ) {
+		String result = "운동아이디를 확인해주세요.";
+		if( iservice.update2(dto) > 0 ) { result = "수정이 왼료되었습니다."; }
+		rttr.addFlashAttribute("success", result);
+		return "redirect:/detail.execinfo?id=" + dto.getExecid();
 	}
 	///////////////////////////////////////////////////////
 	//삭제폼
@@ -76,6 +76,9 @@ public class ExecInfoController {
 		rttr.addFlashAttribute("success", result);
 		return "redirect:/list.execinfo";
 	}
+
+	
+	
 }
 
 /*

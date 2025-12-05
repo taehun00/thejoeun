@@ -29,15 +29,18 @@ public interface ExecInfoDao {
 	public 		int   selectTotalCnt();	
 	
 	/* idouble */
-	public int iddouble2(int execid);
+	public int iddouble(int postid);
 	
 	/* admin  - 전체유저정보 selectAll 
-	           / 게시글아이디(execId) 주면 해당게시글 찾기
-	           / 수정하기 updateAdmin2
-	           / 삭제하기 deleteAdmin2*/
-//	public int updateAdmin2(ExecBoardDto dto);
-//	public int deleteAdmin2(ExecBoardDto dto);
-		
+	           / 게시글아이디(postid) 주면 해당게시글 찾기
+	           / 수정하기 updateMember
+	           / 삭제하기 deleteMember*/
+//	public int updateAdmin(ExecBoardDto dto);
+//	public int deleteAdmin(ExecBoardDto dto);
+	
+	public int updateMember(ExecBoardDto dto);
+	public int deleteMember(ExecBoardDto dto);
+	
 	/* security */
 //	public int insertAuth(ExecAuthDto dto);
 //	public ExecBoardAuthDto readAuth(ExecBoardAuthDto dto);

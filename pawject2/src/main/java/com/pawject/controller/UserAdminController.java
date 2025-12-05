@@ -1,61 +1,56 @@
 package com.pawject.controller;
 
 import org.springframework.stereotype.Controller;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.authentication.UserServiceBeanDefinitionParser;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-
-import com.pawject.dto.paging.PagingDto10;
+import com.pawject.dao.user.UserMapper;
 import com.pawject.dto.user.UserDto;
 import com.pawject.service.user.UserSecurityService;
-
 
 @Controller
 @RequestMapping("/security")
 public class UserAdminController {
+	@Autowired private UserMapper dao;
 	
     @Autowired
     private UserSecurityService userService;
 
-    @RequestMapping("/listPage")
-    public String adminListPage(Model model,
-                                @RequestParam(value="pstartno", defaultValue="1") int pstartno) {
-        // JSP에서 바로 EL로 출력하고 싶으면 model에 담아줌
-        model.addAttribute("list", userService.listUsers(pstartno));
-        model.addAttribute("paging", new PagingDto10(userService.selectTotalCnt(), pstartno));
-        return "user/list"; // /WEB-INF/view/user/list.jsp
+    // 관리자 전용 페이지 이동
+    @RequestMapping("/list")
+    public String adminList() {
+        return "/user/list";
     }
 
     
     // 전체 유저 리스트 (관리자용)
-    // 관리자 전용 페이지 이동
+    @RequestMapping(value="/selectAll", method=RequestMethod.GET)
     @ResponseBody
-    @RequestMapping("/list")
-    public Map<String, Object> adminList(
-    		@RequestParam (value="pstartno", defaultValue="1") int pstartno
-    ) {
-    	Map<String, Object> result = new HashMap<>();
-    	result.put("list", userService.listUsers(pstartno));
-    	result.put("paging", new PagingDto10( userService.selectTotalCnt(), pstartno));
-        return result;
+    public List<UserDto> selectAll() {
+        return userService.listUsers(0, 100); // 페이징 범위 예시
     }
-
-    
-    
-	
-	
-	
 
     // 특정 유저 조회 (관리자용)
     @RequestMapping(value="/select", method=RequestMethod.GET)
@@ -86,7 +81,7 @@ public class UserAdminController {
 
 		
         // list.jsp로 리다이렉트
-        return "redirect:/security/listPage";
+        return "redirect:/security/list";
     }
 
 
@@ -106,23 +101,12 @@ public class UserAdminController {
     }
 
     
-    // 검색 페이지 이동 (검색 폼을 보여줄 때)
-    @RequestMapping("/search")
-    public String userSearchPage() {
-        return "security/list";  // /WEB-INF/view/security/list.jsp
-    }
-
-    // 검색 실행 (Ajax 요청 처리)
+    // 검색 (이메일/닉네임)
     @RequestMapping(value="/search", method=RequestMethod.GET)
     @ResponseBody
-    public List<UserDto> searchUsers(@RequestParam("keyword") String keyword,
-                                     @RequestParam(value="type", required=false) String type) {
-        // 서비스 호출
-        List<UserDto> users = userService.searchUsers(keyword, type);
-        return users;  // JSON 응답
+    public List<UserDto> search(@RequestParam("keyword") String keyword) {
+        return userService.searchUsers(keyword);
     }
-
-
     
     @RequestMapping(value="/detail", method=RequestMethod.GET)
     public String detail(@RequestParam("userId") int userId, Model model) {
