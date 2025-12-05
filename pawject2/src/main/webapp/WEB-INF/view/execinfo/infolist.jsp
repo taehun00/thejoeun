@@ -19,8 +19,6 @@
 </script>
  <div class="container card  my-5 p-4">
 	<h3 class="card-header">운동정보게시판</h3>
-	<div>${list}</div>
-	<div>${paging}</div>
 	<table class="table table-striped table-bordered table-hover">
 		<caption>운동정보</caption>
 		<thead>

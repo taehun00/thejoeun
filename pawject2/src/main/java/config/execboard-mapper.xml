@@ -13,7 +13,6 @@
 		#{execid} , #{userid}, #{etitle},
 		#{econtent},
 		#{eimg})
-
 	</insert>
 	
 	<insert id="insert2" parameterType="ExecBoardDto">

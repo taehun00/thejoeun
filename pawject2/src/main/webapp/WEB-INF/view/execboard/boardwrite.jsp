@@ -12,7 +12,8 @@
 		  <!-- 외래키로 가지고 올 것들. / placeholder="내용을 입력해주세요" ← 사용해야 될 수도 있으니 임시보관 -->
 		  <div class="mb-3 mt-3">
 		    <label for="postid" class="form-label">게시글아이디:</label>
-		    <input type="text" class="form-control" id="postid"  name="postid">
+		    <input type="text" class="form-control" id="postid"  name="postid"
+		    		placeholder="게시글 아이디는 무작위로 지정됩니다.">
 		  </div>
 		  <div class="mb-3 mt-3">
 		    <label for="execid" class="form-label">운동아이디:</label>

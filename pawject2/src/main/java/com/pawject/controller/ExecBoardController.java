@@ -59,7 +59,7 @@ public class ExecBoardController {
 	//@PreAuthorize("isAthenticated()")
 	@RequestMapping(value="/edit.execboard", method=RequestMethod.POST)
 	public String edit_post( ExecBoardDto dto,  RedirectAttributes rttr ) {
-		String result = "사용자 아이디를 확인해주세요.";
+		String result = "사용자아이디를 확인해주세요.";
 		if( service.update1(dto) > 0 ) { result = "수정이 왼료되었습니다."; }
 		rttr.addFlashAttribute("success", result);
 		return "redirect:/detail.execboard?id=" + dto.getPostid();
@@ -73,7 +73,7 @@ public class ExecBoardController {
 	//@PreAuthorize("isAthenticated()")
 	@RequestMapping(value="/delete.execboard", method=RequestMethod.POST)
 	public String delete_post( ExecBoardDto dto,  RedirectAttributes rttr ) {
-		String result = "사용자 아이디를 확인해주세요.";
+		String result = "사용자아이디를 확인해주세요.";
 		if( service.delete1(dto) > 0 ) { result="삭제가 왼료되었습니다.";}
 		rttr.addFlashAttribute("success", result);
 		return "redirect:/list.execboard";

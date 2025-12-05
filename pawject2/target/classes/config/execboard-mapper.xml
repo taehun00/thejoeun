@@ -13,7 +13,6 @@
 		#{execid} , #{userid}, #{etitle},
 		#{econtent},
 		#{eimg})
-
 	</insert>
 	
 	<insert id="insert2" parameterType="ExecBoardDto">
@@ -25,23 +24,12 @@
 		#{execid} , #{userid}, #{etitle},
 		#{econtent},
 		#{eimg})
->>>>>>> f18fb881f656af023dc2b96524c238690c5a6b45
 	</insert>
 
 	<update id="update1" parameterType="ExecBoardDto">
 		update execboard
 		set
 		etitle=#{etitle},
-<<<<<<< HEAD
-		econtent=#{econtent} ,
-		execid=#{execid}, eimg=#{eimg}
-		where postid=#{postid}
-	</update>
-	<update id="updateHit" parameterType="int">
-		update execboard set ehit
-		= ehit+1 where postid=#{postid}
-	</update>
-=======
 		econtent=#{econtent},
 		execid=#{execid}, eimg=#{eimg}
 		where postid=#{postid}
@@ -56,12 +44,10 @@
 		where postid=#{postid}
 	</update>
 	
-	
 	<update id="updateHit" parameterType="int">
 		update execboard set ehit
 		= ehit+1 where postid=#{postid}
 	</update>
->>>>>>> f18fb881f656af023dc2b96524c238690c5a6b45
 
 	<delete id="delete1" parameterType="ExecBoardDto">
 		delete from execboard where
@@ -99,17 +85,10 @@
 		updatedat
 		from execboard ) A where A.rnum between #{start} and #{end}
 	</select>
-<<<<<<< HEAD
-	<select resultType="int" id="selectTotalCnt"> 
-		select cnt(*) from execboard
-	</select>
-=======
+
 	<select resultType="int" id="selectTotalCnt">
 		select count(*) from execboard
 	</select>
-
->>>>>>> f18fb881f656af023dc2b96524c238690c5a6b45
-
 </mapper>
 
 
