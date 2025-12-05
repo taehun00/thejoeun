@@ -80,7 +80,14 @@
 	</table>
 	<sec:authorize access="isAuthenticated()">	</sec:authorize>
 		<p class="text-end">
-			<a href="${pageContext.request.contextPath}/write.execinfo?execid=${dto.execid}"
+			<a href="${pageContext.request.contextPath}/list.execboard"
+				class=" text-white btn btn-mustard">운동챌린지게시판</a>
+		</p>
+	
+	
+	<sec:authorize access="isAuthenticated()">	</sec:authorize>
+		<p class="text-end">
+			<a href="${pageContext.request.contextPath}/write.execinfo"
 				class=" text-white btn btn-navy">글쓰기</a>
 		</p>
 	

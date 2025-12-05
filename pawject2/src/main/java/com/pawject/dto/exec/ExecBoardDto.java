@@ -17,7 +17,6 @@ public class ExecBoardDto {
 	private int ehit;
     private String createdat;
     private String updatedat;
-		
 	}
 
 //LocalDateTime이 안되면 String으로 바꿔서 실행해주세요.

@@ -17,7 +17,7 @@
       <h3 class="card-header"> 운동정보 글삭제</h3>
 	  <%-- <form action="${pageContext.request.contextPath}/delete.do?id=${param.id}"     method="post">  --%> 
 	  <form action="${pageContext.request.contextPath}/delete.execinfo"  method="post">  
-	      <input type="hidden"   name="execId"  value="${param.execid}"> 
+	      <input type="hidden"   name="execid"  value="${param.execid}"> 
 		  <input  type="hidden" name="${_csrf.parameterName}"  value="${_csrf.token}" />			  
 		  
 		  <div class="my-3">

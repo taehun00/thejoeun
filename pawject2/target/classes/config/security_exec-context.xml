@@ -13,7 +13,6 @@
 	<!-- 운동정보 -->
 	<bean id="execinfoSecurity"	    class="com.pawject.security.exec.ExecInfoSecurity"/>
 	
-	
 
 <!-- 사용할때 풀어주기.
 	<security:authentication-manager>
