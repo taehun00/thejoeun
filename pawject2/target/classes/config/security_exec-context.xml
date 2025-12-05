@@ -12,11 +12,6 @@
 	
 	<!-- 운동정보 -->
 	<bean id="execinfoSecurity"	    class="com.pawject.security.exec.ExecInfoSecurity"/>
-	
-<<<<<<< HEAD
-=======
-	
->>>>>>> 8229c01e4a164a1e7969c039b4ee1bd00d7c3dde
 
 <!-- 사용할때 풀어주기.
 	<security:authentication-manager>

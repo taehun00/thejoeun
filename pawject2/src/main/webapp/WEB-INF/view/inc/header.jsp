@@ -35,14 +35,9 @@
     <div class="collapse navbar-collapse" id="navMenu">
       <ul class="navbar-nav ms-auto">
 
-
-		<sec:authorize access="hasRole('ADMIN')">
-		    <li class="nav-item">
-		        <a class="nav-link" href="${pageContext.request.contextPath}/foodlist.fn">사료 관리</a>
-		    </li>
-		</sec:authorize>
-		
-		
+        <li class="nav-item">
+          <a class="nav-link" href="${pageContext.request.contextPath}/foodlist.fn">사료 관리</a>
+        </li>
         <li class="nav-item">
           <a class="nav-link" href="${pageContext.request.contextPath}/reviewlist.fn">사료 리뷰</a>
         </li>
@@ -73,7 +68,7 @@
         <!-- 비로그인 사용자만 보이는 메뉴 -->
         <sec:authorize access="isAnonymous()">
           <li class="nav-item">
-            <a class="nav-link" href="${pageContext.request.contextPath}/security/doLogin">LOGIN</a>
+            <a class="nav-link" href="${pageContext.request.contextPath}/security/login">LOGIN</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="${pageContext.request.contextPath}/security/join">JOIN</a>
@@ -82,8 +77,11 @@
         
         <sec:authorize access="hasRole('ADMIN')">
 		  <li class="nav-item">
-		    <a class="nav-link fw-bold text-warning" href="${pageContext.request.contextPath}/security/list">
-		      관리자 USER BOARD
+		    <a class="nav-link fw-bold text-warning" href="${pageContext.request.contextPath}/security/listPage">
+		      관리자 USER
+		    </a>
+		    <a class="nav-link fw-bold text-warning" href="${pageContext.request.contextPath}/pet/listPetPage">
+		      관리자 PET
 		    </a>
 		  </li>
 		</sec:authorize>

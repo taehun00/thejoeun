@@ -11,13 +11,10 @@
    	  <div class="mb-3 mt-3">
 	    <label for="execid" class="form-label">운동아이디:</label>
 	    <input type="text" class="form-control" id="execid" 
-<<<<<<< HEAD
+
 	    	  placeholder="운동아이디 입력해주세요." name="execid" readonly value="${dto.execid}">
 	  </div> 
-=======
-	    	  placeholder="운동아이디 입력해주세요" name="execid"  value="${dto.execid}">
-	  </div>
->>>>>>> 8229c01e4a164a1e7969c039b4ee1bd00d7c3dde
+
 	  <div class="mb-3 mt-3">
 	    <label for="exectype" class="form-label">운동유형:</label>
 	    <input type="text" class="form-control" id="exectype" 

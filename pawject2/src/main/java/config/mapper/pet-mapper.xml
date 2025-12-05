@@ -18,6 +18,7 @@
 	    <result property="petTypeId" column="PETTYPEID" />
 	    <result property="createdAt" column="CREATEDAT" />
 	    <result property="pfile"     column="PFILE" />
+	    <result property="email"     column="EMAIL" />
 	</resultMap>
 	
 	<!-- 펫 페이지(로그인 시 해당유저의 전체펫 조회)(사용자) -->
@@ -49,6 +50,23 @@
 	    WHERE p.userid = #{userId}
 	      AND p.petid = #{petId}
 	</select>
+	<!-- 펫 상세 조회 (관리자) -->
+	<select id="selectPetDetailByAdmin" parameterType="int" resultMap="petMap">
+	    SELECT 
+	        p.petid,
+	        p.userid,
+	        u.email,
+	        p.petname,
+	        p.petbreed,
+	        p.birthdate,
+	        p.pettypeid,
+	        p.createdat,
+	        p.pfile
+	    FROM pet p
+	    JOIN users u ON p.userid = u.userid
+	    WHERE p.petid = #{petId}
+	</select>
+	
 	<!-- 펫 정보 수정(사용자) -->
     <update id="updatePetByUser" parameterType="map">
         UPDATE pet
@@ -93,6 +111,7 @@
 	<select id="searchPets" resultMap="petMap" parameterType="string">
 	    SELECT 
 	        p.petid,
+	        p.userid,
 	        u.email,
 	        p.petname,
 	        p.petbreed,
@@ -105,6 +124,28 @@
 	    WHERE u.email LIKE CONCAT(CONCAT('%', #{keyword}), '%')
 	       OR p.petname LIKE CONCAT(CONCAT('%', #{keyword}), '%')
 	    ORDER BY u.createdat DESC
+	</select>
+	<!-- pagging -->
+	<select id="selectPet10" resultMap="petMap" parameterType="java.util.HashMap">
+	SELECT *
+	FROM (
+	    SELECT ROW_NUMBER() OVER (ORDER BY p.createdat DESC) AS rnum,
+	           p.petid,
+	           p.userid,
+	           u.email,
+	           p.petname,
+	           p.petbreed,
+	           p.birthdate,
+	           p.pettypeid,
+	           p.createdat,
+	           p.pfile
+	    FROM pet p
+	    JOIN users u ON p.userid = u.userid
+	) A
+	WHERE A.rnum BETWEEN #{start} AND #{end}
+	</select>
+	<select id="selectTotalPetCnt" resultType="int">
+		select count(*) from pet
 	</select>
 	
 </mapper>
