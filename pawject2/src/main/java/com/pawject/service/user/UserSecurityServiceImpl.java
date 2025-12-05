@@ -22,7 +22,7 @@ import com.pawject.dto.user.UserDto;
 @Service
 public class UserSecurityServiceImpl implements UserSecurityService{
 	@Autowired  UserMapper  dao;  
-	@Autowired  PasswordEncoder  pwencoder;
+//	@Autowired  PasswordEncoder  pwencoder;
 	@Autowired  PetMapper pdao;
 	
 	@Transactional
@@ -41,7 +41,7 @@ public class UserSecurityServiceImpl implements UserSecurityService{
 
 	   dto.setUfile(fileName); 
 	   //2. 암호화 ###
-	   dto.setPassword(  pwencoder.encode(  dto.getPassword() )  );
+//	   dto.setPassword(  pwencoder.encode(  dto.getPassword() )  );
 	   
 	   // 3. mobile 중복 체크
 	    int count = dao.countByMobile(dto.getMobile());
@@ -118,7 +118,7 @@ public class UserSecurityServiceImpl implements UserSecurityService{
 		
 		// 비밀번호 암호화 처리
 	    if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
-	        dto.setPassword(pwencoder.encode(dto.getPassword()));
+//	        dto.setPassword(pwencoder.encode(dto.getPassword()));
 	    } else {
 	        // 비밀번호를 수정하지 않은 경우 기존 비밀번호 유지
 	        dto.setPassword(dbUser.getPassword());
