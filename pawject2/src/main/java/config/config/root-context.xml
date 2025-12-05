@@ -36,7 +36,6 @@
 				<value>classpath:config/mapper/pet-mapper.xml</value>
 				<value>classpath:config/mapper/execboard-mapper.xml</value>
 		   		<value>classpath:config/mapper/execinfo-mapper.xml</value>
-		   		<value>classpath:config/disease-mapper.xml</value>
 			</list>
 		</property>
 		</bean>
