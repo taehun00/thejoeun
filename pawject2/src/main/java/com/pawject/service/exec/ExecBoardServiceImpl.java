@@ -25,6 +25,7 @@ public class ExecBoardServiceImpl implements ExecBoardService {
 	@Override public int delete1(ExecBoardDto dto) {return dao.delete1(dto);}
 	@Override public List<ExecBoardDto> selectAll1() {return dao.selectAll1();}
 	@Override public ExecBoardDto select1(int postId) { dao.updateHit(postId); return dao.select1(postId);}
+	
 	@Override public ExecBoardDto selectUpdateForm(int postid) {return dao.select1(postid);}
 
 	/*Upload*/
@@ -37,7 +38,9 @@ public class ExecBoardServiceImpl implements ExecBoardService {
 				file.transferTo(img);
 				dto.setEimg(fileName);
 			}  catch (IOException e) { e.printStackTrace(); }
-		}
+		}else { dto.setEimg("no.png"); }
+
+		
 		return dao.insert2(dto);
 	}
 	
@@ -52,7 +55,7 @@ public class ExecBoardServiceImpl implements ExecBoardService {
 				dto.setEimg(fileName);
 			} catch (IOException e) { e.printStackTrace(); }
 		}
-		return dao.update1(dto);
+		return dao.update2(dto);
 	}
 
 	/* Search - Ajax */
@@ -73,13 +76,13 @@ public class ExecBoardServiceImpl implements ExecBoardService {
 	@Override public int selectTotalCnt() {return dao.selectTotalCnt();}
 
 	//iddouble
-//	@Override public int iddouble(int postid) {return 0;}
+//	@Override public int iddouble1(int postid) {return 0;}
 
 	// ADMIN / MEMBER
-//	@Override public int updateAdmin(ExecBoardDto dto) { return 0; }
-//	@Override public int deleteAdmin(ExecBoardDto dto) {return 0;}
-//	@Override public int updateMember(ExecBoardDto dto) { return 0; }
-//	@Override public int deleteMember(ExecBoardDto dto) { return 0; }
+//	@Override public int updateAdmin1(ExecBoardDto dto) { return 0; }
+//	@Override public int deleteAdmin1(ExecBoardDto dto) {return 0;}
+//	@Override public int updateMember1(ExecBoardDto dto) { return 0; }
+//	@Override public int deleteMember1(ExecBoardDto dto) { return 0; }
 	
 
 }
