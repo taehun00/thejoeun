@@ -17,7 +17,7 @@ import com.pawject.service.exec.ExecBoardService;
 
 @Controller
 public class ExecBoardController {
-	@Autowired ExecBoardService service;
+	@Autowired ExecBoardService service; 
 	
 	///////////////////////////////////////////////////////
 	//전체보기(+ Paging)
