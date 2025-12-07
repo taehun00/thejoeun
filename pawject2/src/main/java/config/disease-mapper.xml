@@ -8,6 +8,7 @@
  		<!-- 명시적 매핑 --> 
 		 <resultMap id="diseaseMap" type="DisswcDto">
 			<result property="disno" column="DISNO" />
+			<result property="userid" column="USERID" />
 			<result property="disname" column="DISNAME" />
 			<result property="disex" column="DISEX" />
 			<result property="kindpet" column="KINDPET" />
@@ -21,8 +22,9 @@
 	<insert id="insert" parameterType="DisswcDto">
 
 		insert into disease (
-		disno,disname,disex,kindpet,infval,mannote, bhit, createdat)
+		disno,userid,disname,disex,kindpet,infval,mannote, bhit, createdat)
 		values(disno_seq.nextval
+		,#{userid}
 		,#{disname}, #{disex},#{kindpet}, #{infval}, #{mannote}
 		, #{bhit},SYSDATE
 		)
@@ -53,8 +55,7 @@
 	</delete>
 
 
-	<select id="selectAll" resultMap="diseaseMap"
-		parameterType="map">
+	<select  resultMap="diseaseMap" id="select10" parameterType="java.util.HashMap">
 		select *
 		from (
 		select row_number() over (order by createdat desc) as rnum,
@@ -64,7 +65,7 @@
 		where A.rnum between #{start} and #{end}
 	</select>
 	
-	<!-- <select id="selectAll" resultType="com.pawject.dto.Disswc.DisswcDto"
+	<select id="selectAll" resultMap = "diseaseMap"
 		parameterType="map">
 		select *
 		from (
@@ -73,7 +74,7 @@
 		from disease
 		) A
 		where A.rnum between #{start} and #{end}
-	</select> -->
+	</select>
 	
 	 <!-- 
 		<select id="selectAll" resultType="com.pawject.dto.Disswc.DisswcDto" parameterType="map">
@@ -87,7 +88,7 @@
        </select>
  -->
  
-		 <select resultMap="diseaseMap" id="select" parameterType="int">
+		 <select resultMap = "diseaseMap" id="select" parameterType="int">
 			SELECT *
 			FROM disease
 			WHERE disno = #{disno}
@@ -104,6 +105,13 @@
 		 <select resultMap = "diseaseMap" id="selectSearch"  parameterType="java.util.HashMap">
 		 	select * from disease where disname like #{search}
 		 </select>
+	
+			<!-- resources/mapper/DiseaseMapper.xml -->
+		
+		    <select id="selectTotalCnt" resultType="int">
+		        SELECT COUNT(*) FROM DISEASE
+		    </select>
+		
 	
 	
 

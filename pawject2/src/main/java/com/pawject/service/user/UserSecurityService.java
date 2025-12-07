@@ -1,9 +1,7 @@
 package com.pawject.service.user;
 
 import java.util.List;
-import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.pawject.dto.user.AuthDto;

@@ -1,9 +1,7 @@
 package com.pawject.service.exec;
 
-import java.util.HashMap;
 import java.util.List;
 
-import com.pawject.dto.exec.ExecBoardDto;
 import com.pawject.dto.exec.ExecInfoDto;
 
 public interface ExecInfoService {	

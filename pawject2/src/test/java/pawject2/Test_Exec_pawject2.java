@@ -18,11 +18,16 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.pawject.dao.exec.ExecBoardDao;
 import com.pawject.dao.exec.ExecInfoDao;
+<<<<<<< HEAD
 //import com.pawject.dto.exec.ExecBoardDto;
 //import com.pawject.dto.exec.ExecInfoDto;
 import com.pawject.service.exec.ExecBoardService;
 import com.pawject.service.exec.ExecInfoService;
 //import org.springframework.mock.web.*;  //## 가짜이미지파일
+=======
+import com.pawject.service.exec.ExecBoardService;
+import com.pawject.service.exec.ExecInfoService;
+>>>>>>> 7ee00e1 (수정내용등록 paging 불가)
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:config/root-context.xml")

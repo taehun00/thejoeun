@@ -21,7 +21,15 @@
 		<typeAlias type="com.pawject.dto.review.ReviewImgDto"	alias="ReviewImgDto"/>
 		<typeAlias type="com.pawject.dto.exec.ExecBoardDto"      alias="ExecBoardDto"/>
 		<typeAlias type="com.pawject.dto.exec.ExecInfoDto"          alias="ExecInfoDto"/>  	
+<<<<<<< HEAD
 		<typeAlias alias="DisswcDto" type="com.pawject.dto.Disswc.DisswcDto"/>	
+=======
+		<typeAlias type="com.pawject.dto.Disswc.DisswcDto"     alias="DisswcDto"/>	
+		<!-- Exec에 해당되는 security가 따로 필요하면 사용할 예정. -->
+<!-- 	<typeAlias type="com.pawject.dto.exec.ExecBoardAuthDto"      alias="ExecBoardAuthDto"/> -->
+<!--  	<typeAlias type="com.pawject.dto.exec.ExecInfoAuthDto"      alias="ExecInfoAuthDto"/> -->
+
+>>>>>>> 7ee00e1 (수정내용등록 paging 불가)
 	</typeAliases>
 
 </configuration>

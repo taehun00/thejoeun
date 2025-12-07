@@ -1,11 +1,9 @@
 package com.pawject.service.review;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.pawject.dto.food.FoodDtoForList;
 import com.pawject.dto.review.ReviewDto;
 import com.pawject.dto.review.ReviewImgDto;
 
