@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
@@ -6,6 +7,9 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
 		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.3.xsd">
 
+		
+
+	
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg ref="sqlSessionFactory"></constructor-arg>
 	</bean>	
@@ -16,17 +20,12 @@
 		<property name="annotationClass" value="com.pawject.dao.MyDao"></property>
 	</bean>
 
-	
 	<!-- 2. mybatis -->
-	<context:component-scan
-		base-package="com.pawject" />
-	<bean id="sqlSessionFactory"
-		class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="dataSource" />
-		<property name="configLocation"
-			value="classpath:config/mybatis-config.xml" />
+	<context:component-scan base-package="com.pawject"></context:component-scan>
+		<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="configLocation"  value="classpath:config/mybatis-config.xml"></property>
 		<property name="mapperLocations">
-
 			<list> <!-- DB테스트시 잠그고 하기 -->
 				<value>classpath:config/mapper/food-mapper.xml</value>
 				<value>classpath:config/mapper/nutri-mapper.xml</value>
@@ -37,25 +36,29 @@
 				<value>classpath:config/mapper/pet-mapper.xml</value>
 				<value>classpath:config/mapper/execboard-mapper.xml</value>
 		   		<value>classpath:config/mapper/execinfo-mapper.xml</value>
-		   		<value>classpath:config/disease-mapper.xml</value>
 			</list>
 		</property>
 		</bean>
 
+
 	<!-- 1. db연동 한 번에 하나씩 -->
-	<!-- <context:property-placeholder location="classpath:config/application.properties"/> 
-		<bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource"> 
-		<property name="driverClass" value="${application.driverClass}"></property> 
-		<property name="url" value="${application.url}"></property> <property name="username" 
-		value="${application.username}"></property> <property name="password" value="${application.password}"></property> 
-		</bean> -->
-	<!-- 분산 처리로 교체 -->
-	<context:property-placeholder
-		location="classpath:config/db.properties" />
-	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource">
-		<property name="driverClassName" value="${db.driverClass}" />
-		<property name="jdbcUrl" value="${db.url}" />
-		<property name="username" value="${db.username}" />
-		<property name="password" value="${db.password}" />
+<!-- 	<context:property-placeholder location="classpath:config/application.properties"/>
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+	<property name="driverClass" value="${application.driverClass}"></property>
+	<property name="url" value="${application.url}"></property>
+	<property name="username" value="${application.username}"></property>
+	<property name="password" value="${application.password}"></property>
 	</bean>
+ -->
+ 	<!-- 분산 처리로 교체 -->
+ 	<context:property-placeholder location="classpath:config/db.properties"/>
+	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource">
+	<property name="driverClassName" value="${db.driverClass}"></property>
+	<property name="jdbcUrl" value="${db.url}"></property>
+	<property name="username" value="${db.username}"></property>
+	<property name="password" value="${db.password}"></property>
+	</bean>
+	
+
+	
 </beans>
