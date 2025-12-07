@@ -28,7 +28,7 @@ public interface ExecBoardService {
 	public List<ExecBoardDto> select10(int pstartno); //1(1,10), 2(11,20), 3(21,30)
 	public 		int   selectTotalCnt();
 	
-	/* idouble */
+//	/* idouble */
 //	public int iddouble(int postid);
 	
 	/* admin  - 전체유저정보 selectAll 
