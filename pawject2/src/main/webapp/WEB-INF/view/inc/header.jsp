@@ -45,10 +45,6 @@
         <li class="nav-item">
           <a class="nav-link" href="${pageContext.request.contextPath}/list.execboard">운동 챌린지게시판</a>
         </li>
-
-        <li class="nav-item">
-          <a class="nav-link" href="">게시판3</a>
-        </li>
 		
 		<!-- 로그인한 사용자만 보이는 메뉴 -->
         <sec:authorize access="isAuthenticated()">

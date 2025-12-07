@@ -2,6 +2,7 @@ package pawject2;
 
 import java.util.HashMap;
 
+import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSession;
@@ -9,25 +10,26 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+//import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
-import org.springframework.security.authentication.encoding.PasswordEncoder;
+//import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.pawject.dao.exec.ExecBoardDao;
 import com.pawject.dao.exec.ExecInfoDao;
-import com.pawject.dto.exec.ExecBoardDto;
-import com.pawject.dto.exec.ExecInfoDto;
+//import com.pawject.dto.exec.ExecBoardDto;
+//import com.pawject.dto.exec.ExecInfoDto;
 import com.pawject.service.exec.ExecBoardService;
 import com.pawject.service.exec.ExecInfoService;
-import org.springframework.mock.web.*;  //## 가짜이미지파일
+//import org.springframework.mock.web.*;  //## 가짜이미지파일
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:config/root-context.xml")
 
 public class Test_Exec_pawject2 {
 	@Autowired ApplicationContext context;
+	//@Autowired ServletContext context;
 	@Autowired DataSource ds;
 	@Autowired SqlSession sqlSession;
 	@Autowired ExecBoardDao dao;
@@ -36,21 +38,44 @@ public class Test_Exec_pawject2 {
 	@Autowired ExecInfoService  iservice;
 	
 	//운동정보게시판 paging_Test
-	
+	@Ignore @Test public void test11() {
+//		HashMap<String, Object> para = new HashMap<>();
+//		para.put("start", 1); para.put("end", 10);
+//		System.out.println(idao.select10(para));
+//		System.out.println(idao.selectAll2());
+//		System.out.println(idao.selectTotalCnt());
+	}
+
 	
 	//운동챌린지게시판 paging_Test
-	@Ignore public void test8() {
-		HashMap<String, Object> para = new HashMap<>();
-		para.put("start", 1); para.put("end", 10);
-		System.out.println(dao.select10(para));
+	@Ignore @Test public void test10() {
+//		HashMap<String, Object> para = new HashMap<>();
+//		para.put("start", 1); para.put("end", 10);
+//		System.out.println(dao.select10(para));
+//		System.out.println(dao.selectTotalCnt());
+	}
+	
+	//운동정보게시판 Search_Test
+	@Ignore public void test9() { 
+//		HashMap<String, String> para = new HashMap<>();
+//		para.put("search", "%t%");
 		
-		System.out.println(dao.selectAll1());
+//		System.out.println(idao.selectSearch2(para));
+	}
+	
+	//운동챌린지게시판 Search_Test
+	@Ignore public void test8() {
+//		HashMap<String, String> para = new HashMap<>();
+//		para.put("search", "%t%");
+//		
+//		System.out.println(dao.selectSearch1(para));
 	}
 	
 	
 	
+	
    //운동정보게시판 service테스트(운동챌린지 게시판 작성시 참고용)
-	@Test public void test7() {
+	@Ignore public void test7() {
 		//5. delete
 //		ExecInfoDto dto = new ExecInfoDto();
 //		dto.setExecid(71);
@@ -169,7 +194,7 @@ public class Test_Exec_pawject2 {
   //운동챌린지 게시판 service 테스트(완료)
   //※ 지금 상태로 돌려도 이상은 없으나, 
   //혹시나 insert가 안되면 ExecInfoServiceImpl에서 insert파트 try/catch부분 지우기.	(dao테스트도 동일)
-	@Test public void test6() {
+	@Ignore public void test6() {
 		//5. delete
 //		ExecBoardDto dto = new ExecBoardDto();
 //		dto.setPostid(34); dto.setExecid(74);

@@ -2,6 +2,19 @@
     pageEncoding="UTF-8"%>
     
 <%@include file="../inc/header.jsp" %> 
+<script>
+	$(function(){
+		let result = '${success}';
+		console.log(result);
+		if(result == '글쓰기에 실패했습니다.'){
+			alert(result); history.go(-1);
+		}else if(result.length !=0){
+			alert(result);
+		}
+	});
+</script>
+
+
    <div class="container card  my-5 p-4">
       <h3 class="card-header"> 운동챌린지게시판 글쓰기</h3>
       <!-- POSTID, ETITLE , ECONTENT  -->
@@ -17,28 +30,29 @@
  		  
  		  <div class="mb-3 mt-3">
 		    <label for="execid" class="form-label">운동아이디:</label>
-		    <input type="text" class="form-control" placeholder="운동아이디를 입력해주세요" 
+		    <input type="text" class="form-control" placeholder="운동아이디를 입력해주세요." 
 		    		id="execid"  name="execid">
 		  </div>
-<!--  게시판 기능테스트때는 풀어서 사용하고, 합본때에네는 잠그고 사용하시면 됩니다.-->	  
+<!--  게시판 기능테스트때는 풀어서 사용하고, 합본때에네는 잠그고 사용하시면 됩니다 -->
 		  <div class="mb-3">
 		    <label for="userid" class="form-label">사용자아이디:</label>
-		    <input type="text" class="form-control" id="userid" name="userid">
-		  </div>
+		    <input type="text" class="form-control" placeholder="사용자아이디를 입력해주세요."
+		    	   id="userid" name="userid">
+		  </div> 
 		  <!-- 외래키로 가지고 올 것들. -->
 
 		  <div class="mb-3 mt-3">
 		    <label for="etitle" class="form-label">제목:</label>
-		    <input type="text" class="form-control" id="etitle" placeholder="제목을 입력해주세요" name="etitle">
+		    <input type="text" class="form-control" id="etitle" placeholder="제목을 입력해주세요." name="etitle">
 		  </div>
 		  <div class="mb-3">
 		    <label for="econtent" class="form-label">내용:</label>
-		    <textarea class="form-control" id="econtent" placeholder="내용을 입력해주세요" name="econtent"></textarea>
+		    <textarea class="form-control" id="econtent" placeholder="내용을 입력해주세요." name="econtent"></textarea>
 		  </div> 
 		   
 		  <div class="mb-3">
 		    <label for="eimg" class="form-label">이미지:</label>
-		    <input type="file" class="form-control" id="eimg" placeholder="이미지를 선택해주세요" name="file">
+		    <input type="file" class="form-control" id="eimg" placeholder="이미지를 선택해주세요." name="file">
 		  </div>
 		  
 		  <div class="mb-3  text-end">
