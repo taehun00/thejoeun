@@ -2,6 +2,7 @@ package com.pawject.service.Disswc;
 
 import java.util.List;
 import java.util.Map;
+
 import com.pawject.dto.Disswc.DisswcDto;
 
 public interface DiseaseService {
@@ -16,4 +17,8 @@ public interface DiseaseService {
 	
 	/* Search - Ajax */
 	public List<DisswcDto> selectSearch(String keyword);
+	
+	/*Paging*/
+	public List<DisswcDto>  select10(int pstartno);
+	public int  selectTotalCnt();
 }

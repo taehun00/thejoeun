@@ -7,7 +7,7 @@
       <!-- APP_USER_ID , BTITLE , BCONTENT , BPASS  -->
 	  <form action="${pageContext.request.contextPath}/write.quest"  
 	  		method="post"    > 
-	      <input type="hidden"   name="appUserid"  value="1"> 
+	      <input type="hidden"   name="userid"  value="1"> 
 		  <div class="mb-3 mt-3">
 		    <label for="disname" class="form-label">질환명:</label>
 		    <input type="text" class="form-control" id="disname" placeholder="질환명을  입력해주세요" name="disname">
@@ -46,6 +46,7 @@
 		  	<button type="submit" class="btn btn-danger">글쓰기</button>  
 		  	<a href="${pageContext.request.contextPath}/list.quest"  class="btn btn-primary">목록보기</a>
 		  </div>
+		  <input type="hidden" name="${_csrf.parameterName}"  value="${_csrf.token}" />
    </form>
    
   </div>

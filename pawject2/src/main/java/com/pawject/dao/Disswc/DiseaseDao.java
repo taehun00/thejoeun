@@ -20,5 +20,10 @@ public interface DiseaseDao {
 	
 	/*Ajax*/
 	public List<DisswcDto>  selectSearch( HashMap<String, String> para);
+	
+	/*Paging*/
+	public List<DisswcDto> select10(HashMap<String,Object> para);
+	public int selectTotalCnt();
+	 
 
 }

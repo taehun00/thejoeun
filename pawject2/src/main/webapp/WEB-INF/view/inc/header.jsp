@@ -45,6 +45,13 @@
         <li class="nav-item">
           <a class="nav-link" href="${pageContext.request.contextPath}/list.execboard">운동 챌린지게시판</a>
         </li>
+<<<<<<< HEAD
+=======
+
+        <li class="nav-item">
+          <a class="nav-link" href="${pageContext.request.contextPath}/list.quest">질환 리스트</a>
+        </li>
+>>>>>>> 7ee00e1 (수정내용등록 paging 불가)
 		
 		<!-- 로그인한 사용자만 보이는 메뉴 -->
         <sec:authorize access="isAuthenticated()">

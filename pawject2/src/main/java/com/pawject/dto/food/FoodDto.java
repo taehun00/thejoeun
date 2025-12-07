@@ -1,7 +1,5 @@
 package com.pawject.dto.food;
 
-import java.util.Date;
-
 import lombok.Data;
 
 @Data

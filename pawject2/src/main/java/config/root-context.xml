@@ -36,6 +36,11 @@
 				<value>classpath:config/mapper/pet-mapper.xml</value>
 				<value>classpath:config/mapper/execboard-mapper.xml</value>
 		   		<value>classpath:config/mapper/execinfo-mapper.xml</value>
+<<<<<<< HEAD
+=======
+		   		<value>classpath:config/disease-mapper.xml</value> 
+		   	
+>>>>>>> 7ee00e1 (수정내용등록 paging 불가)
 			</list>
 		</property>
 		</bean>

@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.pawject.dao.MyDao;
 import com.pawject.dto.exec.ExecBoardDto;
-import com.pawject.dto.exec.ExecInfoDto;
 
 @MyDao
 public interface ExecBoardDao {
