@@ -9,9 +9,6 @@
 	<configs>
 	</configs>
 	<autoconfigs>
-		<config>src/main/java/config/servlet-context.xml</config>
-		<config>src/main/java/config/security-context.xml</config>
-		<config>src/main/java/config/root-context.xml</config>
 	</autoconfigs>
 	<configSets>
 	</configSets>

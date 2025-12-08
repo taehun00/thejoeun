@@ -200,8 +200,19 @@ public class UserSecurityServiceImpl implements UserSecurityService{
 
 
 	@Override
-	public List<UserDto> listUsers(int start, int end) {
-		return dao.listUsers(start, end);
+	public List<UserDto> listUsers(int pstartno) {
+		HashMap<String, Object> para = new HashMap();
+		int start = (pstartno - 1 ) * 10 + 1;
+		para.put("start", start);
+		para.put("end", start + 10 - 1);
+		
+		return dao.listUsers(para);
+	}
+
+	
+	@Override
+	public int selectTotalCnt() {
+		return dao.selectTotalCnt();
 	}
 
 
@@ -210,32 +221,18 @@ public class UserSecurityServiceImpl implements UserSecurityService{
 		return dao.selectUser(userId);
 
 	}
-
-
-//	@Override
-//	public List<UserDto> searchUsers(String keyword, String type) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//
-//	@Override
-//	public List<UserDto> listUsers(int pstartno) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-
-
-//	@Override
-//	public int selectTotalCnt() {
-//		// TODO Auto-generated method stub
-//		return 0;
-//	}
 	
-//	@Override
-    public List<UserDto> searchUsers(String keyword) {
-        return dao.searchUsers(keyword);
-    }
+	@Override
+	public List<UserDto> searchUsers(String keyword, String type) {
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("keyword", keyword);
+	    params.put("type", type);
+	    return dao.searchUsers(params);
+	}
+
+
+
+
 
 
 

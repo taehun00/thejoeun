@@ -44,7 +44,6 @@
 		where postid=#{postid}
 	</update>
 	
-	
 	<update id="updateHit" parameterType="int">
 		update execboard set ehit
 		= ehit+1 where postid=#{postid}
@@ -78,6 +77,11 @@
 		select * from execboard where postid=#{postid}
 	</select>
 
+	<!-- ajax - search -->
+	<select resultMap="ExecBoardMap" id="selectSearch1" parameterType="java.util.HashMap">
+		select * from execboard where etitle like #{search} <!-- #{search} 주의!! -->
+	</select>
+
 	<!-- paging -->
 	<select resultMap="ExecBoardMap" id="select10"
 		parameterType="java.util.HashMap">
@@ -94,8 +98,6 @@
 	<select resultType="int" id="selectTotalCnt">
 		select count(*) from execboard
 	</select>
-
-
 </mapper>
 
 

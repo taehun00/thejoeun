@@ -31,9 +31,14 @@ public interface UserSecurityService {
     // 회원 정보 수정
     public int update(MultipartFile file, UserDto dto);
 
-    // 전체 유저 목록 조회 (관리자용, 페이징)
-    public List<UserDto> listUsers(int start, int end);
+    // 검색(이메일, 닉네임)
+    public List<UserDto> searchUsers(String keyword, String type);
 
+    
+    // 전체 유저 목록 조회 (관리자용, 페이징)
+    public List<UserDto> listUsers(int pstartno);
+    public int selectTotalCnt();
+    
     // 특정 유저 조회
     public UserDto selectUser(int userId);
 
@@ -47,8 +52,8 @@ public interface UserSecurityService {
     //public int deleteAdmin(String email);
     public int deleteUser(String email);
 
-    // 검색(이메일, 닉네임)
-    public List<UserDto> searchUsers(String keyword);
+
+    
 
 
 }
