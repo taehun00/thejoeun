@@ -83,6 +83,50 @@
 
       <ul class="navbar-nav ms-auto">
 
+<<<<<<< HEAD
+=======
+        <li class="nav-item">
+          <a class="nav-link" href="${pageContext.request.contextPath}/foodlist.fn">사료 관리</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="${pageContext.request.contextPath}/reviewlist.fn">사료 리뷰</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="${pageContext.request.contextPath}/list.execboard">운동 챌린지게시판</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="${pageContext.request.contextPath}/list.quest">질환 리스트</a>
+        </li>
+
+		
+		<!-- 로그인한 사용자만 보이는 메뉴 -->
+        <sec:authorize access="isAuthenticated()">
+          <li class="nav-item">
+            <a class="nav-link" href="${pageContext.request.contextPath}/security/mypage">
+              <sec:authentication property="principal.dto.email" />
+            </a>
+          </li>
+          <li class="nav-item">
+            <form action="${pageContext.request.contextPath}/security/logout" method="post">
+              <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+              <input type="submit" value="로그아웃" class="btn btn-danger" />
+            </form>
+          </li>
+        </sec:authorize>
+
+        <!-- 비로그인 사용자만 보이는 메뉴 -->
+        <sec:authorize access="isAnonymous()">
+          <li class="nav-item">
+            <a class="nav-link" href="${pageContext.request.contextPath}/security/login">LOGIN</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="${pageContext.request.contextPath}/security/join">JOIN</a>
+          </li>
+        </sec:authorize>
+        
+>>>>>>> e1b1c63 (질환 fv0)
         <sec:authorize access="hasRole('ADMIN')">
 		  <li class="nav-item">
 		    <a class="nav-link fw-bold text-warning" href="${pageContext.request.contextPath}/security/listPage">

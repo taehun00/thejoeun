@@ -1,8 +1,14 @@
 package com.pawject.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+<<<<<<< HEAD
 import org.springframework.security.access.prepost.PreAuthorize;
 //import org.springframework.security.access.prepost.PreAuthorize;
+=======
+
+import org.springframework.security.access.prepost.PreAuthorize;
+
+>>>>>>> e1b1c63 (질환 fv0)
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;

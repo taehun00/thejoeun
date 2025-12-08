@@ -2,8 +2,12 @@ package com.pawject.service.exec;
 
 import java.io.File;
 import java.io.IOException;
+<<<<<<< HEAD
 //import java.net.InetAddress;
 //import java.net.UnknownHostException;
+=======
+
+>>>>>>> e1b1c63 (질환 fv0)
 import java.util.HashMap;
 import java.util.List;
 

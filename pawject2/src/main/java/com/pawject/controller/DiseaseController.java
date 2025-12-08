@@ -32,7 +32,7 @@ public class DiseaseController {
 	
 	@RequestMapping("/list.quest")
 	public String list(Model model,
-	                   @RequestParam(value="pstartno", defaultValue="0") int pstartno) {
+	                   @RequestParam(value="pstartno", defaultValue="1") int pstartno) {
 	    if (pstartno == 0) {
 	        Map<String, Object> params = new HashMap<>();
 	        params.put("start", 1);
@@ -45,46 +45,7 @@ public class DiseaseController {
 	    return "quest_board/list";
 	}
 
-//	@RequestMapping("/list.quest")   //       
-//	public String list(Model model) {
-//		Map<String, Object> params = new HashMap<>();
-//		params.put("start", 1);
-//		params.put("end", 10);
-//		model.addAttribute("list",service.selectAll(params));
-//		  // 처리하고
-//		return "quest_board/list";   //해당화면    /view/ 폴더안에    +  파일명    + .jsp
-//	}
-//	
-//	@RequestMapping("/list.quest")   //       
-//	public String list(Model model,
-//			@RequestParam(value="pstartno", defaultValue="0") int pstartno) {
-//		model.addAttribute("list", service.select10(pstartno));
-//		model.addAttribute("paging", new PagingDto10( service.selectTotalCnt(),pstartno
-//		));
-//		  // 처리하고
-//		return "quest_board/list";   //해당화면    /view/ 폴더안에    +  파일명    + .jsp
-//	}
-	
-	
-/*
-	@RequestMapping(value="/list.quest", params="pstartno")
-	public String listWithPaging(Model model,
-	        @RequestParam(value="pstartno", defaultValue="0") int pstartno) {
-	    model.addAttribute("list", service.select10(pstartno));
-	    model.addAttribute("paging", new PagingDto10(service.selectTotalCnt(), pstartno));
-	    return "quest_board/list";
-	}
 
-	@RequestMapping(value="/list.quest", params="!pstartno")
-	public String listDefault(Model model) {
-	    Map<String, Object> params = new HashMap<>();
-	    params.put("start", 1);
-	    params.put("end", 10);
-	    model.addAttribute("list", service.selectAll(params));
-	    return "quest_board/list";
-	}
-
-*/	
 	
 
 	// 글쓰기 폼

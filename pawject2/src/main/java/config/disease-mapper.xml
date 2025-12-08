@@ -54,7 +54,7 @@
 		WHERE disno = #{disno}
 	</delete>
 
-
+<!--  <select  resultMap="diseaseMap" id="select10" parameterType="java.util.HashMap"> -->
 	<select  resultMap="diseaseMap" id="select10" parameterType="java.util.HashMap">
 		select *
 		from (
@@ -67,7 +67,7 @@
 	
 
 	<select id="selectAll" resultMap = "diseaseMap"
-		parameterType="map">
+		parameterType="java.util.HashMap">
 		select *
 		from (
 		select row_number() over (order by createdat desc) as rnum,

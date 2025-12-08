@@ -80,7 +80,7 @@
       <!-- 로그인 사람만 글쓰기 가능 -->
         <sec:authorize access="isAuthenticated()">
 		<p class="text-end">
-			<a href="${pageContext.request.contextPath}/write.quest" class="btn btn-primary">글쓰기</a>
+			<a href="${pageContext.request.contextPath}/write.quest" class="btn btn-olive">글쓰기</a>
 		</p>	
 		
 		</sec:authorize> 

@@ -54,13 +54,13 @@
 		  </div>  --%>		  
 		  
 			<div class="mb-3">
-			<a href="${pageContext.request.contextPath}/edit.quest?disno=${dto.disno}" class="btn btn-success form-control">글수정</a>
+			<a href="${pageContext.request.contextPath}/edit.quest?disno=${dto.disno}" class="btn btn-lavender form-control">글수정</a>
 			</div>
 			<div class="mb-3">
-			<a href="${pageContext.request.contextPath}/delete.quest?disno=${dto.disno}" class="btn btn-secondary form-control">글삭제</a>
+			<a href="${pageContext.request.contextPath}/delete.quest?disno=${dto.disno}" class="btn btn-roseRed form-control">글삭제</a>
 			</div>  
 		  <div class="mb-3">
-		  	<a href="${pageContext.request.contextPath}/list.quest" class="btn btn-primary form-control">목록보기</a>
+		  	<a href="${pageContext.request.contextPath}/list.quest" class="btn btn-terra form-control">목록보기</a>
 		  </div>
 	 </div>
    </div> 
