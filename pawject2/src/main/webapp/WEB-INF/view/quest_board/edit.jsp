@@ -52,9 +52,9 @@
 	  <div class="mb-3  text-end">
 	  <!-- 로그인한 사람만 글 수정 -->
 	  <sec:authorize access="isAuthenticated()"> 
-	  	<button type="submit" class="btn btn-primary">글수정</button>
+	  	<button type="submit" class="btn btn-lavender">글수정</button>
 	  </sec:authorize>
-	  	<a href="javascript:history.go(-1)"  class="btn btn-danger">BACK</a>
+	  	<a href="javascript:history.go(-1)"  class="btn btn-mint">BACK</a>
 	  </div>
 	  <input type="hidden" name="${_csrf.parameterName}"  value="${_csrf.token}" />
  </form>
