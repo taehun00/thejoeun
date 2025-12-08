@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pawject.dao.pet.PetMapper">
+  <insert id="petJoin" parameterType="PetDto">
+	    INSERT INTO pet (petid, userid, petname, petbreed, birthdate, pettypeid, createdat, pfile)
+	    VALUES ( pet_seq.NEXTVAL, #{userId}, #{petName}, #{petBreed}, #{birthDate},
+	    			#{petTypeId}, SYSDATE, #{pfile, jdbcType=VARCHAR} )
+	</insert>
+	
+	<resultMap type="PetDto" id="petMap">
+	    <result property="petId"     column="petid" />
+	    <result property="userId"    column="USERID" />
+	    <result property="petName"   column="PETNAME" />
+	    <result property="petBreed"  column="PETBREED" />
+	    <result property="birthDate" column="BIRTHDATE" />
+	    <result property="petTypeId" column="PETTYPEID" />
+	    <result property="createdAt" column="CREATEDAT" />
+	    <result property="pfile"     column="PFILE" />
+	    <result property="email"     column="EMAIL" />
+	</resultMap>
+	
+	<!-- 펫 페이지(로그인 시 해당유저의 전체펫 조회)(사용자) -->
+	<select id="selectPetsByUserId" parameterType="int" resultMap="petMap">
+	    SELECT
+	    	p.petid,
+	        p.petname,
+	        p.petbreed,
+	        p.birthdate,
+	        p.pettypeid,
+	        p.createdat,
+	        p.pfile
+	    FROM pet p
+	    JOIN users u ON p.userid = u.userid
+	    WHERE u.userid = #{userId}
+	    ORDER BY p.createdat DESC
+	</select>
+	<!-- 펫 상세페이지(로그인 시 해당유저의 상세펫 조회)(사용자) -->
+	<select id="selectPetDetail" resultMap="petMap">
+	    SELECT 
+	    	p.petid,
+	        p.petname,
+	        p.petbreed,
+	        p.birthdate,
+	        p.pettypeid,
+	        p.createdat,
+	        p.pfile
+	    FROM pet p
+	    WHERE p.userid = #{userId}
+	      AND p.petid = #{petId}
+	</select>
+	<!-- 펫 상세 조회 (관리자) -->
+	<select id="selectPetDetailByAdmin" parameterType="int" resultMap="petMap">
+	    SELECT 
+	        p.petid,
+	        p.userid,
+	        u.email,
+	        p.petname,
+	        p.petbreed,
+	        p.birthdate,
+	        p.pettypeid,
+	        p.createdat,
+	        p.pfile
+	    FROM pet p
+	    JOIN users u ON p.userid = u.userid
+	    WHERE p.petid = #{petId}
+	</select>
+	
+	<!-- 펫 정보 수정(사용자) -->
+    <update id="updatePetByUser" parameterType="map">
+        UPDATE pet
+        SET petname   = #{pet.petName},
+            petbreed  = #{pet.petBreed},
+            birthdate = #{pet.birthDate},
+            pettypeid = #{pet.petTypeId},
+            pfile     = #{pet.pfile}
+        WHERE petid   = #{pet.petId}
+          AND userid  = #{userId}
+    </update>
+
+    <!-- 펫 정보 수정(관리자) -->
+    <update id="updatePetByAdmin" parameterType="PetDto">
+        UPDATE pet
+        SET petname   = #{petName}
+        WHERE petid   = #{petId}
+    </update>
+	
+	<!-- 펫 삭제 사용자 -->
+    <delete id="deletePetByUser" parameterType="map">
+        DELETE FROM pet
+        WHERE petid = #{petId}
+          AND userid = #{userId}
+    </delete>
+
+    <!-- 펫 삭제 관리자 -->
+    <delete id="deletePetByAdmin" parameterType="int">
+        DELETE FROM pet
+        WHERE petid = #{petId}
+    </delete>
+	
+	<!-- 유저의 모든 펫 삭제 -->
+	<delete id="deletePetsByUser" parameterType="int">
+	    DELETE FROM pet
+	    WHERE userid = #{userId}
+	</delete>
+	
+	
+	<!-- 이메일로 검색 -->
+	<!-- 펫이름으로 검색 -->
+	<select id="searchPets" resultMap="petMap" parameterType="map">
+	    SELECT 
+	        p.petid,
+	        p.userid,
+	        u.email,
+	        p.petname,
+	        p.petbreed,
+	        p.birthdate,
+	        p.pettypeid,
+	        p.createdat,
+	        p.pfile
+	    FROM pet p
+	    JOIN users u ON p.userid = u.userid
+	    WHERE
+	        <choose>
+	            <when test="type == 'email'">
+	                u.email LIKE '%' || #{keyword} || '%'
+	            </when>
+	            <when test="type == 'petname'">
+	                p.petname LIKE '%' || #{keyword} || '%'
+	            </when>
+	            <otherwise>
+	                u.email LIKE '%' || #{keyword} || '%'
+	                OR p.petname LIKE '%' || #{keyword} || '%'
+	            </otherwise>
+	        </choose>
+	    ORDER BY p.createdat DESC
+	</select>
+
+	<!-- pagging -->
+	<select id="selectPet10" resultMap="petMap" parameterType="java.util.HashMap">
+	SELECT *
+	FROM (
+	    SELECT ROW_NUMBER() OVER (ORDER BY p.createdat DESC) AS rnum,
+	           p.petid,
+	           p.userid,
+	           u.email,
+	           p.petname,
+	           p.petbreed,
+	           p.birthdate,
+	           p.pettypeid,
+	           p.createdat,
+	           p.pfile
+	    FROM pet p
+	    JOIN users u ON p.userid = u.userid
+	) A
+	WHERE A.rnum BETWEEN #{start} AND #{end}
+	</select>
+	<select id="selectTotalPetCnt" resultType="int">
+		select count(*) from pet
+	</select>
+	
+</mapper>
