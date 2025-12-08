@@ -18,12 +18,14 @@ public interface ExecBoardDao {
 	public ExecBoardDto select1(int postId);
 		
 	
+
 	/* UPLOAD */
 	public int insert2(ExecBoardDto dto);
 	public int update2(ExecBoardDto dto); 
 	
 	/*Ajax*/
 	public List<ExecBoardDto> selectSearch1 (HashMap<String, String> para);
+
 
 	/*paging*/
 	public List<ExecBoardDto> select10(HashMap<String, Object> para);

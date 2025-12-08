@@ -157,7 +157,7 @@ public class ReviewController {
 				rttr.addFlashAttribute("success", result);
 				return "redirect:/reviewlist.fn";
 			} else {
-				String result="삭제 실패";
+				String result="삭제 성공";
 				rttr.addFlashAttribute("success", result);
 				return "redirect:/reviewlist.fn";
 			}

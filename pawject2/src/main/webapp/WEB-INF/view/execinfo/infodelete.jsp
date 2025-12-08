@@ -9,22 +9,21 @@
 	  <form action="${pageContext.request.contextPath}/delete.execinfo"  method="post">  
 	      <input type="hidden"   name="execid"  value="${param.execid}"> 
 		  <input  type="hidden" name="${_csrf.parameterName}"  value="${_csrf.token}" />			  
-		  
 		  <div class="my-3">
 		    <label for="execid" class="form-label">운동아이디:</label>
 		    <input type="text" class="form-control" 
-		    	id="execid"  placeholder="운동아이디를 입력해주세요" name="execid">
+		    	id="execid"  placeholder="운동아이디를 입력해주세요." name="execid">
 		  </div> 
 		  <div class="my-3">
 		    <label for="exectype" class="form-label">운동유형:</label>
 		    <input type="text" class="form-control" 
-		    	id="exectype"  placeholder="운동유형을 입력해주세요" name="exectype">
+		    	id="exectype"  placeholder="운동유형을 입력해주세요." name="exectype">
 		  </div> 
 		  
 		  
 		  <div class="my-3  text-end">
 		  	<button type="submit" class="btn btn-roseRed">글삭제</button>
-		  	<a href="javascript:history.go(-1)"  class="btn btn-rosePink">BACK</a>
+		  	<a href="javascript:history.go(-1)"  class="btn btn-navy">BACK</a>
 		  </div>
 	 </form>
    </div>

@@ -18,12 +18,20 @@
 
 		<!-- 이미지 -->
 		<div class="col-3 d-flex align-items-center justify-content-center">
-			<img
-				src="${pageContext.request.contextPath}/static/foodimg/${fdto.foodimg}"
-				alt="사료 이미지"
-				style="width:100%">
+			<c:choose>
+				<c:when test="${not empty fdto.foodimg}">
+				<img src="${pageContext.request.contextPath}/foodimg/${fdto.foodimg}"
+						 alt="사료 이미지" style="width:100%">
+				</c:when>
+				 <c:otherwise>
+				     <img src="${pageContext.request.contextPath}/foodimg/brand0${fdto.brandid}.png"
+				          alt="브랜드 로고" style="width:100%">
+				</c:otherwise>
+		</c:choose>				
+				
 		</div>
-
+		
+		
 		<!-- 기본 정보 -->
 		<div class="col-9">
 

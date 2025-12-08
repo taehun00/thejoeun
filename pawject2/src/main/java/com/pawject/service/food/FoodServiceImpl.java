@@ -32,7 +32,7 @@ public class FoodServiceImpl implements FoodService {
 
 		    if (!file.isEmpty()) {
 		        fileName = file.getOriginalFilename();
-		        String uploadPath = context.getRealPath("/static/foodimg/");
+		        String uploadPath = context.getRealPath("/foodimg/");
 		        File img = new File(uploadPath + fileName);
 
 		        try {
@@ -62,7 +62,7 @@ public class FoodServiceImpl implements FoodService {
 
 		    if (!file.isEmpty()) {
 		        fileName = file.getOriginalFilename();
-		        String uploadPath = context.getRealPath("/static/foodimg/");
+		        String uploadPath = context.getRealPath("/foodimg/");
 		        File img = new File(uploadPath + fileName);
 
 		        try {
