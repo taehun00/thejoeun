@@ -79,14 +79,14 @@
 		</tfoot>
 	</table>
 	
-	<sec:authorize access="isAuthenticated()">
+ 	<sec:authorize access="isAuthenticated()">
 		<p class="text-end">
 			<a href="${pageContext.request.contextPath}/list.execboard"
 				class=" text-white btn btn-mustard">운동챌린지게시판</a>
 		</p>
 	</sec:authorize>
 	
-	<sec:authorize access="isAuthenticated()">
+ 	<sec:authorize access="isAuthenticated()">
 		<p class="text-end">
 			<a href="${pageContext.request.contextPath}/write.execinfo"
 				class=" text-white btn btn-navy">글쓰기</a>
@@ -158,7 +158,7 @@
 																				+ "<td>"
 																				+ (res.length - index)
 																				+ "</td>"
-																				+ "<td><a href='${pageContext.request.contextPath}/detail.execinfo?id="
+																				+ "<td><a href='${pageContext.request.contextPath}/detail.execinfo?execid="
 																				+ dto.execid
 																				+ "'>"
 																				+ dto.exectype

@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Bootstrap 5 Website Example</title>
+  <title>Pet Food & Wellness</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -33,23 +33,22 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navMenu">
-<<<<<<< HEAD
+
         <ul class="navbar-nav ms-auto align-items-center">
-          <li class="nav-item">
-            <a class="nav-link" href="${pageContext.request.contextPath}/foodlist.fn">사료 관리</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="${pageContext.request.contextPath}/reviewlist.fn">사료 리뷰</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="${pageContext.request.contextPath}/list.execboard">운동 챌린지게시판</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">게시판3</a>
-          </li>
+		 
+
 
           <!-- 로그인 사용자 메뉴 -->
           <sec:authorize access="isAuthenticated()">
+          
+           <li class="nav-item">
+            <a class="nav-link" href="${pageContext.request.contextPath}/reviewlist.fn">사료 리뷰</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="${pageContext.request.contextPath}/list.execboard">운동 챌린지</a>
+          </li>
+                   
+ 
             <li class="nav-item">
               <a class="nav-link fw-bold text-info" href="${pageContext.request.contextPath}/security/mypage">
                 <sec:authentication property="principal.dto.email" />
@@ -65,6 +64,17 @@
 
           <!-- 비로그인 사용자 메뉴 -->
           <sec:authorize access="isAnonymous()">
+          
+          <li class="nav-item">
+            <a class="nav-link" href="${pageContext.request.contextPath}/reviewlist.fn">사료 리뷰</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="${pageContext.request.contextPath}/list.execboard">운동 챌린지</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="${pageContext.request.contextPath}/list.execinfo">운동 정보</a>
+          </li>
+          
             <li class="nav-item">
               <a class="nav-link" href="${pageContext.request.contextPath}/security/login">LOGIN</a>
             </li>
@@ -73,79 +83,33 @@
             </li>
           </sec:authorize>
 
-          <!-- 관리자 메뉴 -->
-          <sec:authorize access="hasRole('ADMIN')">
-            <li class="nav-item">
-              <a class="nav-link fw-bold text-warning" href="${pageContext.request.contextPath}/security/listPage">관리자 USER</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link fw-bold text-warning" href="${pageContext.request.contextPath}/pet/listPetPage">관리자 PET</a>
-            </li>
-          </sec:authorize>
-        </ul>
-      </div>
 
-=======
       <ul class="navbar-nav ms-auto">
 
-        <li class="nav-item">
-          <a class="nav-link" href="${pageContext.request.contextPath}/foodlist.fn">사료 관리</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="${pageContext.request.contextPath}/reviewlist.fn">사료 리뷰</a>
-        </li>
-
-        <li class="nav-item">
-          <a class="nav-link" href="${pageContext.request.contextPath}/list.execboard">운동 챌린지게시판</a>
-        </li>
-<<<<<<< HEAD
-=======
-
-        <li class="nav-item">
-          <a class="nav-link" href="${pageContext.request.contextPath}/list.quest">질환 리스트</a>
-        </li>
->>>>>>> 7ee00e1 (수정내용등록 paging 불가)
-		
-		<!-- 로그인한 사용자만 보이는 메뉴 -->
-        <sec:authorize access="isAuthenticated()">
-          <li class="nav-item">
-            <a class="nav-link" href="${pageContext.request.contextPath}/security/mypage">
-              <sec:authentication property="principal.dto.email" />
-            </a>
-          </li>
-          <li class="nav-item">
-            <form action="${pageContext.request.contextPath}/security/logout" method="post">
-              <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-              <input type="submit" value="로그아웃" class="btn btn-danger" />
-            </form>
-          </li>
-        </sec:authorize>
-
-        <!-- 비로그인 사용자만 보이는 메뉴 -->
-        <sec:authorize access="isAnonymous()">
-          <li class="nav-item">
-            <a class="nav-link" href="${pageContext.request.contextPath}/security/login">LOGIN</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="${pageContext.request.contextPath}/security/join">JOIN</a>
-          </li>
-        </sec:authorize>
-        
         <sec:authorize access="hasRole('ADMIN')">
 		  <li class="nav-item">
 		    <a class="nav-link fw-bold text-warning" href="${pageContext.request.contextPath}/security/listPage">
 		      관리자 USER
 		    </a>
+		 </li>
+		 <li>   
 		    <a class="nav-link fw-bold text-warning" href="${pageContext.request.contextPath}/pet/listPetPage">
 		      관리자 PET
 		    </a>
 		  </li>
+		  <li class="nav-item">
+		      <a class="nav-link fw-bold text-warning" href="${pageContext.request.contextPath}/foodlist.fn">사료 관리</a>
+		  </li>
+		  
+		<li class="nav-item">
+          <a class="nav-link fw-bold text-warning" href="${pageContext.request.contextPath}/list.quest">질환 리스트</a>
+        </li>
 		</sec:authorize>
         
 		
       </ul>
     </div>
->>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
+
   </div>
 </nav>
 <!-- 	header		 -->
