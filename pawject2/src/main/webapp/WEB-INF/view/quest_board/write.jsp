@@ -43,8 +43,8 @@
 		    <input type="file" class="form-control" id="file" placeholder="파일을 입력해주세요" name="file">
 		  </div> -->
 		  <div class="mb-3  text-end">
-		  	<button type="submit" class="btn btn-danger">글쓰기</button>  
-		  	<a href="${pageContext.request.contextPath}/list.quest"  class="btn btn-primary">목록보기</a>
+		  	<button type="submit" class="btn btn-olive">글쓰기</button>  
+		  	<a href="${pageContext.request.contextPath}/list.quest"  class="btn btn-terra">목록보기</a>
 		  </div>
 		  <input type="hidden" name="${_csrf.parameterName}"  value="${_csrf.token}" />
    </form>
