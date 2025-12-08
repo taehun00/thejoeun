@@ -2,7 +2,11 @@ package com.pawject.controller;
 
 import java.util.List;
 
+<<<<<<< HEAD
+import org.springframework.beans.factory.annotation.Autowired; 
+=======
 import org.springframework.beans.factory.annotation.Autowired;
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;

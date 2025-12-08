@@ -26,7 +26,7 @@
 		<property name="dataSource" ref="dataSource"></property>
 		<property name="configLocation"  value="classpath:config/mybatis-config.xml"></property>
 		<property name="mapperLocations">
-			 <list> <!-- DB테스트시 잠그고 하기 -->
+			<list> <!-- DB테스트시 잠그고 하기 -->
 				<value>classpath:config/mapper/food-mapper.xml</value>
 				<value>classpath:config/mapper/nutri-mapper.xml</value>
 				<value>classpath:config/mapper/brand-mapper.xml</value>
@@ -36,8 +36,7 @@
 				<value>classpath:config/mapper/pet-mapper.xml</value>
 				<value>classpath:config/mapper/execboard-mapper.xml</value>
 		   		<value>classpath:config/mapper/execinfo-mapper.xml</value>
-		   		<value>classpath:config/mapper/disease-mapper.xml</value> 
-			</list> 
+			</list>
 		</property>
 		</bean>
 

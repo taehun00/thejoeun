@@ -2,7 +2,10 @@ package com.pawject.service.Disswc;
 
 import java.util.List;
 import java.util.Map;
+<<<<<<< HEAD
+=======
 
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 import com.pawject.dto.Disswc.DisswcDto;
 
 public interface DiseaseService {
@@ -17,8 +20,11 @@ public interface DiseaseService {
 	
 	/* Search - Ajax */
 	public List<DisswcDto> selectSearch(String keyword);
+<<<<<<< HEAD
+=======
 	
 	/*Paging*/
 	public List<DisswcDto>  select10(int pstartno);
 	public int  selectTotalCnt();
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 }

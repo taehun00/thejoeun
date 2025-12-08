@@ -65,6 +65,7 @@
 		where A.rnum between #{start} and #{end}
 	</select>
 	
+
 	<select id="selectAll" resultMap = "diseaseMap"
 		parameterType="map">
 		select *
@@ -74,6 +75,7 @@
 		from disease
 		) A
 		where A.rnum between #{start} and #{end}
+
 	</select>
 	
 	 <!-- 
@@ -88,7 +90,9 @@
        </select>
  -->
  
+
 		 <select resultMap = "diseaseMap" id="select" parameterType="int">
+
 			SELECT *
 			FROM disease
 			WHERE disno = #{disno}
@@ -106,6 +110,7 @@
 		 	select * from disease where disname like #{search}
 		 </select>
 	
+
 			<!-- resources/mapper/DiseaseMapper.xml -->
 		
 		    <select id="selectTotalCnt" resultType="int">
@@ -113,6 +118,7 @@
 		    </select>
 		
 	
+
 	
 
 </mapper>

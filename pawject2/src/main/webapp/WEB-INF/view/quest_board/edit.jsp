@@ -56,7 +56,10 @@
 	  </sec:authorize>
 	  	<a href="javascript:history.go(-1)"  class="btn btn-danger">BACK</a>
 	  </div>
+<<<<<<< HEAD
+=======
 	  <input type="hidden" name="${_csrf.parameterName}"  value="${_csrf.token}" />
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
  </form>
   </div>
    

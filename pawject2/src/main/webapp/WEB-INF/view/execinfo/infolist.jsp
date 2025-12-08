@@ -19,6 +19,11 @@
 </script>
  <div class="container card  my-5 p-4">
 	<h3 class="card-header">운동정보게시판</h3>
+<<<<<<< HEAD
+	<div>${list}</div>
+	<div>${paging}</div>
+=======
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 	<table class="table table-striped table-bordered table-hover">
 		<caption>운동정보</caption>
 		<thead>
@@ -37,7 +42,11 @@
 				<tr>
 					<%-- <td>${dto}</td> --%>
 					<td>${paging.listtotal -((paging.current-1) *10) -status.index}</td>
+<<<<<<< HEAD
+					<%-- 	<td>${list.size()-status.index}</td> --%>
+=======
 					<%-- <td>${list.size()-status.index}</td>  --%>
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 					<!-- 3-0=3  3-1=2  3=2=1  -->
 					<td><a
 						href="${pageContext.request.contextPath}/detail.execinfo?execid=${dto.execid}">
@@ -47,19 +56,32 @@
 					<td>${dto.exectargetmin}</td>
 			   <%-- <td>${dto.suitablefor}</td>  --%>
 					<td>${dto.intensitylevel}</td>
+<<<<<<< HEAD
+				<tr>
+				<tr>
+=======
 				</tr>
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 			</c:forEach>
 		</tbody>
 		<tfoot>
 			<tr>
+<<<<<<< HEAD
+				<td colspan="5"><ul class="pagination  justify-content-center">
+=======
 				<td colspan="5"> <!-- Paging -->
 					<ul class="pagination  justify-content-center">
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 						<!-- 이전 -->
 						<c:if test="${ paging.start >10 }">
 							<li class="page-item"><a class="page-link"
 								href="?pstartno=${paging.start-1}">이전</a></li>
 						</c:if>
+<<<<<<< HEAD
+
+=======
 			
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 						<!-- 1,2,3,4,5,6,7,8,9,10 -->
 						<c:forEach var="i" begin="${paging.start}" end="${paging.end}">
 							<li
@@ -67,12 +89,24 @@
 								<a class="page-link" href="?pstartno=${i}">${i}</a>
 							</li>
 						</c:forEach>
+<<<<<<< HEAD
+
+=======
 			
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 						<!-- 다음 -->
 						<c:if test="${ paging.pagetotal > paging.end }">
 							<li class="page-item"><a class="page-link"
 								href="?pstartno=${paging.end+1}">다음</a></li>
 						</c:if>
+<<<<<<< HEAD
+
+					</ul></td>
+			</tr>
+		</tfoot>
+	</table>
+	<sec:authorize access="isAuthenticated()">	</sec:authorize>
+=======
 					</ul>
 				</td>
 			</tr>
@@ -80,18 +114,28 @@
 	</table>
 	
 	<sec:authorize access="isAuthenticated()">
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 		<p class="text-end">
 			<a href="${pageContext.request.contextPath}/list.execboard"
 				class=" text-white btn btn-mustard">운동챌린지게시판</a>
 		</p>
+<<<<<<< HEAD
+	
+	
+	<sec:authorize access="isAuthenticated()">	</sec:authorize>
+=======
 	</sec:authorize>
 	
 	<sec:authorize access="isAuthenticated()">
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 		<p class="text-end">
 			<a href="${pageContext.request.contextPath}/write.execinfo"
 				class=" text-white btn btn-navy">글쓰기</a>
 		</p>
+<<<<<<< HEAD
+=======
 	</sec:authorize>
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 	
 	<p class="text-end alert alert-info">운동정보 참고용 게시판입니다.</p>
 
@@ -99,7 +143,11 @@
 		<label for="search" class="form-label"> SEARCH</label> 
 		<input
 			type="search" class="form-control" id="search"
+<<<<<<< HEAD
+			placeholder="검색어를 입력해주세요" name="search">
+=======
 			placeholder="검색어를 입력해주세요." name="search">
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 		<!--                    -->
 		<!--                    -->
 		<div id="resultArea">
@@ -159,6 +207,20 @@
 																				+ (res.length - index)
 																				+ "</td>"
 																				+ "<td><a href='${pageContext.request.contextPath}/detail.execinfo?id="
+<<<<<<< HEAD
+																				+ dto.id
+																				+ "'>"
+																				+ dto.btitle
+																				+ "</a></td>"
+																				+ "<td>"
+																				+ dto.appUserId
+																				+ "</td>"
+																				+ "<td>"
+																				+ dto.createdAt
+																				+ "</td>"
+																				+ "<td>"
+																				+ dto.bhit
+=======
 																				+ dto.execid
 																				+ "'>"
 																				+ dto.exectype
@@ -168,6 +230,7 @@
 																				+ "</td>"
 																				+ "<td>"
 																				+ dto.intensitylevel
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 																				+ "</td>"
 																				+ "</tr>";
 																		$(
@@ -186,4 +249,8 @@
 </div> 
 <%@include file="../inc/footer.jsp"%>
 
+<<<<<<< HEAD
 <!-- [ mbtiBoard - list.jsp ]  -->
+=======
+<!-- [ mbtiBoard - list.jsp ]  -->
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
