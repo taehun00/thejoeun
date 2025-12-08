@@ -85,13 +85,7 @@ public class ReviewAjaxController {
     	return service.reviewimgdelete(reviewimgid);
     }
     
-    //페이징 
-//	@RequestMapping("/reviewPaging")
-//	public List<ReviewDto> reviewPaging(
-//	    @RequestParam(defaultValue="1") int pstartno
-//	){
-//	    return service.reviewSelect10(pstartno);
-//	}
+
     
     @RequestMapping("/reviewPaging")
     public Map<String, Object> reviewPaging(
