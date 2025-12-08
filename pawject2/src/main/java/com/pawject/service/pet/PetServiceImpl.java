@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -97,9 +99,14 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    public List<PetDto> searchPets(String keyword) {
-        return pdao.searchPets(keyword);
+
+    public List<PetDto> searchPets(String keyword, String type) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("keyword", keyword);
+        params.put("type", type);
+        return pdao.searchPets(params);
     }
+
 
 
 	@Override

@@ -1,17 +1,5 @@
 package com.pawject.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.HashMap;
@@ -20,9 +8,19 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.pawject.dto.paging.PagingDto10;
 import com.pawject.dto.pet.PetDto;
-import com.pawject.dto.user.UserAuthDto;
 import com.pawject.dto.user.UserDto;
 import com.pawject.service.pet.PetService;
 import com.pawject.service.user.UserSecurityService;
@@ -170,15 +168,17 @@ public class PetController {
     // 검색 페이지 이동 (검색 폼을 보여줄 때)
     @RequestMapping("/search")
     public String petSearchPage() {
-        return "pet/list";  // /WEB-INF/view/pet/list.jsp
+
+        return "pet/list";  
     }
 
     // 검색 실행 (Ajax 요청 처리)
     @RequestMapping(value="/search", method=RequestMethod.GET)
     @ResponseBody
-    public List<PetDto> searchPets(@RequestParam("keyword") String keyword) {
+    public List<PetDto> searchPets(@RequestParam("keyword") String keyword,
+                                   @RequestParam(value="type", required=false) String type) {
         // 서비스 호출
-        List<PetDto> pets = pservice.searchPets(keyword);
+        List<PetDto> pets = pservice.searchPets(keyword, type);
         return pets;  // JSON 응답
     }
 
@@ -201,10 +201,11 @@ public class PetController {
         Map<String, Object> result = new HashMap<>();
         Integer userId = (Integer) session.getAttribute("userid");
 
-        if (userId != null && pservice.deletePetByUser(petId, userId) > 0) {
-            result.put("result", 1);   // ✅ 삭제 성공
+        if (userId != null && pservice.deletePetByAdmin(petId) > 0) {
+
+            result.put("result", 1);   //  삭제 성공
         } else {
-            result.put("result", 0);   // ❌ 삭제 실패
+            result.put("result", 0);   //  삭제 실패
         }
         return result;   // JSON 응답
     }
