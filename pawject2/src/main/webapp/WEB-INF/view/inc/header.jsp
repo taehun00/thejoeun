@@ -71,9 +71,6 @@
           <li class="nav-item">
             <a class="nav-link" href="${pageContext.request.contextPath}/list.execboard">운동 챌린지</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="${pageContext.request.contextPath}/list.execinfo">운동 정보</a>
-          </li>
             <li class="nav-item">
               <a class="nav-link" href="${pageContext.request.contextPath}/security/login">LOGIN</a>
             </li>
@@ -114,4 +111,3 @@
 <!-- 	header		 -->
 <!-- 	header		 -->
 <!-- 	header		 -->
-    
