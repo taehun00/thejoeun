@@ -54,7 +54,7 @@
 		WHERE disno = #{disno}
 	</delete>
 
-
+<!--  <select  resultMap="diseaseMap" id="select10" parameterType="java.util.HashMap"> -->
 	<select  resultMap="diseaseMap" id="select10" parameterType="java.util.HashMap">
 		select *
 		from (
@@ -65,9 +65,8 @@
 		where A.rnum between #{start} and #{end}
 	</select>
 	
-
 	<select id="selectAll" resultMap = "diseaseMap"
-		parameterType="map">
+		parameterType="java.util.HashMap">
 		select *
 		from (
 		select row_number() over (order by createdat desc) as rnum,
@@ -75,7 +74,6 @@
 		from disease
 		) A
 		where A.rnum between #{start} and #{end}
-
 	</select>
 	
 	 <!-- 
@@ -90,9 +88,7 @@
        </select>
  -->
  
-
 		 <select resultMap = "diseaseMap" id="select" parameterType="int">
-
 			SELECT *
 			FROM disease
 			WHERE disno = #{disno}
@@ -110,7 +106,6 @@
 		 	select * from disease where disname like #{search}
 		 </select>
 	
-
 			<!-- resources/mapper/DiseaseMapper.xml -->
 		
 		    <select id="selectTotalCnt" resultType="int">
@@ -118,7 +113,6 @@
 		    </select>
 		
 	
-
 	
 
 </mapper>
