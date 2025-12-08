@@ -1,5 +1,6 @@
 package com.pawject.controller;
 
+<<<<<<< HEAD
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+=======
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
@@ -20,9 +23,24 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+<<<<<<< HEAD
 import com.pawject.dto.paging.PagingDto10;
 import com.pawject.dto.pet.PetDto;
 import com.pawject.dto.user.UserAuthDto;
+=======
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.pawject.dto.paging.PagingDto10;
+import com.pawject.dto.pet.PetDto;
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 import com.pawject.dto.user.UserDto;
 import com.pawject.service.pet.PetService;
 import com.pawject.service.user.UserSecurityService;
@@ -170,21 +188,34 @@ public class PetController {
     // 검색 페이지 이동 (검색 폼을 보여줄 때)
     @RequestMapping("/search")
     public String petSearchPage() {
+<<<<<<< HEAD
         return "pet/list";
+=======
+        return "pet/list";  // /WEB-INF/view/pet/list.jsp
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
     }
 
     // 검색 실행 (Ajax 요청 처리)
     @RequestMapping(value="/search", method=RequestMethod.GET)
     @ResponseBody
+<<<<<<< HEAD
     public List<PetDto> searchPets(@RequestParam("keyword") String keyword,
                                    @RequestParam(value="type", required=false) String type) {
         // 서비스 호출
         List<PetDto> pets = pservice.searchPets(keyword, type);
+=======
+    public List<PetDto> searchPets(@RequestParam("keyword") String keyword) {
+        // 서비스 호출
+        List<PetDto> pets = pservice.searchPets(keyword);
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
         return pets;  // JSON 응답
     }
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
     // 펫 삭제 폼 (뷰 반환)
     @RequestMapping("/delete")
     public String deletePetForm(@RequestParam("petId") int petId,
@@ -196,14 +227,22 @@ public class PetController {
     }
 
     // 펫 삭제 처리 (AJAX JSON 반환)
+<<<<<<< HEAD
     @PostMapping(value="/delete", produces="application/json;charset=UTF-8")
     @ResponseBody
     public Map<String, Object> deletePetAjax(@RequestParam("petId") int petId,
                                              HttpSession session) {
+=======
+    @ResponseBody
+    @RequestMapping(value="/delete", method=RequestMethod.POST)
+    public Map<String, Object> deletePet(@RequestParam("petId") int petId,
+                                         HttpSession session) {
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
         Map<String, Object> result = new HashMap<>();
         Integer userId = (Integer) session.getAttribute("userid");
 
         if (userId != null && pservice.deletePetByUser(petId, userId) > 0) {
+<<<<<<< HEAD
             result.put("result", 1);
             result.put("message", "펫 삭제 성공!");
         } else {
@@ -214,6 +253,15 @@ public class PetController {
     }
 
 
+=======
+            result.put("result", 1);   // ✅ 삭제 성공
+        } else {
+            result.put("result", 0);   // ❌ 삭제 실패
+        }
+        return result;   // JSON 응답
+    }
+
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
     
     @RequestMapping("/listPetPage")
     public String adminListPage(Model model,

@@ -1,6 +1,9 @@
 package com.pawject.service.exec;
 
+<<<<<<< HEAD
 import java.util.HashMap;
+=======
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -28,7 +31,11 @@ public interface ExecBoardService {
 	public List<ExecBoardDto> select10(int pstartno); //1(1,10), 2(11,20), 3(21,30)
 	public 		int   selectTotalCnt();
 	
+<<<<<<< HEAD
 	/* idouble */
+=======
+//	/* idouble */
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 //	public int iddouble(int postid);
 	
 	/* admin  - 전체유저정보 selectAll 

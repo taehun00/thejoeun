@@ -2,6 +2,7 @@ package pawject1_swc;
 
 import java.net.UnknownHostException;
 import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
 
@@ -32,11 +33,13 @@ public class TestDis1 {
 	@Autowired DiseaseDao        dao;
 	@Autowired DiseaseService    service;
 	
+
 	@Ignore @Test public void test1() { System.out.println(context); }
 	@Ignore @Test public void test2() { System.out.println(ds); }
 	@Ignore @Test public void test3() { System.out.println(Session); }
 	
 	@Test public void test6() throws UnknownHostException{
+
 		HashMap<String,String> para = new HashMap<>();
 		para.put("search", "%t%");
 		

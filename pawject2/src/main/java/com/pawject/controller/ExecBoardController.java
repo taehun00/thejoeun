@@ -1,7 +1,15 @@
 package com.pawject.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+<<<<<<< HEAD
 import org.springframework.security.access.prepost.PreAuthorize;
+=======
+<<<<<<< HEAD
+import org.springframework.security.access.prepost.PreAuthorize;
+//import org.springframework.security.access.prepost.PreAuthorize;
+=======
+>>>>>>> 7ee00e1 (수정내용등록 paging 불가)
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +24,11 @@ import com.pawject.service.exec.ExecBoardService;
 
 @Controller
 public class ExecBoardController {
+<<<<<<< HEAD
 	@Autowired ExecBoardService service;
+=======
+	@Autowired ExecBoardService service; 
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 	
 	///////////////////////////////////////////////////////
 	//전체보기(+ Paging)
@@ -33,10 +45,17 @@ public class ExecBoardController {
 	@RequestMapping(value="/write.execboard", method=RequestMethod.GET)
 	public String write_get() { return "/execboard/boardwrite"; }
 	//글쓰기기능
+<<<<<<< HEAD
 	//@PreAuthorize("isAthenticated()")
 	@RequestMapping(value="/write.execboard", method=RequestMethod.POST)
 	public String write_post(ExecBoardDto dto,  RedirectAttributes rttr ) {
 		String result = " 글쓰기실패";
+=======
+	@PreAuthorize("isAuthenticated()")
+	@RequestMapping(value="/write.execboard", method=RequestMethod.POST)
+	public String write_post(ExecBoardDto dto,  RedirectAttributes rttr ) {
+		String result = "글쓰기에 실패했습니다.";
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 		if(service.insert1(dto) > 0) { result="글쓰기가 완료되었습니다."; }
 		rttr.addFlashAttribute("success", result);
 		return "redirect:/list.execboard";
@@ -56,6 +75,7 @@ public class ExecBoardController {
 		return "execboard/boardedit";
 	}
 	//수정기능
+<<<<<<< HEAD
 	//@PreAuthorize("isAthenticated()")
 	@RequestMapping(value="/edit.execboard", method=RequestMethod.POST)
 	public String edit_post( ExecBoardDto dto,  RedirectAttributes rttr ) {
@@ -63,6 +83,15 @@ public class ExecBoardController {
 		if( service.update1(dto) > 0 ) { result = "수정이 왼료되었습니다."; }
 		rttr.addFlashAttribute("success", result);
 		return "redirect:/detail.execboard?id=" + dto.getPostid();
+=======
+	@PreAuthorize("isAuthenticated()")
+	@RequestMapping(value="/edit.execboard", method=RequestMethod.POST)
+	public String edit_post( ExecBoardDto dto,  RedirectAttributes rttr ) {
+		String result = "사용자아이디를 확인해주세요.";
+		if( service.update1(dto) > 0 ) { result = "수정이 왼료되었습니다."; }
+		rttr.addFlashAttribute("success", result);
+		return "redirect:/detail.execboard?postid=" + dto.getPostid();
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 	}
 	///////////////////////////////////////////////////////
 	//삭제폼
@@ -70,16 +99,24 @@ public class ExecBoardController {
 	public String delete_get() { return "execboard/boarddelete"; }
 	
 	//삭제기능
+<<<<<<< HEAD
 	//@PreAuthorize("isAthenticated()")
 	@RequestMapping(value="/delete.execboard", method=RequestMethod.POST)
 	public String delete_post( ExecBoardDto dto,  RedirectAttributes rttr ) {
 		String result = "사용자 아이디를 확인해주세요.";
+=======
+	@PreAuthorize("isAuthenticated()")
+	@RequestMapping(value="/delete.execboard", method=RequestMethod.POST)
+	public String delete_post( ExecBoardDto dto,  RedirectAttributes rttr ) {
+		String result = "사용자아이디를 확인해주세요.";
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 		if( service.delete1(dto) > 0 ) { result="삭제가 왼료되었습니다.";}
 		rttr.addFlashAttribute("success", result);
 		return "redirect:/list.execboard";
 	}
 	///////////////////////////////////////////////////////
 	//Upload
+<<<<<<< HEAD
 	//글쓰기기능
 	//@PreAuthorize("isAthenticated()")
 	@RequestMapping(value="/upload.execboard", method=RequestMethod.POST)
@@ -96,6 +133,29 @@ public class ExecBoardController {
 								, ExecBoardDto dto,  RedirectAttributes rttr ) {
 		
 		return "redirect:/list.execboard?id=" + dto.getPostid();
+=======
+	//글쓰기기능(upload)
+	@PreAuthorize("isAuthenticated()")
+	@RequestMapping(value="/upload.execboard", method=RequestMethod.POST)
+	public String upload_post( @RequestParam("file") MultipartFile file
+			   					, ExecBoardDto dto,  RedirectAttributes rttr) {
+		String result = "글쓰기에 실패했습니다."; 
+		if( service.insert2(file, dto) > 0 ) { result="글쓰기에 성공했습니다."; }
+		rttr.addFlashAttribute("success", result);
+		return "redirect:/list.execboard";
+	}
+	//수정기능(upload)
+	@PreAuthorize("isAuthenticated()")
+	@RequestMapping(value="/updateEdit.execboard"
+				  , method=RequestMethod.POST
+				  , headers=("content-type=multipart/*"))
+	public String updateEdit_post( @RequestParam("file")MultipartFile file
+								, ExecBoardDto dto,  RedirectAttributes rttr ) {
+		String result = "시용자아이디를 확인해주세요.";
+		if( service.update2(file, dto)>0) {result="수정에 성공했습니다.";}
+		rttr.addFlashAttribute("success", result);
+		return "redirect:/list.execboard?postid=" + dto.getPostid();
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 	}
 	
 	///////////////////////////////////////////////////////

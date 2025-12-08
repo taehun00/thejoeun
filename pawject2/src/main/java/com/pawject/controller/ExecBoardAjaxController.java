@@ -1,5 +1,6 @@
 package com.pawject.controller;
 
+<<<<<<< HEAD
 //import java.util.HashMap;
 //import java.util.List;
 //import java.util.Map;
@@ -38,6 +39,47 @@ package com.pawject.controller;
 //		result.put("result", service.select1(postId));
 //		return result;
 //	}
+=======
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.pawject.dto.exec.ExecBoardDto;
+import com.pawject.service.exec.ExecBoardService;
+
+@Controller     //처리 (service) + 화면
+@RestController //처리(service) + 나온값 
+public class ExecBoardAjaxController {
+	
+	@Autowired ExecBoardService service;	
+	
+//	@RequestMapping("/iddouble")
+//	public Map<String, Object> iddouble1(@RequestParam int postid){
+//		Map<String, Object> result = new HashMap<>();
+//		result.put("cnt", service.iddouble(0));
+//		return result;
+//	}
+	//////////////////////////////////////////
+	/* admin 유저관리 - 전체유저정보 selectAll
+	 * 				/ 아이디주면 해당 유저정보찾기 select 
+	 * 				/ 수정하기 updateAdimin
+	 * 				/ 삭제하기 deleteAdimin */
+	@RequestMapping("/ExecBoardselectAll")
+	public List<ExecBoardDto> selectAll(){
+		return service.selectAll1();
+	}
+	@RequestMapping("/ExecBoardselect")
+	public Map<String, Object> select1(@RequestParam int postId){
+		Map<String, Object> result = new HashMap<>();
+		result.put("result", service.select1(postId));
+		return result;
+	}
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 	/////////////////////////////////////////////////////
 	//권한부여 Admin, Member
 //	@RequestMapping("/updateExecBoardAdmin")
@@ -73,6 +115,7 @@ package com.pawject.controller;
 //		dto.setPostid(postId);
 	//	result.put("result", service.deleteMember1(dto));
 //		return result;
+<<<<<<< HEAD
 //	}
 
 	
@@ -80,3 +123,7 @@ package com.pawject.controller;
 	
 	
 //}
+=======
+//	}	
+}
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c

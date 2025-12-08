@@ -3,6 +3,7 @@
 <%@include file="../inc/header.jsp" %>
 
 <div class="container my-5">
+<<<<<<< HEAD
   <div class="card shadow-sm">
     <div class="card-header bg-light">
       <h3 class="mb-0">펫 이름 수정 (관리자)</h3>
@@ -53,6 +54,25 @@
     </div>
   </div>
 </div>
+=======
+    <h3 class="mb-4">펫 이름 수정 (관리자)</h3>
+	<meta name="_csrf" content="${_csrf.token}"/>
+	<meta name="_csrf_header" content="${_csrf.headerName}"/>
+	
+
+    <form id="updatePetForm">
+        <input type="hidden" name="petId" value="${pet.petId}" />
+
+        <div class="mb-3">
+            <label for="petName" class="form-label">펫 이름</label>
+            <input type="text" class="form-control" id="petName" name="petName" value="${pet.petName}">
+        </div>
+
+        <button type="button" class="btn btn-primary" id="updateBtn">수정하기</button>
+    </form>
+</div>
+
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 <script>
 $(function(){
     $("#updateBtn").on("click", function(){

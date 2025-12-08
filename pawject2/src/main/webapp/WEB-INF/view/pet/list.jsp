@@ -17,6 +17,7 @@
     </script>
 </c:if>
 
+<<<<<<< HEAD
 <div class="container card my-5 p-4 petTable shadow-sm">
   <h3 class="card-header bg-light">관리자 PET BOARD</h3>
   <table class="table table-striped table-bordered table-hover align-middle">
@@ -39,12 +40,36 @@
       </tr>
     </thead>
 
+=======
+<div class="container card my-5 p-4 petTable">
+    <h3 class="card-header">관리자 PET BOARD</h3>
+    <table class="table table-striped table-bordered table-hover">
+        <meta name="_csrf" content="${_csrf.token}"/>
+        <meta name="_csrf_header" content="${_csrf.headerName}"/>
+        <caption>PETS</caption>
+        <thead>
+            <tr>
+                <th scope="col">NO</th>
+                <th scope="col">이미지</th>
+                <th scope="col">PetID</th>
+                <th scope="col">Email</th>
+                <th scope="col">PetName</th>
+                <th scope="col">Breed</th>
+                <th scope="col">BirthDate</th>
+                <th scope="col">Type</th>
+                <th scope="col">등록일</th>
+                <th scope="col">수정</th>
+                <th scope="col">삭제</th>
+            </tr>
+        </thead>
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
         <tbody>
         </tbody>
     </table>
 </div>
 
 <div class="paging text-center my-3">
+<<<<<<< HEAD
   <ul class="pagination justify-content-center"></ul>
 </div>
 
@@ -64,6 +89,28 @@
   </div>
 </div>
 
+=======
+    <ul class="pagination justify-content-center"></ul>
+</div>
+
+<div class="container my-3">
+    <div class="input-group">
+        <select id="searchType" class="form-select">
+            <option value="email">이메일</option>
+            <option value="petName">펫 이름</option>
+        </select>
+        <!-- 검색 입력창: 넓게 -->
+        <div class="col-6 col-md-8">
+            <input type="text" id="searchKeyword" class="form-control" placeholder="검색어 입력">
+        </div>
+
+        <!-- 검색 버튼 -->
+        <div class="col-3 col-md-2">
+            <button type="button" class="btn btn-primary w-100" id="searchBtn">검색</button>
+        </div>
+    </div>
+</div>
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 
 <script>
 $(function(){

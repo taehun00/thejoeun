@@ -33,11 +33,18 @@
 	      <input class="form-check-input" type="checkbox" name="remember"> Remember me
 	    </label>
 	  </div> -->
+<<<<<<< HEAD
 	  <button type="submit" class="btn btn-mint">로그인</button>
 		<div class="text-end">
 		    <a href="${pageContext.request.contextPath}/security/join" class="btn btn-rose">회원가입</a>
 		</div>
 
+=======
+	  <button type="submit" class="btn btn-primary">로그인</button>
+	  <div class="text-end">
+	  <a href="${pageContext.request.contextPath}/security/join"  class="btn btn-danger">회원가입</a>
+	  </div>
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 	  <input  type="hidden" name="${_csrf.parameterName}"  value="${_csrf.token}" />
 	</form>
 </div>

@@ -32,10 +32,28 @@ public class DiseaseServiceImpl implements DiseaseService {
 	
 	/* Search - Ajax */
 	public List<DisswcDto> selectSearch(String keyword){
+<<<<<<< HEAD
 		HashMap<String, String> para=new HashMap<>();
 		para.put("search", "%" + keyword + "%");
 		return dao.selectSearch(para);
 	}
 	
+=======
+		HashMap<String, String> para = new HashMap<>();
+		para.put("search", "%" + keyword + "%");
+		return dao.selectSearch(para);
+	}
+	/*Paging*/
+	@Override
+	public List<DisswcDto> select10(int pstartno){
+		HashMap<String,Object> para=new HashMap();
+		int start=(pstartno-1)*10 + 1;
+		para.put("start", start );
+		para.put("end",start +10 -1);
+		return dao.select10(para);
+	}
+	@Override public int selectTotalCnt() {return dao.selectTotalCnt();
+	}
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 
 }

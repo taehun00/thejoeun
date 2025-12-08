@@ -1,6 +1,10 @@
 package com.pawject.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+<<<<<<< HEAD
+=======
+import org.springframework.security.access.prepost.PreAuthorize;
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,7 +12,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+<<<<<<< HEAD
 import com.pawject.dto.exec.ExecBoardDto;
+=======
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 import com.pawject.dto.exec.ExecInfoDto;
 import com.pawject.dto.paging.PagingDto10;
 import com.pawject.service.exec.ExecInfoService;
@@ -28,6 +35,7 @@ public class ExecInfoController {
 		return "execinfo/infolist";
 	}
 	////////////////////////////////////
+<<<<<<< HEAD
 	@RequestMapping(value="/write.execinfo", method=RequestMethod.GET)
 	public String write_get() { return "/execboard/infowrite"; }
 	//글쓰기기능
@@ -38,6 +46,19 @@ public class ExecInfoController {
 		if(iservice.insert2(dto)> 0) { result="글쓰기가 완료되었습니다."; }
 		rttr.addFlashAttribute("success", result);
 		return "redirect:/list.execinfo";
+=======
+	//글쓰기폼
+	@RequestMapping(value="/write.execinfo", method=RequestMethod.GET)
+	public String write_get() { return "/execinfo/infowrite"; }
+	//글쓰기기능
+	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')") //2. 로그인 → ADMIN 권한이 있다면 
+	@RequestMapping(value="/write.execinfo", method=RequestMethod.POST)
+	public String write_post(ExecInfoDto dto,  RedirectAttributes rttr ) {
+		String result = "글쓰기에 실패했습니다.";
+		if(iservice.insert2(dto)> 0) { result="글쓰기가 완료되었습니다."; }
+		rttr.addFlashAttribute("success", result);
+		return "redirect:/list.execinfo?execid="+ dto.getExecid();
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 	}
 	////////////////////////////////////
 	//상세보기
@@ -54,6 +75,7 @@ public class ExecInfoController {
 		return "execinfo/infoedit";
 	}
 	//수정기능
+<<<<<<< HEAD
 	//@PreAuthorize("isAthenticated() and hasRole('ROLE_ADMIN')") //2. 로그인 → ADMIN 권한이 있다면 
 	@RequestMapping(value="/edit.execinfo", method=RequestMethod.POST)
 	public String edit_post( ExecInfoDto dto,  RedirectAttributes rttr ) {
@@ -61,6 +83,15 @@ public class ExecInfoController {
 		if( iservice.update2(dto) > 0 ) { result = "수정이 왼료되었습니다."; }
 		rttr.addFlashAttribute("success", result);
 		return "redirect:/detail.execinfo?id=" + dto.getExecid();
+=======
+	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')") //2. 로그인 → ADMIN 권한이 있다면 
+	@RequestMapping(value="/edit.execinfo", method=RequestMethod.POST)
+	public String edit_post( ExecInfoDto dto,  RedirectAttributes rttr ) {
+		String result = "글수정에 실패했습니다.";
+		if( iservice.update2(dto) > 0 ) { result = "글수정이 완료되었습니다."; }
+		rttr.addFlashAttribute("success", result);
+		return "redirect:/detail.execinfo?execid=" + dto.getExecid();
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 	}
 	///////////////////////////////////////////////////////
 	//삭제폼
@@ -68,17 +99,27 @@ public class ExecInfoController {
 	public String delete_get() { return "execinfo/infodelete"; }
 	
 	//삭제기능
+<<<<<<< HEAD
 	//@PreAuthorize("isAthenticated() and hasRole('ROLE_ADMIN')") //2. 로그인 → ADMIN 권한이 있다면 
 	@RequestMapping(value="/delete.execinfo", method=RequestMethod.POST)
 	public String delete_post( ExecInfoDto dto,  RedirectAttributes rttr ) {
 		String result = "운동아이디를 확인해주세요.";
+=======
+	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')") //2. 로그인 → ADMIN 권한이 있다면 
+	@RequestMapping(value="/delete.execinfo", method=RequestMethod.POST)
+	public String delete_post( ExecInfoDto dto,  RedirectAttributes rttr ) {
+		String result = "운동운동유형을 확인해주세요.";
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 		if( iservice.delete2(dto) > 0 ) { result="삭제가 왼료되었습니다.";}
 		rttr.addFlashAttribute("success", result);
 		return "redirect:/list.execinfo";
 	}
+<<<<<<< HEAD
 
 	
 	
+=======
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 }
 
 /*

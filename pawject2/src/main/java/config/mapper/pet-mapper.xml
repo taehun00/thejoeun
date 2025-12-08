@@ -121,6 +121,7 @@
 	        p.pfile
 	    FROM pet p
 	    JOIN users u ON p.userid = u.userid
+
 	    WHERE
 	        <choose>
 	            <when test="type == 'email'">

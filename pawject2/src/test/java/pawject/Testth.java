@@ -2,14 +2,21 @@ package pawject;
 
 import java.util.List;
 
+
 import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSession;
+cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.context.ApplicationContext;
+
+//## 가짜이미지파일
+import org.springframework.mock.web.MockMultipartFile;
+
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -20,6 +27,7 @@ import com.pawject.dto.user.AuthDto;
 import com.pawject.dto.user.UserAuthDto;
 import com.pawject.dto.user.UserDto;
 import com.pawject.service.user.UserSecurityService;
+
 import org.springframework.mock.web.*;  //## 가짜이미지파일
 
 @RunWith(SpringJUnit4ClassRunner.class)
