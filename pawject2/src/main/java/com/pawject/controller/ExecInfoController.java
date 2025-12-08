@@ -1,6 +1,7 @@
 package com.pawject.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.pawject.dto.exec.ExecBoardDto;
 import com.pawject.dto.exec.ExecInfoDto;
 import com.pawject.dto.paging.PagingDto10;
 import com.pawject.service.exec.ExecInfoService;
@@ -23,21 +23,22 @@ public class ExecInfoController {
 	public String list( Model model,
 			@RequestParam(value="pstartno", defaultValue="1") int pstartno
 			) {
-		model.addAttribute("list", iservice.select10(pstartno));  //
+		model.addAttribute("list", iservice.select10(pstartno));  
 		model.addAttribute("paging", new PagingDto10( iservice.selectTotalCnt(), pstartno));
 		return "execinfo/infolist";
 	}
 	////////////////////////////////////
+	//글쓰기폼
 	@RequestMapping(value="/write.execinfo", method=RequestMethod.GET)
-	public String write_get() { return "/execboard/infowrite"; }
+	public String write_get() { return "/execinfo/infowrite"; }
 	//글쓰기기능
-	//@PreAuthorize("isAthenticated() and hasRole('ROLE_ADMIN')") //2. 로그인 → ADMIN 권한이 있다면 
+	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')") //2. 로그인 → ADMIN 권한이 있다면 
 	@RequestMapping(value="/write.execinfo", method=RequestMethod.POST)
 	public String write_post(ExecInfoDto dto,  RedirectAttributes rttr ) {
-		String result = " 글쓰기실패";
+		String result = "글쓰기에 실패했습니다.";
 		if(iservice.insert2(dto)> 0) { result="글쓰기가 완료되었습니다."; }
 		rttr.addFlashAttribute("success", result);
-		return "redirect:/list.execinfo";
+		return "redirect:/list.execinfo?execid="+ dto.getExecid();
 	}
 	////////////////////////////////////
 	//상세보기
@@ -54,13 +55,13 @@ public class ExecInfoController {
 		return "execinfo/infoedit";
 	}
 	//수정기능
-	//@PreAuthorize("isAthenticated() and hasRole('ROLE_ADMIN')") //2. 로그인 → ADMIN 권한이 있다면 
+	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')") //2. 로그인 → ADMIN 권한이 있다면 
 	@RequestMapping(value="/edit.execinfo", method=RequestMethod.POST)
 	public String edit_post( ExecInfoDto dto,  RedirectAttributes rttr ) {
-		String result = "운동아이디를 확인해주세요.";
-		if( iservice.update2(dto) > 0 ) { result = "수정이 왼료되었습니다."; }
+		String result = "글수정에 실패했습니다.";
+		if( iservice.update2(dto) > 0 ) { result = "글수정이 완료되었습니다."; }
 		rttr.addFlashAttribute("success", result);
-		return "redirect:/detail.execinfo?id=" + dto.getExecid();
+		return "redirect:/detail.execinfo?execid=" + dto.getExecid();
 	}
 	///////////////////////////////////////////////////////
 	//삭제폼
@@ -68,17 +69,14 @@ public class ExecInfoController {
 	public String delete_get() { return "execinfo/infodelete"; }
 	
 	//삭제기능
-	//@PreAuthorize("isAthenticated() and hasRole('ROLE_ADMIN')") //2. 로그인 → ADMIN 권한이 있다면 
+	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')") //2. 로그인 → ADMIN 권한이 있다면 
 	@RequestMapping(value="/delete.execinfo", method=RequestMethod.POST)
 	public String delete_post( ExecInfoDto dto,  RedirectAttributes rttr ) {
-		String result = "운동아이디를 확인해주세요.";
+		String result = "운동운동유형을 확인해주세요.";
 		if( iservice.delete2(dto) > 0 ) { result="삭제가 왼료되었습니다.";}
 		rttr.addFlashAttribute("success", result);
 		return "redirect:/list.execinfo";
 	}
-
-	
-	
 }
 
 /*

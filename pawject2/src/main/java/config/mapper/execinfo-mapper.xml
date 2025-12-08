@@ -34,15 +34,24 @@
 		select * from exerciseinfo where execid=#{execid}
 	</select>
 
+
+	<!-- ajax - search -->
+	<select resultMap="ExecInfoMap" id="selectSearch2" parameterType="java.util.HashMap">
+		select * from exerciseinfo where exectype like #{search} <!-- #{search} 주의!! -->
+	</select>
+
 	<!-- paging -->
 	<select resultMap="ExecInfoMap" id="select10"
 		parameterType="java.util.HashMap">
-		select * from ( select row_number() over (order by createdat desc) as rnum,
-		execid, exectype, description, avgkcal30min, exectargetmin, suitablefor, 
-		intensitylevel
-		from exerciseinfo ) A where A.rnum between #{start} and #{end}
+		select * 
+		from ( 
+			select row_number() over (order by createdat desc) as rnum,
+			execid, exectype, description, avgkcal30min, exectargetmin, suitablefor, 
+			intensitylevel
+			from exerciseinfo 
+		) A 
+		where A.rnum between #{start} and #{end}
 	</select>
-
 	<select resultType="int" id="selectTotalCnt">
 		select count(*) from exerciseinfo
 	</select>

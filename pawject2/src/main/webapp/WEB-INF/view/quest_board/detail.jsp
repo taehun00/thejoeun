@@ -14,7 +14,7 @@
    <div class="container card  my-5 p-4">
       <h3 class="card-header"> 반려동물 질환 글 수정 <%-- ${dto} --%></h3>
 	  <div> 
-	      <input type="hidden"   name="appUserid"  value=""> 
+	      <input type="hidden"   name="userid"  value=""> 
 		  <div class="mb-3 mt-3">
 		    <label for="bhit" class="form-label">조회수</label>
 		    <input type="text" class="form-control" id="bhit" name="bhit"  readonly   value="${dto.bhit}">

@@ -1,5 +1,11 @@
 package pawject2;
 
+import java.util.HashMap;
+
+<<<<<<< HEAD
+=======
+import javax.servlet.ServletContext;
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSession;
@@ -7,23 +13,46 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+<<<<<<< HEAD
 import org.springframework.context.ApplicationContext;
+=======
+//import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
+//import org.springframework.security.authentication.encoding.PasswordEncoder;
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.pawject.dao.exec.ExecBoardDao;
 import com.pawject.dao.exec.ExecInfoDao;
+<<<<<<< HEAD
 import com.pawject.dto.exec.ExecBoardDto;
 import com.pawject.dto.exec.ExecInfoDto;
 import com.pawject.service.exec.ExecBoardService;
 import com.pawject.service.exec.ExecInfoService;
 import org.springframework.mock.web.*;  //## 가짜이미지파일
+=======
+<<<<<<< HEAD
+//import com.pawject.dto.exec.ExecBoardDto;
+//import com.pawject.dto.exec.ExecInfoDto;
+import com.pawject.service.exec.ExecBoardService;
+import com.pawject.service.exec.ExecInfoService;
+//import org.springframework.mock.web.*;  //## 가짜이미지파일
+=======
+import com.pawject.service.exec.ExecBoardService;
+import com.pawject.service.exec.ExecInfoService;
+>>>>>>> 7ee00e1 (수정내용등록 paging 불가)
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:config/root-context.xml")
 
 public class Test_Exec_pawject2 {
 	@Autowired ApplicationContext context;
+<<<<<<< HEAD
+=======
+	//@Autowired ServletContext context;
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 	@Autowired DataSource ds;
 	@Autowired SqlSession sqlSession;
 	@Autowired ExecBoardDao dao;
@@ -31,8 +60,62 @@ public class Test_Exec_pawject2 {
 	@Autowired ExecBoardService service;
 	@Autowired ExecInfoService  iservice;
 	
+	//운동정보게시판 paging_Test
+<<<<<<< HEAD
+	
+	
+	//운동챌린지게시판 paging_Test
+	@Ignore public void test8() {
+		HashMap<String, Object> para = new HashMap<>();
+		para.put("start", 1); para.put("end", 10);
+		System.out.println(dao.select10(para));
+		
+		System.out.println(dao.selectAll1());
+=======
+	@Ignore @Test public void test11() {
+//		HashMap<String, Object> para = new HashMap<>();
+//		para.put("start", 1); para.put("end", 10);
+//		System.out.println(idao.select10(para));
+//		System.out.println(idao.selectAll2());
+//		System.out.println(idao.selectTotalCnt());
+	}
+
+	
+	//운동챌린지게시판 paging_Test
+	@Ignore @Test public void test10() {
+//		HashMap<String, Object> para = new HashMap<>();
+//		para.put("start", 1); para.put("end", 10);
+//		System.out.println(dao.select10(para));
+//		System.out.println(dao.selectTotalCnt());
+	}
+	
+	//운동정보게시판 Search_Test
+	@Ignore public void test9() { 
+//		HashMap<String, String> para = new HashMap<>();
+//		para.put("search", "%t%");
+		
+//		System.out.println(idao.selectSearch2(para));
+	}
+	
+	//운동챌린지게시판 Search_Test
+	@Ignore public void test8() {
+//		HashMap<String, String> para = new HashMap<>();
+//		para.put("search", "%t%");
+//		
+//		System.out.println(dao.selectSearch1(para));
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
+	}
+	
+	
+	
+<<<<<<< HEAD
+   //운동정보게시판 service테스트(운동챌린지 게시판 작성시 참고용)
+	@Test public void test7() {
+=======
+	
    //운동정보게시판 service테스트(운동챌린지 게시판 작성시 참고용)
 	@Ignore public void test7() {
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 		//5. delete
 //		ExecInfoDto dto = new ExecInfoDto();
 //		dto.setExecid(71);
@@ -88,6 +171,10 @@ public class Test_Exec_pawject2 {
 //		System.out.println(iservice.selectAll2());
 	}
 	
+<<<<<<< HEAD
+=======
+
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
    //운동정보게시판dao테스트(테스트완료/운동챌린지 게시판 작성시 참고용)	
 	@Ignore public void test5() {
 		//5. delete
@@ -146,10 +233,18 @@ public class Test_Exec_pawject2 {
 //		System.out.println(idao.selectAll2()); 
 	}
 	
+<<<<<<< HEAD
   //운동챌린지 게시판 service 테스트(완료)
   //※ 지금 상태로 돌려도 이상은 없으나, 
   //혹시나 insert가 안되면 ExecInfoServiceImpl에서 insert파트 try/catch부분 지우기.	(dao테스트도 동일)
 	@Test public void test6() {
+=======
+
+  //운동챌린지 게시판 service 테스트(완료)
+  //※ 지금 상태로 돌려도 이상은 없으나, 
+  //혹시나 insert가 안되면 ExecInfoServiceImpl에서 insert파트 try/catch부분 지우기.	(dao테스트도 동일)
+	@Ignore public void test6() {
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 		//5. delete
 //		ExecBoardDto dto = new ExecBoardDto();
 //		dto.setPostid(34); dto.setExecid(74);
@@ -178,7 +273,7 @@ public class Test_Exec_pawject2 {
 //		System.out.println( service.insert2( file ,dto) );
 		
 		//1. selectAll
-		System.out.println(service.selectAll1());
+//		System.out.println(service.selectAll1());
 	}
 	
   //운동챌린지 게시판 dao 테스트(완료)

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class DisswcDto {
 	private int disno;
 	private int appUserId;
+	private int userid;
 	private String disname;
 	private String disex;
 	private String kindpet;
