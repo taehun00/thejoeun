@@ -2,6 +2,7 @@ package com.pawject.dao.pet;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -36,7 +37,10 @@ public interface PetMapper {
 
     
     // 검색
-    public List<PetDto> searchPets(String keyword);
+
+    public List<PetDto> searchPets(Map<String, Object> params);
+
+
 
     // paging
     public List<PetDto> selectPet10(HashMap<String, Object> para);

@@ -30,7 +30,7 @@
 		    <label for="file" class="form-label">프로필사진 (추후에 업데이트가능합니다!) </label>
 		    <input type="file" class="form-control" id="file" placeholder="파일을 입력해주세요" name="file">
 		  </div>
-		<button type="submit" class="btn btn-primary">회원가입</button>
+		<button type="submit" class="btn btn-mint">회원가입</button>
 	</form>
 	<script>
 			$(function(){
@@ -60,9 +60,6 @@
 								}else{
 									$(".iddouble_result").empty().append("<span  class='text-success p-3'>사용가능한 이메일입니다.</span>");
 								}
-							} ,
-							error:function( ){
-								$(".iddouble_result").empty().append("<span  class='text-danger p-3'>서버요청 중 오류가 발생했습니다.</span>");
 							}
 						});
 					}
@@ -75,11 +72,3 @@
 
 
 
-
-
-	
-<!-- 				
-	action="join_process.jsp"
-	method="post"
-	name="email"   name="password"  name="mbti_type_id" 
--->
