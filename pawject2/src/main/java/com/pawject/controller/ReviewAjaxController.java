@@ -1,125 +1,102 @@
 package com.pawject.controller;
 
 import java.security.Principal;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.pawject.dto.paging.PagingDto10;
 import com.pawject.dto.review.ReviewDto;
 import com.pawject.dto.review.ReviewImgDto;
 import com.pawject.dto.user.UserAuthDto;
+import com.pawject.dto.user.UserDto;
+import com.pawject.service.food.FoodService;
 import com.pawject.service.review.ReviewService;
 import com.pawject.service.user.UserSecurityService;
-@RestController
-public class ReviewAjaxController {
 
-    @Autowired
-    ReviewService service;
-    @Autowired UserSecurityService uservice;
-    
-    // 글 업로드 - get은 기존 컨트롤러 활용
-    @PostMapping("/reviewwrite.fn")
-    @PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER')") 
-    public int writeAjax(ReviewDto dto,  Principal principal) {
-        UserAuthDto user = uservice.readAuth(principal.getName());
-        dto.setUserid(user.getUserId()); 
-    	
-        service.reviewInsert(dto);
-        return dto.getReviewid();
-    }
+@Controller
+public class ReviewController {
 
-    // 이미지 업로드 
-    @PostMapping("/reviewimg/upload")
-    @PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER')") 
-    public Map<String, Object> reviewUpload(
-            @RequestParam("reviewid") int reviewid,
-            @RequestParam("file") MultipartFile file) {
+@Autowired ReviewService service;
+@Autowired FoodService fservice;
+@Autowired UserSecurityService uservice;
 
-        ReviewImgDto dto = service.reviewimginsert(reviewid, file);
+		//전체 리스트 페이지+시큐리티
+		@RequestMapping("/reviewlist.fn")
+		public String reviewlist(Model model,
+		                       @RequestParam(value="pstartno", defaultValue = "1") int pstartno,
+		                       Principal principal) {
+		
+		  int total = service.reviewSelectCnt();
+		  PagingDto10 paging = new PagingDto10(total, pstartno);
+		  model.addAttribute("reviewlist", service.reviewSelect10(paging.getCurrent()));
+		  model.addAttribute("reviewpaging", paging);
+		
+	
+		  if (principal != null) {
+		      // principal.getName() → username(email 또는 userid)
+		      UserAuthDto user = uservice.readAuth(principal.getName());
+		
+		      model.addAttribute("userid", user.getUserId());
+		      model.addAttribute("author", user.getAuthList().get(0).getAuth()); // ROLE_ADMIN / ROLE_MEMBER
+		  }
+		
+		  return "reviewboard/reviewlist";
+		}
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("success", true);
-        result.put("reviewimgname", dto.getReviewimgname());
-        result.put("reviewimgid", dto.getReviewimgid());
+	
+	//글쓰기 get
+	@RequestMapping("/reviewwrite.fn")
+	@PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER')") 
+	public String write_get(Model model) {
+	    model.addAttribute("brandlist", fservice.brandSelectAll());
+	    model.addAttribute("foodlist", fservice.foodselectAll());
+	    
+		return "reviewboard/reviewwrite";
+	} 
+	
 
-        return result;
-    }
-    
-    //글 수정
-    @PostMapping("/reviewedit.fn")
-    @PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER')") 
-    public int updateAjax(ReviewDto dto) {
-    	service.reviewUpdate(dto);
-    	return dto.getReviewid();
-    }
-    
-   //이미지 수정
-    @PostMapping("/reviewimg/update")
-    @PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER')") 
-    public Map<String, Object> reviewUpdate(
-            @RequestParam("reviewimgid") int reviewimgid,
-            @RequestParam("file") MultipartFile file) {
+	
+	//수정 get
+	@RequestMapping("/reviewedit.fn")
+	@PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER')") 
+	public String edit_get(@RequestParam("reviewid") int reviewid, Model model) { //여기는 안고쳐도됨
+		model.addAttribute("rdto", service.reviewSelect(reviewid));
+		model.addAttribute("brandlist", fservice.brandSelectAll());
+		model.addAttribute("foodlist", fservice.foodselectAll());
+		model.addAttribute("imglist", service.reviewimgSelect(reviewid)); //해당 아이디 이미지 묶음 추가
 
-        ReviewImgDto dto = service.reviewimgupdate(reviewimgid, file);
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("success", true);
-        result.put("reviewimgname", dto.getReviewimgname());
-        result.put("reviewimgid", dto.getReviewimgid());
-
-        return result;
-    }
-    
-    //이미지 삭제
-    @PostMapping("/reviewimg/delete")
-    @PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER')") 
-    public int deletereviewimg( @RequestParam("reviewimgid") int reviewimgid) {
-    	return service.reviewimgdelete(reviewimgid);
-    }
-    
-
-    
-    @RequestMapping("/reviewPaging")
-    public Map<String, Object> reviewPaging(
-    		@RequestParam(defaultValue="1") int pstartno){	
-    	Map<String, Object> result = new HashMap<>();
-    	
-    	int total= service.reviewSelectCnt();
-    	List<ReviewDto> list = service.reviewSelect10(pstartno);
-    	
-    	result.put("total", total);
-    	result.put("list", list);
-
-    	return result;
-    }
-    
-    
-    //서치
-    @RequestMapping("/reviewsearch")
-    @PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER')") 
-    public Map<String, Object> reviewsearch(
-	        @RequestParam("keyword") String keyword,
-	        @RequestParam("searchType") String searchType){
-    	
-	    Map<String, Object> result = new HashMap<>();
-
-	    List<ReviewDto> list = service.reviewsearch(keyword, searchType);
-
-	    result.put("list", list);
-	    result.put("total", list.size());
-	    result.put("pstartno", 1);
-
-	    return result;
+		return "reviewboard/reviewedit";		
 	}
 
+	
+	//삭제-버튼만 연결
+	@RequestMapping("/reviewdelete.fn")
+	@PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER')") 
+	public String delete(@RequestParam int reviewid,  RedirectAttributes rttr) {
+		 //순서 주의! 이미지->리뷰 순 삭제
+		 int delete1 = service.reviewimgdeleteAll(reviewid); 
+		 int delete2 = service.reviewDelete(reviewid);
+		 
+			if(delete1>0 && delete2>0) {
+				String result="삭제 성공";
+				rttr.addFlashAttribute("success", result);
+				return "redirect:/reviewlist.fn";
+			} else {
+				String result="삭제 성공";
+				rttr.addFlashAttribute("success", result);
+				return "redirect:/reviewlist.fn";
+			}
+	}
+	
 }
 
 
