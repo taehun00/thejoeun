@@ -6,6 +6,7 @@ import java.util.List;
 import com.pawject.dao.MyDao;
 import com.pawject.dto.exec.ExecBoardDto;
 
+
 @MyDao
 public interface ExecBoardDao {
 	//운동챌린지게시판

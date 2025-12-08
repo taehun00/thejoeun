@@ -57,11 +57,12 @@
 				</div> 
 			</sec:authorize>
 				
- 			<sec:authorize access="isAuthenticated()"> 
-				<div class="mb-3">
-					<a href="${pageContext.request.contextPath}/list.execboard?postid=${dto.postid}" class="btn btn-mustard form-control">목록보기</a>
-				</div>
-			</sec:authorize> 
+
+			<sec:authorize access="isAuthenticated()">
+			  <div class="mb-3">
+			  	<a href="${pageContext.request.contextPath}/list.execboard?postid=${dto.postid}" class="btn btn-mustard form-control">목록보기</a>
+			  </div>
+			</sec:authorize>  
 	 </div>
    </div> 
 <%@include file="../inc/footer.jsp" %>

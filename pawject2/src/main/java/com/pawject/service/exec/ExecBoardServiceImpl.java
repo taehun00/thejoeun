@@ -73,5 +73,4 @@ public class ExecBoardServiceImpl implements ExecBoardService {
 		return dao.select10(para);
 	}
 	@Override public int selectTotalCnt() {return dao.selectTotalCnt();}
-
 }

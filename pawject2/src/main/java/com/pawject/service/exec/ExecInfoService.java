@@ -23,5 +23,4 @@ public interface ExecInfoService {
 	public List<ExecInfoDto> select10(int pstartno); //1(1,10), 2(11,20), 3(21,30)
 	public 		int   selectTotalCnt();
 
-		
 }
