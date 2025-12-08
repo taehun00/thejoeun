@@ -5,10 +5,7 @@ import java.util.List;
 
 import com.pawject.dao.MyDao;
 import com.pawject.dto.exec.ExecBoardDto;
-<<<<<<< HEAD
 import com.pawject.dto.exec.ExecInfoDto;
-=======
->>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 
 @MyDao
 public interface ExecBoardDao {
@@ -21,10 +18,7 @@ public interface ExecBoardDao {
 	public ExecBoardDto select1(int postId);
 		
 	
-<<<<<<< HEAD
-=======
 
->>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 	/* UPLOAD */
 	public int insert2(ExecBoardDto dto);
 	public int update2(ExecBoardDto dto); 
@@ -32,10 +26,7 @@ public interface ExecBoardDao {
 	/*Ajax*/
 	public List<ExecBoardDto> selectSearch1 (HashMap<String, String> para);
 
-<<<<<<< HEAD
-=======
 
->>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 	/*paging*/
 	public List<ExecBoardDto> select10(HashMap<String, Object> para);
 	public 		int   selectTotalCnt();

@@ -4,22 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-<<<<<<< HEAD
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
-=======
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
->>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 import com.pawject.dao.pet.PetMapper;
 import com.pawject.dto.pet.PetDto;
 
@@ -107,23 +97,11 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-<<<<<<< HEAD
-    public List<PetDto> searchPets(String keyword, String type) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("keyword", keyword);
-        params.put("type", type);
-        return pdao.searchPets(params);
-    }
-
-
-
-=======
     public List<PetDto> searchPets(String keyword) {
         return pdao.searchPets(keyword);
     }
 
 
->>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 	@Override
 	public List<PetDto> selectPet10(int pstartno) {
 		HashMap<String, Object> para = new HashMap();

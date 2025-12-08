@@ -1,17 +1,11 @@
 package com.pawject.service.review;
 
-<<<<<<< HEAD
 import java.util.HashMap;
-=======
->>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-<<<<<<< HEAD
 import com.pawject.dto.food.FoodDtoForList;
-=======
->>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 import com.pawject.dto.review.ReviewDto;
 import com.pawject.dto.review.ReviewImgDto;
 

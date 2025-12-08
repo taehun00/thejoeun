@@ -37,19 +37,12 @@
 		  <div class="mb-3">
 		  	<input type="text" class="form-control" id="ufile"   readonly  name="ufile"  value="${dto.ufile}">
 		  </div>
-<<<<<<< HEAD
-		<button type="submit" class="btn btn-mustard">정보수정</button>
-		<a href="${pageContext.request.contextPath}/security/mypage" class="btn btn-sage">목록으로</a>	</form>
-</div>
-
-=======
 		<button type="submit" class="btn btn-primary">정보수정-비밀번호/MBTI TYPE</button>
 		<a href="${pageContext.request.contextPath}/security/mypage" class="btn btn-secondary">목록으로</a>
 	</form>
 </div>
 <!-- ctrl + shift + f -->
 <!-- 	footer		 --> 
->>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 <%@ include file="../inc/footer.jsp"%>
 
 
@@ -57,12 +50,8 @@
 
 
 	
-<<<<<<< HEAD
-
-=======
 <!-- 				
 	action="join_process.jsp"
 	method="post"
 	name="email"   name="password"  name="mbti_type_id" 
 -->
->>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c

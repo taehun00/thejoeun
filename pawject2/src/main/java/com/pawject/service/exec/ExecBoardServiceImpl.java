@@ -2,24 +2,13 @@ package com.pawject.service.exec;
 
 import java.io.File;
 import java.io.IOException;
-<<<<<<< HEAD
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.HashMap;
-import java.util.List;
-
-=======
-<<<<<<< HEAD
 //import java.net.InetAddress;
 //import java.net.UnknownHostException;
-=======
->>>>>>> 7ee00e1 (수정내용등록 paging 불가)
 import java.util.HashMap;
 import java.util.List;
 
 //import javax.servlet.ServletContext;
 
->>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -84,14 +73,11 @@ public class ExecBoardServiceImpl implements ExecBoardService {
 		return dao.select10(para);
 	}
 	@Override public int selectTotalCnt() {return dao.selectTotalCnt();}
-<<<<<<< HEAD
-=======
 //	@Override
 //	public int iddouble(int postid) {
 //		// TODO Auto-generated method stub
 //		return 0;
 //	}
->>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 
 	//iddouble
 //	@Override public int iddouble(int postid) {return 0;}

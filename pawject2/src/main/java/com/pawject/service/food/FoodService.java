@@ -1,9 +1,6 @@
 package com.pawject.service.food;
 
-<<<<<<< HEAD
 import java.util.HashMap;
-=======
->>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;

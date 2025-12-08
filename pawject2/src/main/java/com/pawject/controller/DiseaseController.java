@@ -4,25 +4,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-<<<<<<< HEAD
-=======
 import org.springframework.security.access.prepost.PreAuthorize;
->>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-<<<<<<< HEAD
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.pawject.dto.Disswc.DisswcDto;
-=======
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.pawject.dto.Disswc.DisswcDto;
 import com.pawject.dto.paging.PagingDto10;
->>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 import com.pawject.service.Disswc.DiseaseService;
 
 
@@ -34,17 +28,7 @@ import com.pawject.service.Disswc.DiseaseService;
 public class DiseaseController {
 	
 	@Autowired DiseaseService  service;
-<<<<<<< HEAD
-	@RequestMapping("/list.quest")   //       
-	public String list(Model model) {
-		Map<String, Object> params = new HashMap<>();
-		params.put("start", 0);
-		params.put("end", 10);
-		model.addAttribute("list",service.selectAll(params));
-		  // 처리하고
-		return "quest_board/list";   //해당화면    /view/ 폴더안에    +  파일명    + .jsp
-	}
-=======
+
 	
 	@RequestMapping("/list.quest")
 	public String list(Model model,
@@ -102,15 +86,13 @@ public class DiseaseController {
 
 */	
 	
->>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
+
 	// 글쓰기 폼
 	@RequestMapping(value="/write.quest" , method=RequestMethod.GET)
 	public String write_get() { return "quest_board/write"; }
 	// 글쓰기 기능
-<<<<<<< HEAD
-=======
+
 	@PreAuthorize("isAuthenticated()")
->>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 	@RequestMapping(value="/write.quest" , method=RequestMethod.POST)
 	public String write_post( DisswcDto dto, RedirectAttributes rttr) { 
 		String result ="글쓰기 실패";
@@ -130,11 +112,8 @@ public class DiseaseController {
 		model.addAttribute("dto", service.selectUpdateForm(disno));
 		return "quest_board/edit"; 
 	}
-<<<<<<< HEAD
-	
-=======
+
 	@PreAuthorize("isAuthenticated()")
->>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 	@RequestMapping(value="/edit.quest" , method=RequestMethod.POST) //수정기능
 	public String edit_post( DisswcDto dto,   RedirectAttributes rttr) { 
 		System.out.println("......... edit.quest" + dto );
@@ -148,11 +127,9 @@ public class DiseaseController {
 	
 	@RequestMapping(value="/delete.quest" , method=RequestMethod.GET) //삭제폼
 	public String delete_get() { return "quest_board/delete"; }
-<<<<<<< HEAD
-	
-=======
+
 	@PreAuthorize("isAuthenticated()")
->>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
+
 	@RequestMapping(value="/delete.quest" , method=RequestMethod.POST) //삭제기능
 	public String delete_post(DisswcDto dto, RedirectAttributes rttr) { 
 		String result = "비밀번호를 확인해주세요";

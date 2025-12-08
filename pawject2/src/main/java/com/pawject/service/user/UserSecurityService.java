@@ -1,13 +1,9 @@
 package com.pawject.service.user;
 
 import java.util.List;
-<<<<<<< HEAD
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
-=======
-
->>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 import org.springframework.web.multipart.MultipartFile;
 
 import com.pawject.dto.user.AuthDto;
