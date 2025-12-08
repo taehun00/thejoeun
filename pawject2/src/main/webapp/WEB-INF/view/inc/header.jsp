@@ -36,11 +36,7 @@
       <ul class="navbar-nav ms-auto">
 
 
-		<sec:authorize access="hasRole('ADMIN')">
-		    <li class="nav-item">
-		        <a class="nav-link" href="${pageContext.request.contextPath}/foodlist.fn">사료 관리</a>
-		    </li>
-		</sec:authorize>
+
 		
 		
         <li class="nav-item">
@@ -85,6 +81,9 @@
 		    <a class="nav-link fw-bold text-warning" href="${pageContext.request.contextPath}/security/list">
 		      관리자 USER BOARD
 		    </a>
+		  </li>
+		  <li class="nav-item">
+		      <a class="nav-link" href="${pageContext.request.contextPath}/foodlist.fn">사료 관리</a>
 		  </li>
 		</sec:authorize>
         
