@@ -18,6 +18,27 @@
 
 
 
+<<<<<<< HEAD
+	<div class="container card my-5 p-4 userTable shadow-sm">
+	  <h3 class="card-header bg-light">관리자 USER BOARD</h3>
+	  <table class="table table-striped table-bordered table-hover align-middle">
+	    <meta name="_csrf" content="${_csrf.token}"/>
+	    <meta name="_csrf_header" content="${_csrf.headerName}"/>
+	    <caption class="text-center fw-bold">USERS</caption>
+	    <thead class="table-primary">
+	      <tr>
+	        <th scope="col">NO</th>
+	        <th scope="col">PROFILE</th>
+	        <th scope="col">USERNO</th>
+	        <th scope="col">EMAIL</th>
+	        <th scope="col">NICKNAME</th>
+	        <th scope="col">DATE</th>
+	        <th scope="col">수정</th>
+	        <th scope="col">삭제</th>
+	      </tr>
+	    </thead>
+
+=======
    <div class="container card  my-5 p-4  userTable">
       <h3 class="card-header"> 관리자 USER BOARD</h3>  
       <table class="table table-striped table-bordered table-hover">
@@ -37,10 +58,35 @@
       			<th scope="col">삭제</th> 
       		</tr>	
       	</thead>
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
       	<tbody>   
       	</tbody>
       </table>      
    </div>
+<<<<<<< HEAD
+
+<div class="paging text-center my-3">
+  <ul class="pagination justify-content-center"></ul>
+</div>
+
+<div class="container my-3">
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title mb-3">🔍 사용자 검색</h5>
+      <div class="input-group">
+        <select id="searchType" class="form-select" style="max-width:150px;">
+          <option value="email">이메일</option>
+          <option value="nickname">닉네임</option>
+        </select>
+        <input type="text" id="searchKeyword" class="form-control" placeholder="검색어 입력">
+        <button type="button" class="btn btn-navy" id="searchBtn">검색</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+=======
     <div class="paging text-center my-3">
 	    <ul class="pagination justify-content-center"></ul>
 	</div>
@@ -55,6 +101,7 @@
     </div>
 </div>
 
+>>>>>>> cb4a38b2ec94f84ae8d5b1165d16b0247b5b119c
 <script>
 $(function(){        
     userList();   // 전체리스트

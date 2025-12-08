@@ -77,10 +77,12 @@
 		select * from execboard where postid=#{postid}
 	</select>
 
+
 	<!-- ajax - search -->
 	<select resultMap="ExecBoardMap" id="selectSearch1" parameterType="java.util.HashMap">
 		select * from execboard where etitle like #{search} <!-- #{search} 주의!! -->
 	</select>
+
 
 	<!-- paging -->
 	<select resultMap="ExecBoardMap" id="select10"
@@ -98,6 +100,7 @@
 	<select resultType="int" id="selectTotalCnt">
 		select count(*) from execboard
 	</select>
+
 </mapper>
 
 

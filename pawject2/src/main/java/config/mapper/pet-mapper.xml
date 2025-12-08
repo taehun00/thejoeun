@@ -108,7 +108,7 @@
 	
 	<!-- 이메일로 검색 -->
 	<!-- 펫이름으로 검색 -->
-	<select id="searchPets" resultMap="petMap" parameterType="string">
+	<select id="searchPets" resultMap="petMap" parameterType="map">
 	    SELECT 
 	        p.petid,
 	        p.userid,
@@ -121,10 +121,23 @@
 	        p.pfile
 	    FROM pet p
 	    JOIN users u ON p.userid = u.userid
-	    WHERE u.email LIKE CONCAT(CONCAT('%', #{keyword}), '%')
-	       OR p.petname LIKE CONCAT(CONCAT('%', #{keyword}), '%')
-	    ORDER BY u.createdat DESC
+
+	    WHERE
+	        <choose>
+	            <when test="type == 'email'">
+	                u.email LIKE '%' || #{keyword} || '%'
+	            </when>
+	            <when test="type == 'petname'">
+	                p.petname LIKE '%' || #{keyword} || '%'
+	            </when>
+	            <otherwise>
+	                u.email LIKE '%' || #{keyword} || '%'
+	                OR p.petname LIKE '%' || #{keyword} || '%'
+	            </otherwise>
+	        </choose>
+	    ORDER BY p.createdat DESC
 	</select>
+
 	<!-- pagging -->
 	<select id="selectPet10" resultMap="petMap" parameterType="java.util.HashMap">
 	SELECT *

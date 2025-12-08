@@ -22,7 +22,7 @@
 		  
 <!--  		  <div class="my-3">
 		    <label for="postid" class="form-label">게시글아이디:</label>
-<<<<<<< HEAD
+
 		    <input type="text" class="form-control"
 		    	id="postid"  placeholder="게시글아이디를 입력해주세요." name="postid">
 		  </div> -->

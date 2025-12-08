@@ -2,8 +2,13 @@ package com.pawject.service.exec;
 
 import java.io.File;
 import java.io.IOException;
+//import java.net.InetAddress;
+//import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.List;
+
+//import javax.servlet.ServletContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -68,20 +73,5 @@ public class ExecBoardServiceImpl implements ExecBoardService {
 		return dao.select10(para);
 	}
 	@Override public int selectTotalCnt() {return dao.selectTotalCnt();}
-//	@Override
-//	public int iddouble(int postid) {
-//		// TODO Auto-generated method stub
-//		return 0;
-//	}
-
-	//iddouble
-//	@Override public int iddouble(int postid) {return 0;}
-
-	// ADMIN / MEMBER
-//	@Override public int updateAdmin(ExecBoardDto dto) { return 0; }
-//	@Override public int deleteAdmin(ExecBoardDto dto) {return 0;}
-//	@Override public int updateMember(ExecBoardDto dto) { return 0; }
-//	@Override public int deleteMember(ExecBoardDto dto) { return 0; }
-	
 
 }

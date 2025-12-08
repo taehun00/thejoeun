@@ -2,6 +2,7 @@ package com.pawject.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+//import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +17,7 @@ import com.pawject.service.exec.ExecBoardService;
 
 @Controller
 public class ExecBoardController {
-	@Autowired ExecBoardService service; 
+	@Autowired ExecBoardService service;
 	
 	///////////////////////////////////////////////////////
 	//전체보기(+ Paging)

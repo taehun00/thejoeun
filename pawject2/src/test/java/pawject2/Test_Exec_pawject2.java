@@ -2,7 +2,6 @@ package pawject2;
 
 import java.util.HashMap;
 
-import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSession;
@@ -18,18 +17,17 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.pawject.dao.exec.ExecBoardDao;
 import com.pawject.dao.exec.ExecInfoDao;
-import com.pawject.dto.exec.ExecBoardDto;
-import com.pawject.dto.exec.ExecInfoDto;
+//import com.pawject.dto.exec.ExecBoardDto;
+//import com.pawject.dto.exec.ExecInfoDto;
 import com.pawject.service.exec.ExecBoardService;
 import com.pawject.service.exec.ExecInfoService;
-import org.springframework.mock.web.*;  //## 가짜이미지파일
+//import org.springframework.mock.web.*;  //## 가짜이미지파일
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:config/root-context.xml")
 
 public class Test_Exec_pawject2 {
 	@Autowired ApplicationContext context;
-	//@Autowired ServletContext context;
 	@Autowired DataSource ds;
 	@Autowired SqlSession sqlSession;
 	@Autowired ExecBoardDao dao;
