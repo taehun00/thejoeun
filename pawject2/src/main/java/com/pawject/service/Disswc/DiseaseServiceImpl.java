@@ -36,7 +36,6 @@ public class DiseaseServiceImpl implements DiseaseService {
 		para.put("search", "%" + keyword + "%");
 		return dao.selectSearch(para);
 	}
-
 	/*Paging*/
 	@Override
 	public List<DisswcDto> select10(int pstartno){
