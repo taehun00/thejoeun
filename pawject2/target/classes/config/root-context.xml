@@ -17,7 +17,18 @@
 				
 				 <!-- Mapper 인터페이스 자동 스캔  -->
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+	
+		<property name="basePackage" value="com.pawject.dao.Disswc" />
+		<property name="sqlSessionFactoryBeanName"
+			value="sqlSessionFactory" />
+	</bean>
+
+
+>>>>>>> 7dd35b520791d020c650e294f4285741939213ce
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 	
 		<property name="basePackage" value="com.pawject.dao.Disswc" />
