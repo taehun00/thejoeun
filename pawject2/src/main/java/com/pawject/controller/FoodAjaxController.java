@@ -1,6 +1,6 @@
-	package com.pawject.controller;
+package com.pawject.controller;
 	
-	import java.util.HashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,12 +20,7 @@ import com.pawject.service.food.FoodService;
 	public class FoodAjaxController {
 		@Autowired FoodService service;
 		
-//		//foodselectForList - 게시판용 전체 리스트 출력 페이지
-//		@RequestMapping("/foodselectForList")
-//		public List<FoodDtoForList> foodselectForList(){	
-//			return service.foodselectForList();
-//		}
-//		
+		
 		//페이징 적용 버전
 		@RequestMapping("/foodselectForList")
 		public Map<String, Object> foodselectForList(
