@@ -86,6 +86,7 @@
 		</p>
 	</sec:authorize>
 	
+
 	<sec:authorize access="isAuthenticated()">
 		<p class="text-end">
 			<a href="${pageContext.request.contextPath}/write.execinfo"
@@ -158,7 +159,7 @@
 																				+ "<td>"
 																				+ (res.length - index)
 																				+ "</td>"
-																				+ "<td><a href='${pageContext.request.contextPath}/detail.execinfo?id="
+																				+ "<td><a href='${pageContext.request.contextPath}/detail.execinfo?execid="
 																				+ dto.execid
 																				+ "'>"
 																				+ dto.exectype

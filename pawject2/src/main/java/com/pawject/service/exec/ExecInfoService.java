@@ -23,21 +23,4 @@ public interface ExecInfoService {
 	public List<ExecInfoDto> select10(int pstartno); //1(1,10), 2(11,20), 3(21,30)
 	public 		int   selectTotalCnt();
 
-	
-	/* idouble */
-//	public int iddouble(int execid);
-	
-	/* admin  - 전체유저정보 selectAll 
-	           / 게시글아이디(postid) 주면 해당게시글 찾기
-	           / 수정하기 updateMember
-	           / 삭제하기 deleteMember*/
-	
-//	public int updateMember(ExecInfoDto dto);
-//	public int deleteMember(ExecInfoDto dto);
-	
-	/* security */
-//	public int insertAuth(ExecAuthDto dto);
-//	public ExecBoardAuthDto readAuth(ExecBoardAuthDto dto);
-
-	
 }

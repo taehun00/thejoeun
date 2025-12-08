@@ -49,19 +49,20 @@ $(function(){
 			    		placeholder="내용을 입력해주세요." name="intensitylevel"  readonly  value="${dto.intensitylevel}">
 			  </div>  
 			  
+			  
 			  <sec:authorize access="isAuthenticated() and hasRole('ROLE_ADMIN')">
 				  <div class="mb-3">
 						<a href="${pageContext.request.contextPath}/edit.execinfo?execid=${dto.execid}" class="btn btn-olive form-control">글수정</a>
 				  </div>
 			  </sec:authorize>
 			  
-			  <sec:authorize access="isAuthenticated() and hasRole('ROLE_ADMIN')">
+ 			  <sec:authorize access="isAuthenticated() and hasRole('ROLE_ADMIN')">
 				  <div class="mb-3">
 						<a href="${pageContext.request.contextPath}/delete.execinfo?execid=${dto.execid}" class="btn btn-burgundy form-control">글삭제</a>
 				  </div>
 			  </sec:authorize>
 			  		
-			  <sec:authorize access="isAuthenticated()">
+ 			  <sec:authorize access="isAuthenticated()">
 				  <div class="mb-3">
 				  	<a href="${pageContext.request.contextPath}/list.execinfo?execid=${dto.execid}" class="btn btn-sage form-control">목록보기</a>
 				  </div>

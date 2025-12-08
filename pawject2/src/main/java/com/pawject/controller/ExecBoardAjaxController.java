@@ -18,17 +18,7 @@ public class ExecBoardAjaxController {
 	
 	@Autowired ExecBoardService service;	
 	
-//	@RequestMapping("/iddouble")
-//	public Map<String, Object> iddouble1(@RequestParam int postid){
-//		Map<String, Object> result = new HashMap<>();
-//		result.put("cnt", service.iddouble(0));
-//		return result;
-//	}
 	//////////////////////////////////////////
-	/* admin 유저관리 - 전체유저정보 selectAll
-	 * 				/ 아이디주면 해당 유저정보찾기 select 
-	 * 				/ 수정하기 updateAdimin
-	 * 				/ 삭제하기 deleteAdimin */
 	@RequestMapping("/ExecBoardselectAll")
 	public List<ExecBoardDto> selectAll(){
 		return service.selectAll1();
@@ -40,39 +30,5 @@ public class ExecBoardAjaxController {
 		return result;
 	}
 	/////////////////////////////////////////////////////
-	//권한부여 Admin, Member
-//	@RequestMapping("/updateExecBoardAdmin")
-//	public Map<String, Object> updateAdmin1(@RequestParam int postId,
-//										   @RequestParam int execId){
-//		Map<String, Object> result = new HashMap<>();
-//		ExecBoardDto dto = new ExecBoardDto();
-//		dto.setPostid(postId); dto.setExecid(execId);
-//	   //result.put("result", service.updateAdimin1(dto));
-//		return result;
-//	}
-//	@RequestMapping("/deleteExecBoardAdmin")
-//	public Map<String, Object> deleteAdmin1(@RequestParam int postId){
-//		Map<String, Object> result = new HashMap<>();
-//		ExecBoardDto dto = new ExecBoardDto();
-//		dto.setPostid(postId);
-	//	result.put("result", service.deleteAdimin1(dto));
-//		return result;
-//	}
-//	@RequestMapping("/updateExecBoardMember")
-//	public Map<String, Object> updateMember1(@RequestParam int postId,
-//										   @RequestParam int execId){
-//		Map<String, Object> result = new HashMap<>();
-//		ExecBoardDto dto = new ExecBoardDto();
-//		dto.setPostid(postId); dto.setExecid(execId);
-	   //result.put("result", service.updateMember1(dto));
-//		return result;
-//	}
-//	@RequestMapping("/deleteExecBoardAdmin")
-//	public Map<String, Object> deleteMember1(@RequestParam int postId){
-//		Map<String, Object> result = new HashMap<>();
-//		ExecBoardDto dto = new ExecBoardDto();
-//		dto.setPostid(postId);
-	//	result.put("result", service.deleteMember1(dto));
-//		return result;
-//	}	
+
 }

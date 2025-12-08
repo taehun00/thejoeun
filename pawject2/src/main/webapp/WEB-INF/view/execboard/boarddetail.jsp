@@ -45,18 +45,19 @@
 			  <img src="${pageContext.request.contextPath}/upload/${dto.eimg}"  alt="eimg"
 			        style="width:100px;" />
 			</div>	
-			<sec:authorize access="isAuthenticated()">
+ 			<sec:authorize access="isAuthenticated()">
 				<div class="mb-3">
-				<a href="${pageContext.request.contextPath}/edit.execboard?postid=${dto.postid}" class="btn btn-lavender form-control">글수정</a>
+					<a href="${pageContext.request.contextPath}/edit.execboard?postid=${dto.postid}" class="btn btn-lavender form-control">글수정</a>
 				</div>
 			</sec:authorize>	
 			
-			<sec:authorize access="isAuthenticated()">
+ 			<sec:authorize access="isAuthenticated()">
 				<div class="mb-3">
-				<a href="${pageContext.request.contextPath}/delete.execboard?postid=${dto.postid}" class="btn btn-roseRed form-control">글삭제</a>
+					<a href="${pageContext.request.contextPath}/delete.execboard?postid=${dto.postid}" class="btn btn-roseRed form-control">글삭제</a>
 				</div> 
 			</sec:authorize>
 				
+
 			<sec:authorize access="isAuthenticated()">
 			  <div class="mb-3">
 			  	<a href="${pageContext.request.contextPath}/list.execboard?postid=${dto.postid}" class="btn btn-mustard form-control">목록보기</a>

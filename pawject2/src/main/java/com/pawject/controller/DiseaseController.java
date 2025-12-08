@@ -21,9 +21,6 @@ import com.pawject.service.Disswc.DiseaseService;
 
 
 
-
-
-
 @Controller
 public class DiseaseController {
 	
@@ -159,5 +156,3 @@ public class DiseaseController {
 /edit.quest            /view/quest_board/edit.jsp     (수정하기폼)
 /delete.quest          /view/quest_board/delete.jsp   (삭제하기폼)
 */
-
-

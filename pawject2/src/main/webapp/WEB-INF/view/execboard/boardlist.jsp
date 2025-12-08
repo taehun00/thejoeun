@@ -1,4 +1,3 @@
-
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@include file="../inc/header.jsp"%>
@@ -140,13 +139,14 @@ $(function(){
                     $("#resultArea tbody").empty();
                     $.each(res, function(index, dto){
                         let row = "<tr>"
-                                + "<td>" + (res.length - index) + "</td>"
-                                + "<td><a href='${pageContext.request.contextPath}/detail.execboard?postid="
-                                + dto.postId + "'>" + dto.etitle + "</a></td>"
-                                + "<td>" + dto.econtent + "</td>"
-                                + "<td><img src='/pawject2/upload/" + dto.eimg + "' alt='eimg' style='width:100px;'/></td>"
-                                + "<td>" + dto.createdat + "</td>"
-                                + "</tr>";
+                            + "<td>" + (res.length - index) + "</td>"
+                            + "<td><a href='${pageContext.request.contextPath}/detail.execboard?postid="
+                                + dto.postid + "'>" + dto.etitle + "</a></td>"
+                            + "<td>" + dto.econtent + "</td>"
+                            + "<td><img src='${pageContext.request.contextPath}/upload/" 
+                                + dto.eimg + "' style='width:100px;'></td>"
+                            + "<td>" + dto.createdat + "</td>"
+                            + "</tr>";  
                         $("#resultArea tbody").append(row);
                     });
                 }
