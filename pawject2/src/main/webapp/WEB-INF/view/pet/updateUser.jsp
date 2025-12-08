@@ -54,9 +54,10 @@
 		</div>
 				
 
-        <button type="submit" class="btn btn-primary">펫 정보 수정</button>
-        <a href="${pageContext.request.contextPath}/pet/detail?petId=${pet.petId}" class="btn btn-secondary">뒤로가기</a>
-    </form>
+
+        <button type="submit" class="btn btn-mustard">펫 정보 수정</button>
+		<a href="${pageContext.request.contextPath}/pet/detail?petId=${pet.petId}" class="btn btn-sage">뒤로가기</a>    </form>
+
 </div>
 
 <!-- footer -->

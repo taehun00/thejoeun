@@ -1,6 +1,7 @@
 package com.pawject.service.pet;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,7 +28,8 @@ public interface PetService {
     public int deletePetByAdmin(int petId);
 
     // 검색
-    public List<PetDto> searchPets(String keyword);
+
+    public List<PetDto> searchPets(String keyword, String type);
     
     // paging
     public List<PetDto> selectPet10(int pstartno);
