@@ -21,7 +21,6 @@
 		<typeAlias type="com.pawject.dto.review.ReviewImgDto"	alias="ReviewImgDto"/>
 		<typeAlias type="com.pawject.dto.exec.ExecBoardDto"      alias="ExecBoardDto"/>
 		<typeAlias type="com.pawject.dto.exec.ExecInfoDto"          alias="ExecInfoDto"/>  	
-		<typeAlias alias="DisswcDto" type="com.pawject.dto.Disswc.DisswcDto"/>	
 		<typeAlias type="com.pawject.dto.Disswc.DisswcDto"     alias="DisswcDto"/>	
 	</typeAliases>
 
