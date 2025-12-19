@@ -3,8 +3,6 @@ package com.pawject.service.exec;
 import java.util.HashMap;
 import java.util.List;
 
-//import javax.servlet.ServletContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,13 +40,6 @@ public class ExecInfoServiceImpl implements ExecInfoService {
 	}
 	@Override public int selectTotalCnt() {return idao.selectTotalCnt();}
 
-	//iddouble
-//	@Override public int iddouble(int execid) {return 0;}
-
-	
-	//MEMBER
-//	@Override public int updateMember(ExecInfoDto dto) {return 0;}
-//	@Override public int deleteMember(ExecInfoDto dto) {return 0;}
 
 
 }
