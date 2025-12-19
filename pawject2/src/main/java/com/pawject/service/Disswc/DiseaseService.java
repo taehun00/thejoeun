@@ -20,4 +20,5 @@ public interface DiseaseService {
 	/*Paging*/
 	public List<DisswcDto>  select10(int pstartno);
 	public int  selectTotalCnt();
+
 }
