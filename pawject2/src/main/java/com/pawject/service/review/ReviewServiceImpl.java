@@ -84,35 +84,6 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 	
 	
-	//mvc 버전 - 일괄 업로드
-//	public int reviewimginsert(int reviewid, List<MultipartFile> files) {
-//		int successcnt=0;
-//		
-//	    for (MultipartFile file : files) {
-//	        if (file.isEmpty()) { continue; }  //!아님 이미지 없으면 스킵하고 업로드
-//	        String uuid = UUID.randomUUID().toString();
-//	        String originName = file.getOriginalFilename();
-//	        String fileName = uuid + "_" + originName; //이거 안하면 db에서 이미지 이름 중복 시 충돌남
-//	        String uploadPath = "C:/file/";
-//
-//	        File img = new File(uploadPath + fileName);
-//
-//	        try {
-//	            file.transferTo(img);
-//	            successcnt++;  //빼먹으면 카운트 0이됨 영원히....
-//	        } catch (Exception e) {
-//	            e.printStackTrace();
-//	        }
-//
-//	        ReviewImgDto dto = new ReviewImgDto();
-//	        dto.setReviewid(reviewid);
-//	        dto.setReviewimgname(fileName);
-//
-//	        idao.reviewimginsert(dto);
-//	    }//for
-//	    return successcnt;
-//	}
-	
 	
 	@Override  //다 만들고 나니까 깨달은 건데 이거 필요없엉..... 왜했지
 	public ReviewImgDto reviewimgupdate(int reviewimgid,MultipartFile file) {
@@ -150,35 +121,6 @@ public class ReviewServiceImpl implements ReviewService {
 
 	
 	
-//	@Override
-//	public int reviewimgupdate(int reviewid, List<MultipartFile> files) {
-//	
-//		int successcnt=0;
-//		
-//	    for (MultipartFile file : files) {
-//	        if (file.isEmpty()) { continue; }
-//	        String uuid = UUID.randomUUID().toString();
-//	        String originName = file.getOriginalFilename();
-//	        String fileName = uuid + "_" + originName;
-//	        String uploadPath = "C:/file/";
-//
-//	        File img = new File(uploadPath + fileName);
-//
-//	        try {
-//	            file.transferTo(img);
-//	            successcnt++;  
-//	        } catch (Exception e) {
-//	            e.printStackTrace();
-//	        }
-//
-//	        ReviewImgDto dto = new ReviewImgDto();
-//	        dto.setReviewid(reviewid);
-//	        dto.setReviewimgname(fileName);
-//
-//	        idao.reviewimgupdate(dto);
-//	    }//for
-//	    return successcnt;
-//	}
 
 	//파일 삭제 전용 메서드
 	private void filedelete(String fileName) {

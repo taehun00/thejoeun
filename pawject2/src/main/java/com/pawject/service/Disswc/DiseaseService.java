@@ -16,6 +16,7 @@ public interface DiseaseService {
 	
 	/* Search - Ajax */
 	public List<DisswcDto> selectSearch(String keyword);
+	
 	/*Paging*/
 	public List<DisswcDto>  select10(int pstartno);
 	public int  selectTotalCnt();

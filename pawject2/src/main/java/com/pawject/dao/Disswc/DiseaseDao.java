@@ -9,6 +9,7 @@ import com.pawject.dto.Disswc.DisswcDto;
 
 
 
+
 @MyDao
 public interface DiseaseDao {
 	public int       insert(DisswcDto dto);
