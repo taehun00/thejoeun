@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+<head lang="ko">
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div layout:fragment="content">
+    
+<div class="faq-container">
+
+    <h2 class="faq-title">자주 묻는 질문</h2>
+
+   <table class="faq-table table table-bordered table-hover align-middle text-center">
+        <caption class="visually-hidden">FAQ</caption>
+        <thead class="table-light">
+            <tr>
+                <th scope="col">NO.</th>
+                <th scope="col">분류</th>
+                <th scope="col">질문</th>
+                <th scope="col">등록일</th>
+                <th scope="col">수정일</th>
+                <th scope="col">사용여부</th>
+            </tr>
+        </thead>
+
+		<tbody>
+			<th:block th:each="f, status : ${list}">
+			    <tr th:onclick="|toggleContent(${f.faqid})|">
+			        <td th:text="${status.index + 1}"></th>
+			        <td th:text="${f.category}"></td>
+			        <td th:text="${f.question}"></td>
+			        <td th:text="${f.createdat}"></td>
+			        <td th:text="${f.updatedat}"></td>
+			        <td>
+					  <button type="button" class="btn"
+					          th:classappend="${f.isactive == 1} ? 'btn-success' : 'btn-olive'"
+					          th:text="${f.isactive == 1 ? '활성화' : '비활성화'}">
+					  </button>
+					</td>
+			    </tr>
+			
+			    <tr th:id="'content-' + ${f.faqid}" style="display:none;">			    
+					<td colspan="5" class="detail">
+					    <p class="faq-answer" th:text="${f.answer}"></p>
+					    <div class="faq-keyword-wrap">
+					        <button type="button"
+					                class="btn btn-sm btn-outline-secondary"
+					                th:text="${f.keywords}">
+					        </button>
+					    </div>
+					</td>
+				    <td colspan="6">
+				        <div class="d-flex justify-content-end gap-3 mt-3">
+				            <button type="button" class="btn btn-primary">수정</button>
+				        </div>
+				    </td>
+			    </tr>
+
+			</th:block>
+
+		</tbody>
+	</table>
+
+	<div class="write-btn-area">
+				<p class="text-end">
+				<a th:href="@{/faqBoard/faqwrite}" 
+				class="btn btn-slateBlue">글쓰기</a>
+				</p>
+	</div>
+	
+			<div class="help-container">
+			    <h4>다른 도움이 필요하신가요?</h4>
+			
+			    <div class="faq-card-wrapper">
+			        <a href="#" class="faq-directquestion">
+			            <p>💌1:1 질문하기</p>
+			            <p>궁금하신 사항을 알려주시면</p>
+			            <p>24시간 내 답변을 드려요</p>
+			        </a>
+			
+			        <a href="#" class="faq-chatroom">
+			            <p>💬채팅 문의하기</p>
+			            <p>챗봇이 24시간 언제든지</p>
+			            <p>궁금하신 점을 알려드려요</p>
+			        </a>
+			    </div>
+			</div>
+</div>
+
+<script>
+function toggleContent(id) {
+  const row = document.getElementById("content-" + id);
+  row.style.display = (row.style.display === "table-row") ? "none" : "table-row";
+}
+</script>
+
+</div><!-- content-->
+</body>
+</html>
