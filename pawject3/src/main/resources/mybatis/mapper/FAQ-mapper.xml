@@ -30,9 +30,18 @@
 			VALUES (FAQ_SEQ.NEXTVAL, #{category}, #{question}, #{answer}, #{keywords})
   </insert>
   
-  <!-- 활성화 전환 -->
+    <!-- 수정 -->
+  <update id="updateFAQ" parameterType="FAQDto">
+  	UPDATE FAQ SET category=#{category}, question=#{question}, 
+  	answer=#{answer}, keywords=#{keywords}, ISACTIVE=#{isactive}, UPDATEDAT=SYSDATE
+  	WHERE FAQID=#{faqid}
+  </update>
+  
+  <!-- 활성화 전환 (매퍼에서 바로 전환)-->
   <update id="activeFAQ" parameterType="FAQDto">
-  	UPDATE FAQ SET  ISACTIVE=#{isactive} WHERE FAQID=#{faqid}
+    UPDATE FAQ SET ISACTIVE = CASE WHEN ISACTIVE = 1 THEN 0	ELSE 1 END
+    WHERE faqid = #{faqid}
+
   </update>
 
  <!-- 활성화/비활성화(서치 추가 시) SELECT * FROM FAQ WHERE ISACTIVE=1 ORDER BY FAQID;-->

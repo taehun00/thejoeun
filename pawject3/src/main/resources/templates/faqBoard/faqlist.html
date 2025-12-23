@@ -35,10 +35,11 @@
 			        <td th:text="${f.createdat}"></td>
 			        <td th:text="${f.updatedat}"></td>
 			        <td>
-					  <button type="button" class="btn"
-					          th:classappend="${f.isactive == 1} ? 'btn-success' : 'btn-olive'"
-					          th:text="${f.isactive == 1 ? '활성화' : '비활성화'}">
-					  </button>
+					<button type="button" class="btn quickactive-btn"
+					        th:data-faqid="${f.faqid}"
+					        th:classappend="${f.isactive == 1} ? 'btn-success' : 'btn-olive'"
+					        th:text="${f.isactive == 1 ? '활성화' : '비활성화'}">
+					</button>
 					</td>
 			    </tr>
 			
@@ -54,7 +55,7 @@
 					</td>
 				    <td colspan="6">
 				        <div class="d-flex justify-content-end gap-3 mt-3">
-				            <button type="button" class="btn btn-primary">수정</button>
+						<a th:href="@{/faqBoard/faqedit(faqid=${f.faqid})}" class="btn btn-primary">수정</a>
 				        </div>
 				    </td>
 			    </tr>
@@ -96,6 +97,41 @@ function toggleContent(id) {
   row.style.display = (row.style.display === "table-row") ? "none" : "table-row";
 }
 </script>
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+var csrfHeader = /*[[${_csrf.headerName}]]*/ 'X-CSRF-TOKEN';
+var csrfToken = /*[[${_csrf.token}]]*/ '';
+/*]]>*/
+</script>
+
+<script>
+
+$(document).ready(function(){
+    $(".quickactive-btn").on("click", function() {
+        let faqid = $(this).data("faqid");
+        if(confirm("활성화 상태를 변경하시겠습니까?")) {
+            $.ajax({
+                url: "/faqBoard/quickactive",
+                type: "POST",
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
+                data: { faqid: faqid },
+                success: function() {
+					 location.reload();
+                },
+                error: function() {
+                    alert("error");
+                }
+            });
+        }
+    });
+});
+</script>
+
+
+
 
 </div><!-- content-->
 </body>

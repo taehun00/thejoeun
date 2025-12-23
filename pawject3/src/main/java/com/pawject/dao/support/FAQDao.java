@@ -14,6 +14,9 @@ public interface FAQDao {
 	//<select resultMap="FAQMap" id="selectFAQ" parameterType="int">
 	public FAQDto selectFAQ(int faqid);
 	
+	//  <update id="updateFAQ" parameterType="FAQDto">
+	public int updateFAQ(FAQDto dto);
+	
 	//<insert id="insertFAQ" parameterType="FAQDto">
 	public int insertFAQ(FAQDto dto);
 	

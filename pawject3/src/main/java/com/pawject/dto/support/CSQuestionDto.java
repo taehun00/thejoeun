@@ -1,22 +1,29 @@
 package com.pawject.dto.support;
 
+import java.util.List;
+
 import lombok.Data;
 
 @Data
 public class CSQuestionDto {
-	private int answerid;
 	private int questionid;
-	private String adminid;
+	private int userid;
+	private String category;
+	private String title;
 	private String content;
+	public int status;
 	private String createdat;
+	private List<CSAnswerDto> answers;
+	
+	
 }
 
 /*
-이름         널?       유형     
----------- -------- ------ 
-ANSWERID   NOT NULL NUMBER 
-QUESTIONID NOT NULL NUMBER 
-ADMINID    NOT NULL NUMBER 
-CONTENT    NOT NULL CLOB   
-CREATEDAT           DATE   
+QUESTIONID NOT NULL NUMBER        
+USERID     NOT NULL NUMBER        
+CATEGORY            VARCHAR2(50)  
+TITLE      NOT NULL VARCHAR2(200) 
+CONTENT    NOT NULL CLOB          
+STATUS              NUMBER(1)     
+CREATEDAT           DATE    
  */
