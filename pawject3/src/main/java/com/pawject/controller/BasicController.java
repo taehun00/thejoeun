@@ -8,11 +8,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class BasicController {
 
+	//http://localhost8484/pawject3/basic1
 	//@RequestMapping("/basic1")
 	@GetMapping("/basic1")
 	@ResponseBody
 	public String basic1() {return "basic1";}
 	
+	//http://localhost8484/pawject3/basic2
 	@GetMapping("/basic2")
 	public String basic2(Model model) {
 		model.addAttribute("greeting", "hello");
