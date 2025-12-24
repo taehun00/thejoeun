@@ -26,5 +26,4 @@ Thumbs.db
 .mvn/wrapper/maven-wrapper.jar
 
 # 민감 정보 (환경 설정은 별도 관리)
-application-oauth.properties
-application-secret.properties
+*.properties
