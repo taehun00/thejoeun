@@ -13,10 +13,9 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import com.pawject.dao.UserDao;
-import com.pawject.dto.AuthDto;
-import com.pawject.dto.UserAuthDto;
-import com.pawject.dto.UserDto;
-import com.pawject.oauth.Oauth2IUserService;
+import com.pawject.dto.user.AuthDto;
+import com.pawject.dto.user.UserAuthDto;
+import com.pawject.dto.user.UserDto;
 import com.pawject.security.CustomUserDetails;
 
 import lombok.extern.slf4j.Slf4j;

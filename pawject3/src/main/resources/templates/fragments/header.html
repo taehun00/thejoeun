@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultrag.net.nz/thymeleaf/layout"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head lang="ko">
     <meta charset="UTF-8">
@@ -39,7 +39,7 @@
 
           <!-- 로그인 사용자 메뉴 -->
           <sec:authorize access="isAuthenticated()">
-          
+           <li class="nav-item"><a class="nav-link"  sec:authorize="isAnonymous()" th:href="@{/faqBoard/faqlist}">고객센터</a></li>
            <li class="nav-item">
             <a class="nav-link" href="${pageContext.request.contextPath}/reviewlist.fn">사료 리뷰</a>
           </li>
@@ -63,7 +63,7 @@
 
           <!-- 비로그인 사용자 메뉴 -->
           <sec:authorize access="isAnonymous()">
-          
+          <li class="nav-item"><a class="nav-link"  sec:authorize="isAnonymous()" th:href="@{/faqBoard/faqlist}">고객센터</a></li> 
           <li class="nav-item">
             <a class="nav-link" href="${pageContext.request.contextPath}/reviewlist.fn">사료 리뷰</a>
           </li>

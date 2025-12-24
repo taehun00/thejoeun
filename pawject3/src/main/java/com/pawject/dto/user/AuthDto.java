@@ -18,4 +18,3 @@ public class AuthDto {
         this.email = email;
     }
 }
-

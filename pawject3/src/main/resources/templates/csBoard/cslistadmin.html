@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+<head lang="ko">
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div layout:fragment="content">
+  <div class="csq-container">
+
+    <h2 class="csq-title">1:1 문의</h2>
+
+   <table class="csqad-table table table-bordered table-hover align-middle text-center">
+        <caption class="visually-hidden">내 1:1 문의</caption>
+        <thead class="table-light">
+        
+		<input type="hidden" id="csrfToken" th:value="${_csrf.token}" />
+		<input type="hidden" id="csrfHeader" th:value="${_csrf.headerName}" />        
+        
+            <tr>
+                <th scope="col">NO.</th>
+                <th scope="col">분류</th>
+                <th scope="col">질문</th>
+                <th scope="col">닉네임</th>
+                <th scope="col">등록일</th>
+                <th scope="col">처리여부</th>
+                <th scope="col">답변작성</th>
+            </tr>
+        </thead>
+
+		<tbody>
+			<!-- 아작스 -->
+		</tbody>
+	</table>
+	<!-- 페이징 -->
+	<div id="pagingArea" class="mt-2 text-center"  ></div>
+
+</div>
+
+<script>
+//토글
+function toggleContent(id) {
+  const row = document.getElementById("content-" + id);
+  row.style.display = (row.style.display === "table-row") ? "none" : "table-row";
+}
+
+//토큰 전역변수 설정
+let csrfToken = $("#csrfToken").val();
+let csrfHeader = $("#csrfHeader").val();
+
+
+// 답변상태변경
+$(document).on("click", ".quickanswer-btn", function() {
+    let questionid = $(this).data("questionid");
+    if(confirm("답변 상태를 변경하시겠습니까?")) {
+        $.ajax({
+            url: "/csBoard/quickanswer",
+            type: "POST",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
+            data: { questionid: questionid },
+            success: function() {
+                 csPaging($("#currentPage").val() || 1); // AJAX 갱신 후 최신 데이터 반영**
+            },
+            error: function() {
+                alert("error");
+            }
+        });
+    }
+});
+
+//페이징
+$(function () {
+    let currentPage = $("#currentPage").val() || 1;
+    csPaging($("#currentPage").val() || 1);
+});
+
+//페이징기능 분리
+function renderPaging(resPaging) {
+	//초기화
+	let pagingHtml = "";
+
+    // 이전
+	if(resPaging.start>1){
+		pagingHtml += 
+			`<button style="border-radius:50px" class="btn btn-sm btn-outline-primary pageBtn" data-page="${resPaging.start-1}">이전</button>`;
+	}
+
+    // 페이지 번호
+	for(let i = resPaging.start; i<=resPaging.end; i++){
+		const active = i === resPaging.current? "btn-primary":"btn-outline-primary"
+		pagingHtml += `<button style="border-radius:50px" class="btn btn-sm ${active} pageBtn ms-2" data-page="${i}">${i}</button>`;	
+	}
+
+	//다음
+	if(resPaging.end<resPaging.pagetotal){
+		pagingHtml += `<button style="border-radius:50px" class="btn btn-sm btn-outline-primary pageBtn" data-page="${resPaging.end+1}">다음</button>`;
+	}
+
+    $("#pagingArea").html(pagingHtml);
+}
+
+//페이징용 아작스
+function csPaging(pstartno){
+	$.ajax({
+		url:"cspaging",
+        type: "GET",
+        data: { pstartno: pstartno },
+        success: function(json) {
+        	csPagingResult(json, pstartno);  // 페이징 기능때매 필요
+        	renderPaging(json.paging);    //페이징 버튼
+        },
+		error:function (xhr) {
+		    console.error("ERROR:", xhr.responseText);
+		    alert("에러 발생: " + xhr.status);}
+	})
+}
+
+//페이징클릭 위임 - 버튼기능 분리로 success 밖으로 뺌
+$(document).on("click", ".pageBtn", function(){
+    const newPage = $(this).data("page");
+    csPaging(newPage);  // 클릭 시 해당 페이지로 호출
+});
+
+//페이징결과랜더링
+function csPagingResult(json, pstartno) {
+    console.log(json);
+ 
+    let list = json.list;
+    let total = json.total;
+    
+    let tbody = $(".csqad-table tbody");
+    tbody.empty();
+
+    $.each(list, function(idx, csq)  {
+    	let number = total - ((pstartno - 1) * 10 + idx);
+    	
+    	//요약-바로 보이는 행
+		let summary = $("<tr>")
+			.addClass("csq-row")
+			.attr("onclick", "toggleContent(" + csq.questionid + ")")
+			.append($("<td>").css("display","none").text(csq.questionid))
+			.append($("<td>").text(number).addClass("col-no"))
+			.append($("<td>").text(csq.category).addClass("col-category"))
+			.append($("<td>").text(csq.title).addClass("col-title"))
+			.append($("<td>").text(csq.nickname).addClass("col-nickname"))
+			.append($("<td>").text(csq.createdat).addClass("col-created"));
+			
+			//버튼들
+			let statusbtn=$("<button>")
+				.addClass("btn quickanswer-btn")
+				.attr("data-questionid", csq.questionid)
+				.addClass(csq.status==1? "btn-success" : "btn-olive")
+				.text(csq.status==1? "답변완료":"답변대기");
+
+				summary.append($("<td>").append(statusbtn).addClass("col-status")); //괄호 조심
+
+				let writebtnTd = $("<td>").addClass("col-action");
+				if(csq.status==0){
+				    let writebtn = $("<a>")
+				        .addClass("btn btn-mint")
+				        .attr("href", "/csBoard/cswriteanswer?questionid=" + csq.questionid)
+				        .text("답변작성");
+				    writebtnTd.append(writebtn);
+				}
+				summary.append(writebtnTd);
+
+	        tbody.append(summary);
+
+
+    	//상세행
+        let detail = $("<tr>").attr("id", "content-" + csq.questionid).hide();
+        let td = $("<td>").attr("colspan", 7).addClass("detail");
+		
+		let content = $("<p>")
+		    .addClass("csq-answer")
+		    .text(csq.content);
+		
+        td.append(content);
+        td.append($("<hr>"));
+        
+        console.log(detail.html());
+
+        //답변 배열
+        if(csq.answers && csq.answers.length > 0) {
+            $.each(csq.answers, function(aIdx, csa) {
+                let answerP = $("<p>").addClass("csq-answer")
+                    .append($("<strong>").text("[답변] "))
+                    .append($("<span>").text(csa.answercontent));
+
+                let createdDiv = $("<div>").addClass("csq-keyword-wrap")
+                    .append($("<p>").text("[작성일] " + csa.createdat));
+
+                td.append(answerP).append(createdDiv);
+            });
+        }
+
+        detail.append(td);
+        tbody.append(detail);
+    });
+}
+</script>
+
+
+
+
+
+	</div><!-- content-->
+</body>
+</html>
