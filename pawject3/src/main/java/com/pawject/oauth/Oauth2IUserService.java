@@ -48,7 +48,7 @@ public class Oauth2IUserService extends DefaultOAuth2UserService {
 		UserDto userParam = new UserDto();
 		userParam.setEmail(email);
 		userParam.setProvider(provider);
-		UserDto user = dao.findUserByEmail(email);			//유저정보가져오기
+		UserDto user = dao.findByEmail(userParam);			//유저정보가져오기
 		
 		if(user == null) { //회원가입
 			user = new UserDto();
@@ -57,22 +57,22 @@ public class Oauth2IUserService extends DefaultOAuth2UserService {
 			user.setProvider(provider);
 			user.setProviderId(providerId);
 			user.setPassword(passwordEncoder.encode(UUID.randomUUID().toString())); //인코딩 적용
-			dao.join(user);
+			dao.insertUser(user);
 			
 			AuthDto auth = new AuthDto();
 			auth.setEmail(email);
 			auth.setAuth("ROLE_MEMBER");
-			dao.joinRole(auth);
+			dao.insertAuth(auth);
 			System.out.println("..... 신규 소셜 사용자가입" + email);
 		}else { //업데이트
 			if( nickname != null && !nickname.isBlank()) {
 				user.setNickname(nickname);
-				dao.update(user);
+				dao.updateUser(user);
 				System.out.println("..... 소셜 사용자 업데이트" + email);
 			}
 		}
 		
-		UserAuthDto authDto = dao.readAuth(userParam);//유저권한확인
+		UserAuthDto authDto = dao.readAuthByEmail(userParam);//유저권한확인
 		CustomUserDetails customUserDetails = new CustomUserDetails(user, authDto);
 		
 		Map<String, Object> attrs = new HashMap<>(oAuth2User.getAttributes());

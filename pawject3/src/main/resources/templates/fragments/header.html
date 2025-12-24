@@ -4,9 +4,6 @@
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head lang="ko">
     <meta charset="UTF-8">
-    <link rel="stylesheet" th:href="@{/css/button.css}">
-	<link rel="stylesheet" th:href="@{/css/review.css}">
-    
     <title>Header</title>
 </head>
 <body>
@@ -14,6 +11,11 @@
 <!-- header fragment 정의 -->
 <th:block th:fragment="header">
 
+<<<<<<< HEAD
+    <div class="p-5 bg-primary text-white text-center">
+      <h1>My First Bootstrap 5 Page</h1>
+      <p>Resize this responsive page to see the effect!</p> 
+=======
 <div class="p-5 bg-primary text-white text-center">
 <p class="mb-0 fs-4 ">🐾&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;🐾</p>
 <h1 class="fw-bold">Pet Food & Wellness</h1>
@@ -101,10 +103,24 @@
         
 		
       </ul>
+>>>>>>> 3271200de55a609a2cf6f402aff476a5d66f00c8
     </div>
 
-  </div>
-</nav>
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+      <div class="container-fluid">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/board/list}">BOARD</a></li>
+        </ul>
+        
+        <ul class="d-flex navbar-nav">
+        	<li class="nav-item"><a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/users/login}">LOGIN</a></li>
+        	<li class="nav-item"><a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/users/join}">JOIN</a></li>
+        	<li class="nav-item"><a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/users/logout}">LOGOUT</a></li>
+        	<li class="nav-item"><a class="nav-link" sec:authentication="principal.username"
+        		sec:authorize="isAuthenticated()" th:href="@{/users/mypage}">B</a></li>
+        </ul>
+      </div>
+    </nav>
 
 </th:block>
 
