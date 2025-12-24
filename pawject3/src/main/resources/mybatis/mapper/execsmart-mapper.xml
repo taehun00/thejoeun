@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pawject.dao.exec.ExecsmartDao">
+ <resultMap id="execsmartMap" type="ExecsmartDto">
+ 	<result property="postId"   column="POSTID"/>
+ 	<result property="execId"   column="EXECID"/>
+	<result property="userId"   column="USERID"/>
+ 	<result property="basedate" column="BASEDATE"/>
+ 	<result property="courseid" column="COURSEID"/>
+ 	<result property="etitle"   column="ETITLE"/>
+ 	<result property="econtent" column="ECONTENT"/>
+ 	<result property="eimg"     column="EIMG"/>
+ 	<result property="ehit"     column="EHIT"/>
+ 	<result property="createdAt" column="CREATEDAT"/>
+ 	<result property="updatedAt" column="UPDATEDAT"/>
+ </resultMap>
+ 
+ 
+ <insert id="insertsmart" parameterType="ExecsmartDto">
+ 	insert into execsmart  (POSTID,                EXECID,   USERID   , COURSEID    , ETITLE  ,  ECONTENT,    EIMG    )
+    values                 (execsmart_seq.nextval, #{execid},#{userid}, #{courseid} , #{etitle}, #{econtent}, #{eimg, jdbcType=VARCHAR} )
+ </insert>
+ 
+ <update id="updatesmart" parameterType="ExecsmartDto">
+  update execsmart 
+	  <set> 
+		  EXECID=#{execid}, 
+		  USERID=#{userid}, 
+		  COURSEID=#{courseid},
+		  ETITLE=#{etitle},  
+		  ECONTENT=#{econtent},
+		  EIMG=#{eimg, jdbcType=VARCHAR}
+	  </set>
+   where POSTID=#{postid} 	
+ </update>
+ 
+ <update id="updateHitsmart" parameterType="int">
+	update  execsmart   
+	<set>EHIT = EHIT + 1</set>
+	 where  POSTID=#{postid} 
+</update>
+
+ <delete id="deletesmart" parameterType="ExecsmartDto">
+ 	delete from execsmart where POSTID=#{postid} and EXECID=#{execid}
+ </delete>
+ 
+ <select resultMap="execsmartMap"  id="selectAllsmart" >
+	select * from execsmart order by postid desc
+ </select>
+ 
+ <select resultMap="execsmartMap"  id="selectsmart" parameterType="int">
+	select * from execsmart where POSTID=#{postid}
+ </select>
+  
+  
+  <!-- 페이징(1) - select10 -->
+  <select id="selectsmart10" parameterType="java.util.HashMap" resultMap="execsmartMap">
+	  select *
+		from (
+		    select row_number() over (order by CREATEDAT desc) as rnum,
+		           POSTID, EXECID, USERID, BASEDATE, COURSEID, ETITLE, ECONTENT, EIMG, EHIT,
+		           CREATEDAT, UPDATEDAT
+		    from execsmart
+		) A
+		where A.rnum between #{start} and #{end}
+  </select>
+  <!-- 페이징(2) - selectsmartTotalCnt -->
+  <select id="selectsmartTotalCnt" resultType="int">
+  	select count(*) from execsmart
+  </select>
+  
+  <!-- 페이징(3) - selectsmart3 -->
+  <select id="selectsmart3" parameterType="java.util.HashMap" resultMap="execsmartMap">
+  	select *
+		from (
+		    select row_number() over (order by CREATEDAT desc) as rnum,
+		           POSTID, EXECID, USERID, BASEDATE, COURSEID, ETITLE, ECONTENT, EIMG, EHIT,
+		           CREATEDAT, UPDATEDAT
+		    from execsmart
+			where ETITLE  LIKE '%' || #{search , jdbcType=VARCHAR} || '%'
+		) A
+	where A.rnum between #{start} and #{end}
+  </select>
+  
+  <!-- 페이징(4) - selectsmartSearchTotalCnt -->
+  <select id="selectsmartSearchTotalCnt" parameterType="string" resultType="int">
+  	select count (*) 
+	from execsmart
+	where ETITLE LIKE '%' || #{search, jdbcType=VARCHAR} || '%'
+  </select>
+</mapper>
+
+<!-- SQL구문 
+insert
+insert into execsmart  (POSTID,                EXECID,   USERID   , COURSEID    , ETITLE  ,  ECONTENT,    EIMG     )
+values                 (execsmart_seq.nextval, #{execid}, #{userid}, #{courseid} , #{etitle}, #{econtent}, #{eimg, jdbcType=VARCHAR} )
+
+update
+update execsmart set EXECID=#{execid}, USERID=#{userid}, COURSEID=#{courseid},
+					ETITLE=#{etitle},  ECONTENT=#{etitle} ,
+                   EIMG=#{eimg, jdbcType=VARCHAR}
+where POSTID=#{postid}
+
+updateHit
+update  execsmart   
+set     EHIT = EHIT + 1   
+where   POSTID=#{postid} 
+
+delect
+delete from execsmart where POSTID=#{postid} and EXECID=#{execid}
+
+selectAll
+select * from execsmart order by postid desc
+
+
+select
+select * from execsmart where POSTID=#{postid}
+
+PAGING_1
+select *
+from (
+    select row_number() over (order by CREATEDAT desc) as rnum,
+           POSTID, EXECID, USERID, BASEDATE, COURSEID, ETITLE, ECONTENT, EIMG, EHIT,
+           CREATEDAT, UPDATEDAT
+    from execsmart
+) A
+where A.rnum between #{start} and #{end}
+
+PAGING_2
+select count(*) from execsmart
+
+PAGING_3
+select *
+from (
+    select row_number() over (order by CREATEDAT desc) as rnum,
+           POSTID, EXECID, USERID, BASEDATE, COURSEID, ETITLE, ECONTENT, EIMG, EHIT,
+           CREATEDAT, UPDATEDAT
+    from execsmart
+	where ETITLE  LIKE '%' || #{search , jdbcType=VARCHAR} || '%'
+) A
+where A.rnum between #{start} and #{end}
+
+PAGING_4
+select count (*) 
+from execsmart
+where ETITLE LIKE '%' || #{search, jdbcType=VARCHAR} || '%'
+
+-->
