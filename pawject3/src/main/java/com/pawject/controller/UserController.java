@@ -118,17 +118,32 @@ public class UserController {
     // 탈퇴 폼
     @GetMapping("/delete")
     public String deleteForm(Principal principal, Model model) {
-        model.addAttribute("dto", service.selectEmail(principal.getName(), "local"));
+        // principal.getName()은 "email:provider" 형태
+        String[] parts = principal.getName().split(":");
+        String email = parts[0];
+        String provider = parts.length > 1 ? parts[1] : "local";
+
+        UserDto dto = service.selectEmail(email, provider);
+        model.addAttribute("dto", dto);
+
         return "users/delete";
     }
-
+    
     // 회원 탈퇴
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/deleteMember")
-    public String deleteMember(UserDto dto, RedirectAttributes rttr,
+    public String deleteMember(UserDto dto,
+                               Principal principal,
+                               RedirectAttributes rttr,
                                HttpServletRequest request,
                                HttpServletResponse response) {
+        // principal에서 email, provider를 다시 세팅
+        String[] parts = principal.getName().split(":");
+        dto.setEmail(parts[0]);
+        dto.setProvider(parts.length > 1 ? parts[1] : "local");
+
         String result = "비밀번호를 확인해주세요";
+
         if (service.delete(dto, true) > 0) {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             if (auth != null) {
@@ -142,4 +157,5 @@ public class UserController {
             return "redirect:/users/mypage";
         }
     }
+
 }
