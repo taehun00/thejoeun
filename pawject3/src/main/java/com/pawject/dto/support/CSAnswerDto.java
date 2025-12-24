@@ -8,7 +8,7 @@ public class CSAnswerDto {
 	private int answerid;
 	private int questionid;
 	private int adminid;
-	private String content;
+	private String answercontent;
 	private String createdat;
 
 }

@@ -7,18 +7,19 @@
     <result property="answerid" column="ANSWERID"/>
     <result property="questionid" column="QUESTIONID"/>
     <result property="adminid"    column="ADMINID"/>
-    <result property="content"  column="CONTENT"/>
+    <result property="answercontent"  column="ANSWERCONTENT"/>
     <result property="createdat"      column="CREATEDAT"/>
   </resultMap> 
  
   <!-- 등록 -->
   <insert id="insertCSA" parameterType="CSAnswerDto">
-	INSERT INTO CSANSWER(ANSWERID, QUESTIONID, ADMINID, CONTENT)
-	        VALUES(CSANSWER_SEQ.NEXTVAL, #{questionid},#{adminid},#{content})
+	INSERT INTO CSANSWER(ANSWERID, QUESTIONID, ADMINID, CONTENT )
+	        VALUES(CSANSWER_SEQ.NEXTVAL, #{questionid},#{adminid},#{answercontent})
   </insert>
   
   <select resultMap="CSAnswerMap" id="selectByQuestionid" parameterType="int">
-  SELECT * FROM CSQUESTION WHERE QUESTIONID=#{questionid}
+    SELECT ANSWERID, QUESTIONID, CONTENT AS answercontent, CREATEDAT
+    FROM CSANSWER WHERE QUESTIONID = #{questionid}
   </select>
 
 </mapper>

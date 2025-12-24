@@ -12,9 +12,11 @@
 <div class="faq-container">
 
     <h2 class="faq-title">자주 묻는 질문</h2>
+     
 
    <table class="faq-table table table-bordered table-hover align-middle text-center">
         <caption class="visually-hidden">FAQ</caption>
+        
         <thead class="table-light">
             <tr>
                 <th scope="col">NO.</th>
@@ -76,7 +78,7 @@
 			    <h4>다른 도움이 필요하신가요?</h4>
 			
 			    <div class="faq-card-wrapper">
-			        <a href="#" class="faq-directquestion">
+			        <a th:href="@{/csBoard/cswrite}"  class="faq-directquestion">
 			            <p>💌1:1 질문하기</p>
 			            <p>궁금하신 사항을 알려주시면</p>
 			            <p>24시간 내 답변을 드려요</p>

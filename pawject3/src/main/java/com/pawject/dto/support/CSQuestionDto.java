@@ -14,7 +14,17 @@ public class CSQuestionDto {
 	public int status;
 	private String createdat;
 	private List<CSAnswerDto> answers;
+	private String nickname;
 	
+	
+	
+    public List<CSAnswerDto> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(List<CSAnswerDto> answers) {
+        this.answers = answers;
+    }
 	
 }
 

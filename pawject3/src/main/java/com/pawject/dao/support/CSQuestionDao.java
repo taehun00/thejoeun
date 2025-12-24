@@ -1,8 +1,11 @@
 package com.pawject.dao.support;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import com.pawject.dto.support.CSQuestionDto;
 
@@ -27,4 +30,25 @@ public interface CSQuestionDao {
 	// <select resultMap="CSQuestionMap" id="selectCSQUser" parameterType="CSQuestionDto">
 	public List<CSQuestionDto> selectCSQUser(CSQuestionDto dto); 
 
+	@Select("SELECT * FROM CSQUESTION WHERE USERID = (SELECT USERID FROM USERS WHERE EMAIL = #{email})")
+	List<CSQuestionDto> selectCSQByEmail(@Param("email") String email);
+	
+	@Select("SELECT USERID FROM USERS WHERE EMAIL = #{email}")
+	int selectUserIdByEmail(@Param("email") String email);
+	
+	
+	
+	//관리자용 페이징+서치
+	
+//	<select  id="select10CSQ"  parameterType="java.util.HashMap"  resultMap="CSQuestionMap">
+	public List<CSQuestionDto> select10CSQ (HashMap<String,Integer> para);
+
+//	<select  id="selectTotalCntCSQ"  resultType="int">
+	public int selectTotalCntCSQ();
+	
+//	<select  id="selectSearchCSQ"  parameterType="java.util.HashMap"  resultMap="CSQuestionMap">
+	public List<CSQuestionDto> selectSearchCSQ(HashMap<String,Object> para);
+	
+//	<select id="selectSearchTotalCntCSQ" parameterType="string" resultType="int">	
+	public int selectSearchTotalCntCSQ(String search);
 }

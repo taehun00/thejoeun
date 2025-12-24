@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+<head lang="ko">
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div layout:fragment="content">
+	
+		<h3 class="card-header">1:1 답변</h3>
+		<form th:action="@{/csBoard/cswriteanswer}" 
+			    method="post"  >
+		 <input type="hidden"   name="questionid"  th:value="${dto.questionid}"> 	    
+			    
+			    
+   <table class="foranswer-table table table-bordered table-hover align-middle text-center">
+        <caption class="visually-hidden">내 1:1 문의</caption>
+
+        <thead class="table-light">
+            <tr>
+                <th scope="col">분류</th>
+                <th scope="col">질문</th>
+                <th scope="col">작성자</th>
+            </tr>
+        </thead>
+
+		<tbody>
+            <tr>
+				<td th:text="${dto.category}"></td>
+				<td th:text="${dto.title}"></td>
+				<td th:text="${dto.nickname}"></td>
+            </tr>
+            <tr>
+            <td colspan="3" th:text="${dto.title}"></td>
+            </tr>
+		</tbody>
+	</table>			
+
+
+			<div class="mb-3">
+				<label for="content" class="form-label">답변</label>
+				<textarea class="form-control" id="answercontent" placeholder="답변을 입력해 주세요"
+					name="answercontent" ></textarea>
+			</div>
+			
+				<div class="mb-3  text-end " >
+					<button type="submit" class="btn btn-primary ms-2">작성완료</button>
+					<a th:href="@{/csBoard/cslistadmin}"  class="btn btn-primary">질문목록</a>
+				</div>	
+		
+		</form> 
+	</div><!-- content-->
+</body>
+</html>
