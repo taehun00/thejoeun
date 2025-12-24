@@ -34,7 +34,7 @@ public class SecurityConfig {
 			.formLogin( form -> form
 					.loginPage("/users/login") 					// 로그인 폼
 					.loginProcessingUrl("/users/loginProc")		// 로그인 경로
-					.defaultSuccessUrl("/users/mainpage", true) 	// 로그인성공시 경로
+					.defaultSuccessUrl("/users/mypage", true) 	// 로그인성공시 경로
 					.failureUrl("/users/fail")					// 로그인실패시 경로
 					.permitAll()
 			)
@@ -57,9 +57,9 @@ public class SecurityConfig {
 		return http.build();
 	}
 	
-	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-		
-		return authConfig.getAuthenticationManager();
-	}
+//		@Bean
+//		public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+//			
+//			return authConfig.getAuthenticationManager();
+//		}
 }
