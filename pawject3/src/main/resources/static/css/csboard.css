@@ -10,6 +10,13 @@
     margin-bottom: 25px;
     font-weight: 600;
 }
+
+.csqad-title {
+    text-align: left;
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+
 .csqad-table thead th,
 .csqad-table tbody td,
 .csq-table thead th,
@@ -88,4 +95,40 @@
     margin-top: 20px;
 }
 
+/* 답변 작성 - 기존 질문 테이블*/
+.foranswer-table{
+	width:1200px;
+	margin:30px;
+	padding:30px;
+}
+
+.foranswer-table thead th,
+.foranswer-table tbody td{
+    vertical-align: middle;
+}
+
+.foranswer-table th:nth-child(1),
+.foranswer-table td:nth-child(1){
+    width: 120px;   
+}
+.foranswer-table th:nth-child(2),
+.foranswer-table td:nth-child(2){
+    width: auto;   
+}
+.foranswer-table th:nth-child(3),
+.foranswer-table td:nth-child(3){
+    width: 200px;   
+}
+
+.questioncontent td{
+	margin:10px;
+	padding:20px;
+	text-align:left;
+}
+
+.answercontent textarea {
+  width: 1200px;
+  display: block;      
+  margin: 0 auto;      
+}
 

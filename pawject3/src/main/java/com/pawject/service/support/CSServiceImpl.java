@@ -90,25 +90,76 @@ public class CSServiceImpl implements CSService {
 		return qdao.selectTotalCntCSQ();
 	}
 
-	
-	
 	//페이징+서치
 	@Override
-	public List<CSQuestionDto> selectSearchCSQ(String keyword, int pageNo) {
-		HashMap<String, Object> para = new HashMap<>();
-		
-		int start = (pageNo-1)*10 + 1; 
-		int end   = start + 9;
-		para.put("start", start);
-		para.put("end"  , end);
-		para.put("search", keyword);
-		
-		return qdao.selectSearchCSQ(para);
-	}
+	public List<CSQuestionDto> selectSearchCSQ(String keyword, String searchType, int pageNo) {
+
+		    if (keyword == null) keyword = "";   
+		    keyword = keyword.toLowerCase();     
+
+		    HashMap<String,Object> para = new HashMap<>();
+		    int start = (pageNo-1)*10 + 1; 
+		    int end   = start + 9;
+		    para.put("start", start);
+		    para.put("end", end);
+		    para.put("search", keyword);
+
+		    String searchLike = "%" + keyword + "%";
+		    switch(searchType) {
+		        case "title":
+		            para.put("searchType", "title");
+		            para.put("search", searchLike);
+		            break;
+		        case "content":
+		            para.put("searchType", "content");
+		            para.put("search", searchLike);
+		            break;
+		        case "nickname":
+		            para.put("searchType", "nickname");
+		            para.put("search", searchLike);
+		            break;
+		        case "all":
+		            para.put("searchType", "all");
+		            para.put("search", searchLike);
+		            break;
+		    }
+
+		    List<CSQuestionDto> questions = qdao.selectSearchCSQ(para);
+		    for(CSQuestionDto q : questions) {
+		        q.setAnswers(adao.selectByQuestionid(q.getQuestionid()));
+		    }
+		    return questions;
+		}
 
 	@Override
-	public int selectSearchTotalCntCSQ(String keyword) {
-		return qdao.selectSearchTotalCntCSQ(keyword);
+	public int selectSearchTotalCntCSQ(String keyword, String searchType) {
+
+	    if (keyword == null) keyword = "";   
+	    keyword = keyword.toLowerCase();     
+	    
+	    HashMap<String, Object> para = new HashMap<>();
+	    String searchLike = "%" + keyword + "%";
+
+	    switch (searchType) {
+	        case "title":
+	            para.put("searchType", "title");
+	            para.put("search", searchLike);
+	            break;
+	        case "content":
+	            para.put("searchType", "content");
+	            para.put("search", searchLike);
+	            break;
+	        case "nickname":
+	            para.put("searchType", "nickname");
+	            para.put("search", searchLike);
+	            break;
+	        case "all":
+	            para.put("searchType", "all");
+	            para.put("search", searchLike);
+	            break;
+	    }
+
+	    return qdao.selectSearchTotalCntCSQ(para);
 	}
 
 	//이메일로 본인 아이디 찾아서 글 가져오기

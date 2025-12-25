@@ -32,14 +32,14 @@
 				<td th:text="${dto.title}"></td>
 				<td th:text="${dto.nickname}"></td>
             </tr>
-            <tr>
-            <td colspan="3" th:text="${dto.title}"></td>
+            <tr class="questioncontent">
+            <td colspan="3" th:text="${dto.content}"></td>
             </tr>
 		</tbody>
 	</table>			
 
 
-			<div class="mb-3">
+			<div class="mb-3 answercontent">
 				<label for="content" class="form-label">답변</label>
 				<textarea class="form-control" id="answercontent" placeholder="답변을 입력해 주세요"
 					name="answercontent" ></textarea>

@@ -10,7 +10,27 @@
 	<div layout:fragment="content">
   <div class="csq-container">
 
-    <h2 class="csq-title">1:1 문의</h2>
+    <h2 class="csqad-title">1:1 문의</h2>
+    
+    		<div class="row my-3">
+			  <div class="col d-flex justify-content-end gap-2">
+			    <select id="searchType" class="form-select" style="width:150px;">
+			      <option value="all">제목+내용</option>
+			      <option value="title">제목</option>
+			      <option value="content">내용</option>
+			      <option value="nickname">닉네임</option>
+			    </select>
+			
+			    <input type="text" id="searchKeyword" placeholder="검색어를 입력해 주세요" class="form-control" style="width:300px;">
+			    <button type="button" class="btn btn-mint" onclick="searchCS()">검색</button>
+			
+			    <!-- 목록보기 버튼도 같은 flex 컨테이너 안에 -->
+			    <a th:href="@{/csBoard/cslistadmin}" 
+			       id="searchlistBtn"
+			       class="btn btn-slateBlue"
+			       style="display:none;">목록보기</a>
+			  </div>
+			</div>
 
    <table class="csqad-table table table-bordered table-hover align-middle text-center">
         <caption class="visually-hidden">내 1:1 문의</caption>
@@ -36,173 +56,224 @@
 	</table>
 	<!-- 페이징 -->
 	<div id="pagingArea" class="mt-2 text-center"  ></div>
+			
 
 </div>
 
 <script>
-//토글
-function toggleContent(id) {
-  const row = document.getElementById("content-" + id);
-  row.style.display = (row.style.display === "table-row") ? "none" : "table-row";
-}
-
-//토큰 전역변수 설정
+// ================= CSRF =================
 let csrfToken = $("#csrfToken").val();
 let csrfHeader = $("#csrfHeader").val();
 
+// ================= 상태 =================
+let currentMode = "list";
+let currentSearchType = "";
+let currentKeyword = "";
+let currentPageNo = 1;
 
-// 답변상태변경
-$(document).on("click", ".quickanswer-btn", function() {
-    let questionid = $(this).data("questionid");
-    if(confirm("답변 상태를 변경하시겠습니까?")) {
-        $.ajax({
-            url: "/csBoard/quickanswer",
-            type: "POST",
-            beforeSend: function(xhr) {
-                xhr.setRequestHeader(csrfHeader, csrfToken);
-            },
-            data: { questionid: questionid },
-            success: function() {
-                 csPaging($("#currentPage").val() || 1); // AJAX 갱신 후 최신 데이터 반영**
-            },
-            error: function() {
-                alert("error");
-            }
-        });
+// ================= 초기 로드 =================
+$(function(){
+  csPaging(1);
+});
+
+// ================= 토글 =================
+function toggleContent(id){
+  const row = document.getElementById("content-" + id);
+  if(!row) return;
+  row.style.display = (row.style.display === "table-row") ? "none" : "table-row";
+}
+
+// ================= 답변 상태 변경 =================
+$(document).on("click", ".quickanswer-btn", function(e){
+  e.stopPropagation();
+  let questionid = $(this).data("questionid");
+
+  if(!confirm("답변 상태를 변경하시겠습니까?")) return;
+
+  $.ajax({
+    url: "/csBoard/quickanswer",
+    type: "POST",
+    beforeSend: function(xhr){
+      xhr.setRequestHeader(csrfHeader, csrfToken);
+    },
+    data: { questionid: questionid },
+    success: function(){
+      if(currentMode === "search"){
+        doCSSearch(currentSearchType, currentKeyword, currentPageNo);
+      } else {
+        csPaging(currentPageNo);
+      }
     }
+  });
 });
 
-//페이징
-$(function () {
-    let currentPage = $("#currentPage").val() || 1;
-    csPaging($("#currentPage").val() || 1);
-});
-
-//페이징기능 분리
-function renderPaging(resPaging) {
-	//초기화
-	let pagingHtml = "";
-
-    // 이전
-	if(resPaging.start>1){
-		pagingHtml += 
-			`<button style="border-radius:50px" class="btn btn-sm btn-outline-primary pageBtn" data-page="${resPaging.start-1}">이전</button>`;
-	}
-
-    // 페이지 번호
-	for(let i = resPaging.start; i<=resPaging.end; i++){
-		const active = i === resPaging.current? "btn-primary":"btn-outline-primary"
-		pagingHtml += `<button style="border-radius:50px" class="btn btn-sm ${active} pageBtn ms-2" data-page="${i}">${i}</button>`;	
-	}
-
-	//다음
-	if(resPaging.end<resPaging.pagetotal){
-		pagingHtml += `<button style="border-radius:50px" class="btn btn-sm btn-outline-primary pageBtn" data-page="${resPaging.end+1}">다음</button>`;
-	}
-
-    $("#pagingArea").html(pagingHtml);
-}
-
-//페이징용 아작스
-function csPaging(pstartno){
-	$.ajax({
-		url:"cspaging",
-        type: "GET",
-        data: { pstartno: pstartno },
-        success: function(json) {
-        	csPagingResult(json, pstartno);  // 페이징 기능때매 필요
-        	renderPaging(json.paging);    //페이징 버튼
-        },
-		error:function (xhr) {
-		    console.error("ERROR:", xhr.responseText);
-		    alert("에러 발생: " + xhr.status);}
-	})
-}
-
-//페이징클릭 위임 - 버튼기능 분리로 success 밖으로 뺌
+// ================= 페이징 버튼 =================
 $(document).on("click", ".pageBtn", function(){
-    const newPage = $(this).data("page");
-    csPaging(newPage);  // 클릭 시 해당 페이지로 호출
+  let page = $(this).data("page");
+  currentPageNo = page;
+
+  if(currentMode === "search"){
+    doCSSearch(currentSearchType, currentKeyword, page);
+  } else {
+    csPaging(page);
+  }
 });
 
-//페이징결과랜더링
-function csPagingResult(json, pstartno) {
-    console.log(json);
- 
-    let list = json.list;
-    let total = json.total;
-    
-    let tbody = $(".csqad-table tbody");
-    tbody.empty();
+// ================= 전체 목록 =================
+function csPaging(pageNo){
+  currentMode = "list";
+  currentPageNo = pageNo;
 
-    $.each(list, function(idx, csq)  {
-    	let number = total - ((pstartno - 1) * 10 + idx);
-    	
-    	//요약-바로 보이는 행
-		let summary = $("<tr>")
-			.addClass("csq-row")
-			.attr("onclick", "toggleContent(" + csq.questionid + ")")
-			.append($("<td>").css("display","none").text(csq.questionid))
-			.append($("<td>").text(number).addClass("col-no"))
-			.append($("<td>").text(csq.category).addClass("col-category"))
-			.append($("<td>").text(csq.title).addClass("col-title"))
-			.append($("<td>").text(csq.nickname).addClass("col-nickname"))
-			.append($("<td>").text(csq.createdat).addClass("col-created"));
-			
-			//버튼들
-			let statusbtn=$("<button>")
-				.addClass("btn quickanswer-btn")
-				.attr("data-questionid", csq.questionid)
-				.addClass(csq.status==1? "btn-success" : "btn-olive")
-				.text(csq.status==1? "답변완료":"답변대기");
+  $.ajax({
+    url: "/csBoard/cspaging",
+    type: "GET",
+    data: { pstartno: pageNo },
+    success: function(json){
+      csPagingResult(json, pageNo);
+      renderPaging(json.paging);
+      $("#searchlistBtn").hide();   // ✅ 기존 방식
+    }
+  });
+}
 
-				summary.append($("<td>").append(statusbtn).addClass("col-status")); //괄호 조심
+// ================= 검색 =================
+function searchCS(){
+  let keyword = $("#searchKeyword").val().trim();
+  let searchType = $("#searchType").val();
 
-				let writebtnTd = $("<td>").addClass("col-action");
-				if(csq.status==0){
-				    let writebtn = $("<a>")
-				        .addClass("btn btn-mint")
-				        .attr("href", "/csBoard/cswriteanswer?questionid=" + csq.questionid)
-				        .text("답변작성");
-				    writebtnTd.append(writebtn);
-				}
-				summary.append(writebtnTd);
+  if(keyword === ""){
+    alert("검색어를 입력해주세요.");
+    return;
+  }
 
-	        tbody.append(summary);
+  doCSSearch(searchType, keyword, 1);
+}
 
+function doCSSearch(searchType, keyword, pageNo){
+  currentMode = "search";
+  currentSearchType = searchType;
+  currentKeyword = keyword;
+  currentPageNo = pageNo;
 
-    	//상세행
-        let detail = $("<tr>").attr("id", "content-" + csq.questionid).hide();
-        let td = $("<td>").attr("colspan", 7).addClass("detail");
-		
-		let content = $("<p>")
-		    .addClass("csq-answer")
-		    .text(csq.content);
-		
-        td.append(content);
-        td.append($("<hr>"));
-        
-        console.log(detail.html());
+  $.ajax({
+    url: "/csBoard/cssearchpaging",
+    type: "GET",
+    data: { searchType: searchType, keyword: keyword, pageNo: pageNo },
+    success: function(json){
+      if(!json.list || json.list.length === 0){
+        alert("검색 결과가 없습니다.");
+        return;
+      }
 
-        //답변 배열
-        if(csq.answers && csq.answers.length > 0) {
-            $.each(csq.answers, function(aIdx, csa) {
-                let answerP = $("<p>").addClass("csq-answer")
-                    .append($("<strong>").text("[답변] "))
-                    .append($("<span>").text(csa.answercontent));
+      csPagingResult(json, pageNo);
+      renderPaging(json.paging);
+      $("#searchlistBtn").show();   // ✅ 기존 방식
+    }
+  });
+}
 
-                let createdDiv = $("<div>").addClass("csq-keyword-wrap")
-                    .append($("<p>").text("[작성일] " + csa.createdat));
+// ================= 페이징 결과 렌더링 =================
+function csPagingResult(json, pstartno){
+  let list = json.list;
+  let total = json.total;
+  let tbody = $(".csqad-table tbody");
+  tbody.empty();
 
-                td.append(answerP).append(createdDiv);
-            });
-        }
+  if(!list || list.length === 0){
+    tbody.append('<tr><td colspan="7">게시글이 없습니다.</td></tr>');
+    return;
+  }
 
-        detail.append(td);
-        tbody.append(detail);
-    });
+  $.each(list, function(idx, csq){
+    let number = total - ((pstartno - 1) * 10 + idx);
+
+    // 요약 행
+    let summary = $("<tr>")
+      .addClass("csq-row")
+      .attr("onclick", "toggleContent(" + csq.questionid + ")")
+      .append($("<td>").css("display","none").text(csq.questionid))
+      .append($("<td>").addClass("col-no").text(number))
+      .append($("<td>").addClass("col-category").text(csq.category))
+      .append($("<td>").addClass("col-title").text(csq.title))
+      .append($("<td>").addClass("col-nickname").text(csq.nickname))
+      .append($("<td>").addClass("col-created").text(csq.createdat));
+
+    let statusBtn = $("<button>")
+      .addClass("btn quickanswer-btn")
+      .addClass(csq.status==1 ? "btn-success" : "btn-olive")
+      .attr("data-questionid", csq.questionid)
+      .text(csq.status==1 ? "답변완료" : "답변대기");
+
+    summary.append($("<td>").addClass("col-status").append(statusBtn));
+
+    let actionTd = $("<td>").addClass("col-action");
+    if(csq.status==0){
+      actionTd.append(
+        $("<a>")
+          .addClass("btn btn-mint")
+          .attr("href", "/csBoard/cswriteanswer?questionid=" + csq.questionid)
+          .text("답변작성")
+      );
+    }
+    summary.append(actionTd);
+    tbody.append(summary);
+
+    // 상세 행
+    let detail = $("<tr>")
+      .attr("id", "content-" + csq.questionid)
+      .hide();
+
+    let td = $("<td>").attr("colspan", 7).addClass("detail");
+    td.append($("<p>").addClass("csq-answer").text(csq.content));
+    td.append($("<hr>"));
+
+    if(csq.answers && csq.answers.length > 0){
+      $.each(csq.answers, function(i, csa){
+        td.append(
+          $("<p>").addClass("csq-answer")
+            .append($("<strong>").text("[답변] "))
+            .append($("<span>").text(csa.answercontent))
+        );
+        td.append(
+          $("<div>").addClass("csq-keyword-wrap")
+            .append($("<p>").text("[작성일] " + csa.createdat))
+        );
+      });
+    }
+
+    detail.append(td);
+    tbody.append(detail);
+  });
+}
+
+// ================= 페이징 렌더 =================
+function renderPaging(p){
+  let area = $("#pagingArea");
+  area.empty();
+
+  if(!p || p.pagetotal <= 1) return;
+
+  let html = "";
+  let end = Math.min(p.end, p.pagetotal);
+
+  if(p.start > 1){
+    html += `<button class="btn btn-sm btn-outline-primary pageBtn" data-page="${p.start-1}">이전</button>`;
+  }
+
+  for(let i=p.start; i<=end; i++){
+    let active = (i === p.current) ? "btn-primary" : "btn-outline-primary";
+    html += `<button class="btn btn-sm ${active} pageBtn ms-2" data-page="${i}">${i}</button>`;
+  }
+
+  if(end < p.pagetotal){
+    html += `<button class="btn btn-sm btn-outline-primary pageBtn ms-2" data-page="${end+1}">다음</button>`;
+  }
+
+  area.html(html);
 }
 </script>
+
+
 
 
 

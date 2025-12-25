@@ -39,7 +39,7 @@ public class CSController {
 	    return "csBoard/cslistuser";
 	    
 	}
-	
+	////////////////////////
 	
 	//전체 글 조회 
 	@GetMapping("/cslistadmin")
@@ -70,30 +70,32 @@ public class CSController {
     }
   
 
-	 
-
+	  @GetMapping("/cssearchpaging")
+	  @ResponseBody
+	  public Map<String, Object> cssearchpaging(
+	      @RequestParam("searchType") String searchType,
+	      @RequestParam(value="pageNo", defaultValue="1") int pageNo,
+	      @RequestParam(value="keyword", required=false) String keyword){
 	
+	      Map<String, Object> result = new HashMap<>();
 	
+	      // 🔥 searchType 반영된 total
+	      int total = service.selectSearchTotalCntCSQ(keyword, searchType);
 	
+	      List<CSQuestionDto> list =
+	          service.selectSearchCSQ(keyword, searchType, pageNo);
 	
-	//(서치+페이징)	
-	@GetMapping("/search")
-	@ResponseBody
-	public Map<String, Object>  search(
-		@RequestParam(value="pageNo"  , defaultValue="1")  int pageNo ,
-		@RequestParam(value="keyword" , required=false  )  String keyword
-	){
+	      UtilPaging paging = new UtilPaging(total, pageNo);
 	
-		Map<String, Object> result = new HashMap<>();
-		int totalCnt = service.selectSearchTotalCntCSQ(keyword);
-		
-		result.put("search", keyword);
-		result.put("list"  , service.selectSearchCSQ(keyword, pageNo));
-		result.put("paging", new UtilPaging(  totalCnt      , pageNo , 5, 10)); //3. 페이징계산
-		return result;                        //키워드검색갯수, 페이지번호, 몇개씩, 하단블록
-	}
+	      result.put("total", total);   
+	      result.put("list", list);
+	      result.put("paging", paging);
+	      result.put("search", keyword);
 	
+	      return result;
+	  }
 	
+	/////////////////////////////////
 	//질문 작성
 	@GetMapping("/cswrite") public String write_get(Model model) {  
 		model.addAttribute("categories", List.of("계정", "서비스", "이벤트", "기타"));

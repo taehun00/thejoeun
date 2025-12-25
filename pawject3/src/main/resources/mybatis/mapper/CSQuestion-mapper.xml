@@ -83,20 +83,23 @@
 		    Q.QUESTIONID, Q.USERID, Q.CATEGORY, Q.TITLE, Q.CONTENT, Q.STATUS, Q.CREATEDAT, U.NICKNAME
 			FROM CSQUESTION Q LEFT JOIN USERS U ON(Q.USERID=U.USERID)
 	    <where>
-	        <choose>
-	            <when test="searchType == 'title'">
-	              lower(q.title) like #{search}
-	            </when>
-	            
-	            <when test="searchType == 'status'">
-	                q.status = #{search} 
-	            </when>
-	            
-				<when test="searchType == 'userid'">
-				    u.nickname like #{search}
-				</when>
-
-	        </choose>
+			<choose>
+			    <when test="searchType == 'title'">
+			        lower(q.title) like #{search}
+			    </when>
+			    <when test="searchType == 'content'">
+			        lower(q.content) like #{search}
+			    </when>
+			    <when test="searchType == 'nickname'">
+			        lower(u.nickname) like #{search}
+			    </when>
+			    <when test="searchType == 'all'">
+			        lower(q.title) like #{search} or lower(q.content) like #{search}
+			    </when>
+			    <otherwise>
+			        1=1
+			    </otherwise>
+			</choose>
 	    </where>
 		) A  
 		where  A.rnum  between  #{start}  and #{end}	
@@ -106,26 +109,34 @@
 	</select> 
 	
 	<!-- 페이징+검색어(4) 검색어 기준 전체 건수 -->
-	<select id="selectSearchTotalCntCSQ" parameterType="string" resultType="int">
-	    SELECT COUNT(*)
-	    FROM CSQUESTION
-	    <where>
-	        <choose>
-	            <when test="searchType == 'title'">
-	              lower(title) like #{search}
-	            </when>
-	            
-	            <when test="searchType == 'status'">
-	                status = #{search} 
-	            </when>
-	            
-				<when test="searchType == 'userid'">
-				    userid like #{search}
-				</when>
-
-	        </choose>
-	    </where>
-	</select>
+		<select id="selectSearchTotalCntCSQ"
+		        parameterType="java.util.HashMap"
+		        resultType="int">
+		
+		    SELECT COUNT(*)
+		    FROM CSQUESTION Q
+		    LEFT JOIN USERS U ON (Q.USERID = U.USERID)
+		    <where>
+		        <choose>
+		            <when test="searchType == 'title'">
+		                lower(Q.TITLE) like #{search}
+		            </when>
+		            <when test="searchType == 'content'">
+		                lower(Q.CONTENT) like #{search}
+		            </when>
+		            <when test="searchType == 'nickname'">
+		                lower(U.NICKNAME) like #{search}
+		            </when>
+		            <when test="searchType == 'all'">
+		                lower(Q.TITLE) like #{search}
+		                or lower(Q.CONTENT) like #{search}
+		            </when>
+		            <otherwise>
+		                1=1
+		            </otherwise>
+		        </choose>
+		    </where>
+		</select>
 
 
 
