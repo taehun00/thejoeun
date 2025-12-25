@@ -60,26 +60,53 @@
 
 
 
+
 	<!-- 페이징 (1) -->
-	<select  id="select10CSQ"  parameterType="java.util.HashMap"  resultMap="CSQuestionMap">
-		select * from(
-			select row_number() over(order by questionid desc)  as rnum, 
-		    Q.QUESTIONID, Q.USERID, Q.CATEGORY, Q.TITLE, Q.CONTENT, Q.STATUS, Q.CREATEDAT, U.NICKNAME
-			FROM CSQUESTION Q LEFT JOIN USERS U ON(Q.USERID=U.USERID)
-		) A  
-		where  A.rnum  between  #{start}  and #{end}
-		order by questionid desc
+	<select id="select10CSQ" parameterType="java.util.HashMap" resultMap="CSQuestionMap">
+	    SELECT *
+	    FROM (
+	        SELECT 
+	            ROW_NUMBER() OVER (
+	                <choose>
+	                    <when test="condition == 'noanswer'">
+	                        ORDER BY Q.STATUS ASC, Q.QUESTIONID DESC
+	                    </when>
+	                    <when test="condition == 'answerend'">
+	                        ORDER BY Q.STATUS DESC, Q.QUESTIONID DESC
+	                    </when>
+	                    <otherwise>
+	                        ORDER BY Q.QUESTIONID DESC
+	                    </otherwise>
+	                </choose>
+	            ) AS rnum,
+	            Q.QUESTIONID, Q.USERID, Q.CATEGORY, Q.TITLE, Q.CONTENT,
+	            Q.STATUS, Q.CREATEDAT, U.NICKNAME
+	        FROM CSQUESTION Q
+	        LEFT JOIN USERS U ON Q.USERID = U.USERID
+	    )
+	    WHERE rnum BETWEEN #{start} AND #{end}
 	</select>
 
 	<!-- 페이징 (2) -->
 	<select  id="selectTotalCntCSQ"  resultType="int">
-		select count(*)  from CSQUESTION order by questionid desc
+		select count(*)  from CSQUESTION 
 	</select>
 	
 	<!-- 페이징+검색어(3) -->
 	<select  id="selectSearchCSQ"  parameterType="java.util.HashMap"  resultMap="CSQuestionMap">
 		select * from(
-			select row_number() over(order by questionid desc)  as rnum, 
+			select row_number() over(
+	                <choose>
+	                    <when test="condition == 'noanswer'">
+	                        ORDER BY Q.STATUS ASC, Q.QUESTIONID DESC
+	                    </when>
+	                    <when test="condition == 'answerend'">
+	                        ORDER BY Q.STATUS DESC, Q.QUESTIONID DESC
+	                    </when>
+	                    <otherwise>
+	                        ORDER BY Q.QUESTIONID DESC
+	                    </otherwise>
+	                </choose>			)  as rnum, 
 		    Q.QUESTIONID, Q.USERID, Q.CATEGORY, Q.TITLE, Q.CONTENT, Q.STATUS, Q.CREATEDAT, U.NICKNAME
 			FROM CSQUESTION Q LEFT JOIN USERS U ON(Q.USERID=U.USERID)
 	    <where>
@@ -103,7 +130,7 @@
 	    </where>
 		) A  
 		where  A.rnum  between  #{start}  and #{end}	
-		order by questionid desc
+
 	
 
 	</select> 

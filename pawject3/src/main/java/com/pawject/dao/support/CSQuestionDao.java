@@ -42,7 +42,7 @@ public interface CSQuestionDao {
 	//관리자용 페이징+서치
 	
 //	<select  id="select10CSQ"  parameterType="java.util.HashMap"  resultMap="CSQuestionMap">
-	public List<CSQuestionDto> select10CSQ (HashMap<String,Integer> para);
+	public List<CSQuestionDto> select10CSQ (HashMap<String,Object> para);
 
 //	<select  id="selectTotalCntCSQ"  resultType="int">
 	public int selectTotalCntCSQ();

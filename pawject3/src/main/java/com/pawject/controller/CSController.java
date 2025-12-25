@@ -53,11 +53,12 @@ public class CSController {
   @RequestMapping("/cspaging")
   @ResponseBody
     public Map<String, Object> cspaging(
-    		@RequestParam(defaultValue="1") int pstartno){	
+    		@RequestParam(defaultValue="1") int pstartno,
+    		@RequestParam(required=false) String condition){	
     	Map<String, Object> result = new HashMap<>();
 
     	int total= service.selectTotalCntCSQ();
-    	List<CSQuestionDto> list = service.select10CSQ(pstartno);
+    	List<CSQuestionDto> list = service.select10CSQ(condition, pstartno);
     	
         // UtilPaging 활용 - 이거 없으면 버튼 안나타남
         UtilPaging paging = new UtilPaging(total, pstartno);  
@@ -75,15 +76,16 @@ public class CSController {
 	  public Map<String, Object> cssearchpaging(
 	      @RequestParam("searchType") String searchType,
 	      @RequestParam(value="pageNo", defaultValue="1") int pageNo,
-	      @RequestParam(value="keyword", required=false) String keyword){
+	      @RequestParam(value="keyword", required=false) String keyword,
+	      @RequestParam(required=false) String condition){
 	
 	      Map<String, Object> result = new HashMap<>();
 	
-	      // 🔥 searchType 반영된 total
+
 	      int total = service.selectSearchTotalCntCSQ(keyword, searchType);
 	
 	      List<CSQuestionDto> list =
-	          service.selectSearchCSQ(keyword, searchType, pageNo);
+	          service.selectSearchCSQ(keyword, searchType, condition, pageNo);
 	
 	      UtilPaging paging = new UtilPaging(total, pageNo);
 	

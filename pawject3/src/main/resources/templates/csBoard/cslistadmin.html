@@ -13,7 +13,7 @@
     <h2 class="csqad-title">1:1 문의</h2>
     
     		<div class="row my-3">
-			  <div class="col d-flex justify-content-end gap-2">
+			  <div class="col d-flex justify-content-center gap-2">
 			    <select id="searchType" class="form-select" style="width:150px;">
 			      <option value="all">제목+내용</option>
 			      <option value="title">제목</option>
@@ -30,6 +30,14 @@
 			       class="btn btn-slateBlue"
 			       style="display:none;">목록보기</a>
 			  </div>
+			  
+			  	<select id="condition" class="condition form-select justify-content-end" style="width:120px;">
+			      <option value="">최신</option>
+			      <option value="noanswer">답변대기</option>
+			      <option value="answerend">답변완료</option>
+			    </select>
+			  
+			  
 			</div>
 
    <table class="csqad-table table table-bordered table-hover align-middle text-center">
@@ -61,29 +69,32 @@
 </div>
 
 <script>
-// ================= CSRF =================
+// 전역변수-토큰
 let csrfToken = $("#csrfToken").val();
 let csrfHeader = $("#csrfHeader").val();
 
-// ================= 상태 =================
+// 전역변수-페이징 화면 분기
 let currentMode = "list";
 let currentSearchType = "";
 let currentKeyword = "";
 let currentPageNo = 1;
 
-// ================= 초기 로드 =================
+//전역변수-정렬
+let currentCondition = null;  
+
+// 초기 로드
 $(function(){
   csPaging(1);
 });
 
-// ================= 토글 =================
+// 토글
 function toggleContent(id){
   const row = document.getElementById("content-" + id);
   if(!row) return;
   row.style.display = (row.style.display === "table-row") ? "none" : "table-row";
 }
 
-// ================= 답변 상태 변경 =================
+// 답변 상태 전환
 $(document).on("click", ".quickanswer-btn", function(e){
   e.stopPropagation();
   let questionid = $(this).data("questionid");
@@ -107,7 +118,21 @@ $(document).on("click", ".quickanswer-btn", function(e){
   });
 });
 
-// ================= 페이징 버튼 =================
+
+
+// 답변 상태 정렬
+$(document).on("change", ".condition", function () {
+    currentCondition = $(this).val() || null;
+    currentPageNo = 1;
+
+    if (currentMode === "search") {
+        doCSSearch(currentSearchType, currentKeyword, 1);
+    } else {
+        csPaging(1);
+    }
+});
+
+//페이징 버튼
 $(document).on("click", ".pageBtn", function(){
   let page = $(this).data("page");
   currentPageNo = page;
@@ -119,27 +144,31 @@ $(document).on("click", ".pageBtn", function(){
   }
 });
 
-// ================= 전체 목록 =================
+// 전체 리스트 페이지
 function csPaging(pageNo){
   currentMode = "list";
   currentPageNo = pageNo;
-
+  
+  let data = { pstartno: pageNo };
+  if (currentCondition) data.condition = currentCondition;	
+  
   $.ajax({
     url: "/csBoard/cspaging",
     type: "GET",
-    data: { pstartno: pageNo },
-    success: function(json){
+    data: data,
+    success: function(json){	
       csPagingResult(json, pageNo);
       renderPaging(json.paging);
-      $("#searchlistBtn").hide();   // ✅ 기존 방식
+      $("#searchlistBtn").hide();   
     }
   });
 }
 
-// ================= 검색 =================
+//검색
 function searchCS(){
   let keyword = $("#searchKeyword").val().trim();
   let searchType = $("#searchType").val();
+  
 
   if(keyword === ""){
     alert("검색어를 입력해주세요.");
@@ -149,16 +178,24 @@ function searchCS(){
   doCSSearch(searchType, keyword, 1);
 }
 
+//검색 
 function doCSSearch(searchType, keyword, pageNo){
   currentMode = "search";
   currentSearchType = searchType;
   currentKeyword = keyword;
   currentPageNo = pageNo;
+  
+  let data = {
+		  searchType: searchType,
+		  keyword: keyword,
+		  pageNo: pageNo
+		};
+  if (currentCondition) data.condition = currentCondition;
 
   $.ajax({
     url: "/csBoard/cssearchpaging",
     type: "GET",
-    data: { searchType: searchType, keyword: keyword, pageNo: pageNo },
+    data: data,
     success: function(json){
       if(!json.list || json.list.length === 0){
         alert("검색 결과가 없습니다.");
@@ -167,12 +204,12 @@ function doCSSearch(searchType, keyword, pageNo){
 
       csPagingResult(json, pageNo);
       renderPaging(json.paging);
-      $("#searchlistBtn").show();   // ✅ 기존 방식
+      $("#searchlistBtn").show();   
     }
   });
 }
 
-// ================= 페이징 결과 렌더링 =================
+// 페이징 결과
 function csPagingResult(json, pstartno){
   let list = json.list;
   let total = json.total;
@@ -246,7 +283,7 @@ function csPagingResult(json, pstartno){
   });
 }
 
-// ================= 페이징 렌더 =================
+// 페이징 랜더
 function renderPaging(p){
   let area = $("#pagingArea");
   area.empty();
