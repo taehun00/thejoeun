@@ -11,8 +11,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import com.pawject.dto.UserAuthDto;
-import com.pawject.dto.UserDto;
+import com.pawject.dto.user.UserAuthDto;
+import com.pawject.dto.user.UserDto;
 
 public class CustomUserDetails implements UserDetails, OAuth2User{
 	private UserDto user;
@@ -36,8 +36,7 @@ public class CustomUserDetails implements UserDetails, OAuth2User{
 	}
 	@Override
 	public String getUsername() {
-		//return user.getEmail() + ":" + user.getProvider(); // 1@1:local , 2@2:kakao
-		return user.getEmail();
+		return user.getEmail() + ":" + user.getProvider(); // 1@1:local , 2@2:kakao
 	}
 	@Override
 	public boolean isAccountNonExpired() {

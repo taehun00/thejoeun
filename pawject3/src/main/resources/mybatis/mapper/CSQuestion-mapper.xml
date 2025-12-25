@@ -60,72 +60,110 @@
 
 
 
+
 	<!-- 페이징 (1) -->
-	<select  id="select10CSQ"  parameterType="java.util.HashMap"  resultMap="CSQuestionMap">
-		select * from(
-			select row_number() over(order by questionid desc)  as rnum, 
-		    Q.QUESTIONID, Q.USERID, Q.CATEGORY, Q.TITLE, Q.CONTENT, Q.STATUS, Q.CREATEDAT, U.NICKNAME
-			FROM CSQUESTION Q LEFT JOIN USERS U ON(Q.USERID=U.USERID)
-		) A  
-		where  A.rnum  between  #{start}  and #{end}
-		order by questionid desc
+	<select id="select10CSQ" parameterType="java.util.HashMap" resultMap="CSQuestionMap">
+	    SELECT *
+	    FROM (
+	        SELECT 
+	            ROW_NUMBER() OVER (
+	                <choose>
+	                    <when test="condition == 'noanswer'">
+	                        ORDER BY Q.STATUS ASC, Q.QUESTIONID DESC
+	                    </when>
+	                    <when test="condition == 'answerend'">
+	                        ORDER BY Q.STATUS DESC, Q.QUESTIONID DESC
+	                    </when>
+	                    <otherwise>
+	                        ORDER BY Q.QUESTIONID DESC
+	                    </otherwise>
+	                </choose>
+	            ) AS rnum,
+	            Q.QUESTIONID, Q.USERID, Q.CATEGORY, Q.TITLE, Q.CONTENT,
+	            Q.STATUS, Q.CREATEDAT, U.NICKNAME
+	        FROM CSQUESTION Q
+	        LEFT JOIN USERS U ON Q.USERID = U.USERID
+	    )
+	    WHERE rnum BETWEEN #{start} AND #{end}
 	</select>
 
 	<!-- 페이징 (2) -->
 	<select  id="selectTotalCntCSQ"  resultType="int">
-		select count(*)  from CSQUESTION order by questionid desc
+		select count(*)  from CSQUESTION 
 	</select>
 	
 	<!-- 페이징+검색어(3) -->
 	<select  id="selectSearchCSQ"  parameterType="java.util.HashMap"  resultMap="CSQuestionMap">
 		select * from(
-			select row_number() over(order by questionid desc)  as rnum, 
+			select row_number() over(
+	                <choose>
+	                    <when test="condition == 'noanswer'">
+	                        ORDER BY Q.STATUS ASC, Q.QUESTIONID DESC
+	                    </when>
+	                    <when test="condition == 'answerend'">
+	                        ORDER BY Q.STATUS DESC, Q.QUESTIONID DESC
+	                    </when>
+	                    <otherwise>
+	                        ORDER BY Q.QUESTIONID DESC
+	                    </otherwise>
+	                </choose>			)  as rnum, 
 		    Q.QUESTIONID, Q.USERID, Q.CATEGORY, Q.TITLE, Q.CONTENT, Q.STATUS, Q.CREATEDAT, U.NICKNAME
 			FROM CSQUESTION Q LEFT JOIN USERS U ON(Q.USERID=U.USERID)
 	    <where>
-	        <choose>
-	            <when test="searchType == 'title'">
-	              lower(q.title) like #{search}
-	            </when>
-	            
-	            <when test="searchType == 'status'">
-	                q.status = #{search} 
-	            </when>
-	            
-				<when test="searchType == 'userid'">
-				    u.nickname like #{search}
-				</when>
-
-	        </choose>
+			<choose>
+			    <when test="searchType == 'title'">
+			        lower(q.title) like #{search}
+			    </when>
+			    <when test="searchType == 'content'">
+			        lower(q.content) like #{search}
+			    </when>
+			    <when test="searchType == 'nickname'">
+			        lower(u.nickname) like #{search}
+			    </when>
+			    <when test="searchType == 'all'">
+			        lower(q.title) like #{search} or lower(q.content) like #{search}
+			    </when>
+			    <otherwise>
+			        1=1
+			    </otherwise>
+			</choose>
 	    </where>
 		) A  
 		where  A.rnum  between  #{start}  and #{end}	
-		order by questionid desc
+
 	
 
 	</select> 
 	
 	<!-- 페이징+검색어(4) 검색어 기준 전체 건수 -->
-	<select id="selectSearchTotalCntCSQ" parameterType="string" resultType="int">
-	    SELECT COUNT(*)
-	    FROM CSQUESTION
-	    <where>
-	        <choose>
-	            <when test="searchType == 'title'">
-	              lower(title) like #{search}
-	            </when>
-	            
-	            <when test="searchType == 'status'">
-	                status = #{search} 
-	            </when>
-	            
-				<when test="searchType == 'userid'">
-				    userid like #{search}
-				</when>
-
-	        </choose>
-	    </where>
-	</select>
+		<select id="selectSearchTotalCntCSQ"
+		        parameterType="java.util.HashMap"
+		        resultType="int">
+		
+		    SELECT COUNT(*)
+		    FROM CSQUESTION Q
+		    LEFT JOIN USERS U ON (Q.USERID = U.USERID)
+		    <where>
+		        <choose>
+		            <when test="searchType == 'title'">
+		                lower(Q.TITLE) like #{search}
+		            </when>
+		            <when test="searchType == 'content'">
+		                lower(Q.CONTENT) like #{search}
+		            </when>
+		            <when test="searchType == 'nickname'">
+		                lower(U.NICKNAME) like #{search}
+		            </when>
+		            <when test="searchType == 'all'">
+		                lower(Q.TITLE) like #{search}
+		                or lower(Q.CONTENT) like #{search}
+		            </when>
+		            <otherwise>
+		                1=1
+		            </otherwise>
+		        </choose>
+		    </where>
+		</select>
 
 
 

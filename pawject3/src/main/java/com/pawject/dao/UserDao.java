@@ -1,27 +1,16 @@
 package com.pawject.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Mapper;
 
-import com.pawject.dto.AuthDto;
-import com.pawject.dto.UserAuthDto;
-import com.pawject.dto.UserDto;
+import com.pawject.dto.user.UserDto;
+import com.pawject.dto.user.AuthDto;
+import com.pawject.dto.user.UserAuthDto;
 
 @Mapper
 public interface UserDao {
-<<<<<<< HEAD
-	/* 회원관리 */
-	public int insertUser(UserDto dto);
-	public UserAuthDto readAuthByEmail(UserDto dto);
-	public UserDto findByEmail(UserDto dto);
-	public int iddoubleByEmail(UserDto dto);
-	public int updateUser(UserDto dto);
-	public int deleteUser(UserDto dto);
-	
-	/* 권한관리 */
-	public int insertAuth(AuthDto dto);
-	public int deleteAuth(AuthDto dto);
-}
-=======
 
     // 회원가입
     int join(UserDto dto);
@@ -45,11 +34,11 @@ public interface UserDao {
     int joinRole(AuthDto dto);
 
     // 권한 삭제
-    int deleteRolesByUserId(int userId);
-
+    int deleteRolesByEmail(String email);
 
     // 마이페이지
     UserDto myPage(UserDto dto);
+
     // 아이디 찾기
     String findId(UserDto dto);
 
@@ -77,4 +66,3 @@ public interface UserDao {
     // 로그인: 이메일 기준 사용자 + 권한
     UserAuthDto readAuth(UserDto dto);
 }
->>>>>>> 3271200de55a609a2cf6f402aff476a5d66f00c8

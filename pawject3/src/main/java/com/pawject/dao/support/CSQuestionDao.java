@@ -2,6 +2,7 @@ package com.pawject.dao.support;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -41,7 +42,7 @@ public interface CSQuestionDao {
 	//관리자용 페이징+서치
 	
 //	<select  id="select10CSQ"  parameterType="java.util.HashMap"  resultMap="CSQuestionMap">
-	public List<CSQuestionDto> select10CSQ (HashMap<String,Integer> para);
+	public List<CSQuestionDto> select10CSQ (HashMap<String,Object> para);
 
 //	<select  id="selectTotalCntCSQ"  resultType="int">
 	public int selectTotalCntCSQ();
@@ -50,5 +51,5 @@ public interface CSQuestionDao {
 	public List<CSQuestionDto> selectSearchCSQ(HashMap<String,Object> para);
 	
 //	<select id="selectSearchTotalCntCSQ" parameterType="string" resultType="int">	
-	public int selectSearchTotalCntCSQ(String search);
+	int selectSearchTotalCntCSQ(Map<String, Object> para);
 }

@@ -28,11 +28,11 @@ public interface CSService {
 	
 	
 	//페이징
-	public List<CSQuestionDto> select10CSQ (int pageNo);
+	public List<CSQuestionDto> select10CSQ (String condition, int pageNo);
 	public int selectTotalCntCSQ();
 	
 	//페이징+서치
-	public List<CSQuestionDto> selectSearchCSQ( String keyword ,int pageNo);
-	public int selectSearchTotalCntCSQ(String keyword);
+	public List<CSQuestionDto> selectSearchCSQ( String keyword, String searchType, String condition, int pageNo);
+	int selectSearchTotalCntCSQ(String keyword, String searchType);
 	
 }

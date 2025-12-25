@@ -39,7 +39,7 @@ public class CSController {
 	    return "csBoard/cslistuser";
 	    
 	}
-	
+	////////////////////////
 	
 	//전체 글 조회 
 	@GetMapping("/cslistadmin")
@@ -53,11 +53,12 @@ public class CSController {
   @RequestMapping("/cspaging")
   @ResponseBody
     public Map<String, Object> cspaging(
-    		@RequestParam(defaultValue="1") int pstartno){	
+    		@RequestParam(defaultValue="1") int pstartno,
+    		@RequestParam(required=false) String condition){	
     	Map<String, Object> result = new HashMap<>();
 
     	int total= service.selectTotalCntCSQ();
-    	List<CSQuestionDto> list = service.select10CSQ(pstartno);
+    	List<CSQuestionDto> list = service.select10CSQ(condition, pstartno);
     	
         // UtilPaging 활용 - 이거 없으면 버튼 안나타남
         UtilPaging paging = new UtilPaging(total, pstartno);  
@@ -70,30 +71,33 @@ public class CSController {
     }
   
 
-	 
+	  @GetMapping("/cssearchpaging")
+	  @ResponseBody
+	  public Map<String, Object> cssearchpaging(
+	      @RequestParam("searchType") String searchType,
+	      @RequestParam(value="pageNo", defaultValue="1") int pageNo,
+	      @RequestParam(value="keyword", required=false) String keyword,
+	      @RequestParam(required=false) String condition){
+	
+	      Map<String, Object> result = new HashMap<>();
+	
 
+	      int total = service.selectSearchTotalCntCSQ(keyword, searchType);
 	
+	      List<CSQuestionDto> list =
+	          service.selectSearchCSQ(keyword, searchType, condition, pageNo);
 	
+	      UtilPaging paging = new UtilPaging(total, pageNo);
 	
+	      result.put("total", total);   
+	      result.put("list", list);
+	      result.put("paging", paging);
+	      result.put("search", keyword);
 	
-	//(서치+페이징)	
-	@GetMapping("/search")
-	@ResponseBody
-	public Map<String, Object>  search(
-		@RequestParam(value="pageNo"  , defaultValue="1")  int pageNo ,
-		@RequestParam(value="keyword" , required=false  )  String keyword
-	){
+	      return result;
+	  }
 	
-		Map<String, Object> result = new HashMap<>();
-		int totalCnt = service.selectSearchTotalCntCSQ(keyword);
-		
-		result.put("search", keyword);
-		result.put("list"  , service.selectSearchCSQ(keyword, pageNo));
-		result.put("paging", new UtilPaging(  totalCnt      , pageNo , 5, 10)); //3. 페이징계산
-		return result;                        //키워드검색갯수, 페이지번호, 몇개씩, 하단블록
-	}
-	
-	
+	/////////////////////////////////
 	//질문 작성
 	@GetMapping("/cswrite") public String write_get(Model model) {  
 		model.addAttribute("categories", List.of("계정", "서비스", "이벤트", "기타"));

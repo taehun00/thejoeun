@@ -2,9 +2,11 @@ package com.pawject.service.user;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.pawject.dto.user.UserDto;
+import com.pawject.dto.support.CSQuestionDto;
 import com.pawject.dto.user.AuthDto;
 import com.pawject.dto.user.UserAuthDto;
 
@@ -21,8 +23,7 @@ public interface UserSecurityService {
 
     /* 권한 추가/삭제 */
     int joinAuth(AuthDto dto);
-    int deleteRolesByUserId(AuthDto dto);
-
+    int deleteAuth(AuthDto dto);
 
     /* 로그인 권한 조회 */
     UserAuthDto readAuth(String email, String provider);
@@ -43,7 +44,4 @@ public interface UserSecurityService {
 
     /* 검색 */
     List<UserDto> searchUsers(String keyword, String type);
-    
-    // 마이페이지 조회
-    UserDto myPage(String email);
 }
