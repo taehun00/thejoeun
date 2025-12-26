@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pawject.dao.food.SearchPetfoodDao">
+	<resultMap type="SearchPetfoodDto" id="SearchPetfoodMap">
+	
+	
+	<!-- 펫타입-->	
+	<result property="pettypeid"	column="PETTYPEID"/>
+	<result property="pettypename"	column="PETTYPENAME"/>
+	
+	<!-- 브랜드 -->	
+	<result property="brandid"	column="BRANDID"/>
+	<result property="brandname"	column="BRANDNAME"/>
+	<result property="country"	column="COUNTRY"/>
+	<result property="brandtype"	column="BRANDTYPE"/>
+	<result property="origin"	column="ORIGIN"/>
+
+	<!-- 사료 -->	
+	<result property="foodid"	column="FOODID"/>
+	<result property="foodname"	column="FOODNAME"/>
+	<result property="description"	column="DESCRIPTION"/>
+	<result property="mainingredient"	column="MAININGREDIENT"/>
+	<result property="subingredient"	column="SUBINGREDIENT"/>
+	<result property="category"	column="CATEGORY"/>
+	<result property="petagegroup"	column="PETAGEGROUP"/>
+	<result property="isgrainfree"	column="ISGRAINFREE"/>
+	<result property="calorie"	column="CALORIE"/>
+	<result property="foodtype"	column="FOODTYPE"/>
+	<result property="foodimg"	column="FOODIMG"/>
+
+	<!-- 영양 -->	
+	<result property="nutrientid"	column="NUTRIENTID"/>
+	<result property="amount"	column="AMOUNT"/>
+	<result property="nutrientname"	column="NUTRIENTNAME"/>
+	<result property="unit"	column="UNIT"/>
+	<result property="rangeid"	column="RANGEID"/>
+	<result property="minvalue"	column="MINVALUE"/>
+	<result property="maxvalue"	column="MAXVALUE"/>
+	<result property="rangelabel"	column="RANGELABEL"/>
+	
+	<!-- 별점 -->	
+	<result property="avgrating"	column="RATING"/>	
+
+	</resultMap>
+
+
+	<!-- 카드형 이미지 -->
+	<select id="resultcard">
+		SELECT B.BRANDNAME, F.FOODNAME , R.AVGRATING, F.DESCRIPTION
+		FROM FOOD F 
+	    JOIN FOODBRAND B ON(F.BRANDID=B.BRANDID)
+	    LEFT JOIN (SELECT FOODID, ROUND(AVG(RATING), 2) AS AVGRATING FROM REVIEW GROUP BY FOODID) R ON (F.FOODID=R.FOODID)
+	</select>
+	
+	<!-- 상세 정보(모달팝업) -->
+	<select id="foodinfo">
+	
+	</select>	
+	
+	<!-- 서치 필터 -->
+	<select id="foodfilter">
+	
+	</select>	
+	
+	<!-- 서치 (참고용사료검색샘플)-->
+<!-- 		<select resultMap="FoodMap" id="foodsearch" parameterType="java.util.HashMap">
+	    select f.foodid as foodid, f.foodname as foodname, 
+	        b.brandid as brandid, b.brandname as brandname,
+	        f.pettypeid as pettypeid,
+	        TO_CHAR(f.createdat, 'YYYY-MM-DD') as createdat, 
+	        TO_CHAR(f.updatedat , 'YYYY-MM-DD') as updatedat
+	    from food f join foodbrand b on(f.brandid=b.brandid)
+	    <where>
+	        <choose>
+	            <when test="searchType == 'brandname'">
+	              lower(b.brandname) like #{search}
+	            </when>
+	            
+	            <when test="searchType == 'foodname'">
+	                f.foodname like #{search} 
+	            </when>
+	            
+				<when test="searchType == 'pettypeid'">
+				    f.pettypeid = #{search}
+				</when>
+	            
+	            <when test="searchType == 'description'">
+	                f.description like #{search} 
+	            </when>
+	
+	            <when test="searchType == 'mainingredient'">
+	                f.mainingredient like #{search} 
+	            </when>
+	
+	            <when test="searchType == 'subingredient'">
+	                f.subingredient like #{search} 
+	            </when>
+	
+	            <when test="searchType == 'nutrient'">
+	                exists (
+	                    select 1
+	                    from foodnutrient fn join nutrient n on(fn.nutrientid=n.nutrientid)
+	                    where fn.foodid=f.foodid
+	                      and n.nutrientname = #{search} 
+	                )
+	            </when>
+	
+	            <otherwise>
+	                (
+	                    f.foodname like #{search} 
+	                    or f.description like #{search} 
+	                    or f.mainingredient like #{search} 
+	                    or f.subingredient like #{search} 
+				    	or lower(b.brandname) like #{search}
+	                    or exists ( select 1
+	                                from foodnutrient fn join nutrient n on fn.nutrientid = n.nutrientid
+	                                where fn.foodid = f.foodid
+	                                   and n.nutrientname like #{search} 	)
+	                )
+	            </otherwise>
+	        </choose>
+	    </where>
+	    order by f.foodid desc
+	</select> -->
+	
+	
+
+	
+</mapper>
