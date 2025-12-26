@@ -29,10 +29,10 @@ public class ReviewAjaxController {
     @PostMapping("/reviewwrite.fn")
     @PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER')") 
     public int writeAjax(ReviewDto dto,  Principal principal) {
-		/*
-		 * UserAuthDto user = uservice.readAuth(principal.getName());
-		 * dto.setUserid(user.getUserId());
-		 */
+	
+	//	  UserAuthDto user = uservice.readAuth(principal.getName());
+	//	  dto.setUserid(user.getUserId());
+	
     	
         service.reviewInsert(dto);
         return dto.getReviewid();

@@ -47,85 +47,80 @@
 
 
 	<!-- 카드형 이미지 -->
-	<select id="resultcard">
+	<select resultMap="SearchPetfoodMap" id="resultcard">
 		SELECT B.BRANDNAME, F.FOODNAME , R.AVGRATING, F.DESCRIPTION
 		FROM FOOD F 
 	    JOIN FOODBRAND B ON(F.BRANDID=B.BRANDID)
 	    LEFT JOIN (SELECT FOODID, ROUND(AVG(RATING), 2) AS AVGRATING FROM REVIEW GROUP BY FOODID) R ON (F.FOODID=R.FOODID)
 	</select>
 	
-	<!-- 상세 정보(모달팝업) -->
-	<select id="foodinfo">
-	
-	</select>	
+	<!-- 상세 정보(모달팝업) 기존 사료매퍼 이용 -->	
 	
 	<!-- 서치 필터 -->
-	<select id="foodfilter">
-	
-	</select>	
-	
-	<!-- 서치 (참고용사료검색샘플)-->
-<!-- 		<select resultMap="FoodMap" id="foodsearch" parameterType="java.util.HashMap">
-	    select f.foodid as foodid, f.foodname as foodname, 
-	        b.brandid as brandid, b.brandname as brandname,
-	        f.pettypeid as pettypeid,
-	        TO_CHAR(f.createdat, 'YYYY-MM-DD') as createdat, 
-	        TO_CHAR(f.updatedat , 'YYYY-MM-DD') as updatedat
-	    from food f join foodbrand b on(f.brandid=b.brandid)
+	<select resultMap="SearchPetfoodMap" id="foodfilter" parameterType="java.util.HashMap">
+		SELECT B.BRANDNAME, F.FOODNAME , R.AVGRATING, F.DESCRIPTION
+		FROM FOOD F 
+	    JOIN FOODBRAND B ON(F.BRANDID=B.BRANDID)
+	    LEFT JOIN (SELECT FOODID, ROUND(AVG(RATING), 2) AS AVGRATING 
+                    FROM REVIEW GROUP BY FOODID) R ON (F.FOODID=R.FOODID)
+        JOIN FOODNUTRIENT FN ON (F.FOODID=FN.FOODID)
+        JOIN NUTRIENTRANGE RN ON ( FN.NUTRIENTID=RN.NUTRIENTID AND FN.AMOUNT BETWEEN RN.MINVALUE AND RN.MAXVALUE)
 	    <where>
-	        <choose>
-	            <when test="searchType == 'brandname'">
-	              lower(b.brandname) like #{search}
-	            </when>
-	            
-	            <when test="searchType == 'foodname'">
-	                f.foodname like #{search} 
-	            </when>
-	            
-				<when test="searchType == 'pettypeid'">
-				    f.pettypeid = #{search}
-				</when>
-	            
-	            <when test="searchType == 'description'">
-	                f.description like #{search} 
-	            </when>
-	
-	            <when test="searchType == 'mainingredient'">
-	                f.mainingredient like #{search} 
-	            </when>
-	
-	            <when test="searchType == 'subingredient'">
-	                f.subingredient like #{search} 
-	            </when>
-	
-	            <when test="searchType == 'nutrient'">
-	                exists (
-	                    select 1
-	                    from foodnutrient fn join nutrient n on(fn.nutrientid=n.nutrientid)
-	                    where fn.foodid=f.foodid
-	                      and n.nutrientname = #{search} 
-	                )
-	            </when>
-	
-	            <otherwise>
-	                (
-	                    f.foodname like #{search} 
-	                    or f.description like #{search} 
-	                    or f.mainingredient like #{search} 
-	                    or f.subingredient like #{search} 
-				    	or lower(b.brandname) like #{search}
-	                    or exists ( select 1
-	                                from foodnutrient fn join nutrient n on fn.nutrientid = n.nutrientid
-	                                where fn.foodid = f.foodid
-	                                   and n.nutrientname like #{search} 	)
-	                )
-	            </otherwise>
-	        </choose>
+            <if test="pettypeid != null">
+                AND F.PETTYPEID = #{pettypeid}
+            </if>
+            <if test="brandid != null">
+                AND  B.BRANDID = #{brandid}
+            </if>           
+            <if test="foodid != null">
+                AND F.FOODID = #{foodid}
+            </if>            
+            <if test="petagegroup != null">
+                AND F.PETAGEGROUP = #{petagegroup}
+            </if>            
+            <if test="category != null">
+                AND F.CATEGORY = #{category}
+            </if>                    
+            <if test="foodtype != null">
+                AND F.FOODTYPE = #{foodtype}
+            </if>                  
+            <if test="isgrainfree != null">
+                AND F.ISGRAINFREE = #{isgrainfree}
+            </if> 
+            <if test="origin != null">
+                AND B.origin = #{origin}
+            </if>  
+            <if test="rangelabel != null">
+            AND EXISTS (
+                SELECT 1
+                FROM FOODNUTRIENT FN
+                JOIN NUTRIENTRANGE RN ON (FN.NUTRIENTID = RN.NUTRIENTID)
+                 AND RN.PETTYPEID = F.PETTYPEID
+                WHERE FN.FOODID = F.FOODID
+                  AND RN.RANGELABEL = #{rangelabel}
+                  AND FN.AMOUNT BETWEEN RN.MINVALUE AND RN.MAXVALUE
+            )
+            </if>
+            
+            <if test="mincalorie != null">
+              AND F.CALORIE &gt;= #{mincalorie}
+            </if>
+            <if test="mincalorie != null">
+              AND F.CALORIE &lt;= #{maxcalorie}
+            </if>            
+            
+            <if test="keyword != null and keyword != ''">
+              AND (
+                   F.FOODNAME 		LIKE '%' || #{keyword} || '%'
+                OR F.MAININGREDIENT LIKE '%' || #{keyword} || '%'
+                OR F.SUBINGREDIENT  LIKE '%' || #{keyword} || '%'
+              )
+            </if>
+            
 	    </where>
-	    order by f.foodid desc
-	</select> -->
-	
-	
+	   ORDER BY F.FOODNAME DESC	
+	</select>	
+
 
 	
 </mapper>
