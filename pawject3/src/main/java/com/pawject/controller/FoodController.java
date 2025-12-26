@@ -24,6 +24,7 @@ import com.pawject.service.food.FoodService;
 public class FoodController {
 	@Autowired FoodService service;
 
+	//리스트
 	@RequestMapping("/foodlist.fn")
 	public String list(Model model,
 						@RequestParam(value="pstartno", defaultValue = "1") int pstartno ) { //전체 목록 게시판 뷰
@@ -32,14 +33,10 @@ public class FoodController {
 	    model.addAttribute("foodlist", service.foodselect10(paging.getCurrent()));
 	    model.addAttribute("foodpaging", paging);
 
-
 	    return "foodboard/foodlist";
 	}
-	
 
-	
-	
-	
+	//신규등록
 	@RequestMapping("/foodwrite.fn")
 	public String write_get(Model model) { //신규사료+영양입력폼
 		
@@ -81,15 +78,15 @@ public class FoodController {
 	    
 	    if(result1 > 0){
 	        rttr.addFlashAttribute("success", "사료 등록 성공");
-	        return "redirect:/fooddetail.fn?foodid=" + fdto.getFoodid();
+	        return "redirect:/foodboard/fooddetail.fn?foodid=" + fdto.getFoodid();
 	    } else {
 	        rttr.addFlashAttribute("success", "사료 등록 실패");
-	        return "redirect:/foodwrite.fn";
+	        return "redirect:/foodboard/foodwrite.fn";
 	    }
 	}
 	
 
-	
+	//상세페이지
 	@RequestMapping("/fooddetail.fn")
 	public String detail(int foodid, Model model) { //개별상세페이지
 		model.addAttribute("fdto", service.foodselectwithBrand(foodid));
@@ -99,6 +96,8 @@ public class FoodController {
 		return "foodboard/fooddetail";
 	}
 	
+	
+	//편집
 	@RequestMapping("/foodedit.fn")
 	public String edit_get(int foodid, Model model) { //수정폼
 		model.addAttribute("fdto", service.foodselect(foodid));
@@ -138,10 +137,10 @@ public class FoodController {
 
 	    if(result1 > 0){
 	        rttr.addFlashAttribute("success", "사료 수정 성공");
-	        return "redirect:/fooddetail.fn?foodid=" + fdto.getFoodid();
+	        return "redirect:/foodboard/fooddetail.fn?foodid=" + fdto.getFoodid();
 	    } else {
 	        rttr.addFlashAttribute("success", "사료 수정 실패");
-	        return "redirect:/foodedit.fn?foodid=" + fdto.getFoodid();
+	        return "redirect:/foodboard/foodedit.fn?foodid=" + fdto.getFoodid();
 	    }
 
 	}
@@ -156,11 +155,11 @@ public class FoodController {
 			if(result1>0 && result2>0) {
 				String result="삭제 성공";
 				rttr.addFlashAttribute("success", result);
-				return "redirect:/foodlist.fn";
+				return "redirect:/foodboard/foodlist.fn";
 			} else {
 				String result="삭제 실패";
 				rttr.addFlashAttribute("success", result);
-				return "redirect:/fooddetail.fn?foodid=" + foodid;
+				return "redirect:/foodboard/fooddetail.fn?foodid=" + foodid;
 			}
 	}
 	

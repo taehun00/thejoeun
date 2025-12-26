@@ -6,8 +6,10 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pawject.dto.food.FoodDto;
@@ -38,7 +40,7 @@ import com.pawject.service.food.FoodService;
 		}
 		
 		//빠른 삭제
-		@RequestMapping("/foodquikdelete")
+		@PostMapping("/foodquikdelete")
 		public Map<String, Object> foodquikdelete(@RequestParam int foodid){
 			Map<String, Object> result = new HashMap<>();
 			FoodDto fdto = new FoodDto();

@@ -15,7 +15,7 @@
      
 
    <table class="faq-table table table-bordered table-hover align-middle text-center">
-   <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+   <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         <caption class="visually-hidden">FAQ</caption>
         
         <thead class="table-light">
