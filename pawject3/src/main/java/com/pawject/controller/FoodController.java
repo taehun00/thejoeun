@@ -19,6 +19,7 @@ import com.pawject.service.food.FoodService;
 
 
 @Controller
+@RequestMapping("/foodboard")
 @PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 public class FoodController {
 	@Autowired FoodService service;

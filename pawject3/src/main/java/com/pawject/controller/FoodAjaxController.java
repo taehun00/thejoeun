@@ -16,6 +16,7 @@ import com.pawject.service.food.FoodService;
 
 	
 	@RestController
+	@RequestMapping("/foodboard")
 	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 	public class FoodAjaxController {
 		@Autowired FoodService service;

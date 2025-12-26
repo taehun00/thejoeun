@@ -15,6 +15,7 @@
      
 
    <table class="faq-table table table-bordered table-hover align-middle text-center">
+   <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         <caption class="visually-hidden">FAQ</caption>
         
         <thead class="table-light">
@@ -24,7 +25,8 @@
                 <th scope="col">질문</th>
                 <th scope="col">등록일</th>
                 <th scope="col">수정일</th>
-                <th scope="col">사용여부</th>
+                <th scope="col"
+                	sec:authorize="hasRole('ROLE_ADMIN')">사용여부</th>
             </tr>
         </thead>
 
@@ -36,7 +38,7 @@
 			        <td th:text="${f.question}"></td>
 			        <td th:text="${f.createdat}"></td>
 			        <td th:text="${f.updatedat}"></td>
-			        <td>
+			        <td sec:authorize="hasRole('ROLE_ADMIN')">
 					<button type="button" class="btn quickactive-btn"
 					        th:data-faqid="${f.faqid}"
 					        th:classappend="${f.isactive == 1} ? 'btn-success' : 'btn-olive'"
@@ -48,14 +50,16 @@
 			    <tr th:id="'content-' + ${f.faqid}" style="display:none;">			    
 					<td colspan="5" class="detail">
 					    <p class="faq-answer" th:text="${f.answer}"></p>
-					    <div class="faq-keyword-wrap">
+					    <div class="faq-keyword-wrap"
+						    sec:authorize="hasRole('ROLE_ADMIN')">
 					        <button type="button"
 					                class="btn btn-sm btn-outline-secondary"
 					                th:text="${f.keywords}">
 					        </button>
 					    </div>
 					</td>
-				    <td colspan="6">
+				    <td colspan="6"
+				    	sec:authorize="hasRole('ROLE_ADMIN')">
 				        <div class="d-flex justify-content-end gap-3 mt-3">
 						<a th:href="@{/faqBoard/faqedit(faqid=${f.faqid})}" class="btn btn-primary">수정</a>
 				        </div>
@@ -67,7 +71,8 @@
 		</tbody>
 	</table>
 
-	<div class="write-btn-area">
+	<div class="write-btn-area"
+	sec:authorize="hasRole('ROLE_ADMIN')">
 				<p class="text-end">
 				<a th:href="@{/faqBoard/faqwrite}" 
 				class="btn btn-slateBlue">글쓰기</a>
@@ -79,19 +84,75 @@
 			
 			    <div class="faq-card-wrapper">
 			        <a th:href="@{/csBoard/cswrite}"  class="faq-directquestion">
-			            <p>💌1:1 질문하기</p>
+			            <p>💌1:1 문의하기</p>
 			            <p>궁금하신 사항을 알려주시면</p>
-			            <p>24시간 내 답변을 드려요</p>
+			            <p>관리자가 답변을 드려요</p>
 			        </a>
 			
-			        <a href="#" class="faq-chatroom">
+			        <div class="faq-chatroom" id="chatbtn">
 			            <p>💬채팅 문의하기</p>
 			            <p>챗봇이 24시간 언제든지</p>
 			            <p>궁금하신 점을 알려드려요</p>
-			        </a>
+			        </div>
 			    </div>
 			</div>
 </div>
+
+
+<script>
+
+	(function() {
+		var w = window;
+		if (w.ChannelIO) {
+			return w.console.error("ChannelIO script included twice.");
+		}
+		var ch = function() {
+			ch.c(arguments);
+		};
+		ch.q = [];
+		ch.c = function(args) {
+			ch.q.push(args);
+		};
+		w.ChannelIO = ch;
+		function l() {
+			if (w.ChannelIOInitialized) {
+				return;
+			}
+			w.ChannelIOInitialized = true;
+			var s = document.createElement("script");
+			s.type = "text/javascript";
+			s.async = true;
+			s.src = "https://cdn.channel.io/plugin/ch-plugin-web.js";
+			var x = document.getElementsByTagName("script")[0];
+			if (x.parentNode) {
+				x.parentNode.insertBefore(s, x);
+			}
+		}
+		if (document.readyState === "complete") {
+			l();
+		} else {
+			w.addEventListener("DOMContentLoaded", l);
+			w.addEventListener("load", l);
+		}
+	})();
+
+	ChannelIO('boot', {
+		"pluginKey" : "afb5a7b9-9200-440f-999a-7f0ef91db208"
+	});
+
+	
+	
+	
+	document.addEventListener("DOMContentLoaded", function() {
+		const chatbtn = document.getElementById("chatbtn");
+
+		chatbtn.addEventListener("click", function(e) {
+			e.preventDefault();
+			ChannelIO('show');
+		});
+	});
+	
+</script>
 
 <script>
 function toggleContent(id) {

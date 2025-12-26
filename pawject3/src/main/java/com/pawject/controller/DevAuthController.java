@@ -39,7 +39,7 @@ public class DevAuthController {
 	        context
 	    );
 
-	    return "redirect:/csBoard/cslistuser";
+	    return "redirect:/faqBoard/faqlist";
 	}
     
     @GetMapping("/login/admin")

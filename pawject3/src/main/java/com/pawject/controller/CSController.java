@@ -70,7 +70,7 @@ public class CSController {
     	return result;
     }
   
-
+  	//검색+페이징
 	  @GetMapping("/cssearchpaging")
 	  @ResponseBody
 	  public Map<String, Object> cssearchpaging(
@@ -152,7 +152,6 @@ public class CSController {
 
 	    return result;
 	}
-	
 	
 	
 
