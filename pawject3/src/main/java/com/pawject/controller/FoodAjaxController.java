@@ -22,8 +22,7 @@ import com.pawject.service.food.FoodService;
 	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 	public class FoodAjaxController {
 		@Autowired FoodService service;
-		
-		
+
 		//페이징 적용 버전
 		@RequestMapping("/foodselectForList")
 		public Map<String, Object> foodselectForList(

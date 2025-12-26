@@ -38,6 +38,10 @@ public class SearchPetfoodDto {
 	private int minvalue;
 	private int maxvalue;
 	private String rangelabel;
+	
+	//칼로리검색용
+	private int mincalorie;	
+	private int maxcalorie;	
 
 	//별점(요약카드)
 	private double avgrating;
