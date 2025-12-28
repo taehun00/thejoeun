@@ -5,7 +5,7 @@
 <mapper namespace="com.pawject.dao.food.SearchPetfoodDao">
 	<resultMap type="SearchPetfoodDto" id="SearchPetfoodMap">
 	
-	
+		
 	<!-- 펫타입-->	
 	<result property="pettypeid"	column="PETTYPEID"/>
 	<result property="pettypename"	column="PETTYPENAME"/>
@@ -48,17 +48,84 @@
 
 	<!-- 카드형 이미지 -->
 	<select resultMap="SearchPetfoodMap" id="resultcard">
-		SELECT B.BRANDNAME, F.FOODNAME , R.AVGRATING, F.DESCRIPTION
+		SELECT B.BRANDNAME, F.FOODNAME , F.FOODIMG, R.AVGRATING, F.DESCRIPTION
 		FROM FOOD F 
 	    JOIN FOODBRAND B ON(F.BRANDID=B.BRANDID)
 	    LEFT JOIN (SELECT FOODID, ROUND(AVG(RATING), 2) AS AVGRATING FROM REVIEW GROUP BY FOODID) R ON (F.FOODID=R.FOODID)
+		order by foodname
 	</select>
 	
 	<!-- 상세 정보(모달팝업) 기존 사료매퍼 이용 -->	
 	
 	<!-- 서치 필터 -->
 	<select resultMap="SearchPetfoodMap" id="foodfilter" parameterType="java.util.HashMap">
-		SELECT B.BRANDNAME, F.FOODNAME , R.AVGRATING, F.DESCRIPTION
+		SELECT
+		  B.BRANDNAME, F.FOODNAME, F.FOODIMG, R.AVGRATING, F.DESCRIPTION
+		FROM FOOD F
+		JOIN FOODBRAND B ON F.BRANDID = B.BRANDID
+		LEFT JOIN ( SELECT FOODID, ROUND(AVG(RATING), 2) AS AVGRATING
+		  			FROM REVIEW GROUP BY FOODID
+				  ) R ON F.FOODID = R.FOODID
+		<where>
+		  <if test="pettypeid != null">
+		    AND F.PETTYPEID = #{pettypeid}
+		  </if>
+		  <if test="brandid != null">
+		    AND B.BRANDID = #{brandid}
+		  </if>
+		  <if test="foodid != null">
+		    AND F.FOODID = #{foodid}
+		  </if>
+		  <if test="petagegroup != null">
+		    AND F.PETAGEGROUP = #{petagegroup}
+		  </if>
+		  <if test="category != null">
+		    AND F.CATEGORY = #{category}
+		  </if>
+		  <if test="foodtype != null">
+		    AND F.FOODTYPE = #{foodtype}
+		  </if>
+		  <if test="isgrainfree != null">
+		    AND F.ISGRAINFREE = #{isgrainfree}
+		  </if>
+		  <if test="origin != null">
+		    AND B.ORIGIN = #{origin}
+		  </if>
+		
+		  <!-- 영양 조건은 EXISTS로만 **-->
+		  <if test="rangeid != null">
+		    AND EXISTS (
+		      SELECT 1
+		      FROM FOODNUTRIENT FN
+		      JOIN NUTRIENTRANGE RN ON FN.NUTRIENTID = RN.NUTRIENTID
+		      WHERE FN.FOODID = F.FOODID
+		        AND RN.RANGEID = #{rangeid}
+		        AND FN.AMOUNT BETWEEN RN.MINVALUE AND RN.MAXVALUE
+		    )
+		  </if>
+		
+		  <if test="minvalue != null">
+		    AND F.CALORIE &gt;= #{minvalue}
+		  </if>
+		  <if test="maxvalue != null">
+		    AND F.CALORIE &lt;= #{maxvalue}
+		  </if>
+		
+		  <if test="keyword != null and keyword != ''">
+		    AND (
+		      F.FOODNAME        LIKE '%' || #{keyword} || '%'
+		      OR F.MAININGREDIENT LIKE '%' || #{keyword} || '%'
+		      OR F.SUBINGREDIENT  LIKE '%' || #{keyword} || '%'
+		    )
+		  </if>
+		</where>
+		ORDER BY F.FOODNAME 
+	</select>	
+	
+	
+	
+<!-- 	<select resultMap="SearchPetfoodMap" id="foodfilter" parameterType="java.util.HashMap">
+		SELECT B.BRANDNAME, F.FOODNAME , F.FOODIMG, R.AVGRATING, F.DESCRIPTION
 		FROM FOOD F 
 	    JOIN FOODBRAND B ON(F.BRANDID=B.BRANDID)
 	    LEFT JOIN (SELECT FOODID, ROUND(AVG(RATING), 2) AS AVGRATING 
@@ -119,8 +186,19 @@
             
 	    </where>
 	   ORDER BY F.FOODNAME DESC	
-	</select>	
+	</select>	 -->
 
 
+
+	<resultMap type="SearchPetfoodDto" id="RangeMap">
+		<result property="pettypeid"	column="PETTYPEID"/>
+		<result property="rangeid"	column="RANGEID"/>
+		<result property="rangelabel"	column="RANGELABEL"/>
+	</resultMap>
+
+	<!-- 영양 범위 라벨 필터 -->
+	<select resultMap="RangeMap" id="rangeList">
+		SELECT RANGEID, PETTYPEID, RANGELABEL FROM NUTRIENTRANGE
+	</select>
 	
 </mapper>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+<head lang="ko">
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div layout:fragment="content">
+ <script th:inline="javascript">
+    const csrfHeader = /*[[${_csrf.headerName}]]*/ '';
+    const csrfToken  = /*[[${_csrf.token}]]*/ '';
+</script>
+
+    <h2 class="foodsearcher-title">사료 찾기</h2>
+    
+    <div class="filterbox">
+    
+		<div class="filter-row row">
+
+			<div class="pettypeidfilter col-4 mb-2">
+				<select name="pettypeid" id="pettypeid" class="form-control" >
+					<option value="">-- 모든 펫타입 --</option>
+					<option value="1">고양이</option>
+					<option value="2">강아지</option>
+				</select>
+			</div>
+
+			<div class="foodtypefilter col-4 mb-2">
+				<select name="foodtype"	id="foodtype" class="form-control">
+					<option value="">-- 건식/습식 --</option>
+					<option value="건식">건식</option>
+					<option value="습식">습식</option>
+				</select>
+			</div>
+
+			<div class="brandidfilter col-4 mb-2">
+			  <select name="brandid" id="brandid" class="form-control">
+			    <option value="">-- 모든 브랜드 --</option>	
+			    <option th:each="b : ${brandlist}"
+			            th:value="${b.brandid}"
+			            th:text="${b.brandname}">
+			    </option>
+			  </select>
+			</div>
+			
+			<div class="foodidfilter col-4 mb-2">
+			  <select name="foodid" id="foodid" class="form-control">
+			    <option value="">-- 모든 사료 --</option>	
+			    <option th:each="f : ${foodlist}"
+			    		th:data-pet="${f.pettypeid}"
+			    		th:data-brand="${f.brandid}"
+			            th:value="${f.foodid}"
+			            th:text="${f.foodname}">
+			    </option>
+			  </select>
+
+			</div>
+		</div>
+		
+		<div class="filter-row row">	
+		  <div class="col d-flex justify-content-center gap-2">
+		    <input type="text" id="searchKeyword"
+		           placeholder="찾으시는 사료나 재료를 입력해 주세요"
+		           class="form-control" style="width:300px;">
+		    <button type="button" class="btn btn-mint" onclick="searchFood()">검색</button>
+		  </div>
+		</div>
+		
+		<div class="row">
+		  <div class="col d-flex justify-content-end gap-2">
+		    <button type="button"
+		            id="searchFilterToggle"
+		            onclick="toggleContent()"
+		            class="btn btn-mint">
+		      상세조건
+		    </button>
+		  </div>
+		</div>		
+		
+		<!-- 여기가 토글 -->
+		<div id="searchFilterPanel" class="hidden">
+
+	  		<div class="filter-row row">	
+				<div class="categoryfilter col-3 mb-2">
+					<select name="category" id="category" class="form-control">
+						<option value="">-- 모든 유형 --</option>
+						<option value="일반">일반</option>
+						<option value="처방식">처방식</option>
+						<option value="기능식">기능식</option>
+					</select>
+				</div>
+	
+				<div class="petagegroupfilter col-3 mb-2">
+					<select name="petagegroup" id= "petagegroup" class="form-control">
+						<option value="">-- 모든 연령 --</option>
+						<option value="어덜트">어덜트</option>
+						<option value="시니어">시니어</option>
+						<option value="키튼">키튼</option>
+						<option value="퍼피">퍼피</option>
+					</select>
+				</div>
+	
+				<div class="isgrainfreefilter col-3 mb-2">
+					<select name="isgrainfree" id="isgrainfree" class="form-control">
+						<option value="">-- 그레인프리?--</option>
+						<option value="Y">Y</option>
+						<option value="N">N</option>
+					</select>
+				</div>
+				
+				<div class="originfilter col-3 mb-2">
+					<select name="origin" id="origin" class="form-control">
+						<option value="">-- 국내/해외 --</option>
+						<option value="국내">국내</option>
+						<option value="해외">해외</option>
+					</select>
+				</div>	
+
+			</div>
+			
+		<div class="filter-row row">	
+
+		  <div class="rangelabelfilter col-3 mb-2">
+		    <select name="rangeid" id="rangeid" class="form-control">
+		      <option value="">-- 영양소 범위 --</option>	
+		      <option th:each="r : ${rangelist}"
+		              th:data-pet="${r.pettypeid}"
+		              th:value="${r.rangeid}"
+		              th:text="${r.rangelabel}">
+		      </option>
+		    </select>
+		  </div> 
+		  
+		<div class="caloriefilter col-8 mb-2">
+		  <div class="input-group">
+		    <span class="input-group-text">칼로리</span>
+		    <input type="text" class="form-control" name="minvalue" placeholder="최소">
+		    <span class="input-group-text">~</span>
+		    <input type="text" class="form-control" name="maxvalue" placeholder="최대">
+		    <span class="input-group-text">kcal</span>
+		  </div>
+		</div>	
+			
+		</div> <!-- filter-row -->
+		
+    </div><!-- searchFilterPanel -->
+
+	</div><!-- filterbox -->	
+	
+	
+	<!-- ai 상담 채팅창 -->
+	<!-- ai 상담 채팅창 -->
+	<!-- ai 상담 채팅창 -->
+	
+	
+	
+	
+	<!-- 검색결과 -->
+	<!-- SELECT B.BRANDNAME, F.FOODNAME , F.FOODIMG, R.AVGRATING, F.DESCRIPTION -->
+	 <div>
+	 
+	<table class="resultTable">
+	  <thead>
+	    <tr>
+	      <th scope="col">검색 결과</th>
+	    </tr>
+	  </thead>
+	
+	  <tbody>
+	    <th:block th:each="f, status : ${resultcard}">
+	      <tr>
+	        <td style="display:flex; align-items:flex-start; gap:16px;">
+	
+	          <img th:if="${f.foodimg != null}"
+	               th:src="@{/foodimg/{img}(img=${f.foodimg})}"
+	               alt="사료 이미지"
+	               style="width:200px;"/>
+	
+	          <img th:if="${f.foodimg == null}"
+	               th:src="@{/foodimg/brand0{bid}.png(bid=${f.brandid})}"
+	               alt="브랜드 로고"
+	               style="width:200px;"/>
+	
+				<div style="display:flex; flex-direction:column;">
+				  <span class="rating" th:text="${f.avgrating}"></span>
+				  <span class="brand" th:text="${f.brandname}"></span>
+				  <span class="foodname" th:text="${f.foodname}"></span>
+				  <span class="desc" th:text="${f.description}"></span>
+				
+				  <div class="action">
+				    <button class="btn btn-olive">상세보기</button>
+				    <button class="btn btn-olive">리뷰</button>
+				  </div>
+				</div>
+	
+	        </td>
+	      </tr>
+	    </th:block>	
+	  </tbody>
+	</table>
+			 
+	 
+	 </div>
+
+	
+
+		<script>
+		//토글
+		function toggleContent() {
+			  const panel = document.getElementById("searchFilterPanel");
+			  if (!panel) return;
+			  panel.classList.toggle("hidden");
+			}
+			
+			
+		
+		//검색필터
+	    window.onload = function () {
+	        const pet = document.getElementById("pettypeid");
+	        const brand = document.getElementById("brandid");
+	        const food = document.getElementById("foodid");
+	        const range = document.getElementById("rangeid");
+
+	        //펫타입+브랜드->사료
+	        function filterFood() {
+	          const p = pet.value;
+	          const b = brand.value;
+
+	          for (let i = 0; i < food.options.length; i++) {
+	            const opt = food.options[i];
+
+	            if (!opt.getAttribute("data-pet")) {
+	              opt.style.display = "block";
+	              continue;
+	            }
+
+	            const petOk = (p === "") || (opt.getAttribute("data-pet") === p);
+	            const brandOk = (b === "") || (opt.getAttribute("data-brand") === b);
+
+	            opt.style.display = (petOk && brandOk) ? "block" : "none";
+	          }
+
+	          food.value = "";
+	        }
+			//펫타입->라벨
+	        function filterRange() {
+	          const p = pet.value;
+
+	          for (let i = 0; i < range.options.length; i++) {
+	            const opt = range.options[i];
+
+	            if (!opt.getAttribute("data-pet")) {
+	              opt.style.display = "block";
+	              continue;
+	            }
+
+	            const petOk = (p === "") || (opt.getAttribute("data-pet") === p);
+	            opt.style.display = petOk ? "block" : "none";
+	          }
+
+	          range.value = "";
+	        }
+
+	        pet.onchange = function () {
+	          filterFood();
+	          filterRange();
+	        };
+	        brand.onchange = filterFood;
+	      };
+		
+	
+		
+		function ratingToStar(avgrating) {
+			  const r = Math.round(avgrating);
+
+			  if (r === 5) return "★★★★★ (" + avgrating.toFixed(1) + ")";
+			  if (r === 4) return "★★★★☆ (" + avgrating.toFixed(1) + ")";
+			  if (r === 3) return "★★★☆☆ (" + avgrating.toFixed(1) + ")";
+			  if (r === 2) return "★★☆☆☆ (" + avgrating.toFixed(1) + ")";
+			  if (r === 1) return "★☆☆☆☆ (" + avgrating.toFixed(1) + ")";
+			  return "☆☆☆☆☆";
+			}
+		
+		
+		</script>
+
+	</div><!-- content-->
+	
+
+
+
+</body>
+</html>

@@ -1,7 +1,7 @@
 package com.pawject.dao.food;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -14,5 +14,8 @@ public interface SearchPetfoodDao {
 	public List<SearchPetfoodDto> resultcard();
 	
 //	<select resultMap="SearchPetfoodMap" id="foodfilter" parameterType="java.util.HashMap">
-	public List<SearchPetfoodDto> foodfilter(HashMap<String,Object> para);
+	public List<SearchPetfoodDto> foodfilter(Map<String,Object> params);
+	
+	//	<select resultMap="RangeMap" id="rangeList">
+	public List<SearchPetfoodDto> rangeList();
 }
