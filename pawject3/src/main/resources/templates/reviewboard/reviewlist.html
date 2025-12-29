@@ -16,8 +16,8 @@
 </script>	
  -->
 <script th:inline="javascript">
-const loginRole = [[${author != null ? "'" + author + "'" : "null"}]];
-const loginUserId = [[${userid != null ? userid : "null"}]];
+    const loginRole = /*[[${author}]]*/ null;
+    const loginUserId = /*[[${userid}]]*/ null;
 </script>	
 
 
@@ -64,14 +64,14 @@ console.log("loginUserId =", loginUserId);
         <thead class="table-light">
             <tr>
                 <th style="display:none;"></th>
-                <th scope="col">NO.</th>
-                <th scope="col">브랜드</th>
-                <th scope="col">제품명</th>
-                <th scope="col">평점</th>
-                <th scope="col">제목</th>
-                <th scope="col">작성자</th>
-                <th scope="col">등록일</th>
-                <th scope="col">수정일</th>
+				<th class="col-no">NO.</th>
+				<th class="col-brand">브랜드</th>
+				<th class="col-food">제품명</th>
+				<th class="col-rating">평점</th>
+				<th class="col-title">제목</th>
+				<th class="col-writer">작성자</th>
+				<th class="col-created">등록일</th>
+				<th class="col-updated">수정일</th>
             </tr>
         </thead>
 
@@ -135,302 +135,251 @@ console.log("loginUserId =", loginUserId);
 
 <script>
 
-//전역 상태
-let currentMode = "list";       
+//전역
+let currentMode = "list";
 let currentSearchType = "";
 let currentKeyword = "";
 
-//첫 로딩
-/* $(function() {
- const currentPage = $("#currentPage").val() || 1;
- reviewPaging(currentPage);
-});
- */
- // 사료찾기 페이지 연결 추가 버전
+//초기 로딩
 $(function () {
-    const params = new URLSearchParams(window.location.search);
-    const foodid = params.get("foodid");
+ const params = new URLSearchParams(window.location.search);
+ const foodid = params.get("foodid");
 
-    console.log("URL foodid =", foodid);
-
-    if (foodid) {
-        loadReviewsByFoodid(foodid);
-    } else {
-        const currentPage = $("#currentPage").val() || 1;
-        reviewPaging(currentPage);
-    }
+ if (foodid) {
+     loadReviewsByFoodid(foodid);
+ } else {
+     const currentPage = $("#currentPage").val() || 1;
+     reviewPaging(currentPage);
+ }
 });
 
-//검색 기능
+//검색
 function doReviewSearch(searchType, keyword) {
-    currentMode = "search";
-    currentSearchType = searchType;
-    currentKeyword = keyword;
+ currentMode = "search";
+ currentSearchType = searchType;
+ currentKeyword = keyword;
 
-    $("#currentPage").val(1); //검색 진입 시 페이지 초기화**
-    
-    $.ajax({
-        url: "/reviewboard/reviewsearch",
-        type: "GET",
-        data: { keyword: keyword, searchType: searchType },
-        success: function(json) {
-            reviewPagingResult(json, 1);
-            $("#searchlistBtn").show();
-            $("tfoot").hide();
-            $("#writeBtn").hide();
-        }
-    }); 
+ $("#currentPage").val(1);
+
+ $.ajax({
+     url: "/reviewboard/reviewsearch",
+     type: "GET",
+     data: { keyword, searchType },
+     success: function (json) {
+         reviewPagingResult(json, 1);
+         $("#searchlistBtn").show();
+         $("tfoot").hide();
+         $("#writeBtn").hide();
+     }
+ });
 }
 
-function searchReview(){
-    const keyword = $("#searchKeyword").val().trim();
-    const searchType = $("#searchType").val();
+function searchReview() {
+ const keyword = $("#searchKeyword").val().trim();
+ const searchType = $("#searchType").val();
 
-    if(keyword.length === 0){
-        alert("검색어를 입력해주세요.");
-        return;
-    }
-
-    doReviewSearch(searchType, keyword);
+ if (!keyword) {
+     alert("검색어를 입력해주세요.");
+     return;
+ }
+ doReviewSearch(searchType, keyword);
 }
 
-//id로 사료 조회
-function loadReviewsByFoodid(foodid){
-    currentMode = "food";
-    $("#currentPage").val(1);
+//foodid 조회 - 사료검색 페이지 연결용
+function loadReviewsByFoodid(foodid) {
+ currentMode = "food";
+ $("#currentPage").val(1);
 
-    $.ajax({
-        url: "/reviewboard/reviewsearchByFoodid",
-        type: "GET",
-        data: { foodid: foodid },
-        success: function (json) {
-            reviewPagingResult(json, 1);
-            $("#searchlistBtn").show();
-            $("tfoot").hide();
-            $("#writeBtn").hide();
-        },
-        error: function(xhr) {
-            console.error("foodid 조회 실패", xhr.responseText);
-        }
-    });
+ $.ajax({
+     url: "/reviewboard/reviewsearchByFoodid",
+     type: "GET",
+     data: { foodid },
+     success: function (json) {
+         reviewPagingResult(json, 1);
+         $("#searchlistBtn").show();
+         $("tfoot").hide();
+         $("#writeBtn").hide();
+     }
+ });
 }
-
-
 
 //페이징
-function reviewPaging(pstartno){
-    currentMode = "list";
-	$.ajax({
-		url:"/reviewboard/reviewPaging",
-        type: "GET",
-        data: { pstartno: pstartno },
-        success: function(json) {
-        	reviewPagingResult(json, pstartno);  // 페이징 기능때매 필요
-        	 $("tfoot").show();  //페이징 다시 보이기
-        },
-		error:function (xhr) {
-		    console.error("ERROR:", xhr.responseText);
-		    alert("에러 발생: " + xhr.status);}
-	})
+function reviewPaging(pstartno) {
+ currentMode = "list";
+ $.ajax({
+     url: "/reviewboard/reviewPaging",
+     type: "GET",
+     data: { pstartno },
+     success: function (json) {
+         reviewPagingResult(json, pstartno);
+         $("tfoot").show();
+     }
+ });
 }
 
-function ratingToStar(rating){
-	if(rating==5) return "★★★★★";
-	if(rating==4) return "★★★★☆";
-	if(rating==3) return "★★★☆☆";
-	if(rating==2) return "★★☆☆☆";
-	if(rating==1) return "★☆☆☆☆";
-	
+//평점 시각화
+function ratingToStar(rating) {
+ if (rating == 5) return "★★★★★";
+ if (rating == 4) return "★★★★☆";
+ if (rating == 3) return "★★★☆☆";
+ if (rating == 2) return "★★☆☆☆";
+ if (rating == 1) return "★☆☆☆☆";
 }
 
+//랜더링
 function reviewPagingResult(json, pstartno) {
-    console.log(json);
+ console.log("json =", json);
+ console.log("json.list =", json.list);
+
+ const list = json.list;
+ const total = json.total;
+ const tbody = $(".review-table tbody");
+
+ tbody.empty();
+
+ tbody.off("click", ".review-row");
+ tbody.on("click", ".review-row", function () {
+     toggleContent($(this).data("id"));
+ });
+
+ if (!list || list.length === 0) {
+     tbody.append(
+         $("<tr>").append(
+             $("<td>").attr("colspan", 9).text("검색 결과가 없습니다.")
+         )
+     );
+     return;
+ }
+
+ $.each(list, function (idx, review) {
+     const number = total - ((pstartno - 1) * 10 + idx);
+
+     // 요약행
+     const summary = $("<tr>")
+         .addClass("review-row")
+         .data("id", review.reviewid)
+         .append($("<td>").addClass("col-no").text(number))
+         .append($("<td>").addClass("col-brand").text(review.brandname))
+         .append($("<td>").addClass("col-food").text(review.foodname))
+         .append($("<td>").addClass("col-rating").html(ratingToStar(review.rating)))
+         .append($("<td>").addClass("col-title").text(review.title))
+         .append($("<td>").addClass("col-writer").text(review.nickname))
+         .append($("<td>").addClass("col-created").text(review.createdat))
+         .append($("<td>").addClass("col-updated").text(review.updatedat));
+
+     tbody.append(summary);
+
+     // 상세 행
+     const detail = $("<tr>")
+         .attr("id", "content-" + review.reviewid)
+         .addClass("review-detail")
+         .hide();
+
+     const td = $("<td>").attr("colspan", 9);
+
+     const innerTable = $("<table>").addClass("detail-inner-table");
+     const innerTr = $("<tr>");
+
+     // 사료 이미지
+     const foodImgTd = $("<td>").addClass("detail-img").append(
+         $("<img>")
+             .addClass("review-thumb")
+             .attr("src", "/foodimg/" + review.foodimg)
+             .on("click", function () {
+                 openImg("/foodimg/" + review.foodimg);
+             })
+     );
+
+     const contentTd = $("<td>").addClass("detail-content");
+
+     const imgWrap = $("<div>").addClass("review-img-wrap");
+     if (Array.isArray(review.reviewimglist)) {
+         review.reviewimglist.forEach(function (img) {
+             imgWrap.append(
+                 $("<div>").addClass("review-img-box").append(
+                     $("<img>")
+                         .addClass("review-img")
+                         .attr("src", "/upload/" + img.reviewimgname)
+                         .on("click", function () {
+                             openImg("/upload/" + img.reviewimgname);
+                         })
+                 )
+             );
+         });
+     }
+
+     const comment = $("<p>")
+         .addClass("detail-text")
+         .text(review.reviewcomment);
+
+     // 버튼
  
- 
-    let list = json.list;
-    let total = json.total;
-    
-    let tbody = $(".review-table tbody");
-    tbody.empty();
-    
-    tbody.off("click", ".review-row");   // 중복 바인딩 방지
-    tbody.on("click", ".review-row", function () {
-        const id = $(this).data("id");
-        toggleContent(id);
-    });
-    
-    if (!list || list.length === 0) {
-        tbody.append(
-            $("<tr>").append(
-                $("<td>")
-                    .attr("colspan", 9)
-                    .text("검색 결과가 없습니다.")
-            )
-        );
-        return;
-    }
-
-    $.each(list, function(idx, review)  {
-    	let number = total - ((pstartno - 1) * 10 + idx);
-
-
-    	//요약-바로 보이는 행
-		let summary = $("<tr>")
-			.addClass("review-row")
-			.data("id", review.reviewid)
-			.append($("<td>").css("display","none").text(review.reviewid))
-			.append($("<td>").text(number))
-			.append($("<td>").text(review.brandname))
-			.append($("<td>").text(review.foodname))
-			.append($("<td>").html(ratingToStar(review.rating)))
-			.append($("<td>").text(review.title))
-			.append($("<td>").text(review.nickname))
-			.append($("<td>").text(review.createdat))
-			.append($("<td>").text(review.updatedat));
-
-		tbody.append(summary);
-
-    	
-    	//여기서부터 스불재 시작
-		let detail = $("<tr>")
-		    .attr("id", "content-" + review.reviewid)
-		    .addClass("review-detail")
-		    .css("display", "none");
-		
-		let td = $("<td>").attr("colspan", 9);
-		
-		// detail-inner-table
-		let innerTable = $("<table>").addClass("detail-inner-table");
-		
-		// inner table row
-		let innerTr = $("<tr>");
-		
-		//이미지
-		let foodImgTd = $("<td>")
-		    .addClass("detail-img");
-		
-		let foodImg = $("<img>")
-		    .addClass("review-thumb")
-			.attr("src", "/foodimg/" + review.foodimg)
-			.on("click", () => openImg("/foodimg/" + review.foodimg));
-		
-		foodImgTd.append(foodImg);
-		
-		let contentTd = $("<td>")
-		    .addClass("detail-content");
-		
-		let imgWrap = $("<div>").addClass("review-img-wrap");
-		
-		review.reviewimglist.forEach(function(img) {
-		    let imgBox = $("<div>").addClass("review-img-box");
-		
-		    let reviewImg = $("<img>")
-		        .addClass("review-img")
-				.attr("src", "/upload/" + img.reviewimgname)
-				.on("click", () => openImg("/upload/" + img.reviewimgname));
-		
-		    imgBox.append(reviewImg);
-		    imgWrap.append(imgBox);
-		});
-		
-		let comment = $("<p>")
-		    .addClass("detail-text")
-		    .text(review.reviewcomment);
 		let btns = $("<div>").addClass("detail-btns");
-
-
-		// 관리자는 전체 버튼 표시
+		
+		// 관리자-전부
 		if (loginRole === "ROLE_ADMIN") {
-
-		    btns.append(
-		    		  $("<button>")
-		    		    .addClass("btn btn-green")
-		    		    .text("수정")
-		    		    .on("click", function (e) {
-		    		        e.stopPropagation();
-		    		        location.href = "/reviewboard/reviewedit?reviewid=" + review.reviewid;
-		    		    })
-		    		);
-
-		    btns.append(
-		    		  $("<button>")
-		    		    .addClass("btn btn-green")
-		    		    .text("삭제")
-		    		    .on("click", function (e) {
-		    		        e.stopPropagation();
-		    		        location.href = "/reviewboard/reviewdelete?reviewid=" + review.reviewid;
-		    		    })
-		    		);
-
+		
+		    btns.append(makeEditBtn(review.reviewid));
+		    btns.append(makeDeleteBtn(review.reviewid));
+		
 		}
+		// 일반 회원-내 글만
+		else if (
+		    loginRole === "ROLE_MEMBER" &&
+		    Number(review.userid) === Number(loginUserId)
+		) {
 		
-		// 일반 회원이면 본인 글만 버튼 표시
-		else if (loginRole === "ROLE_MEMBER" && review.userid == loginUserId) {
-		
-		    btns.append(
-		    		  $("<button>")
-		    		    .addClass("btn btn-green")
-		    		    .text("수정")
-		    		    .on("click", function (e) {
-		    		        e.stopPropagation();
-		    		        location.href = "/reviewboard/reviewedit?reviewid=" + review.reviewid;
-		    		    })
-		    		);
-
-		    btns.append(
-		    		  $("<button>")
-		    		    .addClass("btn btn-green")
-		    		    .text("삭제")
-		    		    .on("click", function (e) {
-		    		        e.stopPropagation();
-		    		        location.href = "/reviewboard/reviewdelete?reviewid=" + review.reviewid;
-		    		    })
-		    		);
+		    btns.append(makeEditBtn(review.reviewid));
+		    btns.append(makeDeleteBtn(review.reviewid));
 		}
-		// contentTd 구성
-		contentTd.append(imgWrap);
-		contentTd.append(comment);
-		contentTd.append(btns);
-		
-		// inner row 조립
-		innerTr.append(foodImgTd);
-		innerTr.append(contentTd);
-		
-		// innerTable 조립
-		innerTable.append(innerTr);
-		
-		// td에 innerTable 삽입
-		td.append(innerTable);
-		
-		// detail row 완성
-		detail.append(td);
-		
-		// tbody에 detail 추가
-		tbody.append(detail);
 
-    });   //$.each 닫음
+     // 조립 순서 주의
+     contentTd.append(imgWrap);
+     contentTd.append(comment);
+     contentTd.append(btns);   //****!
 
-}   // function reviewPagingResult 닫음
+     innerTr.append(foodImgTd);
+     innerTr.append(contentTd);
+     innerTable.append(innerTr);
 
+     td.append(innerTable);
+     detail.append(td);
+     tbody.append(detail);
+ });
+}
 
+//버튼생성
+function makeEditBtn(reviewid) {
+    return $("<button>")
+        .addClass("btn btn-olive")
+        .text("수정")
+        .on("click", function (e) {
+            e.stopPropagation();
+            location.href = "/reviewboard/reviewedit?reviewid=" + reviewid;
+        });
+}
+
+function makeDeleteBtn(reviewid) {
+    return $("<button>")
+        .addClass("btn btn-olive")
+        .text("삭제")
+        .on("click", function (e) {
+            e.stopPropagation();
+            location.href = "/reviewboard/reviewdelete?reviewid=" + reviewid;
+        });
+}
+
+//토글
 function toggleContent(id) {
-    let row = document.getElementById("content-" + id);
-    if (!row) return;  // 안전장치
-    row.style.display = (row.style.display === "none") ? "table-row" : "none";
+ const row = document.getElementById("content-" + id);
+ if (!row) return;
+ row.style.display = (row.style.display === "none") ? "table-row" : "none";
 }
 
-function openImageModal(src){
-    document.getElementById("modalImg").src = src;
-    document.getElementById("imgModal").style.display = "flex";
-}
-
-
+//================= 이미지 =================
 function openImg(url) {
-    window.open(
-        url, 
-        "_blank",
-        "width=800,height=600,toolbar=no,menubar=no,resizable=yes"
-    );
+ window.open(url, "_blank",
+     "width=800,height=600,toolbar=no,menubar=no,resizable=yes");
 }
 </script>
  

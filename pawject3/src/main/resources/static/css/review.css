@@ -17,7 +17,7 @@
 }
 
 /*컬럼 간격 조정 */
-.review-table th:nth-child(2),
+/* .review-table th:nth-child(2),
 .review-table td:nth-child(2) {
     width: 80px;   
 }
@@ -46,15 +46,36 @@
 .review-table td:nth-child(9) {
     width: 150px;   
 }
-
-
-
+ */
+.review-table .col-no       { width: 80px; }
+.review-table .col-brand   { width: 170px; }
+.review-table .col-food    { width: 250px; }
+.review-table .col-rating  { width: 120px; }
+.review-table .col-title   { width: 250px; }
+.review-table .col-writer  { width: 170px; }
+.review-table .col-created { width: 150px; }
+.review-table .col-updated { width: 150px; }
 
 /* 상세 행 숨김 */
 .review-detail {
     display: none;
 }
 
+.detail-content {
+    overflow: visible;
+}
+
+
+.detail-btns {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 30px;
+}
+
+.review-detail td {
+    overflow: visible;
+}
 /* 상세 내부 테이블 */
 .detail-inner-table {
     width: 100%;
@@ -84,9 +105,11 @@
 .review-img-wrap {
     display: flex;
     gap: 10px;
-    overflow-x: auto;       /* 가로 스크롤 중요!*/
+    overflow-x: auto;
+	overflow-y: visible;
     justify-content: flex-end;
 }
+
 
 .review-img-wrap::-webkit-scrollbar {
     height: 8px;
@@ -122,22 +145,6 @@
 .detail-text {
     margin-bottom: 15px;
     text-align : left;
-}
-
-/* .detail-btns {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-     margin-top: 30px; 
-} */
-
-.review-detail td {
-    position: relative;
-}
-.detail-btns {
-    position: relative;
-    z-index: 5;
-    margin-top: 30px;
 }
 
 

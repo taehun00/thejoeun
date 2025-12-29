@@ -183,6 +183,23 @@ window.onload = function() {
   };
 };
 
+/* 수정 기능 여기로*/
+function submitReview() {
+
+	  $.ajax({
+	    url: "/reviewboard/reviewedit",
+	    type: "POST",
+	    data: $("#reviewUploadForm").serialize(),
+	    success: function (reviewid) {
+	      uploadImages(reviewid);
+	    },
+	    error: function () {
+	      alert("리뷰 수정 실패");
+	    }
+	  });
+
+	}
+
 
 /* 이미지 프리뷰 */
 let uploadFiles = [];
@@ -266,6 +283,7 @@ function uploadImages(reviewid) {
 
   const realFiles = uploadFiles.filter(f => f != null);
 
+  // 새 이미지 없으면 바로 종료
   if (realFiles.length === 0) {
     alert("수정 성공");
     location.href = "/reviewboard/reviewlist";
@@ -276,27 +294,26 @@ function uploadImages(reviewid) {
 
   realFiles.forEach(file => {
 
-      let fd = new FormData();
-      fd.append("file", file);
-      fd.append("reviewid", reviewid);
+    let fd = new FormData();
+    fd.append("file", file);
+    fd.append("reviewid", reviewid);
 
-      $.ajax({
-        url: "/reviewboard/reviewimg/upload",
-        type: "POST",
-        data: fd,
-        contentType: false,
-        processData: false,
-        success: function () {
-          uploaded++;
-          if (uploaded === realFiles.length) {
-            alert("수정 성공");
-            location.href="/reviewboard/reviewlist";
-          }
+    $.ajax({
+      url: "/reviewboard/reviewimg/upload",
+      type: "POST",
+      data: fd,
+      processData: false,
+      contentType: false,
+      success: function () {
+        uploaded++;
+        if (uploaded === realFiles.length) {
+          alert("수정 성공");
+          location.href = "/reviewboard/reviewlist";
         }
-      });
+      }
+    });
 
   });
-
 }
 </script>
 	</div><!-- content-->
