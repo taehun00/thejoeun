@@ -89,11 +89,11 @@ public class ReviewController {
 		if (delete1 > 0 && delete2 > 0) {
 			String result = "삭제 성공";
 			rttr.addFlashAttribute("success", result);
-			return "redirect:/reviewlist";
+			return "redirect:/reviewboard/reviewlist";
 		} else {
 			String result = "삭제 실패";
 			rttr.addFlashAttribute("success", result);
-			return "redirect:/reviewlist";
+			return "redirect:/reviewboard/reviewlist";
 		}
 	}
 
