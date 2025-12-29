@@ -19,11 +19,12 @@ import com.pawject.service.food.FoodService;
 	
 	@RestController
 	@RequestMapping("/foodboard")
-	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
+	//@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 	public class FoodAjaxController {
 		@Autowired FoodService service;
 
 		//페이징 적용 버전
+		@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 		@RequestMapping("/foodselectForList")
 		public Map<String, Object> foodselectForList(
 		    @RequestParam(defaultValue="1") int pstartno){	
@@ -39,6 +40,7 @@ import com.pawject.service.food.FoodService;
 		}
 		
 		//빠른 삭제
+		@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 		@PostMapping("/foodquikdelete")
 		public Map<String, Object> foodquikdelete(@RequestParam int foodid){
 			Map<String, Object> result = new HashMap<>();
@@ -50,6 +52,7 @@ import com.pawject.service.food.FoodService;
 		
 		
 		//검색 기능+검색페이징
+		@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 		@RequestMapping("/foodsearch")
 		public Map<String, Object> foodsearch(
 		        @RequestParam("keyword") String keyword,

@@ -51,5 +51,5 @@ public interface CSQuestionDao {
 	public List<CSQuestionDto> selectSearchCSQ(HashMap<String,Object> para);
 	
 //	<select id="selectSearchTotalCntCSQ" parameterType="string" resultType="int">	
-	int selectSearchTotalCntCSQ(Map<String, Object> para);
+	public int selectSearchTotalCntCSQ(Map<String, Object> para);
 }

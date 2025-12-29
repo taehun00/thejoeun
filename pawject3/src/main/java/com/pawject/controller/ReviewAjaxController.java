@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.pawject.dto.review.ReviewDto;
 import com.pawject.dto.review.ReviewImgDto;
 import com.pawject.dto.user.UserAuthDto;
+import com.pawject.dto.user.UserDto;
 import com.pawject.service.review.ReviewService;
 import com.pawject.service.user.UserSecurityService;
 @RestController
@@ -30,9 +31,12 @@ public class ReviewAjaxController {
     @PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER')") 
     public int writeAjax(ReviewDto dto,  Principal principal) {
 	
-	//	  UserAuthDto user = uservice.readAuth(principal.getName());
-	//	  dto.setUserid(user.getUserId());
-	
+	    UserDto param = new UserDto(principal.getName(), null);
+
+	    UserAuthDto auth = service.readAuthForReview(param);
+	    int userid = service.selectUserIdForReview(principal.getName());
+	    dto.setUserid(userid);
+
     	
         service.reviewInsert(dto);
         return dto.getReviewid();
