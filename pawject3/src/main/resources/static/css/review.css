@@ -124,12 +124,22 @@
     text-align : left;
 }
 
-.detail-btns {
+/* .detail-btns {
     display: flex;
     justify-content: flex-end;
     gap: 8px;
+     margin-top: 30px; 
+} */
+
+.review-detail td {
+    position: relative;
+}
+.detail-btns {
+    position: relative;
+    z-index: 5;
     margin-top: 30px;
 }
+
 
 /* 작성 버튼 */
 .write-btn-area {

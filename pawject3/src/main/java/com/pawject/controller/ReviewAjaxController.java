@@ -20,6 +20,7 @@ import com.pawject.dto.user.UserDto;
 import com.pawject.service.review.ReviewService;
 import com.pawject.service.user.UserSecurityService;
 @RestController
+@RequestMapping("/reviewboard")
 public class ReviewAjaxController {
 
     @Autowired
@@ -27,7 +28,7 @@ public class ReviewAjaxController {
     @Autowired UserSecurityService uservice;
     
     // 글 업로드 - get은 기존 컨트롤러 활용
-    @PostMapping("/reviewwrite.fn")
+    @PostMapping("/reviewwrite")
     @PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER')") 
     public int writeAjax(ReviewDto dto,  Principal principal) {
 	
@@ -44,7 +45,6 @@ public class ReviewAjaxController {
 
     // 이미지 업로드 
     @PostMapping("/reviewimg/upload")
-    @PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER')") 
     public Map<String, Object> reviewUpload(
             @RequestParam("reviewid") int reviewid,
             @RequestParam("file") MultipartFile file) {
@@ -60,7 +60,7 @@ public class ReviewAjaxController {
     }
     
     //글 수정
-    @PostMapping("/reviewedit.fn")
+    @PostMapping("/reviewedit")
     @PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER')") 
     public int updateAjax(ReviewDto dto) {
     	service.reviewUpdate(dto);
@@ -69,7 +69,6 @@ public class ReviewAjaxController {
     
    //이미지 수정
     @PostMapping("/reviewimg/update")
-    @PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER')") 
     public Map<String, Object> reviewUpdate(
             @RequestParam("reviewimgid") int reviewimgid,
             @RequestParam("file") MultipartFile file) {
@@ -86,18 +85,9 @@ public class ReviewAjaxController {
     
     //이미지 삭제
     @PostMapping("/reviewimg/delete")
-    @PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER')") 
     public int deletereviewimg( @RequestParam("reviewimgid") int reviewimgid) {
     	return service.reviewimgdelete(reviewimgid);
     }
-    
-    //페이징 
-//	@RequestMapping("/reviewPaging")
-//	public List<ReviewDto> reviewPaging(
-//	    @RequestParam(defaultValue="1") int pstartno
-//	){
-//	    return service.reviewSelect10(pstartno);
-//	}
     
     @RequestMapping("/reviewPaging")
     public Map<String, Object> reviewPaging(
@@ -114,9 +104,20 @@ public class ReviewAjaxController {
     }
     
     
+    @RequestMapping("/reviewsearchByFoodid")
+    public Map<String, Object> reviewsearchByFoodid(@RequestParam int foodid){
+    	Map<String, Object> result = new HashMap<>();
+    	int total = service.reviewsearchByFoodidCnt(foodid);
+    	List<ReviewDto> list = service.reviewsearchByFoodid(foodid);
+    	
+    	result.put("total", total);
+    	result.put("list", list);
+    	return result;
+    }
+    
+    
     //서치
     @RequestMapping("/reviewsearch")
-    @PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER')") 
     public Map<String, Object> reviewsearch(
 	        @RequestParam("keyword") String keyword,
 	        @RequestParam("searchType") String searchType){
@@ -131,7 +132,6 @@ public class ReviewAjaxController {
 
 	    return result;
 	}
-
 }
 
 

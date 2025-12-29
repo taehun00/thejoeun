@@ -43,4 +43,9 @@ public interface ReviewService {
 	//권한
 	public UserAuthDto readAuthForReview(UserDto udto);
 	public int selectUserIdForReview(String email);
+	
+	
+	//사료-리뷰 연결
+	public List<ReviewDto> reviewsearchByFoodid(int foodid);
+	public int reviewsearchByFoodidCnt(int foodid);
 }

@@ -42,13 +42,13 @@
           <li class="nav-item">
           	<a class="nav-link" th:href="@{/petfoodsearcher/searchpetfood}">사료찾기</a>
           </li> 
+          <li class="nav-item">
+          	<a class="nav-link" th:href="@{/reviewboard/reviewlist}">사료리뷰</a>
+          </li> 
 
           <!-- 로그인 사용자 메뉴 -->
           <sec:authorize access="isAuthenticated()">
            <li class="nav-item"><a class="nav-link"  sec:authorize="isAnonymous()" th:href="@{/faqBoard/faqlist}">고객센터</a></li>
-           <li class="nav-item">
-            <a class="nav-link" href="${pageContext.request.contextPath}/reviewlist.fn">사료 리뷰</a>
-          </li>
           <li class="nav-item">
             <a class="nav-link" href="${pageContext.request.contextPath}/list.execboard">운동 챌린지</a>
           </li>
@@ -70,9 +70,6 @@
           <!-- 비로그인 사용자 메뉴 -->
           <sec:authorize access="isAnonymous()">
 			<li class="nav-item"><a class="nav-link"  sec:authorize="isAnonymous()" th:href="@{/faqBoard/faqlist}">고객센터</a></li>
-          <li class="nav-item">
-            <a class="nav-link" href="${pageContext.request.contextPath}/reviewlist.fn">사료 리뷰</a>
-          </li>
           <li class="nav-item">
             <a class="nav-link" href="${pageContext.request.contextPath}/list.execboard">운동 챌린지</a>
           </li>
