@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.pawject.dao.PetDao;
 import com.pawject.dao.UserDao;
 import com.pawject.dto.user.AuthDto;
 import com.pawject.dto.user.UserAuthDto;
@@ -27,6 +28,7 @@ public class UserSecurityServiceImpl implements UserSecurityService {
 
 	
     @Autowired private UserDao userDao;
+    @Autowired private PetDao petDao;
     @Autowired private PasswordEncoder passwordEncoder;
     @Autowired private UtilUpload utilUpload;
 
@@ -132,6 +134,8 @@ public class UserSecurityServiceImpl implements UserSecurityService {
         }
 
         dto.setUserId(dbUser.getUserId());
+        petDao.deletePetsByUser(dto.getUserId());
+
         userDao.deleteRolesByUserId(dto.getUserId());
         return userDao.deleteMember(dto);
     }
@@ -178,9 +182,14 @@ public class UserSecurityServiceImpl implements UserSecurityService {
 
     /* 관리자용 유저 조회 */
     @Override
-    public List<UserDto> listUsers(UserDto dto) {
-        return userDao.listUsers(dto);
-    }
+	public List<UserDto> listUsers(int pstartno) {
+		HashMap<String, Object> para = new HashMap();
+		int start = (pstartno - 1 ) * 10 + 1;
+		para.put("start", start);
+		para.put("end", start + 10 - 1);
+		
+		return userDao.listUsers(para);
+	}
 
     @Override
     public int selectTotalCnt() {

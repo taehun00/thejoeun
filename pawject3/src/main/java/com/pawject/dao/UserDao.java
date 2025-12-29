@@ -1,5 +1,6 @@
 package com.pawject.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,7 +53,7 @@ public interface UserDao {
     UserDto findUserByEmail(String email);
 
     // 전체 유저 조회 (관리자) + 페이징
-    List<UserDto> listUsers(UserDto dto);
+    List<UserDto> listUsers(HashMap<String, Object> para);
 
     // 전체 유저 수
     int selectTotalCnt();

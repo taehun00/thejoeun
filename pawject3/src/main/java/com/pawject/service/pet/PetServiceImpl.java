@@ -6,45 +6,50 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.pawject.dao.PetDao;
 import com.pawject.dto.pet.PetDto;
+import com.pawject.util.UtilUpload;
 
 @Service
 public class PetServiceImpl implements PetService {
 	
-    private final PetDao pdao;
-
+    @Autowired private final PetDao pdao;
+    @Autowired private UtilUpload utilUpload;
+    
     // 생성자 주입 (Spring Boot 권장 방식)
     public PetServiceImpl(PetDao pdao) {
         this.pdao = pdao;
     }
 
-    @Transactional
-    @Override
-    public int petJoin(MultipartFile file, PetDto pet) {
-        String fileName = null;
-
+    /* 파일 업로드 공통 처리 */
+    public String uploadFile(MultipartFile file, String existingFile) {
         if (file != null && !file.isEmpty()) {
-            fileName = file.getOriginalFilename();
-            String uploadPath = "C:/file/"; // TODO: application.properties로 관리 권장
-            File img = new File(uploadPath + fileName);
             try {
-                file.transferTo(img); // 파일 업로드
+                return utilUpload.fileUpload(file); // UUID_원본파일명 형태로 저장
             } catch (IOException e) {
                 throw new RuntimeException("파일 업로드 실패", e);
             }
-            pet.setPFile(fileName);
-        } else {
-            // 기본 이미지 지정
-            pet.setPFile("x.png"); // 서버에 기본 이미지 준비
         }
+        // 업로드하지 않았다면 기존 파일명 유지하거나 기본 이미지 사용
+        return existingFile != null ? existingFile : "no.png";
+    }
 
+    @Transactional
+    @Override
+    public int petJoin(MultipartFile file, PetDto pet) {
+        // 1. 파일 업로드 처리 (없으면 no.png)
+        pet.setPFile(uploadFile(file, "no.png"));
+
+        // 2. DB 저장
         return pdao.petJoin(pet);
     }
+
 
     @Override
     public List<PetDto> selectPetsByUserId(int userId) {
@@ -58,21 +63,15 @@ public class PetServiceImpl implements PetService {
 
     @Transactional
     @Override
-    public int updatePetByUser(MultipartFile file, PetDto pet, int userId) {
-        if (file != null && !file.isEmpty()) {
-            String fileName = file.getOriginalFilename();
-            String uploadPath = "C:/file/";
-            File img = new File(uploadPath + fileName);
-            try {
-                file.transferTo(img);
-            } catch (IOException e) {
-                throw new RuntimeException("파일 업로드 실패", e);
-            }
-            pet.setPFile(fileName);
-        }
+    public int updatePetByUser(MultipartFile file, @Param("pet") PetDto pet, int userId) {
+        // 파일 업로드 처리 (없으면 기존 파일 유지, 기존도 없으면 no.png)
+        String savedFileName = uploadFile(file, pet.getPFile());
+        pet.setPFile(savedFileName);
 
+        // DB 업데이트 실행
         return pdao.updatePetByUser(pet, userId);
     }
+
 
     @Override
     public PetDto selectPetDetailByAdmin(int petId) {
@@ -85,7 +84,7 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    public int deletePetByUser(int petId, int userId) {
+    public int deletePetByUser(@Param("petId") int petId, @Param("userId") int userId) {
         return pdao.deletePetByUser(petId, userId);
     }
 

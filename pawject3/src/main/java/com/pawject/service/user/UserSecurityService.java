@@ -37,7 +37,7 @@ public interface UserSecurityService {
     boolean matchesPassword(String email, String provider, String rawPassword);
 
     /* 관리자용 유저 조회 */
-    List<UserDto> listUsers(UserDto dto);
+    public List<UserDto> listUsers(int pstartno);
     int selectTotalCnt();
     UserDto selectUser(int userId);
 

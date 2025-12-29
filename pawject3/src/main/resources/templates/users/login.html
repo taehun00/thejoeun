@@ -29,7 +29,12 @@
                 <input type="password" id="password" name="password" class="form-control" required>
             </div>
 
-            <button type="submit" class="btn btn-primary">로그인</button>
+            <div class="d-flex justify-content-between">
+	            <button type="submit" class="btn btn-primary">로그인</button>
+	            <!-- 회원가입 버튼 -->
+	            <a th:href="@{/users/join}" class="btn btn-secondary">회원가입</a>
+	        </div>
+
         </form>
     </div>
     <!-- 로그인한 유저 -->

@@ -25,16 +25,21 @@ public class SecurityConfig {
 		http /* 1. 허용경로 */
 			.authorizeHttpRequests(auth -> auth
 					// 누구나 다 접근가능
-					.antMatchers("/users/join", "/users/login", "/users/iddouble", "/images/**", "/api/**").permitAll()
+					.antMatchers("/users/join", "/users/login", "/users/iddouble", "/images/**", "/api/**",
+							"/notifications/**",   // 알림 API 허용
+		                    "/ws/**"               // WebSocket 엔드포인트 허용
+							).permitAll()
 					// 로그인한 유저들만 접근가능
 					.antMatchers("/users/mypage", "/users/update", "/users/delete").authenticated()
+					// 관리자만 접근 가능
+		            .antMatchers("/admin/**").hasRole("ADMIN")
 					.anyRequest().permitAll()
 			)
 			/* 2. 로그인처리 */
 			.formLogin( form -> form
 					.loginPage("/users/login") 					// 로그인 폼
 					.loginProcessingUrl("/users/loginProc")		// 로그인 경로
-					.defaultSuccessUrl("/users/mypage", true) 	// 로그인성공시 경로
+					.defaultSuccessUrl("/users/mainpage", true) 	// 로그인성공시 경로
 					.failureUrl("/users/fail")					// 로그인실패시 경로
 					.permitAll()
 			)
@@ -51,8 +56,9 @@ public class SecurityConfig {
 					.userInfoEndpoint(userInfo -> userInfo.userService(oauth2IUserService))
 			)
 			/* 4. csrf 예외처리*/
-			.csrf( csrf -> csrf.ignoringAntMatchers("/users/join", "/users/update", "/users/delete")
-				
+			.csrf( csrf -> csrf.ignoringAntMatchers("/users/join", "/users/update", "/users/delete",  "/notifications/**",
+						"/ws/**"   // WebSocket 엔드포인트도 CSRF 예외 처리)
+				)
 			);
 		return http.build();
 	}

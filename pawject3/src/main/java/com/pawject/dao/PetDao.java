@@ -16,7 +16,7 @@ public interface PetDao {
 
     // 펫 페이지 (사용자)
     List<PetDto> selectPetsByUserId(int userId);
-
+    
     // 펫 상세페이지 (사용자)
     PetDto selectPetDetail(@Param("userId") int userId,
                            @Param("petId") int petId);
