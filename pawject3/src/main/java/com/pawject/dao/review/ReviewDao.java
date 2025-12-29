@@ -5,8 +5,9 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-
 import com.pawject.dto.review.ReviewDto;
+import com.pawject.dto.user.UserAuthDto;
+import com.pawject.dto.user.UserDto;
 @Mapper
 public interface ReviewDao {
 	
@@ -41,6 +42,13 @@ public interface ReviewDao {
 		
 	//<select  resultMap="ReviewMap" id="reviewsearchcnt" parameterType="java.util.HashMap">
 		public int reviewsearchcnt(HashMap<String, Object> para);
+		
+		
+		//권한용 임시메서드
+		//<select id="readAuthForReview" resultMap="userAuthMap" parameterType="UserDto">
+		public UserAuthDto readAuthForReview(UserDto udto);
+		//<select id="selectUserIdForReview" resultType="int" parameterType="String">
+		public int selectUserIdForReview(String email);
 		
 }
 

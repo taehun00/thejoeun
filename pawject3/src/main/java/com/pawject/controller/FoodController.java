@@ -20,11 +20,12 @@ import com.pawject.service.food.FoodService;
 
 @Controller
 @RequestMapping("/foodboard")
-@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
+//@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 public class FoodController {
 	@Autowired FoodService service;
 
 	//리스트
+	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 	@RequestMapping("/foodlist.fn")
 	public String list(Model model,
 						@RequestParam(value="pstartno", defaultValue = "1") int pstartno ) { //전체 목록 게시판 뷰
@@ -37,6 +38,7 @@ public class FoodController {
 	}
 
 	//신규등록
+	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 	@RequestMapping("/foodwrite.fn")
 	public String write_get(Model model) { //신규사료+영양입력폼
 		
@@ -98,6 +100,7 @@ public class FoodController {
 	
 	
 	//편집
+	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 	@RequestMapping("/foodedit.fn")
 	public String edit_get(int foodid, Model model) { //수정폼
 		model.addAttribute("fdto", service.foodselect(foodid));
@@ -144,7 +147,7 @@ public class FoodController {
 	    }
 
 	}
-	
+	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 	@RequestMapping("/fooddelete.fn")
 	public String delete(@RequestParam int foodid,  RedirectAttributes rttr) {//삭제폼
 							//dto 쓰기는 과함 id만 있으면 됨

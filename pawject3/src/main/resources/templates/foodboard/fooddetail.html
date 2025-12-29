@@ -125,12 +125,15 @@
 	<div class="text-end mt-4">
 
 		<a th:href="@{/foodboard/foodlist.fn}"
+			sec:authorize="hasRole('ROLE_ADMIN')"
 			class="btn btn-slateBlue" style="margin-right: 6px;"> 목록보기 </a> 
 			
 		<a th:href="@{/foodboard/foodedit.fn?foodid={foodid}(foodid=${fdto.foodid})}"
+			sec:authorize="hasRole('ROLE_ADMIN')"
 			class="btn btn-mint"> 수정 </a> 
 			
 		<a th:href="@{/foodboard/fooddelete.fn?foodid={foodid}(foodid=${fdto.foodid})}"
+			sec:authorize="hasRole('ROLE_ADMIN')"
 			th:onclick="return confirm('정말로 삭제하시겠습니까?');" class="btn btn-burgundy">
 			삭제 </a>
 

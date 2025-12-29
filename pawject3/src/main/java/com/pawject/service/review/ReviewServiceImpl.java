@@ -13,6 +13,8 @@ import com.pawject.dao.review.ReviewDao;
 import com.pawject.dao.review.ReviewImgDao;
 import com.pawject.dto.review.ReviewDto;
 import com.pawject.dto.review.ReviewImgDto;
+import com.pawject.dto.user.UserAuthDto;
+import com.pawject.dto.user.UserDto;
 @Service
 public class ReviewServiceImpl implements ReviewService {
 	@Autowired ReviewDao rdao;
@@ -276,6 +278,16 @@ public class ReviewServiceImpl implements ReviewService {
 		return rdao.reviewsearchcnt(para);
 	}
 
+	
+	@Override
+	public UserAuthDto readAuthForReview(UserDto udto){
+		return rdao.readAuthForReview(udto);
+	}
+	
+	@Override
+	public int selectUserIdForReview(String email) {
+		return rdao.selectUserIdForReview(email);
+	}
 	
 	
 	

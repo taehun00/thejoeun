@@ -170,6 +170,9 @@
 	 <tbody id="resultBody"></tbody>
 
 	</table>
+	
+	<!-- 페이징 -->
+	<div id="pagingArea" class="mt-2 text-center"></div>
 			 
 	 
 	 </div>
@@ -182,6 +185,13 @@
 		let csrfToken = $("#csrfToken").val();
 		let csrfHeader = $("#csrfHeader").val();
 		
+		// 전역변수-페이징 화면 분기
+		let currentMode = "list";
+		let currentKeyword = "";
+		let currentPageNo = 1;
+		
+		// 초기 로드 - 여기선 필요없음, 제거.
+		
 		//토글
 		function toggleContent() {
 			  const panel = document.getElementById("searchFilterPanel");
@@ -189,7 +199,19 @@
 			  panel.classList.toggle("hidden");
 			}
 			
-			
+		//페이징 버튼
+		$(document).on("click", ".pageBtn", function(){
+		  let page = $(this).data("page");
+		
+		  //여기 조심!
+		  const params = cleanParams({
+		    ...collectSearchParams(),
+		    keyword: currentKeyword,
+		    pstartno : page
+		  });
+		
+		  doPetfoodSearch(params);
+		});
 		
 		//검색필터
 	    window.onload = function () {
@@ -288,20 +310,25 @@
 		
 		//검색 - 전체 스캔 방지
 			function searchPetfood() {
-			  const rawParams = collectSearchParams();
-			  const params = cleanParams(rawParams);
+	
+			  const rawParams = collectSearchParams();  //전체 값
+			  const params = cleanParams(rawParams);	//빈값 지우기
 			
 			  if (Object.keys(params).length === 0) {
 			    alert("검색 조건을 하나 이상 선택해 주세요.");
 			    return;
 			  }
-			
+			  params.pstartno = 1;  //검색 페이지 여기서 설정해줘야됨
 			  doPetfoodSearch(params);
 			}
 		 function doPetfoodSearch(params){
 
+			 currentMode = "list";
+			 currentKeyword = params.keyword || "";   //값이 빈 인자 존재
+			 currentPageNo  = params.pstartno || 1;		// 그냥 currentKeyword = keyword 아렇게 받으면 터짐.
+			  											// 컨트롤러 지저분한 것과 같슨
 			  $.ajax({
-			    url:"/petfoodsearcher/searchfilter",
+			    url:"/petfoodsearcher/searchfilterPaging",
 			    type:"GET",
 			    data:params, 
 			    beforeSend: function(xhr){
@@ -312,6 +339,7 @@
 
 			    success: function(result){
 			      const list = result.list;   // 빼먹지말기
+			      const total = result.total;
 			      
 			      const $tbody = $("#resultBody");
 			      $tbody.empty();
@@ -327,9 +355,7 @@
 
 			      list.forEach(function(f){
 
-			        const imgSrc = f.foodimg
-			          ? `/foodimg/${f.foodimg}`
-			          : `/foodimg/brand0${f.brandid}.png`;
+			        const imgSrc = f.foodimg ? `/foodimg/${f.foodimg}` : `/foodimg/brand0${f.brandid}.png`;
 
 			        const row = `
 			          <tr>
@@ -344,9 +370,18 @@
 			                  <span class="desc">${f.description}</span>
 			                </div>
 			                <div class="action">
-			                  <button class="btn btn-olive btn-sm">상세보기</button>
-			                  <button class="btn btn-olive btn-sm">리뷰</button>
-			                </div>
+				                
+				        	<button class="btn btn-olive btn-sm"
+						            onclick="window.open(
+								              '/foodboard/fooddetail.fn?foodid=${f.foodid}',
+								              'detailPopup',
+								              'width=900,height=700,scrollbars=yes,resizable=yes'
+								            )">
+				        	상세보기</button> 
+	
+			                   <button class="btn btn-olive btn-sm">리뷰</button>
+	
+			                 </div>
 			              </div>
 			            </td>
 			          </tr>
@@ -354,13 +389,46 @@
 
 			        $tbody.append(row);
 			      });
+			      
+			      
+			      renderPaging(result.paging);  //페이징
+			      
+			      
 			    },
 
 			    error: function(){
 			      alert("검색 중 오류가 발생했습니다.");
 			    }
+			    
+			    
 			  });
 			}
+		 
+		 function renderPaging(p){
+			  let area = $("#pagingArea");
+			  area.empty();
+
+			  if(!p || p.pagetotal <= 1) return;
+
+			  let html = "";
+			  let end = Math.min(p.end, p.pagetotal);
+
+			  if(p.start > 1){
+			    html += `<button class="btn btn-sm btn-outline-primary pageBtn" data-page="${p.start-1}">이전</button>`;
+			  }
+
+			  for(let i=p.start; i<=end; i++){
+			    let active = (i === p.current) ? "btn-primary" : "btn-outline-primary";
+			    html += `<button class="btn btn-sm ${active} pageBtn ms-2" data-page="${i}">${i}</button>`;
+			  }
+
+			  if(end < p.pagetotal){
+			    html += `<button class="btn btn-sm btn-outline-primary pageBtn ms-2" data-page="${end+1}">다음</button>`;
+			  }
+
+			  area.html(html);
+			}		 
+		 
 		</script>
 
 	</div><!-- content-->

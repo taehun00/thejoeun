@@ -18,4 +18,12 @@ public interface SearchPetfoodDao {
 	
 	//	<select resultMap="RangeMap" id="rangeList">
 	public List<SearchPetfoodDto> rangeList();
+	
+	
+	//서치+페이징
+	//<select resultMap="SearchPetfoodMap" id="foodfilter10" parameterType="java.util.HashMap">
+	public List<SearchPetfoodDto> foodfilter10(Map<String,Object> params);
+	
+	//<select resultType="int" id="foodfilterCnt" parameterType="java.util.HashMap">
+	public int foodfilterCnt(Map<String,Object> params);
 }

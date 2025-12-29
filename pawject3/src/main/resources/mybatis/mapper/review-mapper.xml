@@ -206,4 +206,37 @@
 	    order by r.reviewid desc
 	</select>	
 	
+	
+	
+	<!-- 내 글 구분 권한 확인용 -->
+	<!-- 유저 완성 후 통합시킬 것 -->
+    <!-- RoleDto 매핑 -->
+    <resultMap type="AuthDto" id="roleMap">
+        <result property="authId" column="AUTHID"/>
+        <result property="email"  column="EMAIL"/>
+        <result property="auth"   column="AUTH"/>
+    </resultMap>
+
+    <!-- UserAuthDto 매핑 -->
+    <resultMap type="UserAuthDto" id="userAuthMap">
+        <result property="email"    column="EMAIL"/>
+        <result property="password" column="PASSWORD"/>
+        <result property="userId"   column="USERID"/>
+        <collection property="authList" resultMap="roleMap"/>
+    </resultMap>
+    
+	<select id="readAuthForReview" resultMap="userAuthMap" parameterType="UserDto">
+	    SELECT u.email, r.auth
+	    FROM users u
+	    LEFT JOIN roles r ON u.email = r.email
+	    WHERE u.email = #{email}
+	</select>
+	
+	<select id="selectUserIdForReview" resultType="int" parameterType="String">
+	    SELECT USERID FROM USERS
+	    WHERE EMAIL = #{email}
+	</select>
+	
+	
+	
 </mapper>
