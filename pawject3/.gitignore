@@ -1,29 +1,33 @@
-# IDE 설정
-*.iml
-.idea/
-.classpath
-.project
-.settings/
-.sts4-cache
-.vscode/
-
-# 빌드 결과물
+HELP.md
 target/
-build/
-out/
-*.class
-
-# 로그 및 임시 파일
-*.log
-*.tmp
-*.bak
-
-# OS 자동 생성 파일
-.DS_Store
-Thumbs.db
-
-# Maven Wrapper
 .mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
 
-# 민감 정보 (환경 설정은 별도 관리)
-*.properties
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/

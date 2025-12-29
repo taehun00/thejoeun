@@ -36,8 +36,7 @@ public class CustomUserDetails implements UserDetails, OAuth2User{
 	}
 	@Override
 	public String getUsername() {
-		//return user.getEmail() + ":" + user.getProvider(); // 1@1:local , 2@2:kakao
-		return user.getEmail();
+		return user.getEmail() + ":" + user.getProvider(); // 1@1:local , 2@2:kakao
 	}
 	@Override
 	public boolean isAccountNonExpired() {
