@@ -17,7 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class ReviewApi {
 	
-	@Value("${openai.api.key.hj}") 
+	@Value("${openai.api.key.hj}")
 	private String apikey;
 
 	private static final String API_URL="https://api.openai.com/v1/chat/completions";
@@ -39,6 +39,7 @@ public class ReviewApi {
 			        "너는 사용자 리뷰를 정중하고 중립적인 표현으로 다듬는 도우미다. " +
 			        "의미는 유지하고 비속어, 과한 표현, 감정적인 표현만 순화한다. " +
 			        "주제는 사료 리뷰이며 섭취 대상은 강아지, 고양이다. " +
+			        "강아지, 고양이 여부는 화면의 종과 사료 이름에서 확인이 가능하다. " +
 			        "출력은 반드시 아래 형식을 따른다:\n" +
 			        "제목: <다듬은 제목>\n" +
 			        "내용: <다듬은 내용>"
