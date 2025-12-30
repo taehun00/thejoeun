@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+<head lang="ko">
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div layout:fragment="content">
+      <h3 class="card-header"> 반려동물 질환 글 수정</h3>
+	  <form th:action="@{/board/edit}"  method="post"  enctype="multipart/form-data"> 
+	      <input type="hidden"   name="disno"  th:value="${dto.disno}"> 
+	      <div class="mb-3">
+		    <label for="userid" class="form-label">WRITER:</label>
+		    <input type="text" class="form-control" id="userid"  name="userid"  th:value="${dto.userid}">
+		  </div>
+		  <div class="mb-3 mt-3">
+		    <label for="disname" class="form-label">질환명:</label>
+		    <input type="text" class="form-control" id="disname" 
+		    	placeholder="질환명을 입력해주세요" name="disname"   th:value="${dto.disname}">
+		  </div>
+		  <div class="mb-3">
+		    <label for="bpass" class="form-label">PASS:</label>
+		    <input type="password" class="form-control" id="bpass"
+		    	 placeholder="비밀번호를 입력해주세요" name="bpass">
+		  </div>
+		  
+		  <!-- <div class="mb-3">
+		    <label for="bcontent" class="form-label">CONTENT:</label>
+		    <textarea class="form-control" id="bcontent" placeholder="내용을 입력해주세요" 
+		    	name="bcontent"  th:text="${dto.bcontent}"></textarea>
+		  </div>  -->
+		  
+		  <div class="mb-3">
+		    <label for="disex" class="form-label">질환명 설명:</label>
+		    <textarea class="form-control" id="disex" placeholder="질환명 설명해주세요"   
+		    	name="disex"   th:text="${dto.disex}"></textarea>
+		  </div> 
+		  
+		    <div class="mb-3">
+		    <label for="kindpet" class="form-label">반려동물 종:</label>
+		    <textarea class="form-control" id="kindpet" placeholder="반려동물 종을 입력해주세요"   
+		    	 name="kindpet"   th:text="${dto.kindpet}"></textarea>
+		  </div> 
+		  
+		    <div class="mb-3">
+		    <label for="infval" class="form-label">질환명관련 수치:</label>
+		    <textarea class="form-control" id="infval" placeholder="질환명관련 수치 내용을 입력해주세요"   
+		    	 name="infval"   th:text="${dto.infval}"></textarea>
+		  </div> 
+		  
+		    <div class="mb-3">
+		    <label for="mannote" class="form-label">질환명관련 주의 사항:</label>
+		    <textarea class="form-control" id="mannote" placeholder="질환명관련 주의사항 입력해주세요"   
+		    	 name="mannote"   th:text="${dto.mannote}"></textarea>
+		  </div> 
+		  
+		  
+		  
+		 <!--  <div class="mb-3">
+		    <label for="file" class="form-label">FILE:</label>
+		    <input type="file" class="form-control" id="file" placeholder="비밀번호를 입력해주세요" name="file">
+		    <input type="text"  th:value="${dto.bfile}" name="bfile"  class="form-control" />
+		  </div> -->
+		  
+		  <div class="mb-3  text-end">
+		  	<button type="submit" class="btn btn-primary">글수정</button>  
+		  	<a th:href="@{/board/list}"  class="btn btn-primary">목록보기</a>
+		  </div>
+	 </form> 
+	</div>   
+	<!--    http://localhost:8484/board/edit -->
+</body>
+</html>

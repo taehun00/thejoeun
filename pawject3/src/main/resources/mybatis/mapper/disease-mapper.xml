@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pawject.dao.Disswc.DiseaseDao"> 
+
+  <resultMap id="diseaseMap" type="com.pawject.dto.Disswc.DisswcDto">
+    <result property="disno"     column="DISNO"/>
+    <result property="userid"    column="USERID"/>
+    <result property="disname"   column="DISNAME"/>
+    <result property="disex"     column="DISEX"/>
+    <result property="kindpet"   column="KINDPET"/>
+    <result property="infval"    column="INFVAL"/>
+    <result property="mannote"   column="MANNOTE"/>
+    <result property="bhit"      column="BHIT"/>
+    <result property="createdat" column="CREATEDAT"/>
+    <result property="bip"       column="BIP"/>
+    <result property="bpass"     column="BPASS"/>
+  </resultMap> 
+
+  <!-- 페이징 (1) -->
+  <select id="select10" parameterType="map" resultMap="diseaseMap">
+    SELECT * FROM (
+      SELECT row_number() OVER(ORDER BY disno DESC) AS rnum,
+             disno, userid, disname, disex, kindpet, infval, mannote,
+             bhit, createdat, bip, bpass
+      FROM disease
+    ) A
+    WHERE A.rnum BETWEEN #{start} AND #{end}
+  </select>
+
+  <!-- 페이징 (2) -->
+  <select id="selectTotalCnt" resultType="int">
+    SELECT COUNT(*) FROM disease
+  </select>
+
+  <!-- 페이징+검색어 (3) -->
+  <select id="select3" parameterType="map" resultMap="diseaseMap">
+    SELECT * FROM (
+      SELECT row_number() OVER(ORDER BY disno DESC) AS rnum,
+             disno, userid, disname, disex, kindpet, infval, mannote,
+             bhit, createdat, bip, bpass
+      FROM disease
+      WHERE disname LIKE '%' || #{search} || '%'
+    ) A
+    WHERE A.rnum BETWEEN #{start} AND #{end}
+  </select> 
+
+  <!-- 페이징+검색어 (4) 검색어 기준 전체 건수 -->
+  <select id="selectSearchTotalCnt" parameterType="string" resultType="int">
+    SELECT COUNT(*)
+    FROM disease
+    WHERE disname LIKE '%' || #{keyword} || '%'
+  </select>
+
+  <insert id="insert" parameterType="com.pawject.dto.Disswc.DisswcDto">
+    INSERT INTO disease (
+      disno, userid, disname, disex, kindpet, infval, mannote, bip, bpass
+    )
+    VALUES (
+      disease_seq.nextval,
+      #{userid}, #{disname}, #{disex}, #{kindpet}, #{infval}, #{mannote},
+      #{bip}, #{bpass}
+    )
+  </insert>
+
+  <update id="update" parameterType="com.pawject.dto.Disswc.DisswcDto">
+    UPDATE disease
+    SET disname=#{disname}, disex=#{disex}, kindpet=#{kindpet},
+        infval=#{infval}, mannote=#{mannote}
+    WHERE disno=#{disno} AND bpass=#{bpass}
+  </update> 
+
+  <update id="updateHit" parameterType="int">
+    UPDATE disease SET bhit = bhit + 1 WHERE disno=#{disno}
+  </update>	
+
+  <delete id="delete" parameterType="int">
+    DELETE FROM disease WHERE disno=#{disno}
+  </delete>
+
+  <select id="selectAll" parameterType="map" resultMap="diseaseMap">
+    SELECT * FROM disease ORDER BY disno DESC
+  </select>
+
+  <select id="select" parameterType="int" resultMap="diseaseMap">
+    SELECT * FROM disease WHERE disno=#{disno}
+  </select>
+
+</mapper>
