@@ -174,8 +174,13 @@ SELECT * FROM FAQ WHERE ISACTIVE=1 AND CATEGORY='계정' ORDER BY FAQID;
 INSERT INTO FAQ(FAQID, CATEGORY, QUESTION, ANSWER, KEYWORDS, ISACTIVE)
 VALUES (FAQ_SEQ.NEXTVAL, '계정', '펫 등록을 하고 싶어요', '로그인 후 마이페이지의 펫 등록 기능을 이용해 주세요', '펫, 등록, 추가', 1);
 
---UPDATE(이용X)
+--UPDATE(전체수정 이용X/활성화 변경)
 UPDATE FAQ SET CATEGORY='기타', QUESTION='관리자에게 문의하고 싶어요', ANSWER='고객센터 채팅 기능을 이용해 주세요. 채팅 상담 이용 시간은 평일 09:00~18:00 입니다', KEYWORDS='관리자, 문의, 채팅, 고객센터', ISACTIVE='1', UPDATEDAT=SYSDATE;
+
+UPDATE FAQ SET  ISACTIVE='0' WHERE FAQID=2;
+
+--
+
 
 --DELETE(이용X)
 DELETE FROM FAQ WHERE FAQID=1;

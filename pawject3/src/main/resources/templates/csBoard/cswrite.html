@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+<head lang="ko">
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div layout:fragment="content">
+	
+		<h3 class="card-header">1:1 문의 작성</h3>
+		<form th:action="@{/csBoard/cswrite}" 
+			    method="post"  >
+			
+			
+			<div class="row align-items-end">
+			    <div class="col-sm-6">
+			        <label for="title" class="form-label">제목</label>
+			        <input type="text" class="form-control" id="title"
+			               placeholder="제목을 입력해주세요" name="title">
+			    </div>
+			
+			    <div class="col-sm-2">
+				<select name="category" class="form-select">
+				    <option value="">--분류--</option>
+				    <option th:each="c : ${categories}"
+				            th:value="${c}"
+				            th:text="${c}">
+				    </option>
+				</select>
+			    </div>
+				<div class="mb-3  text-end col-sm-4">
+					<button type="submit" class="btn btn-primary">작성완료</button>
+					<a th:href="@{/csBoard/cslistuser}"  class="btn btn-primary">내질문보기</a>
+				</div>			    
+			   
+			</div>
+
+			<div class="mb-3">
+				<label for="content" class="form-label">내용</label>
+				<textarea class="form-control" id="content" placeholder="내용을 입력해 주세요"
+					name="content" ></textarea>
+			</div>
+		
+		</form> 
+	</div><!-- content-->
+</body>
+</html>

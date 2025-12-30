@@ -2,9 +2,11 @@ package com.pawject.service.user;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.pawject.dto.user.UserDto;
+import com.pawject.dto.support.CSQuestionDto;
 import com.pawject.dto.user.AuthDto;
 import com.pawject.dto.user.UserAuthDto;
 
@@ -37,7 +39,7 @@ public interface UserSecurityService {
     boolean matchesPassword(String email, String provider, String rawPassword);
 
     /* 관리자용 유저 조회 */
-    List<UserDto> listUsers(UserDto dto);
+    public List<UserDto> listUsers(int pstartno);
     int selectTotalCnt();
     UserDto selectUser(int userId);
 

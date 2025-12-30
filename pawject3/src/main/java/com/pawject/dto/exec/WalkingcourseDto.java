@@ -9,7 +9,6 @@ import lombok.ToString;
 @Getter @Setter @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class WalkingcourseDto {
 	private int    courseid;	//COURSEID
 	private int    postid;		//POSTID

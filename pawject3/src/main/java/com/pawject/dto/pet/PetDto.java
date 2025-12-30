@@ -18,8 +18,8 @@ public class PetDto {
     private int petTypeId;      // 반려동물 종류 ID (FK → PETTYPE.PETTYPEID)
     private String pFile;       // 반려동물 이미지 파일명
     private String createdAt;     // 등록일
-    private Integer page;        // 나이
-    private String pgender;      // 성별 (M/F)
+    private Integer pAge;        // 나이
+    private String pGender;      // 성별 (M/F)
     private String email;
 
 }

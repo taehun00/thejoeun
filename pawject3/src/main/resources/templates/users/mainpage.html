@@ -1,11 +1,88 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{fragments/layout}">
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Insert title here</title>
+    <meta charset="UTF-8">
+    <title>메인 페이지</title>
+    <!-- 외부 CSS 불러오기 -->
+    <link rel="stylesheet" th:href="@{/css/mainpage.css}">
 </head>
+
+
 <body>
- 메인페이지
+<div layout:fragment="content">
+    <h2>메인페이지</h2>
+
+    <!-- 알림 UI -->
+    <div id="toast" class="toast">
+	  <span class="icon">🎉</span>
+	  <span id="toast-message">회원가입을 축하합니다!</span>
+	  <span id="toast-close">✖</span>
+	</div>
+
+	<!-- 메인 3가지 파트 -->
+    <main class="main-sections">
+        <section class="part">
+            <h3>사료</h3>
+            <p>반려동물의 건강을 위한 다양한 사료 정보를 제공합니다.</p>
+            <a href="/feed" class="btn">자세히 보기</a>
+        </section>
+
+        <section class="part">
+            <h3>운동</h3>
+            <p>운동 방법과 활동량 관리 팁을 확인하세요.</p>
+            <a href="/exercise" class="btn">자세히 보기</a>
+        </section>
+
+        <section class="part">
+            <h3>질병</h3>
+            <p>질병 예방과 치료 관련 정보를 확인할 수 있습니다.</p>
+            <a href="/disease" class="btn">자세히 보기</a>
+        </section>
+    </main>
+
+	
+
+    <!-- SockJS & STOMP 라이브러리 -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+    <script>
+	  const socket = new SockJS('/ws');
+	  const stompClient = Stomp.over(socket);
+	
+	  stompClient.connect({}, () => {
+	    console.log("✅ STOMP 연결 성공");
+	
+	    // 개인 알림 구독
+	    stompClient.subscribe('/user/queue/notifications', (msg) => {
+	      showToast("🎉 " + msg.body);
+	    });
+	
+	    // 서버에 환영 메시지 요청
+	    fetch('/users/welcome');
+	  });
+	
+	  function showToast(message) {
+		  const toast = document.getElementById("toast");
+		  const toastMessage = document.getElementById("toast-message");
+		  const toastClose = document.getElementById("toast-close");
+
+		  toastMessage.innerText = message;
+		  toast.style.display = "block";
+
+		  // 닫기 버튼 클릭 시 즉시 사라지게
+		  toastClose.onclick = () => {
+		    toast.style.display = "none";
+		  };
+		}
+
+	</script>
+
+</div>
 </body>
 </html>

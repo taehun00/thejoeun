@@ -8,18 +8,18 @@ import com.pawject.dto.exec.WalkingcourseDto;
 
 @Mapper
 public interface WalkingcourseDao {
-	public int insert(  WalkingcourseDto dto);
-	public int update(  WalkingcourseDto dto);
-	public int delete(   WalkingcourseDto dto);
-	public List<WalkingcourseDto> selectAll();
-	public WalkingcourseDto       select(int courseid);
+	public int insertwalking(  WalkingcourseDto wdto);
+	public int updatewalking(  WalkingcourseDto wdto);
+	public int deletewalking(  WalkingcourseDto wdto);
+	public List<WalkingcourseDto> selectAllwalking();
+	public WalkingcourseDto       selectwalking(int courseid);
 
 	/* PAGING */
-	public List<WalkingcourseDto> select10();
-	public int				   selectTotal();
+	public List<WalkingcourseDto> selectwalking10(HashMap<String,Integer> para);
+	public int				selectwalkingTotalCnt();
 	
 	/* SEARCH + PAGING */
-	public List<WalkingcourseDto> select3(HashMap<String, Object> para); //##
-	public int				  selectSearchTotalCnt(String search); //##
+	public List<WalkingcourseDto> selectwalking3(HashMap<String, Object> para); //##
+	public int				        selectwalkingSearchTotalCnt(String search); //##
 
 }

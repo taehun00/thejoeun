@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+<head lang="ko">
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div layout:fragment="content">
+ <div class="csq-container">
+
+    <h2 class="csq-title">내 1:1 문의</h2>
+
+   <table class="csq-table table table-bordered table-hover align-middle text-center">
+        <caption class="visually-hidden">내 1:1 문의</caption>
+        <thead class="table-light">
+            <tr>
+                <th scope="col">NO.</th>
+                <th scope="col">분류</th>
+                <th scope="col">질문</th>
+                <th scope="col">등록일</th>
+                <th scope="col">처리여부</th>
+            </tr>
+        </thead>
+
+		<tbody>
+			<th:block th:each="q, status : ${list}">
+			    <tr th:onclick="|toggleContent(${q.questionid})|">
+			        <td th:text="${status.index + 1}"></th>
+			        <td th:text="${q.category}"></td>
+			        <td th:text="${q.title}"></td>
+			        <td th:text="${q.createdat}"></td>
+			        <td>
+					<button type="button" class="btn quickactive-btn"
+					        th:data-questionid="${q.questionid}"
+					        th:classappend="${q.status == 1} ? 'btn-success' : 'btn-olive'"
+					        th:text="${q.status == 1 ? '답변완료' : '답변대기'}">
+					</button>
+					</td>
+			    </tr>
+			
+				<tr th:id="'content-' + ${q.questionid}" style="display:none;">
+				    <td colspan="6" class="detail">
+				        <p class="csq-answer" th:text="${q.content}"></p>
+				        
+				        <hr/>
+
+				        <div th:if="${#lists.isEmpty(q.answers)}">
+				            <p class="csq-answer text-muted">답변 대기 중입니다</p>
+				        </div>
+				
+				        <div th:each="a : ${q.answers}">
+				            <p class="csq-answer">
+				                <strong>[답변]</strong>
+				                <span th:text="${a.answercontent}"></span>
+				            </p>
+				            <div class="faq-keyword-wrap">
+				            <p>
+				                [작성일]
+				                <span th:text="${a.createdat}"></span>
+				            </p>
+					    </div>
+				        </div>
+				
+				    </td>
+				</tr>
+
+			</th:block>
+
+		</tbody>
+	</table>
+
+	<div class="write-btn-area">
+				<p class="text-end">
+				<a th:href="@{/csBoard/cswrite}" 
+				class="btn btn-slateBlue">문의</a>
+				</p>
+	</div>
+
+</div>
+
+<script>
+function toggleContent(id) {
+  const row = document.getElementById("content-" + id);
+  row.style.display = (row.style.display === "table-row") ? "none" : "table-row";
+}
+</script>
+	</div><!-- content-->
+</body>
+</html>

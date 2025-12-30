@@ -9,17 +9,17 @@ import com.pawject.dto.exec.SaveweatherDto;
 
 @Mapper
 public interface SaveweatherDao {
-	public int insert(  SaveweatherDto dto);
-	public int update(  SaveweatherDto dto);
-	public int delete(   SaveweatherDto dto);
-	public List<SaveweatherDto> selectAll();
-	public SaveweatherDto       select(int basedate);
+	public int insertweather(  SaveweatherDto wdto);
+	public int updateweather(  SaveweatherDto wdto);
+	public int deleteweather(  SaveweatherDto wdto);
+	public List<SaveweatherDto> selectAllweather();
+	public SaveweatherDto       selectweather(int basedate);
 	
 	/* PAGING */
-	public List<SaveweatherDto> select10();
-	public int				  selectTotal();
+	public List<SaveweatherDto> selectweather10(HashMap<String,Integer> para);
+	public int			  selectweatherTotalCnt();
 	/* SEARCH + PAGING */
-	public List<SaveweatherDto> select3(HashMap<String, Object> para); //##
-	public int				  selectSearchTotalCnt(String search); //##
+	public List<SaveweatherDto> selectweather3(HashMap<String, Object> para); //##
+	public int				      selectweatherSearchTotalCnt(String search); //##
 
 }

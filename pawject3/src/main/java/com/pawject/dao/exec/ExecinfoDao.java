@@ -7,18 +7,18 @@ import com.pawject.dto.exec.ExecinfoDto;
 
 @Mapper
 public interface ExecinfoDao {
-	public int insert(  ExecinfoDto dto);
-	public int update(  ExecinfoDto dto);
-	public int delete(   ExecinfoDto dto);
-	public List<ExecinfoDto> selectAll();
-	public ExecinfoDto       select(int execid);
+	public int insertinfo(  ExecinfoDto idto);
+	public int updateinfo(  ExecinfoDto idto);
+	public int deleteinfo(  ExecinfoDto idto);
+	public List<ExecinfoDto> selectAllinfo();
+	public ExecinfoDto       selectinfo(int execid);
 	
 	/* PAGING */
-	public List<ExecinfoDto> select10();
-	public int				  selectTotal();
+	public List<ExecinfoDto> selectinfo10(HashMap<String,Integer> para);
+	public int	       selectinfoTotalCnt();
 	/* SEARCH + PAGING */
-	public List<ExecinfoDto> select3(HashMap<String, Object> para); //##
-	public int				  selectSearchTotalCnt(String search); //##
+	public List<ExecinfoDto> selectinfo3(HashMap<String, Object> para); //##
+	public int				   selectinfoSearchTotalCnt(String search); //##
 
 	
 }

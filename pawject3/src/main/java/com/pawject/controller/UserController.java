@@ -6,12 +6,16 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +27,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.pawject.dto.paging.PagingDto10;
 import com.pawject.dto.user.UserDto;
+import com.pawject.security.CustomUserDetailsService;
+import com.pawject.service.notification.NotificationService;
+import com.pawject.service.pet.PetService;
 import com.pawject.service.user.UserSecurityService;
 
 @Controller
@@ -33,8 +41,20 @@ public class UserController {
     @Autowired 
     private UserSecurityService service;
 
-    //@Autowired 
-    //private PetService pservice;
+    @Autowired 
+    private PetService pservice;
+    @Autowired
+    private NotificationService notificationService;
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
+    
+    
+    private final SimpMessagingTemplate messagingTemplate;
+
+    public UserController(SimpMessagingTemplate messagingTemplate) {
+        this.messagingTemplate = messagingTemplate;
+    }
+
 
     
     @PreAuthorize("permitAll()")
@@ -59,20 +79,57 @@ public class UserController {
     // 회원가입 처리
     @PreAuthorize("isAnonymous()")
     @PostMapping("/join")
-    public String join(@RequestParam("file") MultipartFile file, UserDto dto, RedirectAttributes rttr) {
+    public String join(@RequestParam("file") MultipartFile file, UserDto dto, RedirectAttributes rttr,
+            HttpSession session) {
         String result = "회원가입 실패";
         try {
             if (service.insert(file, dto) > 0) {
+                
+                // 자동 로그인 처리
+                UserDetails userDetails = customUserDetailsService.loadUserByUsername(dto.getEmail());
+                Authentication auth = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(auth);
+
+                
+                // 환영 메시지 플래그 세션에 저장
+                session.setAttribute("welcome", true);
+
                 result = "회원가입 성공";
+
+
             }
         } catch (DuplicateKeyException e) {
             result = "이미 등록된 휴대폰 번호입니다.";
         } catch (Exception e) {
             result = "회원가입 처리 중 오류가 발생했습니다.";
         }
-        rttr.addFlashAttribute("success", result);
-        return "redirect:/users/login";
+        rttr.addFlashAttribute("welcome", true);
+        return "redirect:/users/mainpage";
     }
+    
+    @GetMapping("/welcome")
+    @ResponseBody
+    public void sendWelcomeMessage(Principal principal, HttpSession session) {
+        Boolean welcome = (Boolean) session.getAttribute("welcome");
+        if (welcome != null && welcome) {
+            messagingTemplate.convertAndSendToUser(
+                principal.getName(),
+                "/queue/notifications",
+                "회원가입을 축하합니다!"
+            );
+            // 플래그 제거 (한 번만 보내도록)
+            session.removeAttribute("welcome");
+        }
+    }
+    
+    // 메인페이지
+    @GetMapping("/mainpage")
+    public String mainpage() {
+        return "users/mainpage"; // templates/users/mainpage.html 뷰로 이동
+    }
+
+
 
     // 로그인 폼
     @GetMapping("/login")
@@ -92,7 +149,7 @@ public class UserController {
     public String mypage(Principal principal, Model model) {
         UserDto user = service.selectEmail(principal.getName(), "local");
         model.addAttribute("dto", user);
-//        model.addAttribute("pets", pservice.selectPetsByUserId(user.getUserId()));
+        model.addAttribute("pets", pservice.selectPetsByUserId(user.getUserId()));
         return "users/mypage";
     }
 
@@ -118,32 +175,17 @@ public class UserController {
     // 탈퇴 폼
     @GetMapping("/delete")
     public String deleteForm(Principal principal, Model model) {
-        // principal.getName()은 "email:provider" 형태
-        String[] parts = principal.getName().split(":");
-        String email = parts[0];
-        String provider = parts.length > 1 ? parts[1] : "local";
-
-        UserDto dto = service.selectEmail(email, provider);
-        model.addAttribute("dto", dto);
-
+        model.addAttribute("dto", service.selectEmail(principal.getName(), "local"));
         return "users/delete";
     }
-    
+
     // 회원 탈퇴
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/deleteMember")
-    public String deleteMember(UserDto dto,
-                               Principal principal,
-                               RedirectAttributes rttr,
+    public String deleteMember(UserDto dto, RedirectAttributes rttr,
                                HttpServletRequest request,
                                HttpServletResponse response) {
-        // principal에서 email, provider를 다시 세팅
-        String[] parts = principal.getName().split(":");
-        dto.setEmail(parts[0]);
-        dto.setProvider(parts.length > 1 ? parts[1] : "local");
-
         String result = "비밀번호를 확인해주세요";
-
         if (service.delete(dto, true) > 0) {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             if (auth != null) {

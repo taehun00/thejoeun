@@ -4,25 +4,26 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.pawject.dto.exec.ExecsmartDto;
 
 @Mapper
 public interface ExecsmartDao {
-	public int insert(  ExecsmartDto dto);
-	public int update(  ExecsmartDto dto);
-	public int updateHit(int postid);
-	public int delete(   ExecsmartDto dto);
-	public List<ExecsmartDto> selectAll();
-	public ExecsmartDto       select(int postid);
+	public int insertsmart(  ExecsmartDto sdto);
+	public int updatesmart(  ExecsmartDto sdto);
+	public int updateHitsmart( int postid ); // 타입캐스팅: @RequestParam("postid")
+	public int deletesmart(   ExecsmartDto sdto);
+	public List<ExecsmartDto> selectAllsmart();
+	public ExecsmartDto       selectsmart(int postid);
 	
 	/* PAGING */
-	public List<ExecsmartDto> select10();
-	public int				  selectTotal();
+	public List<ExecsmartDto> selectsmart10(HashMap<String,Integer> para);
+	public int		    selectsmartTotalCnt();
 	
 	/* SEARCH + PAGING */
-	public List<ExecsmartDto> select3(HashMap<String, Object> para); //##
-	public int				  selectSearchTotalCnt(String search); //##
+	public List<ExecsmartDto> selectsmart3(HashMap<String, Object> para); //##
+	public int				  selectsmartSearchTotalCnt(String search); //##
 	
 }
 

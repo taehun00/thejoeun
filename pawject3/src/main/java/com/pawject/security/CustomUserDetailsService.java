@@ -19,6 +19,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		
+		System.out.println("[CustomUserDetailsService] 로그인 시도 username 파라미터: " + username);
+
+
 		// username "1@1 : local , 2@2 : kakao ,,,"
 		String [] parts = username.split(":");
 		String email = parts[0];
@@ -30,15 +34,23 @@ public class CustomUserDetailsService implements UserDetailsService {
 		
 		UserAuthDto authDto = userDao.readAuthByEmail(param);
 		if( authDto == null ) {
+			System.out.println("[CustomUserDetailsService] 인증 정보 없음: " + username);
+
 			throw new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + username);
 		}
 		
 		UserDto user = userDao.findByEmail(param);
 		if( user == null ) {
+			System.out.println("[CustomUserDetailsService] 사용자 기본정보 없음: " + username);
+
 			throw new UsernameNotFoundException("사용자 기본정보를 찾을 수 없습니다: " + username);
 		}
 		
-		return new CustomUserDetails(user, authDto);
+		CustomUserDetails details = new CustomUserDetails(user, authDto);
+        System.out.println("[CustomUserDetailsService] 생성된 Principal 이름(getUsername): " + details.getUsername());
+
+
+		return details;
 	}
 	
 	

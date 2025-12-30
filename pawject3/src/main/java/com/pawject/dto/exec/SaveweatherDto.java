@@ -1,4 +1,6 @@
 package com.pawject.dto.exec;
+import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,12 +12,13 @@ import lombok.ToString;
 @NoArgsConstructor
 
 public class SaveweatherDto {
-	private String basedate;	//BASEDATE
-	private String weather;		//WEATHER
-	private int    maxtemp;		//MAXTEMP
-	private int    mintemp;		//MINTEMP
-	private int    moispercent; //MOISPERCENT
-	private int    rainpercent; //RAINPERCENT
+	private LocalDate basedate;	     //BASEDATE
+	private String    weather;		 //WEATHER
+	private int       maxtemp;		 //MAXTEMP
+	private int       mintemp;		 //MINTEMP
+	private int       moistpercent;  //MOISTPERCENT
+	private int       rainpercent;   //RAINPERCENT
+
 }
 /*
 이름          널?       유형           

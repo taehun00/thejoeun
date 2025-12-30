@@ -2,11 +2,11 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.pawject.dao.pet.PetMapper">
+<mapper namespace="com.pawject.dao.PetDao">
 
     <!-- 펫 등록 -->
     <insert id="petJoin" parameterType="PetDto">
-        INSERT INTO pet (
+        INSERT INTO pets (
             petid, userid, petname, petbreed, birthdate,
             pettypeid, createdat, pfile, page, pgender
         )
@@ -34,19 +34,20 @@
 
     <!-- 펫 페이지 (사용자) -->
     <select id="selectPetsByUserId" parameterType="int" resultMap="petMap">
-        SELECT p.petid, p.petname, p.petbreed, p.birthdate,
-               p.pettypeid, p.createdat, p.pfile, p.page, p.pgender
-        FROM pet p
-        JOIN users u ON p.userid = u.userid
-        WHERE u.userid = #{userId}
-        ORDER BY p.createdat DESC
-    </select>
+	    SELECT p.petid, p.userid, p.petname, p.petbreed, p.birthdate,
+	           p.pettypeid, p.createdat, p.pfile, p.page, p.pgender
+	    FROM pets p
+	    JOIN users u ON p.userid = u.userid
+	    WHERE u.userid = #{userId}
+	    ORDER BY p.createdat DESC
+	</select>
+
 
     <!-- 펫 상세페이지 (사용자) -->
     <select id="selectPetDetail" resultMap="petMap">
         SELECT p.petid, p.petname, p.petbreed, p.birthdate,
                p.pettypeid, p.createdat, p.pfile, p.page, p.pgender
-        FROM pet p
+        FROM pets p
         WHERE p.userid = #{userId} AND p.petid = #{petId}
     </select>
 
@@ -55,27 +56,30 @@
         SELECT p.petid, p.userid, u.email, p.petname, p.petbreed,
                p.birthdate, p.pettypeid, p.createdat, p.pfile,
                p.page, p.pgender
-        FROM pet p
+        FROM pets p
         JOIN users u ON p.userid = u.userid
         WHERE p.petid = #{petId}
     </select>
 
     <!-- 펫 정보 수정 (사용자) -->
     <update id="updatePetByUser" parameterType="map">
-        UPDATE pet
-        SET petname = #{pet.petName},
-            petbreed = #{pet.petBreed},
-            birthdate = #{pet.birthDate},
-            pettypeid = #{pet.petTypeId},
-            pfile = #{pet.pFile},
-            page = #{pet.pAge},
-            pgender = #{pet.pGender}
-        WHERE petid = #{pet.petId} AND userid = #{userId}
-    </update>
+	  UPDATE pets
+	  SET petname   = #{pet.petName},
+	      petbreed  = #{pet.petBreed},
+	      birthdate = #{pet.birthDate},
+	      pettypeid = #{pet.petTypeId},
+	      pfile     = #{pet.pFile},
+	      page      = #{pet.pAge},
+	      pgender   = #{pet.pGender}
+	  WHERE petid   = #{pet.petId}
+	    AND userid  = #{userId}
+	</update>
+
+
 
     <!-- 펫 정보 수정 (관리자) -->
     <update id="updatePetByAdmin" parameterType="PetDto">
-        UPDATE pet
+        UPDATE pets
         SET petname = #{petName},
             petbreed = #{petBreed},
             birthdate = #{birthDate},
@@ -88,17 +92,17 @@
 
     <!-- 펫 삭제 (사용자) -->
     <delete id="deletePetByUser" parameterType="map">
-        DELETE FROM pet WHERE petid = #{petId} AND userid = #{userId}
+        DELETE FROM pets WHERE petid = #{petId} AND userid = #{userId}
     </delete>
 
     <!-- 펫 삭제 (관리자) -->
     <delete id="deletePetByAdmin" parameterType="int">
-        DELETE FROM pet WHERE petid = #{petId}
+        DELETE FROM pets WHERE petid = #{petId}
     </delete>
 
     <!-- 유저의 모든 펫 삭제 -->
     <delete id="deletePetsByUser" parameterType="int">
-        DELETE FROM pet WHERE userid = #{userId}
+        DELETE FROM pets WHERE userid = #{userId}
     </delete>
 
     <!-- 펫 검색 (이메일/펫이름) -->
@@ -106,7 +110,7 @@
         SELECT p.petid, p.userid, u.email, p.petname, p.petbreed,
                p.birthdate, p.pettypeid, p.createdat, p.pfile,
                p.page, p.pgender
-        FROM pet p
+        FROM pets p
         JOIN users u ON p.userid = u.userid
         WHERE
         <choose>
@@ -132,7 +136,7 @@
                    p.petid, p.userid, u.email, p.petname, p.petbreed,
                    p.birthdate, p.pettypeid, p.createdat, p.pfile,
                    p.page, p.pgender
-            FROM pet p
+            FROM pets p
             JOIN users u ON p.userid = u.userid
         ) A
         WHERE A.rnum BETWEEN #{start} AND #{end}
@@ -140,7 +144,7 @@
 
     <!-- 전체 펫 수 -->
     <select id="selectTotalPetCnt" resultType="int">
-        SELECT COUNT(*) FROM pet
+        SELECT COUNT(*) FROM pets
     </select>
 
 </mapper>
