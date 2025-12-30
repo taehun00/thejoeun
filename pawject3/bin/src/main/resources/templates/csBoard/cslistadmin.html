@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+<head lang="ko">
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div layout:fragment="content">
+  <div class="csq-container">
+
+    <h2 class="csqad-title">1:1 문의</h2>
+    
+    		<div class="row my-3">
+			  <div class="col d-flex justify-content-center gap-2">
+			    <select id="searchType" class="form-select" style="width:150px;">
+			      <option value="all">제목+내용</option>
+			      <option value="title">제목</option>
+			      <option value="content">내용</option>
+			      <option value="nickname">닉네임</option>
+			    </select>
+			
+			    <input type="text" id="searchKeyword" placeholder="검색어를 입력해 주세요" class="form-control" style="width:300px;">
+			    <button type="button" class="btn btn-mint" onclick="searchCS()">검색</button>
+			
+			    <!-- 목록보기 버튼도 같은 flex 컨테이너 안에 -->
+			    <a th:href="@{/csBoard/cslistadmin}" 
+			       id="searchlistBtn"
+			       class="btn btn-slateBlue"
+			       style="display:none;">목록보기</a>
+			  </div>
+			  
+			  	<select id="condition" class="condition form-select justify-content-end" style="width:120px;">
+			      <option value="">최신</option>
+			      <option value="noanswer">답변대기</option>
+			      <option value="answerend">답변완료</option>
+			    </select>
+			  
+			  
+			</div>
+
+   <table class="csqad-table table table-bordered table-hover align-middle text-center">
+        <caption class="visually-hidden">내 1:1 문의</caption>
+        <thead class="table-light">
+        
+		<input type="hidden" id="csrfToken" th:value="${_csrf.token}" />
+		<input type="hidden" id="csrfHeader" th:value="${_csrf.headerName}" />        
+        
+            <tr>
+                <th scope="col">NO.</th>
+                <th scope="col">분류</th>
+                <th scope="col">질문</th>
+                <th scope="col">닉네임</th>
+                <th scope="col">등록일</th>
+                <th scope="col">처리여부</th>
+                <th scope="col">답변작성</th>
+            </tr>
+        </thead>
+
+		<tbody>
+			<!-- 아작스 -->
+		</tbody>
+	</table>
+	<!-- 페이징 -->
+	<div id="pagingArea" class="mt-2 text-center"  ></div>
+			
+
+</div>
+
+<script>
+// 전역변수-토큰
+let csrfToken = $("#csrfToken").val();
+let csrfHeader = $("#csrfHeader").val();
+
+// 전역변수-페이징 화면 분기
+let currentMode = "list";
+let currentSearchType = "";
+let currentKeyword = "";
+let currentPageNo = 1;
+
+//전역변수-정렬
+let currentCondition = null;  
+
+// 초기 로드
+$(function(){
+  csPaging(1);
+});
+
+// 토글
+function toggleContent(id){
+  const row = document.getElementById("content-" + id);
+  if(!row) return;
+  row.style.display = (row.style.display === "table-row") ? "none" : "table-row";
+}
+
+// 답변 상태 전환
+$(document).on("click", ".quickanswer-btn", function(e){
+  e.stopPropagation();
+  let questionid = $(this).data("questionid");
+
+  if(!confirm("답변 상태를 변경하시겠습니까?")) return;
+
+  $.ajax({
+    url: "/csBoard/quickanswer",
+    type: "POST",
+    beforeSend: function(xhr){
+      xhr.setRequestHeader(csrfHeader, csrfToken);
+    },
+    data: { questionid: questionid },
+    success: function(){
+      if(currentMode === "search"){
+        doCSSearch(currentSearchType, currentKeyword, currentPageNo);
+      } else {
+        csPaging(currentPageNo);
+      }
+    }
+  });
+});
+
+
+
+// 답변 상태 정렬
+$(document).on("change", ".condition", function () {
+    currentCondition = $(this).val() || null;
+    currentPageNo = 1;
+
+    if (currentMode === "search") {
+        doCSSearch(currentSearchType, currentKeyword, 1);
+    } else {
+        csPaging(1);
+    }
+});
+
+//페이징 버튼
+$(document).on("click", ".pageBtn", function(){
+  let page = $(this).data("page");
+  currentPageNo = page;
+
+  if(currentMode === "search"){
+    doCSSearch(currentSearchType, currentKeyword, page);
+  } else {
+    csPaging(page);
+  }
+});
+
+// 전체 리스트 페이지
+function csPaging(pageNo){
+  currentMode = "list";
+  currentPageNo = pageNo;
+  
+  let data = { pstartno: pageNo };
+  if (currentCondition) data.condition = currentCondition;	
+  
+  $.ajax({
+    url: "/csBoard/cspaging",
+    type: "GET",
+    data: data,
+    success: function(json){	
+      csPagingResult(json, pageNo);
+      renderPaging(json.paging);
+      $("#searchlistBtn").hide();   
+    }
+  });
+}
+
+//검색
+function searchCS(){
+  let keyword = $("#searchKeyword").val().trim();
+  let searchType = $("#searchType").val();
+  
+
+  if(keyword === ""){
+    alert("검색어를 입력해주세요.");
+    return;
+  }
+
+  doCSSearch(searchType, keyword, 1);
+}
+
+//검색 
+function doCSSearch(searchType, keyword, pageNo){
+  currentMode = "search";
+  currentSearchType = searchType;
+  currentKeyword = keyword;
+  currentPageNo = pageNo;
+  
+  let data = {
+		  searchType: searchType,
+		  keyword: keyword,
+		  pageNo: pageNo
+		};
+  if (currentCondition) data.condition = currentCondition;
+
+  $.ajax({
+    url: "/csBoard/cssearchpaging",
+    type: "GET",
+    data: data,
+    success: function(json){
+      if(!json.list || json.list.length === 0){
+        alert("검색 결과가 없습니다.");
+        return;
+      }
+
+      csPagingResult(json, pageNo);
+      renderPaging(json.paging);
+      $("#searchlistBtn").show();   
+    }
+  });
+}
+
+// 페이징 결과
+function csPagingResult(json, pstartno){
+  let list = json.list;
+  let total = json.total;
+  let tbody = $(".csqad-table tbody");
+  tbody.empty();
+
+  if(!list || list.length === 0){
+    tbody.append('<tr><td colspan="7">게시글이 없습니다.</td></tr>');
+    return;
+  }
+
+  $.each(list, function(idx, csq){
+    let number = total - ((pstartno - 1) * 10 + idx);
+
+    // 요약 행
+    let summary = $("<tr>")
+      .addClass("csq-row")
+      .attr("onclick", "toggleContent(" + csq.questionid + ")")
+      .append($("<td>").css("display","none").text(csq.questionid))
+      .append($("<td>").addClass("col-no").text(number))
+      .append($("<td>").addClass("col-category").text(csq.category))
+      .append($("<td>").addClass("col-title").text(csq.title))
+      .append($("<td>").addClass("col-nickname").text(csq.nickname))
+      .append($("<td>").addClass("col-created").text(csq.createdat));
+
+    let statusBtn = $("<button>")
+      .addClass("btn quickanswer-btn")
+      .addClass(csq.status==1 ? "btn-success" : "btn-olive")
+      .attr("data-questionid", csq.questionid)
+      .text(csq.status==1 ? "답변완료" : "답변대기");
+
+    summary.append($("<td>").addClass("col-status").append(statusBtn));
+
+    let actionTd = $("<td>").addClass("col-action");
+    if(csq.status==0){
+      actionTd.append(
+        $("<a>")
+          .addClass("btn btn-mint")
+          .attr("href", "/csBoard/cswriteanswer?questionid=" + csq.questionid)
+          .text("답변작성")
+      );
+    }
+    summary.append(actionTd);
+    tbody.append(summary);
+
+    // 상세 행
+    let detail = $("<tr>")
+      .attr("id", "content-" + csq.questionid)
+      .hide();
+
+    let td = $("<td>").attr("colspan", 7).addClass("detail");
+    td.append($("<p>").addClass("csq-answer").text(csq.content));
+    td.append($("<hr>"));
+
+    if(csq.answers && csq.answers.length > 0){
+      $.each(csq.answers, function(i, csa){
+        td.append(
+          $("<p>").addClass("csq-answer")
+            .append($("<strong>").text("[답변] "))
+            .append($("<span>").text(csa.answercontent))
+        );
+        td.append(
+          $("<div>").addClass("csq-keyword-wrap")
+            .append($("<p>").text("[작성일] " + csa.createdat))
+        );
+      });
+    }
+
+    detail.append(td);
+    tbody.append(detail);
+  });
+}
+
+// 페이징 랜더
+function renderPaging(p){
+  let area = $("#pagingArea");
+  area.empty();
+
+  if(!p || p.pagetotal <= 1) return;
+
+  let html = "";
+  let end = Math.min(p.end, p.pagetotal);
+
+  if(p.start > 1){
+    html += `<button class="btn btn-sm btn-outline-primary pageBtn" data-page="${p.start-1}">이전</button>`;
+  }
+
+  for(let i=p.start; i<=end; i++){
+    let active = (i === p.current) ? "btn-primary" : "btn-outline-primary";
+    html += `<button class="btn btn-sm ${active} pageBtn ms-2" data-page="${i}">${i}</button>`;
+  }
+
+  if(end < p.pagetotal){
+    html += `<button class="btn btn-sm btn-outline-primary pageBtn ms-2" data-page="${end+1}">다음</button>`;
+  }
+
+  area.html(html);
+}
+</script>
+
+
+
+
+
+
+
+	</div><!-- content-->
+</body>
+</html>

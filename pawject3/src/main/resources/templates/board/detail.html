@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+<head lang="ko">
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div layout:fragment="content">
+      <h3 class="card-header" > 반려동물 질환 글 수정 </h3>  
+		<!--  알림메시지  -->
+        <div th:if="${success}" class="alert alert-info alert-dismissible fade show" role="alert">
+            <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>      
+	  <div>
+	      <input type="hidden"   name="userid"  value=""> 
+		  <div class="mb-3 mt-3">
+		    <label for="bhit" class="form-label">조회수</label>
+		    <input type="text" class="form-control" id="bhit" name="bhit"  readonly   
+		    	th:value="${dto.bhit}">
+		  </div> 
+		  <div class="mb-3 mt-3">
+		    <label for="disname" class="form-label">질환명:</label>
+		    <input type="text" class="form-control" id="disname" 
+		    		placeholder="질환명을 입력해주세요" name="disname"  readonly  th:value="${dto.disname}">
+		  </div>  
+		  <div class="mb-3">
+		    <label for="disex" class="form-label">질환명 설명:</label>
+		    <textarea class="form-control" id="disex" placeholder="질환명 설명해주세요"   
+		    	readonly name="disex"   th:text="${dto.disex}"></textarea>
+		  </div> 
+		  
+		    <div class="mb-3">
+		    <label for="kindpet" class="form-label">반려동물 종:</label>
+		    <textarea class="form-control" id="kindpet" placeholder="반려동물 종을 입력해주세요"   
+		    	readonly name="kindpet"   th:text="${dto.kindpet}"></textarea>
+		  </div> 
+		  
+		    <div class="mb-3">
+		    <label for="infval" class="form-label">질환명관련 수치:</label>
+		    <textarea class="form-control" id="infval" placeholder="질환명관련 수치 내용을 입력해주세요"   
+		    	readonly name="infval"   th:text="${dto.infval}"></textarea>
+		  </div> 
+		  
+		    <div class="mb-3">
+		    <label for="mannote" class="form-label">질환명관련 주의 사항:</label>
+		    <textarea class="form-control" id="mannote" placeholder="내용을 입력해주세요"   
+		    	readonly name="mannote"   th:text="${dto.mannote}"></textarea>
+		  </div> 
+		  
+		 <!--  <div class="mb-3 mt-3">
+		    <label for="title" class="form-label">IMG:</label>
+		    <img  th:src="@{'/upload/'+${dto.bfile}}" class="img-fluid  rounded  border mb-3"  alt="" />
+		  </div>  -->
+		  
+			<div class="mb-3">
+				<a th:href="@{/board/edit(disno=${dto.disno})}" class="btn btn-success form-control">글수정</a>
+			</div>
+			<div class="mb-3">
+				<a th:href="@{/board/delete(disno=${dto.disno})}" class="btn btn-secondary form-control">글삭제</a>
+			</div>   
+		  <div class="mb-3"> <a th:href="@{/board/list}" class="btn btn-primary form-control">목록보기</a></div>
+	 </div>
+	</div> 
+	<!--    http://localhost:8484/board/list -->
+</body>
+</html>
