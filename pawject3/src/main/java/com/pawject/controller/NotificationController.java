@@ -26,12 +26,6 @@ public class NotificationController {
     }
 
 
-    @PostMapping("/announcement")
-    @ResponseBody
-    public void sendAnnouncement(@RequestBody String message) {
-        notificationService.sendAnnouncement(message);
-    }
-
     @PostMapping("/welcome/{userId}")
     @ResponseBody
     public void sendWelcome(@PathVariable int userId) {
