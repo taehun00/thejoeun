@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+<head lang="ko">
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div layout:fragment="content">
+ <div class="container card my-5 p-4">
+
+	<h3 class="card-header mb-4">사료 상세</h3>
+
+	<div class="row mt-3">
+
+		<div class="col-3 d-flex align-items-center justify-content-center">
+		
+		  <img th:if="${fdto.foodimg != null}"
+		       th:src="@{/foodimg/{img}(img=${fdto.foodimg})}"
+		       alt="사료 이미지"
+		       style="width:100%"/>
+		
+		  <img th:if="${fdto.foodimg == null}"
+		       th:src="@{/foodimg/brand0{bid}.png(bid=${fdto.brandid})}"
+		       alt="브랜드 로고"
+		       style="width:100%"/>
+		
+		</div>
+		
+		<!-- 기본 정보 -->
+		<div class="col-9">
+
+			<div class="row mb-3">
+				<div class="col-4">
+					<label class="form-label">브랜드</label> <input type="text"
+						class="form-control" readonly th:value="${fdto.brandname}">
+				</div>
+
+				<div class="col-8">
+					<label class="form-label">사료명</label> <input type="text"
+						class="form-control" readonly th:value="${fdto.foodname}">
+				</div>
+			</div>
+
+			<div class="row mb-3">
+				<div class="col-4">
+					<label class="form-label">종</label> <input type="text"
+						class="form-control" readonly
+						th:value="${fdto.pettypeid == 1 ? '고양이' : fdto.pettypeid == 2 ? '강아지' : '기타'}">
+				</div>
+
+				<div class="col-4">
+					<label class="form-label">사료타입</label> <input type="text"
+						class="form-control" readonly th:value="${fdto.foodtype}">
+				</div>
+
+				<div class="col-4">
+					<label class="form-label">그레인프리</label> <input type="text"
+						class="form-control" readonly th:value="${fdto.isgrainfree}">
+				</div>
+			</div>
+
+			<div class="row mb-3">
+				<div class="col-4">
+					<label class="form-label">분류</label> <input type="text"
+						class="form-control" readonly th:value="${fdto.category}">
+				</div>
+
+				<div class="col-4">
+					<label class="form-label">연령</label> <input type="text"
+						class="form-control" readonly th:value="${fdto.petagegroup}">
+				</div>
+
+				<div class="col-4">
+					<label class="form-label">칼로리</label> <input type="text"
+						class="form-control" readonly th:value="${fdto.calorie}">
+				</div>
+			</div>
+
+			<div class="row mb-3">
+				<div class="col-6">
+					<label class="form-label">주재료</label> <input type="text"
+						class="form-control" readonly th:value="${fdto.mainingredient}">
+				</div>
+
+				<div class="col-6">
+					<label class="form-label">부재료</label> <input type="text"
+						class="form-control" readonly th:value="${fdto.subingredient}">
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="mt-4">
+		<label class="form-label">사료 설명</label>
+		<textarea class="form-control" readonly th:text=${fdto.description}></textarea>
+	</div>
+
+	<!-- 영양성분 -->
+	<h5 class="mt-5 mb-3">영양성분 정보</h5>
+
+		<div class="row mb-3"
+			th:each="n, st : ${nutrientList}">
+
+			<div class="col-4">
+				<label class="form-label">영양소<span th:text="${st.count}"></span></label> <input type="text"
+					class="form-control" readonly th:value="${n.nutrientname}">
+			</div>
+
+			<div class="col-4">
+				<label class="form-label">양</label> <input type="text"
+					class="form-control" readonly th:value="${n.amount}">
+			</div>
+
+			<div class="col-2">
+				<label class="form-label">단위</label> <input type="text"
+					class="form-control" readonly th:value="${n.unit}">
+			</div>
+
+		</div>
+
+	<!-- 버튼 -->
+	<div class="text-end mt-4">
+
+		<a th:href="@{/foodboard/foodlist.fn}"
+			sec:authorize="hasRole('ROLE_ADMIN')"
+			class="btn btn-slateBlue" style="margin-right: 6px;"> 목록보기 </a> 
+			
+		<a th:href="@{/foodboard/foodedit.fn?foodid={foodid}(foodid=${fdto.foodid})}"
+			sec:authorize="hasRole('ROLE_ADMIN')"
+			class="btn btn-mint"> 수정 </a> 
+			
+		<a th:href="@{/foodboard/fooddelete.fn?foodid={foodid}(foodid=${fdto.foodid})}"
+			sec:authorize="hasRole('ROLE_ADMIN')"
+			th:onclick="return confirm('정말로 삭제하시겠습니까?');" class="btn btn-burgundy">
+			삭제 </a>
+
+
+	</div>
+<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+</div>
+	</div><!-- content-->
+</body>
+</html>

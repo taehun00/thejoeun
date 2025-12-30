@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+<head lang="ko">
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div layout:fragment="content">
+ 
+<div class="container card my-5 p-4">
+
+	<h3 class="card-header">사료 정보 수정</h3>
+
+	<form th:action="@{/foodboard/foodedit.fn}"
+		method="post"
+		enctype="multipart/form-data">
+
+		<div class="row mt-4">
+
+			<input type="hidden" name="foodid" th:value="${fdto.foodid}">
+
+			<div class="col-4 mb-3">
+			  <label class="form-label">브랜드 :</label>
+			  <select name="brandid" class="form-control">
+			    <option value="">-- 선택 --</option>
+			    <option th:each="b : ${brandlist}"
+			            th:value="${b.brandid}"
+			            th:text="${b.brandname}"
+			            th:selected="${b.brandid == fdto.brandid}">
+			    </option>
+			  </select>
+			</div>
+
+			<div class="col-4 mb-3">
+			    <label class="form-label">펫타입 :</label>
+			    <select name="pettypeid" class="form-control">
+			        <option value="1" th:selected="${fdto.pettypeid == 1}">고양이</option>
+			        <option value="2" th:selected="${fdto.pettypeid == 2}">강아지</option>
+			    </select>
+			</div>
+
+
+			<div class="col-4 mb-3">
+				<label class="form-label">사료 타입 :</label> 
+				<select name="foodtype" class="form-control">
+			        <option value="건식" th:selected="${fdto.foodtype == '건식'}">건식</option>
+			        <option value="습식" th:selected="${fdto.foodtype == '습식'}">습식</option>
+				</select>
+			</div>
+
+		</div>
+
+		<!-- 이름 + 설명 -->
+		<div class="row">
+			<div class="col-12 mb-3">
+				<label class="form-label">사료 이름 :</label> 
+				<input type="text" class="form-control" name="foodname" th:value="${fdto.foodname}">
+			</div>
+
+			<div class="col-12 mb-3">
+				<label class="form-label">사료 설명 :</label>
+				<textarea class="form-control" name="description" rows="3" th:text="${fdto.description}"></textarea>
+			</div>
+		</div>
+
+		<!-- 주재료 / 부재료 -->
+		<div class="row">
+			<div class="col-4 mb-3">
+				<label class="form-label">주재료 :</label> <input type="text"
+					class="form-control" name="mainingredient"
+					th:value="${fdto.mainingredient}">
+			</div>
+
+			<div class="col-4 mb-3">
+				<label class="form-label">부재료 :</label> <input type="text"
+					class="form-control" name="subingredient"
+					th:value="${fdto.subingredient}">
+			</div>
+		</div>
+
+		<!-- 카테고리 / 연령 -->
+		<div class="row">
+
+			<div class="col-4 mb-3">
+				<label class="form-label">분류 :</label> <select name="category"
+					class="form-control">
+			        <option value="일반" th:selected="${fdto.category == '일반'}">일반</option>
+			        <option value="처방식" th:selected="${fdto.category == '처방식'}">처방식</option>
+			        <option value="기능식" th:selected="${fdto.category == '기능식'}">기능식</option>
+				</select>
+			</div>
+
+			<div class="col-4 mb-3">
+				<label class="form-label">연령 :</label> <select name="petagegroup"
+					class="form-control">
+					<option value="어덜트" th:selected="${fdto.petagegroup=='어덜트'}">어덜트</option>
+					<option value="시니어" th:selected="${fdto.petagegroup=='시니어'}">시니어</option>
+					<option value="키튼" th:selected="${fdto.petagegroup=='키튼'}">키튼</option>
+					<option value="퍼피" th:selected="${fdto.petagegroup=='퍼피'}">퍼피</option>
+				</select>
+			</div>
+
+			<div class="col-4 mb-3">
+				<label class="form-label">그레인프리 :</label> <select name="isgrainfree"
+					class="form-control">
+					<option value="Y" th:selected="${fdto.isgrainfree=='Y'}">Y</option>
+					<option value="N" th:selected="${fdto.isgrainfree=='N'}">N</option>
+
+				</select>
+			</div>
+
+		</div>
+
+		<!-- 칼로리 -->
+		<div class="row">
+			<div class="col-4 mb-3">
+				<label class="form-label">칼로리 :</label> <input type="text"
+					class="form-control" name="calorie" th:value="${fdto.calorie}">
+			</div>
+		</div>
+
+		<!-- 영양소 입력 박스 -->
+		<div id="nutri-box">
+
+				<div class="row nutri-row mb-2"
+					 th:each="nutri, st : ${nutriList}">
+
+					<div class="col-4">
+						<label class="form-label"
+								th:text="|영양소 ${st.index+1} :|"></label> 
+						<select
+							name="nutrientid" class="form-control"
+							onchange="updateUnit(this)">
+
+							<option th:each="n : ${nutrientlist}"
+							        th:value="${n.nutrientid}"
+							        th:data-unit="${n.unit}"
+							        th:selected="${n.nutrientid == nutri.nutrientid}"
+							        th:text="${n.nutrientname}">
+							</option>
+						</select>
+					</div>
+
+					<div class="col-4">
+						<label class="form-label">함량 :</label>
+						<div class="input-group">
+							<input type="text" name="amount" class="form-control"
+									th:value="${nutri.amount}"> 
+								<span class="input-group-text unitLabel"
+										th:text="${nutri.unit}"> </span>
+						</div>
+					</div>
+
+				</div>
+
+
+			<!-- 부족한 칸 채우기 -->
+
+			<div class="row nutri-row mb-2"
+			     th:each="i : ${#numbers.sequence(1, 4 - nutriList.size())}">
+			
+			  <div class="col-4">
+			    <label class="form-label"
+			           th:text="|영양소 ${nutriList.size() + i} :|"></label>
+			
+			    <select name="nutrientid" class="form-control"
+			            onchange="updateUnit(this)">
+			      <option value="">-- 선택 --</option>
+			      <option th:each="n : ${nutrientlist}"
+			              th:value="${n.nutrientid}"
+			              th:data-unit="${n.unit}"
+			              th:text="${n.nutrientname}">
+			      </option>
+			    </select>
+			  </div>
+			
+			  <div class="col-4">
+			    <label class="form-label">함량 :</label>
+			    <div class="input-group">
+			      <input type="text" name="amount" class="form-control">
+			      <span class="input-group-text unitLabel"></span>
+			    </div>
+			  </div>
+			</div>
+	
+
+		<!-- 이미지 URL -->
+		<div class="row">
+			<div class="col-4 mb-3">
+			        <label for="file" class="form-label">제품 이미지 :</label>
+			        <input type="file" class="form-control" id="file" name="file" >
+			</div> 	
+
+			<div class="col-4 mb-3">
+			<label class="form-label">등록된 제품 이미지:</label> <input type="text"
+				class="form-control" name="foodimg" th:value="${fdto.foodimg}">
+			</div>
+		</div>
+		
+		<div class="mb-3 text-end">
+			<button type="submit" class="btn btn-mint">사료 정보 수정</button>
+
+			<a href="javascript:history.back()" class="btn btn-slateBlue">뒤로가기</a> 
+			<a th:href="@{/foodboard/foodlist.fn}"
+				class="btn btn-slateBlue"> 목록보기 </a>
+		</div>
+		<input type="hidden"
+	       th:name="${_csrf.parameterName}"
+	       th:value="${_csrf.token}">
+	</form>
+</div>
+
+<script>
+	// 단위 자동표시
+		function updateUnit(selectElem) {
+		    const unit = selectElem.selectedOptions[0].dataset.unit;
+		    selectElem.closest('.nutri-row').querySelector('.unitLabel').textContent = unit;
+		}
+	</script>
+ 
+	</div><!-- content-->
+</body>
+</html>
