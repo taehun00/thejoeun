@@ -365,6 +365,7 @@ function makeDeleteBtn(reviewid) {
         .text("삭제")
         .on("click", function (e) {
             e.stopPropagation();
+            if (!confirm("정말 삭제하시겠습니까?")) return;
             location.href = "/reviewboard/reviewdelete?reviewid=" + reviewid;
         });
 }
@@ -376,7 +377,7 @@ function toggleContent(id) {
  row.style.display = (row.style.display === "none") ? "table-row" : "none";
 }
 
-//================= 이미지 =================
+//이미지 새창
 function openImg(url) {
  window.open(url, "_blank",
      "width=800,height=600,toolbar=no,menubar=no,resizable=yes");

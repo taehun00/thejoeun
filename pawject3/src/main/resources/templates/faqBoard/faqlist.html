@@ -8,6 +8,14 @@
 </head>
 <body>
 	<div layout:fragment="content">
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+var csrfHeader = /*[[${_csrf.headerName}]]*/ 'X-CSRF-TOKEN';
+var csrfToken = /*[[${_csrf.token}]]*/ '';
+/*]]>*/
+</script>   
+   
     
 <div class="faq-container">
 
@@ -76,72 +84,49 @@
 				<p class="text-end">
 				<a th:href="@{/faqBoard/faqwrite}" 
 				class="btn btn-slateBlue">글쓰기</a>
+				<a th:href="@{/csBoard/cslistadmin}" class="btn btn-mint">1:1문의관리</a>
+				
 				</p>
+				
+				
+				
 	</div>
 	
 			<div class="help-container">
-			    <h4>다른 도움이 필요하신가요?</h4>
-			
+			    <h4>다른 도움이 필요하신가요?</h4>	
+	
 			    <div class="faq-card-wrapper">
 			        <a th:href="@{/csBoard/cswrite}"  class="faq-directquestion">
 			            <p>💌1:1 문의하기</p>
-			            <p>궁금하신 사항을 알려주시면</p>
-			            <p>관리자가 답변을 드려요</p>
-			        </a>
+			            <p>궁금하신 사항을 남겨주세요</p>
+			            <p>순차적으로 답변해 드립니다</p>
+			        </a>			        
+
 			
 			        <div class="faq-chatroom" id="chatbtn">
 			            <p>💬채팅 문의하기</p>
-			            <p>챗봇이 24시간 언제든지</p>
-			            <p>궁금하신 점을 알려드려요</p>
+						<p>상담 가능 시간:</p>
+						<p>평일 10:00 ~ 18:00</p>
 			        </div>
 			    </div>
 			</div>
 </div>
 
 
+
+
+
+
+
 <script>
+//채팅
+  (function(){var w=window;if(w.ChannelIO){return w.console.error("ChannelIO script included twice.");}var ch=function(){ch.c(arguments);};ch.q=[];ch.c=function(args){ch.q.push(args);};w.ChannelIO=ch;function l(){if(w.ChannelIOInitialized){return;}w.ChannelIOInitialized=true;var s=document.createElement("script");s.type="text/javascript";s.async=true;s.src="https://cdn.channel.io/plugin/ch-plugin-web.js";var x=document.getElementsByTagName("script")[0];if(x.parentNode){x.parentNode.insertBefore(s,x);}}if(document.readyState==="complete"){l();}else{w.addEventListener("DOMContentLoaded",l);w.addEventListener("load",l);}})();
 
-	(function() {
-		var w = window;
-		if (w.ChannelIO) {
-			return w.console.error("ChannelIO script included twice.");
-		}
-		var ch = function() {
-			ch.c(arguments);
-		};
-		ch.q = [];
-		ch.c = function(args) {
-			ch.q.push(args);
-		};
-		w.ChannelIO = ch;
-		function l() {
-			if (w.ChannelIOInitialized) {
-				return;
-			}
-			w.ChannelIOInitialized = true;
-			var s = document.createElement("script");
-			s.type = "text/javascript";
-			s.async = true;
-			s.src = "https://cdn.channel.io/plugin/ch-plugin-web.js";
-			var x = document.getElementsByTagName("script")[0];
-			if (x.parentNode) {
-				x.parentNode.insertBefore(s, x);
-			}
-		}
-		if (document.readyState === "complete") {
-			l();
-		} else {
-			w.addEventListener("DOMContentLoaded", l);
-			w.addEventListener("load", l);
-		}
-	})();
+  ChannelIO('boot', {
+    "pluginKey": "afb5a7b9-9200-440f-999a-7f0ef91db208",
+    "memberId": "userid"
+  });
 
-	ChannelIO('boot', {
-		"pluginKey" : "afb5a7b9-9200-440f-999a-7f0ef91db208"
-	});
-
-	
-	
 	
 	document.addEventListener("DOMContentLoaded", function() {
 		const chatbtn = document.getElementById("chatbtn");
@@ -152,24 +137,14 @@
 		});
 	});
 	
-</script>
-
-<script>
+//토글
 function toggleContent(id) {
   const row = document.getElementById("content-" + id);
   row.style.display = (row.style.display === "table-row") ? "none" : "table-row";
 }
-</script>
 
-<script th:inline="javascript">
-/*<![CDATA[*/
-var csrfHeader = /*[[${_csrf.headerName}]]*/ 'X-CSRF-TOKEN';
-var csrfToken = /*[[${_csrf.token}]]*/ '';
-/*]]>*/
-</script>
 
-<script>
-
+//활성화버튼
 $(document).ready(function(){
     $(".quickactive-btn").on("click", function() {
         let faqid = $(this).data("faqid");
