@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import com.pawject.dto.exec.ExecsmartDto;
 
 @Mapper
