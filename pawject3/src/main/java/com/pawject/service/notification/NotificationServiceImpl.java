@@ -19,6 +19,8 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public void sendAnnouncement(String message) {
+    	System.out.println("공지 브로드캐스트: " + message);
+
         // 모든 사용자에게 브로드캐스트
         messagingTemplate.convertAndSend("/topic/notifications", message);
     }

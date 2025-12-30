@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+<head lang="ko">
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div layout:fragment="content">
+	
+		<h3 class="card-header">FAQ 작성</h3>
+		<form th:action="@{/faqBoard/faqwrite}" 
+			    method="post"  >
+			
+			
+			<div class="row align-items-end">
+			    <div class="col-sm-6">
+			        <label for="question" class="form-label">질문</label>
+			        <input type="text" class="form-control" id="question"
+			               placeholder="질문을 입력해주세요" name="question">
+			    </div>
+			
+			    <div class="col-sm-2">
+				<select name="category" class="form-select">
+				    <option value="">--분류--</option>
+				    <option th:each="c : ${categories}"
+				            th:value="${c}"
+				            th:text="${c}">
+				    </option>
+				</select>
+			    </div>
+				<div class="mb-3  text-end col-sm-4">
+					<button type="submit" class="btn btn-primary">글쓰기</button>
+					<a th:href="@{/faqBoard/faqlist}"  class="btn btn-primary">목록보기</a>
+				</div>			    
+			    
+			    
+			</div>
+			
+			
+			
+			<div class="mb-3">
+				<label for="answer" class="form-label"></label>
+				<textarea class="form-control" id="answer" placeholder="답변을 입력해주세요"
+					name="answer" ></textarea>
+			</div>
+			
+			<div class="mb-3 mt-3">
+				<label for="keywords" class="form-label">키워드:</label> <input
+					type="text" class="form-control" id="keywords"
+					placeholder="키워드를 입력해주세요" name="keywords">
+			</div>
+
+			
+			
+		</form> 
+	</div><!-- content-->
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{fragments/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>공지사항 작성</title>
+</head>
+<body>
+<div class="container my-5" layout:fragment="content">
+    <h2>공지사항 작성</h2>
+    <form th:action="@{/admin/announcement}" method="post">
+        <div class="mb-3">
+            <label for="message">공지 내용</label>
+            <textarea id="message" name="message" class="form-control" rows="5"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">공지 등록</button>
+    </form>
+</div>
+</body>
+</html>
