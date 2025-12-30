@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserAuthDto {
+	private int userId;
 	private String email;
     private String password;
     private List<AuthDto> authList;

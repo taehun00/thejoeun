@@ -119,7 +119,7 @@ class Pawject3SupportTests {
 		//1. insert
 		CSAnswerDto insert3 = new CSAnswerDto();
 		insert3.setAdminid(100);
-		insert3.setContent("ggg");
+//		insert3.setContent("ggg");
 		insert3.setQuestionid(3);
 
 		
@@ -163,7 +163,7 @@ class Pawject3SupportTests {
 		
 		CSAnswerDto insert3 = new CSAnswerDto();
 		insert3.setAdminid(100);
-		insert3.setContent("ggg");
+//		insert3.setContent("ggg");
 		insert3.setQuestionid(3);
 
 		
