@@ -7,9 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -19,9 +23,11 @@ import com.pawject.dto.review.ReviewImgDto;
 import com.pawject.dto.user.UserAuthDto;
 import com.pawject.dto.user.UserDto;
 import com.pawject.service.food.FoodService;
+import com.pawject.service.review.ReviewApi;
 import com.pawject.service.review.ReviewService;
 import com.pawject.service.user.UserSecurityService;
 
+@RequestMapping("/reviewboard")
 @Controller
 public class ReviewController {
 
@@ -33,7 +39,7 @@ public class ReviewController {
 	UserSecurityService uservice;
 
 	// 전체 리스트 페이지+시큐리티
-	@RequestMapping("/reviewlist.fn")
+	@RequestMapping("/reviewlist")
 	public String reviewlist(Model model, @RequestParam(value = "pstartno", defaultValue = "1") int pstartno,
 			Principal principal) {
 
@@ -56,7 +62,7 @@ public class ReviewController {
 	}
 
 	// 글쓰기 get
-	@RequestMapping("/reviewwrite.fn")
+	@RequestMapping("/reviewwrite")
 	@PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER')")
 	public String write_get(Model model) {
 		model.addAttribute("brandlist", fservice.brandSelectAll());
@@ -66,7 +72,7 @@ public class ReviewController {
 	}
 
 	// 수정 get
-	@RequestMapping("/reviewedit.fn")
+	@RequestMapping("/reviewedit")
 	@PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER')")
 	public String edit_get(@RequestParam("reviewid") int reviewid, Model model) { // 여기는 안고쳐도됨
 		model.addAttribute("rdto", service.reviewSelect(reviewid));
@@ -78,7 +84,7 @@ public class ReviewController {
 	}
 
 	// 삭제-버튼만 연결
-	@RequestMapping("/reviewdelete.fn")
+	@RequestMapping("/reviewdelete")
 	@PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER')")
 	public String delete(@RequestParam int reviewid, RedirectAttributes rttr) {
 		// 순서 주의! 이미지->리뷰 순 삭제
@@ -88,12 +94,23 @@ public class ReviewController {
 		if (delete1 > 0 && delete2 > 0) {
 			String result = "삭제 성공";
 			rttr.addFlashAttribute("success", result);
-			return "redirect:/reviewlist.fn";
+			return "redirect:/reviewboard/reviewlist";
 		} else {
 			String result = "삭제 실패";
 			rttr.addFlashAttribute("success", result);
-			return "redirect:/reviewlist.fn";
+			return "redirect:/reviewboard/reviewlist";
 		}
 	}
+	
+	
+	    //api - get은 기존 글쓰기 페이지로 대체
+		@Autowired ReviewApi apiservice;
+		@PostMapping("/reviewpai")
+		@ResponseBody
+		public String openai(@RequestParam String title,
+							 @RequestParam String reviewcomment) {
+		    return apiservice.helpReviewWriting(title, reviewcomment);
+		}
+
 
 }

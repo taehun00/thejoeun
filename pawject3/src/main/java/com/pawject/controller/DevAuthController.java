@@ -27,7 +27,7 @@ public class DevAuthController {
 	        new UsernamePasswordAuthenticationToken(
 	            "user@test.com",
 	            null,
-	            List.of(new SimpleGrantedAuthority("ROLE_USER"))
+	            List.of(new SimpleGrantedAuthority("ROLE_MEMBER"))
 	        );
 
 	    SecurityContext context = SecurityContextHolder.createEmptyContext();
@@ -47,7 +47,7 @@ public class DevAuthController {
 
 	    Authentication auth =
 		        new UsernamePasswordAuthenticationToken(
-		            "user@test.com",
+		            "admin@test.com",
 		            null,
 		            List.of(new SimpleGrantedAuthority("ROLE_ADMIN"))
 		        );

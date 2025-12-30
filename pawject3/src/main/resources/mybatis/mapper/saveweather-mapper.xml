@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pawject.dao.exec.SaveweatherDao">
+ <resultMap id="saveweatherMap" type="SaveweatherDto">
+ 	<result property="basedate"    column="BASEDATE"/>
+ 	<result property="weather"     column="WEATHER"/>
+ 	<result property="maxtemp"     column="MAXTEMP"/>
+ 	<result property="mintemp"     column="MINTEMP"/>
+ 	<result property="moispercent" column="MOISPERCENT"/>
+ 	<result property="rainpercent" column="RAINPERCENT"/>
+ </resultMap>
+
+
+ <insert id="insertweather" parameterType="SaveweatherDto">
+ 	insert INTO saveweather (  WEATHER,     MAXTEMP,    MINTEMP,    MOISTPERCENT,    RAINPERCENT)
+	values                  (  #{weather},  #{maxtemp}, #{mintemp}, #{moistpercent}, #{rainpercent} )
+ </insert>
+ 
+ <update id="updateweather" parameterType="SaveweatherDto">
+ 	update saveweather 
+ 	<set> 
+	 	MAXTEMP=#{maxtemp}, MINTEMP=#{mintemp},
+	    MOISTPERCENT=#{moistpercent} , RAINPERCENT=#{rainpercent}
+    </set>
+	where WEATHER=#{weather}
+ </update>
+ 
+ <delete id="deleteweather" parameterType="SaveweatherDto">
+	delete from saveweather where WEATHER=#{weather}
+ </delete>
+ 
+ <select resultMap="saveweatherMap"  id="selectAllweather" >
+ 	select * from saveweather order by BASEDATE desc
+ </select>
+ 
+ <select resultMap="saveweatherMap"  id="selectweather" parameterType="int">
+ 	select * from saveweather where trunc(BASEDATE) = trunc(#{basedate})
+ </select>
+ 
+ 
+  <!-- 페이징(1) - saveweather10 -->
+  <select  id="selectweather10"  parameterType="java.util.HashMap"  resultMap="saveweatherMap">
+  	select *
+	from (
+	    select row_number() over (order by BASEDATE desc) as rnum,
+	           BASEDATE, WEATHER, MAXTEMP, MINTEMP, MOISTPERCENT, RAINPERCENT
+	    from saveweather
+	) A
+	where  A.rnum  between  #{start}  and #{end}
+  </select>
+  
+  <!-- 페이징(2) - saveweatherTotalCnt -->
+  <select id="selectweatherTotalCnt" resultType="int">
+  	select count(*) from saveweather
+  </select>
+  
+  <!-- 페이징(3) - saveweather3 -->
+  <select id="selectweather3" parameterType="java.util.HashMap" resultMap="saveweatherMap">
+  	select *
+	from (
+	    select row_number() over (order by BASEDATE desc) as rnum,
+	           BASEDATE, WEATHER, MAXTEMP, MINTEMP, MOISTPERCENT, RAINPERCENT
+	    from saveweather
+	    where WEATHER LIKE '%' || #{search} || '%'
+	) A
+	where  A.rnum  between  #{start}  and #{end}
+  </select>
+  
+  <!-- 페이징(4) - saveweatherSearchTotalCnt -->
+  <select id="selectweatherSearchTotalCnt" parameterType="string" resultType="int">
+  	select count (*) 
+	from saveweather
+	where WEATHER  LIKE '%' || #{search} || '%'
+  </select>
+
+</mapper>
+
+<!-- SQL구문 
+insert
+insert INTO saveweather ( WEATHER,    MAXTEMP,     MINTEMP,    MOISPERCENT,    RAINPERCENT)
+values                  ( #{weather},  #{maxtemp}, #{mintemp}, #{moispercent}, #{rainpercent} )
+
+update
+update saveweather set WEATHER=#{weather}, MAXTEMP=#{maxtemp}, MINTEMP=#{mintemp},
+                     MOISTPERCENT=#{moistpercent} , RAINPERCENT=#{rainpercent}
+where WEATHER=#{weather}
+delect
+delete from saveweather where WEATHER=#{weather}
+
+selectAll
+select * from saveweather order by BASEDATE desc
+
+select
+select * from saveweather where trunc(BASEDATE) = trunc(#{baseDate})
+
+PAGING_1
+select *
+from (
+    select row_number() over (order by BASEDATE desc) as rnum,
+           BASEDATE, WEATHER, MAXTEMP, MINTEMP, MOISTPERCENT, RAINPERCENT
+    from saveweather
+) A
+where  A.rnum  between  #{start}  and #{end}
+
+PAGING_2
+select count(*) from saveweather
+
+PAGING_3
+select *
+from (
+    select row_number() over (order by BASEDATE desc) as rnum,
+           BASEDATE, WEATHER, MAXTEMP, MINTEMP, MOISTPERCENT, RAINPERCENT
+    from saveweather
+    where WEATHER LIKE '%' || #{search} || '%'
+) A
+where  A.rnum  between  #{start}  and #{end}
+
+PAGING_4
+select count (*) 
+from saveweather
+where WEATHER  LIKE '%' || #{search} || '%'
+
+
+ -->

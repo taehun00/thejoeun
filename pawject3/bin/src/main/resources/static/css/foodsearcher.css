@@ -1,0 +1,129 @@
+@charset "UTF-8";
+
+
+/* 선택지 창 조절 */
+.pettypeidfilter,
+.foodtypefilter,
+.brandidfilter,
+
+.categoryfilter,
+.petagegroupfilter,
+.isgrainfreefilter,
+.originfilter,
+
+.rangelabelfilter,
+
+.minvaluefilter{
+	width:200px;
+}
+
+.caloriefilter{
+	width:400px;
+}
+
+/*필터 정렬*/
+.filter-row {
+  margin-top: 1.5rem;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+
+/*검색박스*/
+.filterbox {
+    text-align: center;
+    border-radius: 20px;
+    border: 2px solid darkgrey;
+    padding: 20px;
+    width: auto;
+
+    text-decoration: none;
+    color: inherit;
+    display: block;
+
+    transition: all 0.2s ease;
+}
+
+.hidden {
+  display: none;
+}
+
+/* 푸드 카드 */
+/* 테이블 전체 */
+.resultTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.resultTable thead {
+  display: none; /* "검색 결과" 헤더 숨김 → 밀도 ↑ */
+}
+
+.resultTable tbody tr {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.resultTable tbody tr:last-child {
+  border-bottom: none;
+}
+
+/* 셀 */
+.resultTable td {
+  padding: 12px 8px;
+}
+
+/* 이미지 */
+.resultTable img {
+  width: 160px;          /* 200 → 160 */
+  height: auto;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+/* 텍스트 영역 */
+.resultTable td > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;              /* 여백 최소 */
+}
+
+/* 별점 */
+.resultTable .rating {
+  font-size: 14px;
+  color: #ffb400;
+  font-weight: 600;
+}
+
+/* 브랜드 */
+.resultTable .brand {
+  font-size: 13px;
+  color: #666;
+}
+
+/* 사료명 */
+.resultTable .foodname {
+  font-size: 16px;
+  font-weight: 700;
+  color: #222;
+}
+
+/* 설명 */
+.resultTable .desc {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.4;
+  max-height: 2.8em;      /* 2줄 제한 */
+  overflow: hidden;
+}
+
+/* 버튼 영역 */
+.resultTable .action {
+  margin-top: 6px;
+  display: flex;
+  gap: 6px;
+}
+
+.resultTable .action .btn {
+  padding: 4px 10px;
+  font-size: 12px;
+}

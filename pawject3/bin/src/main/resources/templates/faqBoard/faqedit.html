@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+<head lang="ko">
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div layout:fragment="content">
+	
+		<h3 class="card-header">FAQ 수정</h3>
+		<form th:action="@{/faqBoard/faqedit}" 
+			    method="post"  >
+	    <input type="hidden"   name="faqid"  th:value="${dto.faqid}"> 
+			
+			<div class="row align-items-end">
+			    <div class="col-sm-6">
+			        <label for="question" class="form-label">질문</label>
+			        <input type="text" class="form-control" id="question"
+			               th:value="${dto.question}" name="question">
+			    </div>
+			
+			    <div class="col-sm-4">
+				<select name="category" class="form-select">
+					<option th:each="c : ${categories}"
+					        th:value="${c}"
+					        th:text="${c}"
+					        th:selected="${c == dto.category}">
+				    </option>
+				</select>
+			    </div>
+			</div>
+			
+	
+			<div class="mb-3">
+			    <label for="answer" class="form-label"></label>
+			    <textarea class="form-control" id="answer" name="answer"
+			              th:text="${dto.answer}"></textarea>
+			</div>
+						
+			<div class="mb-3 mt-3">
+				<label for="keywords" class="form-label">키워드:</label> <input
+					type="text" class="form-control" id="keywords"
+					th:value="${dto.keywords}" name="keywords">
+			</div>
+
+			
+			<div class="mb-3  text-end">
+				<button type="submit" class="btn btn-primary">수정</button>
+				<a th:href="@{/faqBoard/faqlist}"  class="btn btn-primary">목록보기</a>
+			</div>
+			
+		</form> 
+	</div><!-- content-->
+</body>
+</html>
