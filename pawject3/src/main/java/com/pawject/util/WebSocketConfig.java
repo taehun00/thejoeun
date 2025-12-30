@@ -18,11 +18,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         config.setApplicationDestinationPrefixes("/app");
     }
 
-//    @Override
-//    public void registerStompEndpoints(StompEndpointRegistry registry) {
-//        // 클라이언트가 연결할 엔드포인트
-//        registry.addEndpoint("/ws").setAllowedOrigins("*").withSockJS();
-//    }
     
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {

@@ -65,7 +65,19 @@
 	
 	    // 서버에 환영 메시지 요청
 	    fetch('/users/welcome');
+	    
+	 	// 모든 사용자에게 브로드캐스트된 공지 구독
+        stompClient.subscribe('/topic/notifications', (msg) => {
+        	console.log("공지 수신:", msg.body);
+            showAnnouncement(msg.body);
+        });
 	  });
+	  
+	  function showAnnouncement(message) {
+	        // 간단히 alert로 표시 (나중에 UI 개선 가능)
+	        alert("📢 공지사항 알림: " + message);
+	    }
+
 	
 	  function showToast(message) {
 		  const toast = document.getElementById("toast");
