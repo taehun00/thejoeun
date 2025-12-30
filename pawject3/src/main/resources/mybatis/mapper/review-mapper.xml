@@ -134,35 +134,33 @@
 			from review r left join food f on(r.foodid=f.foodid)
                join foodbrand fb on(r.brandid=fb.brandid)
                left join users u on(u.userid=r.userid)
-	    <where>
-	        <choose>
-	            <when test="searchType == 'brandname'">
-	              lower(fb.brandname) like #{search}
-	            </when>
-	            
-	            <when test="searchType == 'foodname'">
-	                f.foodname like #{search} 
-	            </when>
-	            
-				<when test="searchType == 'pettypeid'">
-					 f.pettypeid = #{search}
-				</when>
-	            
-	            <when test="searchType == 'reviewcomment'">
-	                r.reviewcomment like #{search} 
-	            </when>
-
-	
-	            <otherwise>
-	                (
-	                    lower(fb.brandname) like #{search}
-	                    or f.foodname like #{search} 
-	    				or r.reviewcomment like #{search} 
-				    
-	                )
-	            </otherwise>
-	        </choose>
-	    </where>
+		<where>
+		    <choose>
+		        <when test="searchType == 'brandname'">
+		            AND lower(fb.brandname) like #{search}
+		        </when>
+		
+		        <when test="searchType == 'foodname'">
+		            AND f.foodname like #{search}
+		        </when>
+		
+		        <when test="searchType == 'pettypeid'">
+		            AND f.pettypeid = #{search}
+		        </when>
+		
+		        <when test="searchType == 'reviewcomment'">
+		            AND r.reviewcomment like #{search}
+		        </when>
+		
+		        <otherwise>
+		            AND (
+		                lower(fb.brandname) like #{search}
+		                OR f.foodname like #{search}
+		                OR r.reviewcomment like #{search}
+		            )
+		        </otherwise>
+		    </choose>
+		</where>
 	    order by r.reviewid desc
 	</select>
 	
@@ -173,39 +171,70 @@
 			from review r left join food f on(r.foodid=f.foodid)
                join foodbrand fb on(r.brandid=fb.brandid)
                left join users u on(u.userid=r.userid)
-	    <where>
-	        <choose>
-	            <when test="searchType == 'brandname'">
-	              lower(fb.brandname) like #{search}
-	            </when>
-	            
-	            <when test="searchType == 'foodname'">
-	                f.foodname like #{search} 
-	            </when>
-	            
-				<when test="searchType == 'pettypeid'">
-					 f.pettypeid = #{search}
-				</when>
-	            
-	            <when test="searchType == 'reviewcomment'">
-	                r.reviewcomment like #{search} 
-	            </when>
-
-	
-	            <otherwise>
-	                (
-	                    lower(fb.brandname) like #{search}
-	                    or f.foodname like #{search} 
-	    				or r.reviewcomment like #{search} 
-						or f.pettypeid = #{search}
-				    
-	                )
-	            </otherwise>
-	        </choose>
-	    </where>
+			<where>
+			    <choose>
+			        <when test="searchType == 'brandname'">
+			            AND lower(fb.brandname) like #{search}
+			        </when>
+			
+			        <when test="searchType == 'foodname'">
+			            AND f.foodname like #{search}
+			        </when>
+			
+			        <when test="searchType == 'pettypeid'">
+			            AND f.pettypeid = #{search}
+			        </when>
+			
+			        <when test="searchType == 'reviewcomment'">
+			            AND r.reviewcomment like #{search}
+			        </when>
+			
+			        <otherwise>
+			            AND (
+			                lower(fb.brandname) like #{search}
+			                OR f.foodname like #{search}
+			                OR r.reviewcomment like #{search}
+			            )
+			        </otherwise>
+			    </choose>
+			</where>
 	    order by r.reviewid desc
 	</select>	
 	
+
+	<!-- 사료-리뷰 연결용 서치 -->
+	<!-- 서치 -->
+		<select resultMap="ReviewMap" id="reviewsearchByFoodid" parameterType="int" >
+		
+		    select r.reviewid,
+		           fb.brandname,
+		           r.foodid,
+		           f.foodname,
+		           f.foodimg,
+		           r.rating,
+		           r.title,
+		           r.reviewcomment,
+		           u.nickname,
+		           u.userid,
+		           TO_CHAR(r.createdat, 'YYYY-MM-DD') as createdat,
+		           TO_CHAR(r.updatedat, 'YYYY-MM-DD') as updatedat
+		    from review r
+		         join food f on (r.foodid = f.foodid)
+		         join foodbrand fb on (r.brandid = fb.brandid)
+		         left join users u on (u.userid = r.userid)
+		    where r.foodid = #{foodid}
+		    order by r.reviewid desc
+		</select>
+	
+	
+		<select resultType="int" id="reviewsearchByFoodidCnt" parameterType="int">
+		    select count(*)
+		    from review r
+		         join food f on (r.foodid = f.foodid)
+		         join foodbrand fb on (r.brandid = fb.brandid)
+		         left join users u on (u.userid = r.userid)
+		    where r.foodid = #{foodid}
+		</select>
 	
 	
 	<!-- 내 글 구분 권한 확인용 -->

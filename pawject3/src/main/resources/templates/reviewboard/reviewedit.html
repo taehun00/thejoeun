@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+<head lang="ko">
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div layout:fragment="content">
+<script th:inline="javascript">
+const csrfHeader = [[${_csrf.headerName}]];
+const csrfToken = [[${_csrf.token}]];
+var savedFoodId = [[${rdto.foodid}]];
+</script>
+
+
+
+ 		<div class="container mt-5">
+		  <h3>리뷰 수정</h3>
+		
+			<form id="reviewUploadForm"
+			      th:action="@{/reviewboard/reviewedit}"  
+			      method="post"
+			      enctype="multipart/form-data">
+		  	  <input type="hidden" name="reviewid" th:value="${rdto.reviewid}">
+
+		    <div class="row">
+		      
+				<!-- 종 선택 -->
+				<div class="col-2">
+				  <label class="form-check-label" for="pettypeid">종</label>
+				    <select name="pettypeid" id="pettypeid" 	class="form-control">
+				        <option value="1" th:selected="${rdto.pettypeid == 1}">고양이</option>
+				        <option value="2" th:selected="${rdto.pettypeid == 2}">강아지</option>
+				    </select>
+				</div>
+				
+				<!-- 브랜드 선택 -->
+				<div class="col-2">
+				  <label class="form-check-label" for="brandid">브랜드</label>
+				  <select name="brandid" id="brandid" class="form-select">
+					    <option value="">-- 선택 --</option>
+					    <option th:each="b : ${brandlist}"
+					            th:value="${b.brandid}"
+					            th:text="${b.brandname}"
+					            th:selected="${b.brandid == rdto.brandid}">
+					    </option>
+				  </select>
+				</div>
+				
+				<!-- 제품 선택 -->
+				<div class="col-3">
+				  <label class="form-check-label" for="foodid">제품명</label>
+				  <select name="foodid" id="foodid" class="form-select">
+				    <option value="">제품 선택</option>
+					<option th:each="f : ${foodlist}"
+							th:value="${f.foodid}"
+				        	th:data-brand="${f.brandid}" 
+				        	th:data-pet="${f.pettypeid}" 
+				        	th:text="${f.foodname}"
+				        	th:selected="${f.foodid == rdto.foodid}">
+					</option>
+				  </select>
+				</div>
+		
+		      <!-- 평점 선택 -->
+		      <div class="col-2">
+		        <label class="form-check-label" for="rating">평점</label>
+		        <select name="rating" id="rating" class="form-select">
+			        <option value="5" th:selected="${rdto.rating == 5}">★★★★★</option>
+			        <option value="4" th:selected="${rdto.rating == 4}">★★★★☆</option>
+			        <option value="3" th:selected="${rdto.rating == 3}">★★★☆☆</option>
+			        <option value="2" th:selected="${rdto.rating == 2}">★★☆☆☆</option>
+			        <option value="1" th:selected="${rdto.rating == 1}">★☆☆☆☆</option>
+		        </select>
+		      </div>
+		
+		      <!-- 버튼 -->
+		      <div class="col-3 d-flex justify-content-end align-items-end mt-4">	
+				<button type="button" class="btn btn-slateBlue me-2" onclick="submitReview()">등록</button>
+				
+				<a  class="btn btn-mint"
+					th:text="목록보기"
+					th:href="@{/reviewboard/reviewlist}"></a>
+			  </div>	
+		    </div>
+		 <div class="row">
+	
+		    <div class="mb-3 mt-4 col-6">
+		      <label for="title" class="form-label">TITLE:</label>
+		      <input type="text" class="form-control" id="title" name="title" th:value="${rdto.title}">
+		    </div>
+		</div>
+		
+
+		    <div class="mb-3">
+		      <label for="reviewcontent" class="form-label">Comments:</label>
+		      <textarea class="form-control" rows="5" id="reviewcomment" name="reviewcomment"
+		        placeholder="리뷰를 작성해 주세요 (250자 이내)" th:text="${rdto.reviewcomment}"></textarea>
+		    </div>
+		    
+			<div class="row">
+			    
+			    <!-- 새로 첨부할 사진 -->
+			    <div class="mb-3 mt-4 col-3">
+			        <label for="files" class="form-label">후기 사진:</label>
+			        <input type="file" class="form-control" id="files" name="files" multiple accept="image/*">
+			    </div>  
+			    
+			    <div class="mb-3 mt-4 col-9">
+			        <label class="form-label"></label>
+			        
+			       <div id="previewBox" class="preview-img-wrap">
+					    <div th:each="img : ${imglist} "
+					    	  class="preview-img-box" 
+					    	  th:data-imgid="${img.reviewimgid}">
+					      <img th:src="@{/upload/{file}(file=${img.reviewimgname})}" 
+					      	   class="preview-img">
+							<button type="button" class="preview-del old-del" th:data-imgid="${img.reviewimgid}">
+							    X
+							</button>
+					    </div>
+
+					
+					</div>
+			        
+			    </div>
+			</div>
+			
+			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+		  </form>
+		</div>
+
+
+
+
+<script>
+
+
+$(document).ajaxSend(function(e, xhr, options) {
+    xhr.setRequestHeader(csrfHeader, csrfToken);
+});
+
+/* 사료 선택 */
+window.onload = function() {
+
+  var pet = document.getElementById("pettypeid");
+  var brand = document.getElementById("brandid");
+  var food = document.getElementById("foodid");
+
+  function filter() {
+    var p = pet.value;
+    var b = brand.value;
+
+    for (var i = 0; i < food.options.length; i++) {
+      var opt = food.options[i];
+
+      if (!opt.getAttribute("data-pet")) {
+        opt.style.display = "block";
+        continue;
+      }
+
+      var matchPet = (opt.getAttribute("data-pet") === p);
+      var matchBrand = (opt.getAttribute("data-brand") === b);
+
+      opt.style.display = (matchPet && matchBrand) ? "block" : "none";
+    }
+  }
+
+  filter();
+
+  if (savedFoodId) {
+    food.value = savedFoodId;
+  }
+
+  pet.onchange = function() {
+    filter();
+    food.value = "";
+  };
+
+  brand.onchange = function() {
+    filter();
+    food.value = "";
+  };
+};
+
+/* 수정 기능 여기로*/
+function submitReview() {
+
+	  $.ajax({
+	    url: "/reviewboard/reviewedit",
+	    type: "POST",
+	    data: $("#reviewUploadForm").serialize(),
+	    success: function (reviewid) {
+	      uploadImages(reviewid);
+	    },
+	    error: function () {
+	      alert("리뷰 수정 실패");
+	    }
+	  });
+
+	}
+
+
+/* 이미지 프리뷰 */
+let uploadFiles = [];
+let previewIndex = 0;
+
+document.getElementById("files").addEventListener("change", function (e) {
+
+  const files = [...e.target.files];
+  const previewBox = document.getElementById("previewBox");
+
+  for (let i = 0; i < files.length; i++) {
+
+    let file = files[i];
+    uploadFiles.push(file);
+
+    let reader = new FileReader();
+    reader.onload = function (ev) {
+
+      const div = document.createElement("div");
+      div.className = "preview-img-box";
+
+      div.innerHTML = 
+        '<img src="' + ev.target.result + '" class="preview-img"/>' +
+        '<button type="button" class="preview-del" data-index="' + previewIndex + '">X</button>';
+
+      previewBox.appendChild(div);
+      previewIndex++;
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+});
+
+
+/* 프리뷰 삭제 */
+document.getElementById("previewBox").addEventListener("click", function(e){
+    
+    if (!e.target.classList.contains("preview-del")) return;
+
+    const box = e.target.closest(".preview-img-box");
+
+    // 기존 이미지 삭제
+    if(e.target.classList.contains("old-del")){
+        
+        const imgid = e.target.dataset.imgid;
+
+        $.ajax({
+            url: "/reviewboard/reviewimg/delete",
+            type: "POST",
+            data: { reviewimgid: imgid },
+            success: function(){ box.remove(); }
+        });
+
+        return;
+    }
+
+    // 새 이미지 삭제
+    const index = Number(e.target.dataset.index);
+    uploadFiles[index] = null;
+    box.remove();
+});
+
+
+/* 수정 업로드 기능 */
+function submitReview() {
+
+  $.ajax({
+    url: "/reviewboard/reviewedit",
+    type: "POST",
+    data: $("#reviewUploadForm").serialize(),
+    success: function (reviewid) {
+      uploadImages(reviewid);
+    }
+  });
+}
+
+
+/* 새 이미지 업로드 - 기존과 거의 동일 */
+function uploadImages(reviewid) {
+
+  const realFiles = uploadFiles.filter(f => f != null);
+
+  // 새 이미지 없으면 바로 종료
+  if (realFiles.length === 0) {
+    alert("수정 성공");
+    location.href = "/reviewboard/reviewlist";
+    return;
+  }
+
+  let uploaded = 0;
+
+  realFiles.forEach(file => {
+
+    let fd = new FormData();
+    fd.append("file", file);
+    fd.append("reviewid", reviewid);
+
+    $.ajax({
+      url: "/reviewboard/reviewimg/upload",
+      type: "POST",
+      data: fd,
+      processData: false,
+      contentType: false,
+      success: function () {
+        uploaded++;
+        if (uploaded === realFiles.length) {
+          alert("수정 성공");
+          location.href = "/reviewboard/reviewlist";
+        }
+      }
+    });
+
+  });
+}
+</script>
+	</div><!-- content-->
+</body>
+</html>

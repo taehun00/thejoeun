@@ -1,12 +1,25 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@ include file="../inc/header.jsp"%>
-<div class="container mt-5">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+<head lang="ko">
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div layout:fragment="content">
+<script th:inline="javascript">
+const csrfParam = [[${_csrf.parameterName}]];
+const csrfToken = [[${_csrf.token}]];
+</script>	
+	
+ <div class="container mt-5">
   <h3>리뷰 작성</h3>
 
-  <form method="post" enctype="multipart/form-data" id="reviewUploadForm">
-    <input type="hidden" name="nickname" value="${nickname}">
+  <form method="post" 
+  		enctype="multipart/form-data" 
+  		id="reviewUploadForm">
+    <input type="hidden" name="nickname" th:value="${nickname}">
 
     <div class="row">
       <!-- 종 선택 -->
@@ -20,30 +33,31 @@
       </div>
 
       <!-- 브랜드 선택 -->
-      <div class="col-2">
-        <label class="form-check-label" for="brandid">브랜드</label>
-        <select name="brandid" id="brandid" class="form-select">
-          <option value="">브랜드 선택</option>
-          <c:forEach var="b" items="${brandlist}">
-            <option value="${b.brandid}">${b.brandname}</option>
-          </c:forEach>
-        </select>
-      </div>
+		<div class="col-2">
+			  <label class="form-check-label">브랜드 :</label>
+			  <select name="brandid" id="brandid" class="form-control">
+			    <option value="">-- 브랜드 선택 --</option>
+			    <option th:each="b : ${brandlist}"
+			            th:value="${b.brandid}"
+			            th:text="${b.brandname}">
+			    </option>
+			  </select>
+		</div>
+
 
       <!-- 제품 선택 -->
       <div class="col-3">
         <label class="form-check-label" for="foodid">제품명</label>
-        <select name="foodid" id="foodid" class="form-select">
-          <option value="">제품 선택</option>
-          <c:forEach var="f" items="${foodlist}">
-            <option value="${f.foodid}"
-                    data-brand="${f.brandid}"
-                    data-pet="${f.pettypeid}">
-              ${f.foodname}
-            </option>
-          </c:forEach>
-        </select>
-      </div>
+			  <select name="foodid" id="foodid" class="form-control">
+			    <option value="">-- 제품 선택 --</option>	
+			    <option th:each="f : ${foodlist}"
+			    		th:data-pet="${f.pettypeid}"
+			    		th:data-brand="${f.brandid}"
+			            th:value="${f.foodid}"
+			            th:text="${f.foodname}">
+			    </option>
+			  </select>
+	</div>		  
 
       <!-- 평점 -->
       <div class="col-2">
@@ -60,10 +74,11 @@
       <!-- 버튼 -->
       <div class="col-3 d-flex justify-content-end align-items-end mt-4">
         <button type="button" class="btn btn-slateBlue me-2" onclick="submitReview()">등록</button>
-        <button type="button" class="btn btn-mint"
-                onclick="location.href='${pageContext.request.contextPath}/reviewlist.fn'">
-          목록보기
-        </button>
+        
+		<a  class="btn btn-mint"
+			th:text="목록보기"
+			th:href="@{/reviewboard/reviewlist}"></a>
+
       </div>
     </div>
 
@@ -91,7 +106,7 @@
 		</div>
 
 		<div id="previewBox" class="preview-img-wrap"></div>
-	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+	<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
   </form>
 </div>
 
@@ -188,10 +203,14 @@ document.getElementById("previewBox").addEventListener("click", function(e){
 
 <!-- 업로드 -->
 <script>
+
+function submitReview() {
+    console.log("submitReview called");
+}
 function submitReview() {
 
 	$.ajax({
-		  url: "${pageContext.request.contextPath}/reviewwrite.fn",
+		  url: "/reviewboard/reviewwrite",
 		  type: "POST",
 		  data: $("#reviewUploadForm").serialize(),
 		  success: function (reviewid) {
@@ -212,7 +231,7 @@ function uploadImages(reviewid) {
   // 이미지 없는 경우
   if (realFiles.length === 0) {
     alert("리뷰 등록 성공");
-    location.href="${pageContext.request.contextPath}/reviewlist.fn";
+    location.href="/reviewboard/reviewlist";
     return;
   }
 
@@ -223,10 +242,10 @@ function uploadImages(reviewid) {
     let fd = new FormData();
     fd.append("file", realFiles[i]);
     fd.append("reviewid", reviewid);
-    fd.append("${_csrf.parameterName}", "${_csrf.token}");
+    fd.append(csrfParam, csrfToken);
 
     $.ajax({
-    	url: "${pageContext.request.contextPath}/reviewimg/upload",
+    	url: "/reviewboard/reviewimg/upload",
       type: "POST",
       data: fd,
       contentType: false,
@@ -237,15 +256,14 @@ function uploadImages(reviewid) {
 
         if (uploaded === realFiles.length) {
           alert("리뷰 등록 성공");
-          location.href="${pageContext.request.contextPath}/reviewlist.fn";
+          location.href="/reviewboard/reviewlist";
         }
       }
     });
   }
 }
 </script>
-
-
-
-
-<%@ include file="../inc/footer.jsp"%>
+ 
+	</div><!-- content-->
+</body>
+</html>

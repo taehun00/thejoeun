@@ -50,6 +50,12 @@ public interface ReviewDao {
 		//<select id="selectUserIdForReview" resultType="int" parameterType="String">
 		public int selectUserIdForReview(String email);
 		
+		
+		//사료-리뷰 연결
+//		<select resultMap="ReviewMap" id="reviewsearchByFoodid" parameterType="int" >
+		public List<ReviewDto> reviewsearchByFoodid(int foodid);
+//		<select resultType="int" id="reviewsearchByFoodidCnt" parameterType="int">
+		public int reviewsearchByFoodidCnt(int foodid);
 }
 
 

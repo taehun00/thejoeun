@@ -66,7 +66,7 @@ public class ReviewServiceImpl implements ReviewService {
 		String uuid = UUID.randomUUID().toString();
         String originName = file.getOriginalFilename();
         String fileName = uuid + "_" + originName;
-        String uploadPath = "C:/file/";
+        String uploadPath =  "C:/upload/";
 
         File img = new File(uploadPath + fileName);
 
@@ -98,7 +98,7 @@ public class ReviewServiceImpl implements ReviewService {
 		String uuid = UUID.randomUUID().toString();
         String originName = file.getOriginalFilename();
         String fileName = uuid + "_" + originName;
-        String uploadPath = "C:/file/";
+        String uploadPath =  "C:/upload/";
 
         File img = new File(uploadPath + fileName);
 
@@ -126,7 +126,7 @@ public class ReviewServiceImpl implements ReviewService {
 
 	//파일 삭제 전용 메서드
 	private void filedelete(String fileName) {
-		String uploadPath = "C:/file/";
+		String uploadPath = "C:/upload/";
 		File img = new File(uploadPath + fileName);
 		
 		if(img.exists()) {
@@ -226,7 +226,9 @@ public class ReviewServiceImpl implements ReviewService {
 				//분기4. 제목+내용+브랜드
 				case "all" : para.put("searchType", "all");
 							para.put("search", searchLike);	break;
-				
+												
+
+							
 		
 				}//switch
 				    List<ReviewDto> list = rdao.reviewsearch(para);
@@ -271,7 +273,7 @@ public class ReviewServiceImpl implements ReviewService {
 				case "all" : para.put("searchType", "all");
 							para.put("search", searchLike);	break;
 				
-		
+							 
 				}//switch
 
 		
@@ -287,6 +289,16 @@ public class ReviewServiceImpl implements ReviewService {
 	@Override
 	public int selectUserIdForReview(String email) {
 		return rdao.selectUserIdForReview(email);
+	}
+
+	@Override
+	public List<ReviewDto> reviewsearchByFoodid(int foodid) {
+		return rdao.reviewsearchByFoodid(foodid);
+	}
+
+	@Override
+	public int reviewsearchByFoodidCnt(int foodid) {
+		return rdao.reviewsearchByFoodidCnt(foodid);
 	}
 	
 	
