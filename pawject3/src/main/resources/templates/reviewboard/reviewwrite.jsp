@@ -1,25 +1,12 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{fragments/layout}">
-<head lang="ko">
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-	<div layout:fragment="content">
-<script th:inline="javascript">
-const csrfParam = [[${_csrf.parameterName}]];
-const csrfToken = [[${_csrf.token}]];
-</script>	
-	
- <div class="container mt-5">
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ include file="../inc/header.jsp"%>
+<div class="container mt-5">
   <h3>리뷰 작성</h3>
 
-  <form method="post" 
-  		enctype="multipart/form-data" 
-  		id="reviewUploadForm">
-    <input type="hidden" name="nickname" th:value="${nickname}">
+  <form method="post" enctype="multipart/form-data" id="reviewUploadForm">
+    <input type="hidden" name="nickname" value="${nickname}">
 
     <div class="row">
       <!-- 종 선택 -->
@@ -33,31 +20,30 @@ const csrfToken = [[${_csrf.token}]];
       </div>
 
       <!-- 브랜드 선택 -->
-		<div class="col-2">
-			  <label class="form-check-label">브랜드 :</label>
-			  <select name="brandid" id="brandid" class="form-control">
-			    <option value="">-- 브랜드 선택 --</option>
-			    <option th:each="b : ${brandlist}"
-			            th:value="${b.brandid}"
-			            th:text="${b.brandname}">
-			    </option>
-			  </select>
-		</div>
-
+      <div class="col-2">
+        <label class="form-check-label" for="brandid">브랜드</label>
+        <select name="brandid" id="brandid" class="form-select">
+          <option value="">브랜드 선택</option>
+          <c:forEach var="b" items="${brandlist}">
+            <option value="${b.brandid}">${b.brandname}</option>
+          </c:forEach>
+        </select>
+      </div>
 
       <!-- 제품 선택 -->
       <div class="col-3">
         <label class="form-check-label" for="foodid">제품명</label>
-			  <select name="foodid" id="foodid" class="form-control">
-			    <option value="">-- 제품 선택 --</option>	
-			    <option th:each="f : ${foodlist}"
-			    		th:data-pet="${f.pettypeid}"
-			    		th:data-brand="${f.brandid}"
-			            th:value="${f.foodid}"
-			            th:text="${f.foodname}">
-			    </option>
-			  </select>
-	</div>		  
+        <select name="foodid" id="foodid" class="form-select">
+          <option value="">제품 선택</option>
+          <c:forEach var="f" items="${foodlist}">
+            <option value="${f.foodid}"
+                    data-brand="${f.brandid}"
+                    data-pet="${f.pettypeid}">
+              ${f.foodname}
+            </option>
+          </c:forEach>
+        </select>
+      </div>
 
       <!-- 평점 -->
       <div class="col-2">
@@ -74,11 +60,10 @@ const csrfToken = [[${_csrf.token}]];
       <!-- 버튼 -->
       <div class="col-3 d-flex justify-content-end align-items-end mt-4">
         <button type="button" class="btn btn-slateBlue me-2" onclick="submitReview()">등록</button>
-        
-		<a  class="btn btn-mint"
-			th:text="목록보기"
-			th:href="@{/reviewboard/reviewlist}"></a>
-
+        <button type="button" class="btn btn-mint"
+                onclick="location.href='${pageContext.request.contextPath}/reviewlist.fn'">
+          목록보기
+        </button>
       </div>
     </div>
 
@@ -104,90 +89,11 @@ const csrfToken = [[${_csrf.token}]];
 		      <input type="file" class="form-control" id="files" name="files" multiple accept="image/*">
 		   </div>
 		</div>
+
 		<div id="previewBox" class="preview-img-wrap"></div>
-	<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-
-
-		<!-- AI 리뷰 다듬기 -->
-		<div class="ai-helper-box mt-4">
-		  <div class="ai-helper-header">
-		    <span class="ai-badge">AI</span>
-		    <span class="ai-helper-text">작성한 리뷰를 조금 더 부드럽게 정리해 볼까요?</span>
-		    <button type="button" id="sendBtn" class="btn btn-sm btn-primary">다듬기</button>
-		  </div>
-		</div>
-		
-		<div class="ai-result-box d-none mt-3" id="responseWrap">
-		  <div class="ai-result-title">AI 추천 문장</div>
-		  <pre id="response" class="ai-result-content"></pre>
-		  <div class="text-end mt-2">
-		    <button type="button" id="applyBtn" class="btn btn-sm btn-success">사용하기</button>
-		  </div>
-		</div>
-
-
-
+	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
   </form>
 </div>
-
-
-<script>
-
-//결과창 감췄다 보여줘서 이렇게 바꿔야됨 복잡...
-let refinedTitle = "";
-let refinedContent = "";
-
-$(document).on("click", "#sendBtn", function () {
-
-    let reviewcomment = $("#reviewcomment").val().trim();
-    let title = $("#title").val().trim();
-
-    if (reviewcomment.length <= 0 || title.length <= 0) {
-        alert("제목과 내용을 작성해 주세요");
-        return;
-    }
-
-    let data = {};
-    data["title"] = title;
-    data["reviewcomment"] = reviewcomment;
-    data[csrfParam] = csrfToken;
-
-    $.ajax({
-        url: "/reviewboard/reviewpai",
-        type: "POST",
-        data: data,
-        success: function(result){
-            $("#response").text(result);
-            $("#responseWrap").removeClass("d-none");
-
-            // 결과 파싱
-            refinedTitle = "";
-            refinedContent = "";
-
-            result.split("\n").forEach(line => {
-                if (line.startsWith("제목:")) {
-                    refinedTitle = line.replace("제목:", "").trim();
-                }
-                if (line.startsWith("내용:")) {
-                    refinedContent = line.replace("내용:", "").trim();
-                }
-            });
-        }
-    });
-});
-
-//멘트 대체하기
-$(document).on("click", "#applyBtn", function () {
-    if (refinedTitle) {
-        $("#title").val(refinedTitle);
-    }
-    if (refinedContent) {
-        $("#reviewcomment").val(refinedContent);
-    }
-});
-</script>
-
-
 
 
 <!-- 사료 선택 필터 -->
@@ -282,14 +188,10 @@ document.getElementById("previewBox").addEventListener("click", function(e){
 
 <!-- 업로드 -->
 <script>
-
-function submitReview() {
-    console.log("submitReview called");
-}
 function submitReview() {
 
 	$.ajax({
-		  url: "/reviewboard/reviewwrite",
+		  url: "${pageContext.request.contextPath}/reviewwrite.fn",
 		  type: "POST",
 		  data: $("#reviewUploadForm").serialize(),
 		  success: function (reviewid) {
@@ -310,7 +212,7 @@ function uploadImages(reviewid) {
   // 이미지 없는 경우
   if (realFiles.length === 0) {
     alert("리뷰 등록 성공");
-    location.href="/reviewboard/reviewlist";
+    location.href="${pageContext.request.contextPath}/reviewlist.fn";
     return;
   }
 
@@ -321,10 +223,10 @@ function uploadImages(reviewid) {
     let fd = new FormData();
     fd.append("file", realFiles[i]);
     fd.append("reviewid", reviewid);
-    fd.append(csrfParam, csrfToken);
+    fd.append("${_csrf.parameterName}", "${_csrf.token}");
 
     $.ajax({
-    	url: "/reviewboard/reviewimg/upload",
+    	url: "${pageContext.request.contextPath}/reviewimg/upload",
       type: "POST",
       data: fd,
       contentType: false,
@@ -335,14 +237,15 @@ function uploadImages(reviewid) {
 
         if (uploaded === realFiles.length) {
           alert("리뷰 등록 성공");
-          location.href="/reviewboard/reviewlist";
+          location.href="${pageContext.request.contextPath}/reviewlist.fn";
         }
       }
     });
   }
 }
 </script>
- 
-	</div><!-- content-->
-</body>
-</html>
+
+
+
+
+<%@ include file="../inc/footer.jsp"%>

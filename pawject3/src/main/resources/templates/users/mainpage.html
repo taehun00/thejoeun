@@ -27,9 +27,9 @@
 	<!-- 메인 3가지 파트 -->
     <main class="main-sections">
         <section class="part">
-            <h3>사료</h3>
-            <p>반려동물의 건강을 위한 다양한 사료 정보를 제공합니다.</p>
-            <a href="/feed" class="btn">자세히 보기</a>
+		<h3>사료찾기</h3>
+		<p>내 반려동물에게 딱 맞는 사료를 찾아보세요.</p>
+            <a th:href="@{/petfoodsearcher/searchpetfood}" class="btn">자세히 보기</a>
         </section>
 
         <section class="part">
@@ -65,7 +65,19 @@
 	
 	    // 서버에 환영 메시지 요청
 	    fetch('/users/welcome');
+	    
+	 	// 모든 사용자에게 브로드캐스트된 공지 구독
+        stompClient.subscribe('/topic/notifications', (msg) => {
+        	console.log("공지 수신:", msg.body);
+            showAnnouncement(msg.body);
+        });
 	  });
+	  
+	  function showAnnouncement(message) {
+	        // 간단히 alert로 표시 (나중에 UI 개선 가능)
+	        alert("📢 공지사항 알림: " + message);
+	    }
+
 	
 	  function showToast(message) {
 		  const toast = document.getElementById("toast");
