@@ -35,11 +35,11 @@ public interface UserDao {
     int joinRole(AuthDto dto);
 
     // 권한 삭제
-    int deleteRolesByEmail(String email);
+    int deleteRolesByUserId(int userId);
+
 
     // 마이페이지
     UserDto myPage(UserDto dto);
-
     // 아이디 찾기
     String findId(UserDto dto);
 

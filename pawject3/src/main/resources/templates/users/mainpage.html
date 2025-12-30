@@ -52,7 +52,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
     <script>
-	  const socket = new SockJS('/pawject3/ws');
+	  const socket = new SockJS('/ws');
 	  const stompClient = Stomp.over(socket);
 	
 	  stompClient.connect({}, () => {
@@ -64,7 +64,7 @@
 	    });
 	
 	    // 서버에 환영 메시지 요청
-	    fetch('/pawject3/users/welcome');
+	    fetch('/users/welcome');
 	  });
 	
 	  function showToast(message) {

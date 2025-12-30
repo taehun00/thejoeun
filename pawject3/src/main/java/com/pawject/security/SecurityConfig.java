@@ -9,16 +9,19 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import com.pawject.oauth.Oauth2IUserService;
+
 import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor // ##
 public class SecurityConfig {
-	
 
+	private final Oauth2IUserService oauth2IUserService; // ##
+	
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
 		http /* 1. 허용경로 */
 			.authorizeHttpRequests(auth -> auth
 					// 누구나 다 접근가능
@@ -57,17 +60,12 @@ public class SecurityConfig {
 						"/ws/**"   // WebSocket 엔드포인트도 CSRF 예외 처리)
 				)
 			);
-
 		return http.build();
 	}
-
-	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-		return authConfig.getAuthenticationManager();
-	}
-
-
+	
+//		@Bean
+//		public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+//			
+//			return authConfig.getAuthenticationManager();
+//		}
 }
-
-
-

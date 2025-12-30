@@ -23,7 +23,8 @@ public interface UserSecurityService {
 
     /* 권한 추가/삭제 */
     int joinAuth(AuthDto dto);
-    int deleteAuth(AuthDto dto);
+    int deleteRolesByUserId(AuthDto dto);
+
 
     /* 로그인 권한 조회 */
     UserAuthDto readAuth(String email, String provider);
@@ -44,4 +45,7 @@ public interface UserSecurityService {
 
     /* 검색 */
     List<UserDto> searchUsers(String keyword, String type);
+    
+    // 마이페이지 조회
+    UserDto myPage(String email);
 }
