@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.pawject.dao.PetDao;
 import com.pawject.dao.UserDao;
 import com.pawject.dto.user.AuthDto;
 import com.pawject.dto.user.UserAuthDto;
@@ -27,6 +28,7 @@ public class UserSecurityServiceImpl implements UserSecurityService {
 
 	
     @Autowired private UserDao userDao;
+    @Autowired private PetDao petDao;
     @Autowired private PasswordEncoder passwordEncoder;
     @Autowired private UtilUpload utilUpload;
 
@@ -74,9 +76,15 @@ public class UserSecurityServiceImpl implements UserSecurityService {
 
         // 7. 권한 부여
         if (result > 0) {
-            userDao.joinRole(new AuthDto("ROLE_MEMBER", dto.getEmail()));
-            log.debug("권한 부여 완료 email={}", dto.getEmail());
+            AuthDto auth = new AuthDto();
+            auth.setUserId(dto.getUserId());   // 시퀀스로 채워진 PK
+            auth.setEmail(dto.getEmail());
+            auth.setAuth("ROLE_MEMBER");
+
+            userDao.joinRole(auth);
+            log.debug("권한 부여 완료 email={}, userId={}", dto.getEmail(), dto.getUserId());
         }
+
 
         // 8. 최종 반환
         log.debug("회원가입 처리 완료 email={}, provider={}", dto.getEmail(), dto.getProvider());
@@ -109,20 +117,29 @@ public class UserSecurityServiceImpl implements UserSecurityService {
     @Transactional
     @Override
     public int delete(UserDto dto, boolean requirePasswordCheck) {
-        UserDto dbUser = userDao.findByEmail(dto);
-        if(dbUser == null) return 0;
+    	// provider가 null이면 기본값을 세팅
+        if (dto.getProvider() == null) {
+            dto.setProvider("local"); // 로컬 기본
+        }
 
-        if(requirePasswordCheck) {
-            if(dto.getPassword() == null || !passwordEncoder.matches(dto.getPassword(), dbUser.getPassword())) {
+    	
+    	UserDto dbUser = userDao.findByEmail(dto);
+        if (dbUser == null) return 0;
+
+        // provider에 따라 비밀번호 체크 여부 결정
+        if (requirePasswordCheck && "local".equals(dbUser.getProvider())) {
+            if (dto.getPassword() == null || !passwordEncoder.matches(dto.getPassword(), dbUser.getPassword())) {
                 return 0;
             }
         }
 
         dto.setUserId(dbUser.getUserId());
-        userDao.deleteRolesByEmail(dto.getEmail());
+        petDao.deletePetsByUser(dto.getUserId());
 
+        userDao.deleteRolesByUserId(dto.getUserId());
         return userDao.deleteMember(dto);
     }
+
 
     /* 권한 추가 */
     @Override
@@ -132,9 +149,10 @@ public class UserSecurityServiceImpl implements UserSecurityService {
 
     /* 권한 삭제 */
     @Override
-    public int deleteAuth(AuthDto dto) {
-        return userDao.deleteRolesByEmail(dto.getEmail());
+    public int deleteRolesByUserId(AuthDto dto) {
+        return userDao.deleteRolesByUserId(dto.getUserId());
     }
+
 
     /* 로그인 권한 조회 */
     @Override
@@ -164,9 +182,14 @@ public class UserSecurityServiceImpl implements UserSecurityService {
 
     /* 관리자용 유저 조회 */
     @Override
-    public List<UserDto> listUsers(UserDto dto) {
-        return userDao.listUsers(dto);
-    }
+	public List<UserDto> listUsers(int pstartno) {
+		HashMap<String, Object> para = new HashMap();
+		int start = (pstartno - 1 ) * 10 + 1;
+		para.put("start", start);
+		para.put("end", start + 10 - 1);
+		
+		return userDao.listUsers(para);
+	}
 
     @Override
     public int selectTotalCnt() {
@@ -184,5 +207,14 @@ public class UserSecurityServiceImpl implements UserSecurityService {
 	    params.put("keyword", keyword);
 	    params.put("type", type);
 	    return userDao.searchUsers(params);
+	}
+
+	
+	
+	@Override
+	public UserDto myPage(String email) {
+		UserDto dto = new UserDto();
+        dto.setEmail(email);
+        return userDao.myPage(dto);
 	}
 }
