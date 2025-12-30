@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pawject.dao.UserDao">
+
+    <!-- 회원가입 -->
+    <insert id="join" parameterType="UserDto">
+    	<selectKey keyProperty="userId" resultType="int" order="BEFORE">
+	    SELECT users_seq.NEXTVAL FROM dual
+	  </selectKey>
+    	
+        INSERT INTO users (userid, email, nickname, password, ufile, mobile, createdat, provider, providerid)
+        VALUES (#{userId}, #{email, jdbcType=VARCHAR}, #{nickname, jdbcType=VARCHAR},
+        	#{password, jdbcType=VARCHAR}, #{ufile, jdbcType=VARCHAR}, #{mobile, jdbcType=VARCHAR}, 
+        	SYSDATE, #{provider, jdbcType=VARCHAR}, #{providerId, jdbcType=VARCHAR})
+    </insert>
+    
+    <!-- 로그인(이메일로 이메일, 비밀번호, 권한) -->
+    <select id="readAuthByEmail" resultMap="userAuthMap" parameterType="UserDto">
+	    SELECT u.userid, u.email, u.password, r.auth
+	    FROM users u
+	    LEFT JOIN roles r ON u.userid = r.userid
+	    WHERE u.email = #{email} AND u.provider = #{provider}
+	</select>
+
+    
+    <!-- 이메일로 유저정보찾기 -->
+    <select id="findByEmail" resultMap="userMap" parameterType="UserDto">
+        SELECT userid, email, nickname, password, ufile, mobile, createdat, provider, providerid
+        FROM users WHERE email=#{email} AND provider=#{provider}
+    </select>
+
+    <!-- 이메일로 아이디 중복검사 -->
+    <select id="iddoubleByEmail" resultType="int" parameterType="UserDto">
+        SELECT COUNT(*) FROM users WHERE email=#{email} AND provider=#{provider}
+    </select>
+
+    <!-- 정보수정 (사용자) -->
+    <update id="update" parameterType="UserDto">
+        UPDATE users
+        <set>
+            <if test="password != null"> PASSWORD = #{password, jdbcType=VARCHAR}, </if>
+            <if test="ufile != null"> UFILE = #{ufile, jdbcType=VARCHAR}, </if>
+            <if test="mobile != null"> MOBILE = #{mobile, jdbcType=VARCHAR}, </if>
+            <if test="nickname != null"> NICKNAME = #{nickname, jdbcType=VARCHAR}, </if>
+            <if test="provider != null"> PROVIDER = #{provider, jdbcType=VARCHAR}, </if>
+            <if test="providerId != null"> PROVIDERID = #{providerId, jdbcType=VARCHAR} </if>
+        </set>
+        WHERE userid = #{userId}
+    </update>
+    
+    <!-- 회원탈퇴 (사용자) -->
+    <delete id="deleteMember" parameterType="UserDto">
+        DELETE FROM users WHERE userid = #{userId}
+    </delete>
+    
+    <!-- 권한 부여 (roles 테이블) -->
+    <insert id="joinRole" parameterType="AuthDto">
+	    INSERT INTO roles (authid, userid, email, auth)
+	    VALUES (roles_seq.NEXTVAL, #{userId, jdbcType=INTEGER}, #{email, jdbcType=VARCHAR}, #{auth, jdbcType=VARCHAR})
+	</insert>
+
+
+    
+    <!-- 권한 삭제 -->
+    <delete id="deleteRolesByUserId" parameterType="int">
+	    DELETE FROM roles WHERE userid = #{userId}
+	</delete>
+
+
+    <!-- UserDto 매핑 -->
+    <resultMap type="UserDto" id="userMap">
+        <result property="userId"    column="USERID"/>
+        <result property="email"     column="EMAIL"/>
+        <result property="password"  column="PASSWORD"/>
+        <result property="createdAt" column="CREATEDAT"/>
+        <result property="ufile"     column="UFILE"/>
+        <result property="mobile"    column="MOBILE"/>
+        <result property="nickname"  column="NICKNAME"/>
+        <result property="provider"  column="PROVIDER"/>
+        <result property="providerId" column="PROVIDERID"/>
+    </resultMap>
+
+    <!-- RoleDto 매핑 -->
+    <resultMap type="AuthDto" id="roleMap">
+	    <result property="authId" column="AUTHID"/>
+	    <result property="userId" column="USERID"/>
+	    <result property="email"  column="EMAIL"/>
+	    <result property="auth"   column="AUTH"/>
+	</resultMap>
+
+
+    <!-- UserAuthDto 매핑 -->
+    <resultMap type="UserAuthDto" id="userAuthMap">
+        <result property="email"    column="EMAIL"/>
+        <result property="password" column="PASSWORD"/>
+        <result property="userId"   column="USERID"/>
+        <collection property="authList" resultMap="roleMap"/>
+    </resultMap>
+
+    <!-- 로그인: 이메일 기준으로 사용자 + 권한 -->
+    <select id="readAuth" resultMap="userAuthMap" parameterType="UserDto">
+	    SELECT u.userid, u.email, u.password, r.auth
+	    FROM users u
+	    LEFT JOIN roles r ON u.userid = r.userid
+	    WHERE u.email = #{email}
+	</select>
+
+
+    <!-- 마이페이지 -->
+    <select id="myPage" resultMap="userMap" parameterType="UserDto">
+        SELECT * FROM users WHERE email = #{email}
+    </select>
+
+    <!-- 아이디 찾기 -->
+    <select id="findId" resultType="string" parameterType="UserDto">
+        SELECT email FROM users WHERE nickname = #{nickname}
+    </select>
+
+    <!-- 비밀번호 찾기 -->
+    <select id="findPassword" resultType="string" parameterType="UserDto">
+        SELECT password FROM users WHERE nickname = #{nickname} AND email = #{email}
+    </select>
+
+    <!-- 정보수정 (관리자) 닉네임만 수정 -->
+    <update id="updateNickname" parameterType="UserDto">
+        UPDATE users SET nickname = #{nickname} WHERE userid = #{userId}
+    </update>
+
+    <!-- 회원탈퇴 (관리자) -->
+    <select id="findUserByEmail" parameterType="string" resultMap="userMap">
+        SELECT USERID, EMAIL, PASSWORD, CREATEDAT, UFILE, MOBILE, NICKNAME, PROVIDER, PROVIDERID
+        FROM users WHERE EMAIL = #{email}
+    </select>
+
+    <!-- 전체 유저 조회 (관리자) + 페이징 -->
+    <select id="listUsers" resultMap="userMap" parameterType="UserDto">
+        SELECT *
+        FROM (
+            SELECT ROW_NUMBER() OVER (ORDER BY createdat DESC) AS rnum,
+                   userid, email, nickname, password, ufile, createdat, mobile, provider, providerid
+            FROM users
+        ) A
+        WHERE A.rnum BETWEEN #{start} AND #{end}
+    </select>
+
+    <select id="selectTotalCnt" resultType="int">
+        SELECT COUNT(*) FROM users
+    </select>
+
+    <!-- 특정 유저 조회 (관리자용) -->
+    <select id="selectUser" resultMap="userMap" parameterType="int">
+        SELECT userid, email, nickname, password, ufile, createdat, mobile, provider, providerid
+        FROM users WHERE userid = #{userId}
+    </select>
+
+    <!-- 검색 -->
+    <select id="searchUsers" resultMap="userMap" parameterType="map">
+        SELECT u.userid, u.email, u.nickname, u.createdat, u.ufile, u.provider, u.providerid
+        FROM users u
+        WHERE
+            <choose>
+                <when test="type == 'email'">
+                    u.email LIKE '%' || #{keyword} || '%'
+                </when>
+                <when test="type == 'nickname'">
+                    u.nickname LIKE '%' || #{keyword} || '%'
+                </when>
+                <otherwise>
+                    u.email LIKE '%' || #{keyword} || '%'
+                    OR u.nickname LIKE '%' || #{keyword} || '%'
+                </otherwise>
+            </choose>
+        ORDER BY u.createdat DESC
+    </select>
+
+</mapper>
