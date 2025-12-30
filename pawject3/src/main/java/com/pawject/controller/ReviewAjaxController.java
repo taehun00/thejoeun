@@ -7,9 +7,12 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,6 +20,7 @@ import com.pawject.dto.review.ReviewDto;
 import com.pawject.dto.review.ReviewImgDto;
 import com.pawject.dto.user.UserAuthDto;
 import com.pawject.dto.user.UserDto;
+import com.pawject.service.review.ReviewApi;
 import com.pawject.service.review.ReviewService;
 import com.pawject.service.user.UserSecurityService;
 @RestController
@@ -132,6 +136,8 @@ public class ReviewAjaxController {
 
 	    return result;
 	}
+
+
 }
 
 
