@@ -107,20 +107,25 @@ const csrfToken = [[${_csrf.token}]];
 		<div id="previewBox" class="preview-img-wrap"></div>
 	<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 
-	<!-- 순화영역 -->
-	
-	<div class="my-4 ai-refine-box">
-	  <p>작성한 리뷰를 조금 더 부드럽게 정리해 볼까요?</p>
-	  <button type="button" id="sendBtn" class="btn btn-primary">✨다듬기</button>
-	</div>
-	
-	<div class="mt-4 ai-result-box d-none" id="responseWrap">
-	  <div class="ai-result-title">추천 멘트</div>
-	  <pre id="response" class="ai-result-content"></pre>
-	  <div class="mt-3 text-end">
-	    <button type="button" id="applyBtn" class="btn btn-success">사용하기</button>
-	  </div>
-	</div>
+
+		<!-- AI 리뷰 다듬기 -->
+		<div class="ai-helper-box mt-4">
+		  <div class="ai-helper-header">
+		    <span class="ai-badge">AI</span>
+		    <span class="ai-helper-text">작성한 리뷰를 조금 더 부드럽게 정리해 볼까요?</span>
+		    <button type="button" id="sendBtn" class="btn btn-sm btn-primary">다듬기</button>
+		  </div>
+		</div>
+		
+		<div class="ai-result-box d-none mt-3" id="responseWrap">
+		  <div class="ai-result-title">AI 추천 문장</div>
+		  <pre id="response" class="ai-result-content"></pre>
+		  <div class="text-end mt-2">
+		    <button type="button" id="applyBtn" class="btn btn-sm btn-success">사용하기</button>
+		  </div>
+		</div>
+
+
 
   </form>
 </div>
@@ -128,7 +133,7 @@ const csrfToken = [[${_csrf.token}]];
 
 <script>
 
-//결과 감췄다 보여줘서 이렇게 바꿔야됨 복잡...
+//결과창 감췄다 보여줘서 이렇게 바꿔야됨 복잡...
 let refinedTitle = "";
 let refinedContent = "";
 
@@ -171,6 +176,7 @@ $(document).on("click", "#sendBtn", function () {
     });
 });
 
+//멘트 대체하기
 $(document).on("click", "#applyBtn", function () {
     if (refinedTitle) {
         $("#title").val(refinedTitle);
@@ -181,41 +187,6 @@ $(document).on("click", "#applyBtn", function () {
 });
 </script>
 
-
-
-<!-- <script>
-//ai 다듬기
-$(function(){
-
-    $("#sendBtn").on("click", function() {
-        let reviewcomment = $("#reviewcomment").val().trim();
-        let title = $("#title").val().trim();
-
-        if (reviewcomment.length <= 0 || title.length <= 0) {
-            alert("제목과 내용을 작성해 주세요");
-            return;
-        }
-	//param 방식으로 변경
-        let data = {};
-        data["title"] = title;
-        data["reviewcomment"] = reviewcomment;
-        data[csrfParam] = csrfToken; // CSRF 추가
-
-        $.ajax({
-            url: "/reviewboard/reviewpai",
-            type: "POST",
-            data: data,
-            success: function(result){
-                $("#response").text(result);
-            },
-            error: function(xhr){
-                $("#response").text("에러 발생 : " + xhr.responseText);
-            }
-        });
-    });
-
-});
-</script> -->
 
 
 
