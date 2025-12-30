@@ -75,6 +75,11 @@ public class SearchPetfoodServiceImpl implements SearchPetfoodService {
 	public int foodfilterCnt(Map<String, Object> params) {
 		return dao.foodfilterCnt(params);
 	}
+
+	@Override
+	public List<SearchPetfoodDto> aiRecommend() {
+		return dao.aiRecommend();
+	}
 	
 
 

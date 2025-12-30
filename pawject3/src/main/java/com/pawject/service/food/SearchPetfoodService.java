@@ -26,5 +26,8 @@ public interface SearchPetfoodService {
 		//페이징추가
 		public List<SearchPetfoodDto> foodfilter10(Map<String,Object> params, int pstartno);
 		public int foodfilterCnt(Map<String,Object> params);
+		
+		//ai
+		public List<SearchPetfoodDto> aiRecommend();
 
 }
