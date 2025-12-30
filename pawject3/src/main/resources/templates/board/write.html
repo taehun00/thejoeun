@@ -66,11 +66,52 @@
 		  </div> -->
 		  
 		  <div class="mb-3  text-end">
-		  	<button type="submit" class="btn btn-primary">글쓰기</button>  
+				<button type="button" class="btn btn-secondary"
+					onclick="autoFillByAI()">🤖 AI 자동완성</button>
+				<button type="submit" class="btn btn-primary">글쓰기</button>  
 		  	<a th:href="@{/board/list}"  class="btn btn-primary">목록보기</a>
 		  </div>
 	 </form> 
-	</div>  
+	</div>
+
+	<script>
+		async
+		function autoFillByAI() {
+
+			const disname = document.getElementById("disname").value;
+
+			if (!disname) {
+				alert("질환명을 먼저 입력해주세요.");
+				return;
+			}
+
+			const res = await
+			fetch("/api/ai/autocomplete", {
+				method : "POST",
+				headers : {
+					"Content-Type" : "application/json"
+				},
+				body : JSON.stringify({
+					disname : disname
+				})
+			});
+
+			if (!res.ok) {
+				alert("AI 호출 실패");
+				return;
+			}
+
+			const data = await
+			res.json();
+
+			document.getElementById("disex").value = data.disex;
+			document.getElementById("kindpet").value = data.kindpet;
+			document.getElementById("infval").value = data.infval;
+			document.getElementById("mannote").value = data.mannote;
+		}
+	</script>
+
+
 
 </body>
 </html>
