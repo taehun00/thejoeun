@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class PetChaApi {
 	
-	@Value("${openai.api.key.swc}")
+	@Value("${openai.api.key}")
 	private String PetChaApiKey;
 
 }
