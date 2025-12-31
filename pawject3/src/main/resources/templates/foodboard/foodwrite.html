@@ -125,8 +125,7 @@
 		       th:each="i : ${#numbers.sequence(1, 4)}">
 		
 		    <div class="col-4">
-		      <label class="form-label"
-		             th:text="|영양소 ${i} :|"></label>
+		      <label class="form-label">영양소:</label>
 		
 		      <select name="nutrientid"
 		              class="form-control"
@@ -150,7 +149,7 @@
 		    </div>
 		
 		  </div>
-		
+		  <button type="button" class="btn btn-outline-secondary" id="addbtn">추가</button>
 		</div>
 
 
@@ -178,7 +177,24 @@
 		    const unit = selectElem.selectedOptions[0].dataset.unit;
 		    selectElem.closest('.nutri-row').querySelector('.unitLabel').textContent = unit;
 		}
+	
+		$("#addbtn").on("click", function () {
+
+			  // 마지막 영양 row 복제
+			  const $lastRow = $(".nutri-row").last();
+			  const $newRow = $lastRow.clone();
+
+			  // 값 초기화
+			  $newRow.find("select[name='nutrientid']").val("");
+			  $newRow.find("input[name='amount']").val("");
+			  $newRow.find(".unitLabel").text("%");
+
+			  // 추가
+			  $newRow.insertBefore("#addbtn");
+			});
 	</script>
+	
+	
 	</div><!-- content-->
 </body>
 </html>
