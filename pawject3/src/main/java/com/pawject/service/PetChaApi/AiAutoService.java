@@ -18,7 +18,7 @@ import okhttp3.Response;
 @Service
 public class AiAutoService {
 
-    @Value("${openai.api.key}")
+    @Value("${openai.api.key.swc}")
     private String apiKey;
 
     private final OkHttpClient client = new OkHttpClient();
