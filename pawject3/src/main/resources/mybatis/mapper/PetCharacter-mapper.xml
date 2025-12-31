@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pawject.dao.PetCharacterDao">
+
+    <!-- INSERT -->
+    <insert id="insertCharacter" parameterType="com.pawject.dto.PetCharacter.PetCharacter">
+        INSERT INTO PetCharacter (
+            charid, userid, kindpet, prompt, imageurl, createdat
+        ) VALUES (
+            petcharacter_seq.NEXTVAL,
+            #{userid},
+            #{kindpet},
+            #{prompt},
+            #{imageurl},
+            SYSDATE
+        )
+    </insert>
+
+    <!-- SELECT -->
+    <select id="findByUserId" parameterType="long" resultType="com.pawject.dto.PetCharacter.PetCharacter">
+        SELECT charid, userid, kindpet, prompt, imageurl, createdat
+        FROM PetCharacter
+        WHERE userid = #{userid}
+        ORDER BY createdat DESC
+    </select>
+
+    <!-- DELETE -->
+    <delete id="deleteCharacter" parameterType="long">
+        DELETE FROM PetCharacter WHERE charid = #{charid}
+    </delete>
+
+</mapper>

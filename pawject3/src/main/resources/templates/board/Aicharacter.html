@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+<head lang="ko">
+    <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    <title>반려동물 캐릭터 생성</title>
+</head>
+<body>
+<div layout:fragment="content" class="container mt-4">
+
+    <!-- 페이지 제목 -->
+    <h3 class="card-header mb-3">🐾 반려동물 캐릭터 생성</h3>
+
+    <!-- 캐릭터 생성 폼 -->
+    <form id="petForm" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="file" class="form-label">원본 이미지 업로드</label>
+            <input type="file" class="form-control" id="file" name="file" accept="image/*">
+        </div>
+
+        <div class="mb-3">
+            <label for="kindpet" class="form-label">반려동물 종</label>
+            <input type="text" class="form-control" id="kindpet" name="kindpet"
+                   placeholder="예: 강아지, 고양이 등">
+        </div>
+
+        <div class="mb-3">
+            <label for="userid" class="form-label">사용자 ID</label>
+            <input type="number" class="form-control" id="userid" name="userid"
+                   placeholder="사용자 ID를 입력하세요">
+        </div>
+
+        <div class="text-end">
+            <button type="button" class="btn btn-primary" onclick="generatePetCharacter()">캐릭터 생성</button>
+        </div>
+    </form>
+
+    <!-- 결과 영역 -->
+    <div id="result" class="mt-4">
+        <!-- 생성된 이미지가 여기에 표시됩니다 -->
+    </div>
+
+</div>
+
+<!-- JS 로직 -->
+<script>
+async function generatePetCharacter() {
+    const fileInput = document.getElementById("file");
+    const kindpet = document.getElementById("kindpet").value.trim();
+    const userid = document.getElementById("userid").value.trim();
+
+    if (!userid) {
+        alert("사용자 ID를 입력해주세요.");
+        return;
+    }
+
+    const token = document.querySelector('meta[name="_csrf"]').content;
+    const header = document.querySelector('meta[name="_csrf_header"]').content;
+
+    const formData = new FormData();
+    if (fileInput.files.length > 0) {
+        formData.append("file", fileInput.files[0]);
+    }
+    if (kindpet) {
+        formData.append("kindpet", kindpet);
+    }
+    formData.append("userid", userid);
+
+    const res = await fetch("/api/pet/character", {
+        method: "POST",
+        headers: {
+            [header]: token
+        },
+        body: formData
+    });
+
+    if (!res.ok) {
+        alert("AI 이미지 생성 실패");
+        return;
+    }
+
+    const data = await res.json();
+    document.getElementById("result").innerHTML =
+        `<img src="${data.url}" alt="반려동물 캐릭터" class="img-fluid rounded shadow"/>`;
+}
+</script>
+</body>
+</html>
