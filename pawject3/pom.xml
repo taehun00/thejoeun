@@ -135,7 +135,7 @@
     <dependency>
         <groupId>com.squareup.okhttp3</groupId>
         <artifactId>okhttp</artifactId>
-        <version>4.9.3</version>
+        
     </dependency>
       <!-- openai 자동생성 글쓰기 -->
       <!-- openai 자동생성 글쓰기 -->
