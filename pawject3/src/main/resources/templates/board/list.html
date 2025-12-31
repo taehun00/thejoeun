@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 	layout:decorate="~{fragments/layout}">
 <head lang="ko">
 <meta charset="UTF-8">
@@ -78,13 +79,14 @@
 		</nav>
 		
 		<!-- 로그인 사람만 글쓰기 가능 -->
-        <!-- <sec:authorize access="isAuthenticated()"> -->
+        <!-- <sec:authorize access="isAuthenticated()">  -->
+         <sec:authorize access="hasRole('ADMIN')">
 		<p class="text-end"> <a  th:href="@{/board/write}" class="btn btn-primary">글쓰기</a> </p>
-		<!-- </sec:authorize>  -->
+		 </sec:authorize> 
 		
-		<!-- <sec:authorize access="isAnonymous()"> -->
+		<sec:authorize access="isAnonymous()">
 		<p class="text-end alert alert-primary">로그인을 하면 글쓰기가능합니다.</p>
-		<!-- </sec:authorize>  -->
+		 </sec:authorize> 
 		
 		<!-- 검색 part -->		
 		<!-- 검색 part -->		 
