@@ -16,6 +16,7 @@
 	<result property="country"	column="COUNTRY"/>
 	<result property="brandtype"	column="BRANDTYPE"/>
 	<result property="origin"	column="ORIGIN"/>
+	<result property="brandinfo"	column="BRANDINFO"/>
 
 	<!-- 사료 -->	
 	<result property="foodid"	column="FOODID"/>
@@ -40,6 +41,8 @@
 	<result property="maxvalue"	column="MAXVALUE"/>
 	<result property="rangelabel"	column="RANGELABEL"/>
 	
+	<result property="nutriinfo"	column="NUTRIINFO"/>
+	
 	<!-- 별점 -->	
 	<result property="avgrating"	column="AVGRATING"/>	
 
@@ -55,7 +58,28 @@
 		order by foodname
 	</select>
 	
-	<!-- 상세 정보(모달팝업) 기존 사료매퍼 이용 -->	
+	<!-- 상세 정보(모달팝업) -->
+	<select resultMap="SearchPetfoodMap" id="detailCard" parameterType="int">
+		SELECT  F.PETTYPEID,
+		        F.FOODID, F.FOODNAME, F.BRANDID, F.DESCRIPTION,
+		        B.BRANDNAME, B.COUNTRY, B.BRANDTYPE, B.BRANDINFO,
+		        F.CATEGORY, F.PETAGEGROUP, F.ISGRAINFREE, F.CALORIE, F.FOODTYPE,
+		        F.MAININGREDIENT, F.SUBINGREDIENT,
+		        NINFO.NUTRIINFO
+		        
+		FROM FOOD F
+		JOIN FOODBRAND B ON F.BRANDID = B.BRANDID
+		
+		LEFT JOIN ( 
+		        SELECT FN.FOODID,
+		        LISTAGG(
+		            N.NUTRIENTNAME || ':' || FN.AMOUNT || N.UNIT, ', '
+		            ) WITHIN GROUP (ORDER BY N.NUTRIENTID) AS NUTRIINFO
+		        FROM FOODNUTRIENT FN
+		        JOIN NUTRIENT N ON (FN.NUTRIENTID = N.NUTRIENTID)
+		        GROUP BY FN.FOODID) NINFO ON(F.FOODID = NINFO.FOODID)
+		WHERE F.FOODID=#{foodid}        
+	</select>	
 	
 	<!-- 서치 필터 -->
 	<select resultMap="SearchPetfoodMap" id="foodfilter" parameterType="java.util.HashMap">
@@ -139,12 +163,38 @@
 	
 	<!-- 페이징 -->
 	<select resultMap="SearchPetfoodMap" id="foodfilter10" parameterType="java.util.HashMap">
-        SELECT * FROM(SELECT ROW_NUMBER() OVER(ORDER BY F.FOODNAME, F.FOODID) AS RNUM,
+        SELECT * FROM(SELECT ROW_NUMBER() OVER(
+				<choose>
+				  <when test="condition == 'foodnameAsc'">
+				    ORDER BY F.FOODNAME, F.FOODID
+				  </when>
+				  <when test="condition == 'foodnameDesc'">
+				    ORDER BY F.FOODNAME DESC, F.FOODID DESC
+				  </when>
+				  <when test="condition == 'brandnameAsc'">
+				    ORDER BY B.BRANDNAME, F.FOODNAME, F.FOODID
+				  </when>
+				  <when test="condition == 'brandnameDesc'">
+				    ORDER BY B.BRANDNAME DESC, F.FOODNAME, F.FOODID
+				  </when>
+				  <!-- NULL값일 경우 고려해야됨 -->
+				  <when test="condition == 'avgratingAsc'">
+				    ORDER BY NVL(R.AVGRATING, 0), F.FOODNAME, F.FOODID
+				  </when>
+				  <when test="condition == 'avgratingDesc'">
+				    ORDER BY NVL(R.AVGRATING, 0) DESC, F.FOODNAME, F.FOODID
+				  </when>
+				  <otherwise>
+				    ORDER BY F.FOODNAME, F.FOODID
+				  </otherwise>
+				</choose>
+        
+        ) AS RNUM,
                     B.BRANDNAME, F.FOODNAME , F.FOODIMG, R.AVGRATING, F.DESCRIPTION,  F.FOODID
                     FROM FOOD F 
                     JOIN FOODBRAND B ON(F.BRANDID=B.BRANDID)
                     LEFT JOIN (SELECT FOODID, ROUND(AVG(RATING), 2) AS AVGRATING FROM REVIEW GROUP BY FOODID) R ON (F.FOODID=R.FOODID)
-                    		<where>
+                   <where>
                       <if test="pettypeid != null">
                         AND F.PETTYPEID = #{pettypeid}
                       </if>
@@ -171,7 +221,7 @@
                       </if>
                     
                       <!-- 영양 조건은 EXISTS로만 **-->
-                      <if test="rangeid != null">
+                    <if test="rangeid != null and rangeid != ''">
                         AND EXISTS (
                           SELECT 1
                           FROM FOODNUTRIENT FN
@@ -181,6 +231,7 @@
                             AND FN.AMOUNT BETWEEN RN.MINVALUE AND RN.MAXVALUE
                         )
                       </if>
+            
                     
                       <if test="minvalue != null">
                         AND F.CALORIE &gt;= #{minvalue}
@@ -224,6 +275,7 @@
 		  <if test="petagegroup != null">
 		    AND F.PETAGEGROUP = #{petagegroup}
 		  </if>
+		  
 		  <if test="category != null">
 		    AND F.CATEGORY = #{category}
 		  </if>
@@ -238,7 +290,7 @@
 		  </if>
 		
 		  <!-- 영양 조건은 EXISTS로만 **-->
-		  <if test="rangeid != null">
+		 <if test="rangeid != null and rangeid != ''">
 		    AND EXISTS (
 		      SELECT 1
 		      FROM FOODNUTRIENT FN
@@ -248,7 +300,7 @@
 		        AND FN.AMOUNT BETWEEN RN.MINVALUE AND RN.MAXVALUE
 		    )
 		  </if>
-		
+
 		  <if test="minvalue != null">
 		    AND F.CALORIE &gt;= #{minvalue}
 		  </if>
@@ -266,6 +318,8 @@
 		</where>
 	</select>
 	
+	
+	<!-- ai 값 전달용 -->
 	<select resultMap="SearchPetfoodMap" id="aiRecommend" >
 		SELECT
 		    (SELECT LISTAGG(PETTYPENAME, ', ') WITHIN GROUP (ORDER BY PETTYPENAME)

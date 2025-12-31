@@ -60,12 +60,37 @@ public class SearchPetfoodServiceImpl implements SearchPetfoodService {
 	}
 
 	@Override
-	public List<SearchPetfoodDto> foodfilter10(Map<String,Object> params, int pstartno) {
+	public List<SearchPetfoodDto> foodfilter10(Map<String,Object> params, String condition, int pstartno) {
 		//5개씩 출력
 		int pageSize=5;
 		int start = (pstartno-1)*pageSize+1;
 		params.put("start", start);  
 		params.put("end"  , start + pageSize-1);  
+		
+	    if (condition != null) {
+	        switch (condition) {
+	            case "foodnameAsc":
+	            	params.put("condition", "foodnameAsc");
+	                break;
+	            case "foodnameDesc":
+	            	params.put("condition", "foodnameDesc");
+	                break;
+	            case "brandnameAsc":
+	            	params.put("condition", "brandnameAsc");
+	                break;
+	            case "brandnameDesc":
+	            	params.put("condition", "brandnameDesc");
+	                break;
+	            case "avgratingAsc":
+	            	params.put("condition", "avgratingAsc");
+	                break;
+	            case "avgratingDesc":
+	            	params.put("condition", "avgratingDesc");
+	                break;
+	                
+	        }
+	    }	
+		
 
 		return dao.foodfilter10(params);
 	}
@@ -79,6 +104,11 @@ public class SearchPetfoodServiceImpl implements SearchPetfoodService {
 	@Override
 	public List<SearchPetfoodDto> aiRecommend() {
 		return dao.aiRecommend();
+	}
+
+	@Override
+	public SearchPetfoodDto detailCard(int foodid) {
+		return dao.detailCard(foodid);
 	}
 	
 

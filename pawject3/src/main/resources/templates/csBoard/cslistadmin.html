@@ -149,7 +149,7 @@ function csPaging(pageNo){
   currentMode = "list";
   currentPageNo = pageNo;
   
-  let data = { pstartno: pageNo };
+  let data = { pstartno : pageNo };
   if (currentCondition) data.condition = currentCondition;	
   
   $.ajax({

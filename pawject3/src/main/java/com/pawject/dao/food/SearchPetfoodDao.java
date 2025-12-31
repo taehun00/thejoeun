@@ -31,4 +31,8 @@ public interface SearchPetfoodDao {
 	//ai데이터용
 	//<select resultMap="SearchPetfoodMap" id="aiRecommend" >
 	public List<SearchPetfoodDto> aiRecommend();
+	
+	//모달용
+//	<select resultMap="SearchPetfoodMap" id="detailCard" parameterType="int">
+	public SearchPetfoodDto detailCard(int foodid);
 }
