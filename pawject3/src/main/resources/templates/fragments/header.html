@@ -84,7 +84,12 @@
           <li class="nav-item">
           	<a class="nav-link" th:href="@{/faqBoard/faqlist}">고객센터</a>
           </li>        
-     
+	      <li class="nav-item">
+	          <a class="btn btn-warning fw-bold ms-3" th:href="@{/api/pet/character}">
+	            🐶 캐릭터 생성
+	          </a>
+	       </li>
+     		
         </sec:authorize>
 
         <!-- 관리자 메뉴 -->
