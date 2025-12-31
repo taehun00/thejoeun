@@ -7,16 +7,20 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pawject.dto.food.FoodDto;
 import com.pawject.dto.food.NutriDto;
 import com.pawject.dto.food.SearchPetfoodDto;
 import com.pawject.dto.support.CSQuestionDto;
+import com.pawject.service.food.FoodApi;
 import com.pawject.service.food.FoodService;
 import com.pawject.service.food.SearchPetfoodService;
+import com.pawject.service.review.ReviewApi;
 import com.pawject.util.UtilPaging;
 
 @RestController
@@ -62,18 +66,17 @@ public class SearchPetfoodAjaxController {
 //	    return result;
 //		}
 	
-	//사료정보 - 아작스는 기능별 분리 필요
-	@GetMapping("/fooddetail")
-	public FoodDto foodDetail(@RequestParam int foodid) {
-	    return service.getFoodDetail(foodid);
-	}
-	
-	//영양정보
-	@GetMapping("/nutridetail")
-	public List<NutriDto> foodNutrients(@RequestParam int foodid) {
-	    return service.getFoodNutrients(foodid);
-	}
-	
+	/*
+	 * //사료정보 - 아작스는 기능별 분리 필요
+	 * 
+	 * @GetMapping("/fooddetail") public FoodDto foodDetail(@RequestParam int
+	 * foodid) { return service.getFoodDetail(foodid); }
+	 * 
+	 * //영양정보
+	 * 
+	 * @GetMapping("/nutridetail") public List<NutriDto> foodNutrients(@RequestParam
+	 * int foodid) { return service.getFoodNutrients(foodid); }
+	 */
 	
 	//검색+페이징
 	@GetMapping("/searchfilterPaging")
@@ -91,7 +94,7 @@ public class SearchPetfoodAjaxController {
 				  @RequestParam(required = false) Integer  minvalue,
 				  @RequestParam(required = false) Integer  maxvalue,
 				  
-				  @RequestParam(defaultValue="1") int pstartno				) { 
+				  @RequestParam(defaultValue="1") int pstartno, String condition	) { 
 		//위치 주의
 		if (minvalue != null && minvalue < 0) minvalue = null;
 		if (maxvalue != null && maxvalue < 0) maxvalue = null;
@@ -113,7 +116,7 @@ public class SearchPetfoodAjaxController {
 	    
 	    int total = service.foodfilterCnt(params);
 
-	    List<SearchPetfoodDto> list = service.foodfilter10(params, pstartno);
+	    List<SearchPetfoodDto> list = service.foodfilter10(params, condition, pstartno);
 	    Map<String, Object> result = new HashMap<>();
 	    result.put("list", list);
 	    
@@ -125,6 +128,23 @@ public class SearchPetfoodAjaxController {
 	    return result;
 	}
 	
+	
+	
+	//api
+	@Autowired FoodApi apiservice;
+	@PostMapping("/foodapi")
+	@ResponseBody
+	public Map<String, Object> foodapi(@RequestParam String userMessage) { //스트링아님
+		return apiservice.aiChangeFilter(userMessage);
+	}
+	
+	
+	//모달정보 - model에 담을 필요x
+	@ResponseBody
+	@RequestMapping("/modalcard")
+	public SearchPetfoodDto modalcard(int foodid) {
+	    return service.detailCard(foodid);
+	}
 	
 	
 	
