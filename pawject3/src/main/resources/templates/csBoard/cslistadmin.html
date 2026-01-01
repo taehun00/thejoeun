@@ -4,13 +4,14 @@
 	layout:decorate="~{fragments/layout}">
 <head lang="ko">
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>1:1문의 관리</title>
 </head>
 <body>
 	<div layout:fragment="content">
   <div class="csq-container">
 
-    <h2 class="csqad-title">1:1 문의</h2>
+    <h2 class="csqad-title">1:1 문의 관리</h2>
+    <caption class="visually-hidden">1:1문의 관리자 페이지</caption>
     
     		<div class="row my-3">
 			  <div class="col d-flex justify-content-center gap-2">
@@ -41,7 +42,7 @@
 			</div>
 
    <table class="csqad-table table table-bordered table-hover align-middle text-center">
-        <caption class="visually-hidden">내 1:1 문의</caption>
+        <caption class="visually-hidden">1:1 문의 관리</caption>
         <thead class="table-light">
         
 		<input type="hidden" id="csrfToken" th:value="${_csrf.token}" />

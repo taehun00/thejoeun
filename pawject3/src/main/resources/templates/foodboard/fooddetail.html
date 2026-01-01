@@ -4,13 +4,17 @@
 	layout:decorate="~{fragments/layout}">
 <head lang="ko">
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>사료 상세 정보</title>
 </head>
 <body>
 	<div layout:fragment="content">
  <div class="container card my-5 p-4">
+ 
+<script th:if="${success != null}" th:inline="javascript">
+    alert([[${success}]]);
+</script>
 
-	<h3 class="card-header mb-4">사료 상세</h3>
+	<h3 class="card-header mb-4">사료 상세 정보</h3>
 
 	<div class="row mt-3">
 

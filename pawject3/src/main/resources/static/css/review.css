@@ -1,29 +1,26 @@
-/* 전체 컨테이너 */
-.review-container {
-    width: 80%;
-    margin: 40px auto;
+/* 전체 */
+.review-table {
+    table-layout: fixed;
+    width: 100%;
 }
 
-/* 제목 */
-.review-title {
-    text-align: center;
-    margin-bottom: 25px;
-    font-weight: 600;
+/* 셀 공통 */
+.review-table th,
+.review-table td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.review-table thead th,
-.review-table tbody td {
-    vertical-align: middle;
-}
-
-.review-table .col-no       { width: 80px; }
-.review-table .col-brand   { width: 170px; }
-.review-table .col-food    { width: 250px; }
-.review-table .col-rating  { width: 120px; }
-.review-table .col-title   { width: 250px; }
-.review-table .col-writer  { width: 170px; }
-.review-table .col-created { width: 150px; }
-.review-table .col-updated { width: 150px; }
+/* 컬럼 폭 재조정 (AJAX 이후 안정용) */
+.review-table .col-no       { width: 70px;  }
+.review-table .col-brand   { width: 160px; }
+.review-table .col-food    { width: 260px; }
+.review-table .col-rating  { width: 110px; }
+.review-table .col-title   { width: 360px; }  /* 핵심: 제목 넓힘 */
+.review-table .col-writer  { width: 150px; }
+.review-table .col-created { width: 140px; }
+.review-table .col-updated { width: 140px; }
 
 /* 상세 행 숨김 */
 .review-detail {

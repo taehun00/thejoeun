@@ -4,7 +4,7 @@
 	layout:decorate="~{fragments/layout}">
 <head lang="ko">
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>리뷰 작성</title>
 </head>
 <body>
 	<div layout:fragment="content">
@@ -113,7 +113,7 @@ const csrfToken = [[${_csrf.token}]];
 		  <div class="ai-helper-header">
 		    <span class="ai-badge">AI</span>
 		    <span class="ai-helper-text">작성한 리뷰를 조금 더 부드럽게 정리해 볼까요?</span>
-		    <button type="button" id="sendBtn" class="btn btn-sm btn-primary">다듬기</button>
+		    <button type="button" id="sendBtn" class="btn btn-sm btn-olive">다듬기</button>
 		  </div>
 		</div>
 		
@@ -121,7 +121,7 @@ const csrfToken = [[${_csrf.token}]];
 		  <div class="ai-result-title">AI 추천 문장</div>
 		  <pre id="response" class="ai-result-content"></pre>
 		  <div class="text-end mt-2">
-		    <button type="button" id="applyBtn" class="btn btn-sm btn-success">사용하기</button>
+		    <button type="button" id="applyBtn" class="btn btn-sm btn-green">사용하기</button>
 		  </div>
 		</div>
 
