@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+<head lang="ko">
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		
+	
+    <form th:action="@{/foodboard/test}"
+          method="post"
+          enctype="multipart/form-data">
+
+        <div class="row">
+            <div class="mb-3 mt-4 col-3">
+                <label for="file" class="form-label">추출할 이미지:</label>
+                <input type="file"
+                       class="form-control"
+                       id="file"
+                       name="file"
+                       required>
+            </div>
+        </div>
+
+        <div class="col-12 mb-3">
+            <label class="form-label">추출 결과 :</label>
+            <textarea class="form-control"
+                      name="result"
+                      rows="5"
+                      th:text="${result}"
+                      readonly></textarea>
+        </div>
+
+        <div class="mb-3 text-end">
+            <button type="submit" class="btn btn-slateBlue">
+                추출
+            </button>
+        </div>
+
+    </form>
+	</div><!-- content-->
+</body>
+</html>
