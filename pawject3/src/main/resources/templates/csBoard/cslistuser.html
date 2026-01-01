@@ -4,12 +4,14 @@
 	layout:decorate="~{fragments/layout}">
 <head lang="ko">
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>내 1:1 문의</title>
 </head>
 <body>
 	<div layout:fragment="content">
  <div class="csq-container">
-
+<script th:if="${success != null}" th:inline="javascript">
+    alert([[${success}]]);
+</script>
     <h2 class="csq-title">내 1:1 문의</h2>
 
    <table class="csq-table table table-bordered table-hover align-middle text-center">

@@ -4,12 +4,13 @@
 	layout:decorate="~{fragments/layout}">
 <head lang="ko">
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>FAQ 작성</title>
 </head>
 <body>
 	<div layout:fragment="content">
 	
 		<h3 class="card-header">FAQ 작성</h3>
+		 <caption class="visually-hidden">FAQ 작성</caption>
 		<form th:action="@{/faqBoard/faqwrite}" 
 			    method="post"  >
 			
