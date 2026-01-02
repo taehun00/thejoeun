@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-	  layout:decorate="~{fragments/layout}">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	layout:decorate="~{fragments/layout}">
 <!-- 	#1. layout 렌더링	 -->
 <head lang="ko">
 <meta charset="UTF-8">
@@ -10,64 +10,69 @@
 </head>
 <body>
 
-<div sec:authorize="isAuthenticated()">
 	<div layout:fragment="content">
-		<h3 class="card-header"> 날씨정보상세보기  <!-- ${dto} --></h3>
+		<div sec:authorize="isAuthenticated()">
+			<h3 class="card-header">날씨정보상세보기<!-- ${dto} --></h3>
 			<!--  알림메시지  -->
-			<div th:if="${success}" class="alert alert-info alert-dismissible fade show" role="alert">
-	            <span th:text="${success}"></span>
-	            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-	        </div>   
-		  <div> 
-		      <input type="hidden" name="wid" th:value="${wdto.wid}"> 
-			  <!-- 외래키로 가지고 올 것들. / placeholder="내용을 입력해주세요" ← 사용해야 될 수도 있으니 임시보관 -->
-		  	 <div class="mb-3 mt-3">
-			    <label for="wid" class="form-label">날씨정보아이디:</label>
-			    <input type="text" class="form-control" id="wid"  name="wid"
-			    	   readonly	th:value="${wdto.wid}">
-			  </div>
-			  <div class="mb-3 mt-3">
-			    <label for="weather" class="form-label">날씨:</label>
-			    <input type="text" class="form-control" id="weather" 
-			    		name="weather"  readonly  th:value="${wdto.weather}">
-			  </div>  
-			  <div class="mb-3">
-			    <label for="maxtemp" class="form-label">최고기온:</label>
-			    <input type="text" class="form-control" id="maxtemp" 
-			    		name="maxtemp"  readonly  th:value="${wdto.maxtemp}">
-		      </div> 
-			  <div class="mb-3 mt-3">
-			    <label for="mintemp" class="form-label">최저기온:</label>
-			    <input type="text" class="form-control" id="mintemp" 
-			    		name="mintemp"  readonly  th:value="${wdto.mintemp}">
-			  </div>  
-			   <div class="mb-3 mt-3">
-			    <label for="moistpercent" class="form-label">습도:</label>
-			    <input type="text" class="form-control" id="moistpercent" 
-			    	   name="moistpercent"  readonly  th:value="${wdto.moistpercent}">
-			  </div>  
-			  <div class="mb-3 mt-3">
-			    <label for="rainpercent" class="form-label">강수량:</label>
-			    <input type="text" class="form-control" id="rainpercent" 
-			    		name="rainpercent"  readonly  th:value="${wdto.rainpercent}">
-			  </div>  
-			  <div class="mb-3 mt-3">
-			    <label for="basedate" class="form-label">날짜:</label>
-			    <input type="text" class="form-control" id="basedate"  name="basedate"
-			    	   readonly	th:value="${wdto.basedate}" >
-			  </div>
-				<div class="mb-3">
-					<a th:href="@{/weather/weatheredit(wid=${wdto.wid})}" class="btn btn-olive form-control">글수정</a>
+			<div th:if="${success}"
+				class="alert alert-info alert-dismissible fade show" role="alert">
+				<span th:text="${success}"></span>
+				<button type="button" class="btn-close" data-bs-dismiss="alert"
+					aria-label="Close"></button>
+			</div>
+			<div>
+				<input type="hidden" name="wid" th:value="${wdto.wid}">
+				<!-- 외래키로 가지고 올 것들. / placeholder="내용을 입력해주세요" ← 사용해야 될 수도 있으니 임시보관 -->
+				<div class="mb-3 mt-3">
+					<label for="wid" class="form-label">날씨정보아이디:</label> <input
+						type="text" class="form-control" id="wid" name="wid" readonly
+						th:value="${wdto.wid}">
+				</div>
+				<div class="mb-3 mt-3">
+					<label for="weather" class="form-label">날씨:</label> <input
+						type="text" class="form-control" id="weather" name="weather"
+						readonly th:value="${wdto.weather}">
 				</div>
 				<div class="mb-3">
-					<a th:href="@{/weather/weatherdelete(wid=${wdto.wid})}" class="btn btn-burgundy form-control">글삭제</a>
-				</div>   
-				<div class="mb-3"> 
-					<a th:href="@{/weather/weatherlist}" class="btn btn-sage form-control">목록보기</a>
+					<label for="maxtemp" class="form-label">최고기온:</label> <input
+						type="text" class="form-control" id="maxtemp" name="maxtemp"
+						readonly th:value="${wdto.maxtemp}">
 				</div>
-		 </div>
-	</div> 
-</div>	
+				<div class="mb-3 mt-3">
+					<label for="mintemp" class="form-label">최저기온:</label> <input
+						type="text" class="form-control" id="mintemp" name="mintemp"
+						readonly th:value="${wdto.mintemp}">
+				</div>
+				<div class="mb-3 mt-3">
+					<label for="moistpercent" class="form-label">습도:</label> <input
+						type="text" class="form-control" id="moistpercent"
+						name="moistpercent" readonly th:value="${wdto.moistpercent}">
+				</div>
+				<div class="mb-3 mt-3">
+					<label for="rainpercent" class="form-label">강수량:</label> <input
+						type="text" class="form-control" id="rainpercent"
+						name="rainpercent" readonly th:value="${wdto.rainpercent}">
+				</div>
+				<div class="mb-3 mt-3">
+					<label for="basedate" class="form-label">날짜:</label> <input
+						type="text" class="form-control" id="basedate" name="basedate"
+						readonly th:value="${wdto.basedate}">
+				</div>
+				<div class="mb-3">
+					<a th:href="@{/weather/weatheredit(wid=${wdto.wid})}"
+						class="btn btn-olive form-control">글수정</a>
+				</div>
+				<div class="mb-3">
+					<a th:href="@{/weather/weatherdelete(wid=${wdto.wid})}"
+						class="btn btn-burgundy form-control">글삭제</a>
+				</div>
+				<div class="mb-3">
+					<a th:href="@{/weather/weatherlist}"
+						class="btn btn-sage form-control">목록보기</a>
+				</div>
+			</div>
+		</div>
+	</div>
 	<!--    http://localhost:8484/pawject3/weather/weatherdetail -->
 </body>
 </html>

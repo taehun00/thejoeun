@@ -1,81 +1,84 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      layout:decorate="~{fragments/layout}">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	layout:decorate="~{fragments/layout}">
 <head lang="ko">
 <meta charset="UTF-8">
 <title>운동스마트게시판 글수정</title>
 </head>
 <body>
-<div sec:authorize="isAuthenticated()">
 	<div layout:fragment="content">
-		<h3 class="card-header"> 운동스마트게시판 글수정 </h3>
+		<div sec:authorize="isAuthenticated()">
+			<h3 class="card-header">운동스마트게시판 글수정</h3>
 
-	  	<form th:action="@{/smart/smartedit}" method="post" enctype="multipart/form-data">
-		     <!-- 게시글 아이디 -->
-		     <input type="hidden" name="postid" th:value="${sdto.postid}">
+			<form th:action="@{/smart/smartedit}" method="post"
+				enctype="multipart/form-data">
+				<!-- 게시글 아이디 -->
+				<input type="hidden" name="postid" th:value="${sdto.postid}">
 
-		     <div class="mb-3 mt-3">
-			    <label for="postid" class="form-label">게시글아이디:</label>
-			    <input type="text" class="form-control" id="postid"
-			    	   name="postid" readonly th:value="${sdto.postid}">
-			  </div>
+				<div class="mb-3 mt-3">
+					<label for="postid" class="form-label">게시글아이디:</label> <input
+						type="text" class="form-control" id="postid" name="postid"
+						readonly th:value="${sdto.postid}">
+				</div>
 
-	 		  <div class="mb-3 mt-3">
-			    <label for="execid" class="form-label">운동아이디:</label>
-			    <input type="text" class="form-control"
-			    	   id="execid" name="execid" readonly th:value="${sdto.execid}">
-			  </div>
+				<div class="mb-3 mt-3">
+					<label for="execid" class="form-label">운동아이디:</label> <input
+						type="text" class="form-control" id="execid" name="execid"
+						readonly th:value="${sdto.execid}">
+				</div>
 
-			  <div class="mb-3">
-			    <label for="userid" class="form-label">사용자아이디:</label>
-			    <input type="text" class="form-control"
-			    	    id="userid" name="userid" readonly th:value="${sdto.userid}">
-			  </div>
-			  <div class="mb-3">
-			    <label for="wid" class="form-label">날씨아이디:</label>
-			    <input type="text" class="form-control"
-			    	    id="wid" name="wid" readonly th:value="${sdto.wid}">
-			  </div>
-			  <div class="mb-3">
-			    <label for="courseid" class="form-label">산책코스아이디:</label>
-			    <input type="text" class="form-control"
-			    	   id="courseid" name="courseid" readonly th:value="${sdto.courseid}">
-			  </div>
+				<div class="mb-3">
+					<label for="userid" class="form-label">사용자아이디:</label> <input
+						type="text" class="form-control" id="userid" name="userid"
+						readonly th:value="${sdto.userid}">
+				</div>
+				<div class="mb-3">
+					<label for="wid" class="form-label">날씨아이디:</label> <input
+						type="text" class="form-control" id="wid" name="wid" readonly
+						th:value="${sdto.wid}">
+				</div>
+				<div class="mb-3">
+					<label for="courseid" class="form-label">산책코스아이디:</label> <input
+						type="text" class="form-control" id="courseid" name="courseid"
+						readonly th:value="${sdto.courseid}">
+				</div>
 
-		  	  <div class="mb-3">
-			    <label for="ehit" class="form-label">조회수:</label>
-			    <input type="text" class="form-control"
-			    	   id="ehit" name="ehit" readonly th:value="${sdto.ehit}">
-			  </div>
+				<div class="mb-3">
+					<label for="ehit" class="form-label">조회수:</label> <input
+						type="text" class="form-control" id="ehit" name="ehit" readonly
+						th:value="${sdto.ehit}">
+				</div>
 
-			  <div class="mb-3 mt-3">
-			    <label for="etitle" class="form-label">제목:</label>
-			    <input type="text" class="form-control" id="etitle"
-			    	  placeholder="제목을 입력해주세요." name="etitle" th:value="${sdto.etitle}">
-			  </div>
+				<div class="mb-3 mt-3">
+					<label for="etitle" class="form-label">제목:</label> <input
+						type="text" class="form-control" id="etitle"
+						placeholder="제목을 입력해주세요." name="etitle" th:value="${sdto.etitle}">
+				</div>
 
-			  <div class="mb-3">
-			    <label for="econtent" class="form-label">내용:</label>
-			    <textarea class="form-control" id="econtent" placeholder="내용을 입력해주세요"
-			    	name="econtent" th:text="${sdto.econtent}"></textarea>
-			  </div>
-				
-			  <div class="mb-3">
-			    <label for="file" class="form-label">이미지:</label>
-			    <input type="file" class="form-control" id="file" name="file">
-			    <!-- 기존 이미지 파일명은 name="eimg"로 변경 -->
-			    <input type="text" name="eimg" class="form-control" readonly th:value="${sdto.eimg}" />
-		 	 </div>
+				<div class="mb-3">
+					<label for="econtent" class="form-label">내용:</label>
+					<textarea class="form-control" id="econtent"
+						placeholder="내용을 입력해주세요" name="econtent"
+						th:text="${sdto.econtent}"></textarea>
+				</div>
 
-			  <div class="mb-3 text-end">
-			  	<button type="submit" class="btn btn-lavender">글수정</button>
-			  	<a href="javascript:history.go(-1)" class="btn btn-navy">BACK</a>
-			  </div>
-		 </form>
+				<div class="mb-3">
+					<label for="file" class="form-label">이미지:</label> <input
+						type="file" class="form-control" id="file" name="file">
+					<!-- 기존 이미지 파일명은 name="eimg"로 변경 -->
+					<input type="text" name="eimg" class="form-control" readonly
+						th:value="${sdto.eimg}" />
+				</div>
+
+				<div class="mb-3 text-end">
+					<button type="submit" class="btn btn-lavender">글수정</button>
+					<a href="javascript:history.go(-1)" class="btn btn-navy">BACK</a>
+				</div>
+			</form>
+		</div>
 	</div>
-</div>	
 	<!-- http://localhost:8484/pawject3/smart/smartedit -->
 </body>
 </html>

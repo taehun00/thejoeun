@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <!-- 오류: sec 네임스페이스 선언 누락 -->
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      layout:decorate="~{fragments/layout}">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	layout:decorate="~{fragments/layout}">
 <!-- 	#1. layout 렌더링	 -->
 <head lang="ko">
 <meta charset="UTF-8">
@@ -11,103 +11,110 @@
 </head>
 
 <body>
-<div sec:authorize="isAuthenticated() and hasRole('ROLE_MEMBER')">
 	<div layout:fragment="content">
-	  <h3 class="card-header"> 운동스마트게시판 글쓰기</h3>
-	     <!-- POSTID, ETITLE , ECONTENT  -->
-	     <!-- 로그인후 사용자만 -->
-		  <form th:action="@{/smart/smartwrite}"  method="post"  enctype="multipart/form-data" > 
-		    	<!-- 사용자아이디 선책창 -->
+		<div sec:authorize="isAuthenticated() and hasRole('ROLE_MEMBER')">
+			<h3 class="card-header">운동스마트게시판 글쓰기</h3>
+			<!-- POSTID, ETITLE , ECONTENT  -->
+			<!-- 로그인후 사용자만 -->
+			<form th:action="@{/smart/smartwrite}" method="post"
+				enctype="multipart/form-data">
+				<!-- 사용자아이디 선책창 -->
 				<div class="col-2">
-				    <label class="form-check-label" for="userid">사용자아이디선택</label>
-				    <select name="useridSelect" id="useridSelect" class="form-select">
-				        <option value="5">아이디5</option>
-				        <option value="4">아이디4</option>
-				        <option value="3">아이디3</option>
-				        <option value="2">아이디2</option>
-				        <option value="1">아이디1</option>
-				    </select>
+					<label class="form-check-label" for="userid">사용자아이디선택</label> <select
+						name="useridSelect" id="useridSelect" class="form-select">
+						<option value="5">아이디5</option>
+						<option value="4">아이디4</option>
+						<option value="3">아이디3</option>
+						<option value="2">아이디2</option>
+						<option value="1">아이디1</option>
+					</select>
 				</div>
-				
+
 				<!-- 버튼 / 필요시 사용-->
-	<!-- 		<div class="col-3 d-flex justify-content-end align-items-end mt-4">
+				<!-- 		<div class="col-3 d-flex justify-content-end align-items-end mt-4">
 				    <button type="submit" class="btn btn-slateBlue me-2">등록</button>
 				    <a th:href="@{/smartlist}" class="btn btn-mint">목록보기</a>
 				</div>  -->
-		    
-		    
-		    
-		      <!-- <input type="hidden"   name="postId"  value="1"> --> 
-		      <div class="mb-3 mt-3">
-			    <label for="postid" class="form-label">게시글아이디:</label>
-			    <input type="text" class="form-control" 
-			    		id="postid"  name="postid" readonly  th:value="${sdto.postid}"> <!-- ${sdto.postid} -->
-			  </div>
-		      
-		      <!-- 외래키 -->	
-	 		  <div class="mb-3 mt-3">
-			    <label for="execid" class="form-label">운동아이디:</label>
-			    <input type="text" class="form-control" 
-			    		id="execid"  name="execid"   placeholder="운동아이디를 입력해주세요."
-			    		th:value="${sdto.execid}" > <!-- ${sdto.execid} -->
-			  </div>
-			  <!-- 사용안할 경우 지우기 -->
-	<!-- 			  <div class="mb-3">
+
+
+
+				<!-- <input type="hidden"   name="postId"  value="1"> -->
+				<div class="mb-3 mt-3">
+					<label for="postid" class="form-label">게시글아이디:</label> <input
+						type="text" class="form-control" id="postid" name="postid"
+						readonly th:value="${sdto.postid}">
+					<!-- ${sdto.postid} -->
+				</div>
+
+				<!-- 외래키 -->
+				<div class="mb-3 mt-3">
+					<label for="execid" class="form-label">운동아이디:</label> <input
+						type="text" class="form-control" id="execid" name="execid"
+						placeholder="운동아이디를 입력해주세요." th:value="${sdto.execid}">
+					<!-- ${sdto.execid} -->
+				</div>
+				<!-- 사용안할 경우 지우기 -->
+				<!-- 			  <div class="mb-3">
 				    <label for="userid" class="form-label">사용자아이디:</label>
 				    <input type="text" class="form-control"  
 				    	    id="userid" name="userid" placeholder="사용자아이디를 입력해주세요."  
 				    	    th:value="1" >시큐리티 걸고 th:value="${cdto.courseid}"
 				  </div>  -->
-			  <div class="mb-3">
-			    <label for="wid" class="form-label">날씨정보아이디:</label>
-			    <input type="text" class="form-control"  
-			    	    id="wid" name="wid" placeholder="날씨정보를 입력해주세요."   
-			    	    th:value="${sdto.wid}" > <!-- ${sdto.wid} -->
-			  </div> 
-			  <div class="mb-3">
-			    <label for="courseid" class="form-label">산책코스아이디:</label>
-			    <input type="text" class="form-control" 
-			    	   id="courseid" name="courseid"  placeholder="산책코스를 입력하셔도 되고, 비워두셔도 됩니다."
-			    	   th:value="${sdto.courseid}" ><!-- 시큐리티 걸고 ${sdto.courseid}-->
-			  </div> 
-			  <!-- 외래키 -->
-			  
-			  <div class="mb-3 mt-3">
-			    <label for="etitle" class="form-label">제목:</label>
-			    <input type="text" class="form-control" id="etitle" placeholder="제목을 입력해주세요." name="etitle">
-			  </div>
-			  <div class="mb-3">
-			    <label for="econtent" class="form-label">내용:</label>
-			    <textarea class="form-control" id="econtent" placeholder="내용을 입력해주세요." name="econtent"></textarea>
-			  </div>
-			  <div class="mb-3">
-			    <label for="file" class="form-label">이미지:</label>
-			    <input type="file" class="form-control" id="file" placeholder="이미지를 선택해주세요." name="file">
-			  </div>
-			  <div class="mb-3  text-end">
-				<button type="button" class="btn btn-olive"
-					 onclick="autoFillByAI()">자동글쓰기</button>
-			  	<button type="submit" class="btn btn-terra">글쓰기</button>
-			  	<a th:href="@{/smart/smartlist}"  class="btn btn-primary">목록보기</a>
-			  </div>
-	     </form> 
-	     <script>
-	     $.ajax({
-	    	  url: "/api/ai/write",
-	    	  type: "post",
-	    	  contentType: "application/json",
-	    	  data: JSON.stringify({
-	    	    topic: "반려동물 운동",
-	    	    keyword: "건강, 운동",
-	    	    length: 500
-	    	  }),
-	    	  success: function(res) {
-	    	    $("#content").val(res.content);
-	    	  }
-	    	});
-	     </script>
-	  </div>
-</div>
+				<div class="mb-3">
+					<label for="wid" class="form-label">날씨정보아이디:</label> <input
+						type="text" class="form-control" id="wid" name="wid"
+						placeholder="날씨정보를 입력해주세요." th:value="${sdto.wid}">
+					<!-- ${sdto.wid} -->
+				</div>
+				<div class="mb-3">
+					<label for="courseid" class="form-label">산책코스아이디:</label> <input
+						type="text" class="form-control" id="courseid" name="courseid"
+						placeholder="산책코스를 입력하셔도 되고, 비워두셔도 됩니다."
+						th:value="${sdto.courseid}">
+					<!-- 시큐리티 걸고 ${sdto.courseid}-->
+				</div>
+				<!-- 외래키 -->
+
+				<div class="mb-3 mt-3">
+					<label for="etitle" class="form-label">제목:</label> <input
+						type="text" class="form-control" id="etitle"
+						placeholder="제목을 입력해주세요." name="etitle">
+				</div>
+				<div class="mb-3">
+					<label for="econtent" class="form-label">내용:</label>
+					<textarea class="form-control" id="econtent"
+						placeholder="내용을 입력해주세요." name="econtent"></textarea>
+				</div>
+				<div class="mb-3">
+					<label for="file" class="form-label">이미지:</label> <input
+						type="file" class="form-control" id="file"
+						placeholder="이미지를 선택해주세요." name="file">
+				</div>
+				<div class="mb-3  text-end">
+					<button type="button" class="btn btn-olive"
+						onclick="autoFillByAI()">자동글쓰기</button>
+					<button type="submit" class="btn btn-terra">글쓰기</button>
+					<a th:href="@{/smart/smartlist}" class="btn btn-primary">목록보기</a>
+				</div>
+			</form>
+			<script>
+				$.ajax({
+					url : "/api/ai/write",
+					type : "post",
+					contentType : "application/json",
+					data : JSON.stringify({
+						topic : "반려동물 운동",
+						keyword : "건강, 운동",
+						length : 500
+					}),
+					success : function(res) {
+						$("#content").val(res.content);
+					}
+				});
+			</script>
+		</div>
+	</div>
+
 	<!--    http://localhost:8484/pawject3/smart/smartwrite -->
 </body>
 </html>
