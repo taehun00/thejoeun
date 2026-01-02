@@ -7,7 +7,69 @@
     <meta name="_csrf" th:content="${_csrf.token}">
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
     <title>반려동물 캐릭터 생성</title>
+
+    <style>
+        /* 하단 결과 영역 */
+        .bottom-preview {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        .preview-box {
+            width: 48%;
+            background: #fff;
+            border-radius: 12px;
+            padding: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            text-align: center;
+        }
+
+        .preview-box img {
+            max-width: 100%;
+            max-height: 280px;
+            object-fit: contain;
+        }
+
+        .preview-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        #errorBox {
+    margin-top: 20px;
+}
+    </style>
+    
+    
+	    <style>
+	    .loading-spinner {
+	        width: 60px;
+	        height: 60px;
+	        border: 6px solid #e0e0e0;
+	        border-top: 6px solid #4a90e2;
+	        border-radius: 50%;
+	        animation: spin 1s linear infinite;
+	        margin: 40px auto;
+	    }
+	
+	    @keyframes spin {
+	        0% { transform: rotate(0deg); }
+	        100% { transform: rotate(360deg); }
+	    }
+	
+	    .hidden {
+	        display: none;
+	    }
+	</style>
+    
 </head>
+
 <body>
 <div layout:fragment="content" class="container mt-4">
 
@@ -18,7 +80,8 @@
     <form id="petForm" method="post" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="file" class="form-label">원본 이미지 업로드</label>
-            <input type="file" class="form-control" id="file" name="file" accept="image/*">
+            <input type="file" class="form-control" id="file" name="file"
+                   accept="image/*" onchange="previewUploadImage(this)">
         </div>
 
         <div class="mb-3">
@@ -34,31 +97,112 @@
         </div>
 
         <div class="text-end">
-            <button type="button" class="btn btn-primary" onclick="generatePetCharacter()">캐릭터 생성</button>
+            <button type="button" class="btn btn-primary"
+                    onclick="generatePetCharacter()">캐릭터 생성</button>
         </div>
     </form>
 
-    <!-- 결과 영역 -->
-    <div id="result" class="mt-4">
-        <!-- 생성된 이미지가 여기에 표시됩니다 -->
+<!-- 🔽 하단 이미지 영역 -->
+<!-- <div class="bottom-preview"> -->
+
+    <!-- 좌측: 업로드 이미지 -->
+    <div class="preview-box">
+        <div class="preview-title">📷 업로드 이미지</div>
+        <img id="uploadPreview" src="" alt="업로드 이미지 미리보기">
     </div>
 
+    <!-- 우측: AI 생성 이미지 -->
+<div class="preview-box">
+    <div class="preview-title">🎨 AI 캐릭터 이미지</div>
+
+    <!-- 로딩 -->
+    <div id="loading" class="loading-spinner hidden"></div>
+
+    <!-- 실패 메시지 -->
+    <div id="errorBox" class="hidden">
+    <p id="errorMessage" class="text-danger mb-2"></p>
+    <button type="button" class="btn btn-outline-danger btn-sm"
+            onclick="retryGenerate()">🔁 재시도</button>
 </div>
+
+
+    <!-- 결과 이미지 -->
+    <img id="aiResultImage" src="" alt="AI 생성 이미지" class="hidden">
+</div>
+
+
+
+<!-- </div> -->
 
 <!-- JS 로직 -->
 <script>
-async function generatePetCharacter() {
+let lastFormData = null;
+
+async function generatePetCharacter(formDataOverride) {
+    const loading = document.getElementById("loading");
+    const aiImage = document.getElementById("aiResultImage");
+    const errorBox = document.getElementById("errorBox");
+    const errorMessage = document.getElementById("errorMessage");
+
+    /* UI 초기화 */
+    loading.classList.remove("hidden");
+    aiImage.classList.add("hidden");
+    errorBox.classList.add("hidden");
+    aiImage.src = "";
+    errorMessage.innerText = "";
+
+    const token = document.querySelector('meta[name="_csrf"]').content;
+    const header = document.querySelector('meta[name="_csrf_header"]').content;
+
+    const formData = formDataOverride || createFormData();
+    lastFormData = formData;
+
+    try {
+        const res = await fetch("/api/pet/character", {
+            method: "POST",
+            headers: {
+                [header]: token
+            },
+            body: formData
+        });
+
+        if (!res.ok) {
+            let errorText = "알 수 없는 오류가 발생했습니다.";
+
+            try {
+                const err = await res.json();
+                errorText = err.message || err.error || errorText;
+            } catch (e) {
+                /* JSON 파싱 실패 시 기본 메시지 */
+            }
+
+            throw new Error(errorText);
+        }
+
+        const data = await res.json();
+
+        aiImage.src = data.url;
+        aiImage.classList.remove("hidden");
+
+    } catch (e) {
+        /* 실패 UI */
+        errorMessage.innerText = e.message;
+        errorBox.classList.remove("hidden");
+
+    } finally {
+        loading.classList.add("hidden");
+    }
+}
+
+/* FormData 생성 */
+function createFormData() {
     const fileInput = document.getElementById("file");
     const kindpet = document.getElementById("kindpet").value.trim();
     const userid = document.getElementById("userid").value.trim();
 
     if (!userid) {
-        alert("사용자 ID를 입력해주세요.");
-        return;
+        throw new Error("사용자 ID가 없습니다.");
     }
-
-    const token = document.querySelector('meta[name="_csrf"]').content;
-    const header = document.querySelector('meta[name="_csrf_header"]').content;
 
     const formData = new FormData();
     if (fileInput.files.length > 0) {
@@ -69,23 +213,30 @@ async function generatePetCharacter() {
     }
     formData.append("userid", userid);
 
-    const res = await fetch("/api/pet/character", {
-        method: "POST",
-        headers: {
-            [header]: token
-        },
-        body: formData
-    });
+    return formData;
+}
 
-    if (!res.ok) {
-        alert("AI 이미지 생성 실패");
-        return;
+/* 재시도 */
+function retryGenerate() {
+    if (lastFormData) {
+        generatePetCharacter(lastFormData);
     }
+}
 
-    const data = await res.json();
-    document.getElementById("result").innerHTML =
-        `<img src="${data.url}" alt="반려동물 캐릭터" class="img-fluid rounded shadow"/>`;
+/* 업로드 미리보기*/
+function previewUploadImage(input) {
+    if (input.files && input.files[0]) {
+        const url = URL.createObjectURL(input.files[0]);
+        document.getElementById("uploadPreview").src = url;
+    }
 }
 </script>
+
+
+
+
+</div> 
+
+
 </body>
 </html>
