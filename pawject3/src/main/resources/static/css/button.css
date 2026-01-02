@@ -1,5 +1,11 @@
 @charset "UTF-8";
 
+/*캡션 감추기*/
+caption.visually-hidden {
+  display: none;
+}
+
+
 	/* 그린 */
 	.btn-green {
 	  background-color: #2F7C57;
