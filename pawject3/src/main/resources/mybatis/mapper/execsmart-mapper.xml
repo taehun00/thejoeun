@@ -7,7 +7,7 @@
  	<result property="postid"   column="POSTID"/>
  	<result property="execid"   column="EXECID"/>
 	<result property="userid"   column="USERID"/>
- 	<result property="basedate" column="BASEDATE"/>
+ 	<result property="wid"      column="WID"/>
  	<result property="courseid" column="COURSEID"/>
  	<result property="etitle"   column="ETITLE"/>
  	<result property="econtent" column="ECONTENT"/>
@@ -19,15 +19,16 @@
  
  
  <insert id="insertsmart" parameterType="ExecsmartDto">
- 	insert into execsmart  (POSTID,                EXECID,   USERID   , COURSEID    , ETITLE  ,  ECONTENT,    EIMG    )
-    values                 (execsmart_seq.nextval, #{execid},#{userid}, #{courseid} , #{etitle}, #{econtent}, #{eimg, jdbcType=VARCHAR} )
+ 	insert into execsmart  (POSTID,                EXECID,   USERID   , WID, COURSEID    , ETITLE  ,  ECONTENT,    EIMG    )
+    values                 (execsmart_seq.nextval, #{execid},#{userid}, #{wid},#{courseid} , #{etitle}, #{econtent}, #{eimg, jdbcType=VARCHAR} )
  </insert>
  
  <update id="updatesmart" parameterType="ExecsmartDto">
   update execsmart 
   <set> 
 	  EXECID=#{execid}, 
-	  USERID=#{userid}, 
+	  USERID=#{userid},
+	  WID=#{wid}, 
 	  COURSEID=#{courseid},
 	  ETITLE=#{etitle},  
 	  ECONTENT=#{econtent},
@@ -51,7 +52,13 @@
  </select>
  
  <select resultMap="execsmartMap"  id="selectsmart" parameterType="int">
-	select * from execsmart where POSTID=#{postid}
+	select e.postid,
+	       e.etitle,
+	       e.econtent,
+	       w.postid
+	from execsmart e
+	inner join walkingcourse w on e.courseid = w.courseid  and e.postid   = w.postid
+	where e.POSTID=#{postid}
  </select>
   
   
@@ -60,7 +67,7 @@
 	  select *
 		from (
 		    select row_number() over (order by CREATEDAT desc) as rnum,
-		           POSTID, EXECID, USERID, BASEDATE, COURSEID, ETITLE, ECONTENT, EIMG, EHIT,
+		           POSTID, EXECID, USERID, WID, COURSEID, ETITLE, ECONTENT, EIMG, EHIT,
 		           CREATEDAT, UPDATEDAT
 		    from execsmart
 		) A
@@ -76,7 +83,7 @@
   	select *
 		from (
 		    select row_number() over (order by CREATEDAT desc) as rnum,
-		           POSTID, EXECID, USERID, BASEDATE, COURSEID, ETITLE, ECONTENT, EIMG, EHIT,
+		           POSTID, EXECID, USERID, WID, COURSEID, ETITLE, ECONTENT, EIMG, EHIT,
 		           CREATEDAT, UPDATEDAT
 		    from execsmart
 			where ETITLE  LIKE '%' || #{search , jdbcType=VARCHAR} || '%'

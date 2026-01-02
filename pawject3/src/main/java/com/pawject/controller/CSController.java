@@ -112,8 +112,8 @@ public class CSController {
 
 	    dto.setUserid(userid);            
 
-		String result ="글쓰기 실패";
-		if(service.insertCSQ(dto) > 0) { result="글쓰기 성공!";}
+		String result ="문의사항 등록에 실패했습니다";
+		if(service.insertCSQ(dto) > 0) { result="문의사항 등록이 완료되었습니다";}
 		rttr.addFlashAttribute("success" , result);
 		
 		return "redirect:/csBoard/cslistuser";

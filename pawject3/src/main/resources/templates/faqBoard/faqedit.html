@@ -4,7 +4,7 @@
 	layout:decorate="~{fragments/layout}">
 <head lang="ko">
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>FAQ 수정</title>
 </head>
 <body>
 	<div layout:fragment="content">
@@ -13,6 +13,7 @@
 		<form th:action="@{/faqBoard/faqedit}" 
 			    method="post"  >
 	    <input type="hidden"   name="faqid"  th:value="${dto.faqid}"> 
+			<caption class="visually-hidden">FAQ 수정</caption>
 			
 			<div class="row align-items-end">
 			    <div class="col-sm-6">

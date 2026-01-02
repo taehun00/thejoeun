@@ -4,7 +4,7 @@
 	layout:decorate="~{fragments/layout}">
 <head lang="ko">
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>1:1 문의 답변</title>
 </head>
 <body>
 	<div layout:fragment="content">
@@ -16,7 +16,7 @@
 			    
 			    
    <table class="foranswer-table table table-bordered table-hover align-middle text-center">
-        <caption class="visually-hidden">내 1:1 문의</caption>
+        <caption class="visually-hidden">1:1 문의 답변</caption>
 
         <thead class="table-light">
             <tr>
@@ -46,7 +46,8 @@
 			</div>
 			
 				<div class="mb-3  text-end " >
-					<button type="submit" class="btn btn-primary ms-2">작성완료</button>
+					<button type="submit" class="btn btn-primary ms-2"
+					onclick="return confirm('답변을 등록하면 수정할 수 없습니다.\n등록하시겠습니까?');">작성완료</button>
 					<a th:href="@{/csBoard/cslistadmin}"  class="btn btn-primary">질문목록</a>
 				</div>	
 		

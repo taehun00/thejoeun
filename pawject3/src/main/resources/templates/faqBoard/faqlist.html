@@ -4,7 +4,7 @@
 	layout:decorate="~{fragments/layout}">
 <head lang="ko">
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>FAQ - 자주 묻는 질문</title>
 </head>
 <body>
 	<div layout:fragment="content">
@@ -18,8 +18,12 @@ var csrfToken = /*[[${_csrf.token}]]*/ '';
    
     
 <div class="faq-container">
-
-    <h2 class="faq-title">자주 묻는 질문</h2>
+<script th:if="${success != null}" th:inline="javascript">
+    alert([[${success}]]);
+</script>
+    <h2 class="faq-title">FAQ - 자주 묻는 질문</h2>
+    <caption class="visually-hidden">FAQ - 자주 묻는 질문</caption>
+    
      
 
    <table class="faq-table table table-bordered table-hover align-middle text-center">

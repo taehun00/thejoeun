@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 
 	private final Oauth2IUserService oauth2IUserService; // ##
+	private final CustomLoginSuccessHandler customLoginSuccessHandler;
 	
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -39,7 +40,7 @@ public class SecurityConfig {
 			.formLogin( form -> form
 					.loginPage("/users/login") 					// 로그인 폼
 					.loginProcessingUrl("/users/loginProc")		// 로그인 경로
-					.defaultSuccessUrl("/users/mainpage", true) 	// 로그인성공시 경로
+					.successHandler(customLoginSuccessHandler) 	// 로그인성공시 경로
 					.failureUrl("/users/fail")					// 로그인실패시 경로
 					.permitAll()
 			)
@@ -52,7 +53,7 @@ public class SecurityConfig {
 			)
 			.oauth2Login(oauth2 -> oauth2
 					.loginPage("/users/login") // 로그인폼 통합
-					.defaultSuccessUrl("/users/mypage", true) // 로그인성공시 경로
+					.successHandler(customLoginSuccessHandler) // 로그인성공시 경로
 					.userInfoEndpoint(userInfo -> userInfo.userService(oauth2IUserService))
 			)
 			/* 4. csrf 예외처리*/

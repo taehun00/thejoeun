@@ -4,7 +4,7 @@
 	layout:decorate="~{fragments/layout}">
 <head lang="ko">
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>사료 정보</title>
 </head>
 <body>
 	<div layout:fragment="content">
@@ -203,7 +203,7 @@ function foodListResult(json, pstartno) {
             .append($("<td>").text(food.createdat))
             .append($("<td>").text(food.updatedat))
             .append($("<td>").html(
-                "<button class='btn btn-mint foodquikdelete' data-foodid='" +
+                "<button class='btn btn-roseRed foodquikdelete' data-foodid='" +
                 food.foodid + "'>빠른삭제</button>"
             ))
             .appendTo(".foodTable tbody");
