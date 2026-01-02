@@ -5,8 +5,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.pawject.dao.exec.SaveweatherDao;
+import com.pawject.dto.Apiweather.WeatherScheduled;
 import com.pawject.dto.exec.SaveweatherDto;
 
 @Service
@@ -17,8 +19,8 @@ public class SaveweatherServiceImpl implements SaveweatherService {
 	@Override public int updateweather(SaveweatherDto wdto) { return wdao.updateweather(wdto); }
 	@Override public int deleteweather(SaveweatherDto wdto) { return wdao.deleteweather(wdto); }
 	@Override public List<SaveweatherDto> selectAllweather() { return wdao.selectAllweather(); }
-	@Override public SaveweatherDto selectweather(int basedate) { return wdao.selectweather(basedate); }
-	@Override public SaveweatherDto selectweatherUpdateForm(int basedate) { return wdao.selectweather(basedate); }
+	@Override public SaveweatherDto selectweather(int wid) { return wdao.selectweather(wid); }
+	@Override public SaveweatherDto selectweatherUpdateForm(int wid) { return wdao.selectweather(wid); }
 
 	/* PAGING */
 	@Override public List<SaveweatherDto> selectweather10(int pageNo) { 
@@ -46,5 +48,25 @@ public class SaveweatherServiceImpl implements SaveweatherService {
 		return wdao.selectweather3(para); 
 	}
 	@Override public int selectweatherSearchTotalCnt(String keyword) { return wdao.selectweatherSearchTotalCnt(keyword); }
+	
+	/* 스케쥴링 - 매일 오전 6시에 자동으로 날씨 갱신 */
+//	@Override
+//	public void saveWeatherFromApi() {
+//	       // 1. 외부 API 호출 (RestTemplate/WebClient 사용)
+//        RestTemplate restTemplate = new RestTemplate();
+//        String url = "https://api.openweathermap.org/data/2.5/weather?q=Seoul&appid=YOUR_API_KEY&units=metric";
+//        WeatherScheduled response = restTemplate.getForObject(url, WeatherApiResponse.class);
+//
+//        // 2. DTO 변환
+//        SaveweatherDto wdto = new SaveweatherDto();
+//        wdto.setWeather(response.getWeather()[0].getDescription());
+//        wdto.setMaxtemp(response.getMain().getTempMax());
+//        wdto.setMintemp(response.getMain().getTempMin());
+//        wdto.setMoistpercent(response.getMain().getHumidity());
+//        wdto.setRainpercent(response.getRain() != null ? response.getRain().getOneHour() : 0);
+//
+//        // 3. DB 저장
+//        SaveweatherDao.insert	
+//	}
 
 }

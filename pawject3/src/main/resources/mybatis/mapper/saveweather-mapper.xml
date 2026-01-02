@@ -4,39 +4,40 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pawject.dao.exec.SaveweatherDao">
  <resultMap id="saveweatherMap" type="SaveweatherDto">
- 	<result property="basedate"    column="BASEDATE"/>
+ 	<result property="wid"         column="WID"/>
  	<result property="weather"     column="WEATHER"/>
  	<result property="maxtemp"     column="MAXTEMP"/>
  	<result property="mintemp"     column="MINTEMP"/>
  	<result property="moispercent" column="MOISPERCENT"/>
  	<result property="rainpercent" column="RAINPERCENT"/>
+ 	<result property="basedate"    column="BASEDATE"/>
  </resultMap>
 
 
  <insert id="insertweather" parameterType="SaveweatherDto">
- 	insert INTO saveweather (  WEATHER,     MAXTEMP,    MINTEMP,    MOISTPERCENT,    RAINPERCENT)
-	values                  (  #{weather},  #{maxtemp}, #{mintemp}, #{moistpercent}, #{rainpercent} )
+ 	insert INTO saveweather (  WID, WEATHER,        MAXTEMP,    MINTEMP,    MOISTPERCENT,    RAINPERCENT)
+	values                  (  weather_seq.nextval, #{weather},  #{maxtemp}, #{mintemp}, #{moistpercent}, #{rainpercent} )
  </insert>
  
  <update id="updateweather" parameterType="SaveweatherDto">
  	update saveweather 
  	<set> 
-	 	MAXTEMP=#{maxtemp}, MINTEMP=#{mintemp},
+	 	WEATHER=#{weather}, MAXTEMP=#{maxtemp}, MINTEMP=#{mintemp},
 	    MOISTPERCENT=#{moistpercent} , RAINPERCENT=#{rainpercent}
     </set>
-	where WEATHER=#{weather}
+	where WID=#{wid}
  </update>
  
  <delete id="deleteweather" parameterType="SaveweatherDto">
-	delete from saveweather where WEATHER=#{weather}
+	delete from saveweather where WID=#{wid}
  </delete>
  
  <select resultMap="saveweatherMap"  id="selectAllweather" >
- 	select * from saveweather order by BASEDATE desc
+ 	select * from saveweather order by WID desc
  </select>
  
  <select resultMap="saveweatherMap"  id="selectweather" parameterType="int">
- 	select * from saveweather where trunc(BASEDATE) = trunc(#{basedate})
+ 	select * from saveweather where WID=#{wid}
  </select>
  
  
@@ -45,7 +46,7 @@
   	select *
 	from (
 	    select row_number() over (order by BASEDATE desc) as rnum,
-	           BASEDATE, WEATHER, MAXTEMP, MINTEMP, MOISTPERCENT, RAINPERCENT
+	           WID, BASEDATE, WEATHER, MAXTEMP, MINTEMP, MOISTPERCENT, RAINPERCENT
 	    from saveweather
 	) A
 	where  A.rnum  between  #{start}  and #{end}
@@ -61,7 +62,7 @@
   	select *
 	from (
 	    select row_number() over (order by BASEDATE desc) as rnum,
-	           BASEDATE, WEATHER, MAXTEMP, MINTEMP, MOISTPERCENT, RAINPERCENT
+	           WID, BASEDATE, WEATHER, MAXTEMP, MINTEMP, MOISTPERCENT, RAINPERCENT
 	    from saveweather
 	    where WEATHER LIKE '%' || #{search} || '%'
 	) A

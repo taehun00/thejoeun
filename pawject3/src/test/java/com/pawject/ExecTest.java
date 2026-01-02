@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +28,9 @@ import com.pawject.service.exec.ExecinfoService;
 import com.pawject.service.exec.ExecsmartService;
 import com.pawject.service.exec.SaveweatherService;
 import com.pawject.service.exec.WalkingcourseService;
+//import com.pawject.service.food.FoodApi;
+//import com.pawject.service.food.NaverOcrService;
+//import com.pawject.service.review.ReviewApi;
 
 @SpringBootTest
 @Transactional   // 테스트 실행중 발생 db변경 자동 롤백
@@ -35,222 +39,233 @@ public class ExecTest {
 	@Autowired ExecinfoDao      idao;
 	@Autowired SaveweatherDao   wdao;
 	@Autowired WalkingcourseDao cdao;
-	
-	
-	
+
+//    @MockBean
+//    private NaverOcrService naverOcrService;
+//	
+//    @MockBean
+//    private ReviewApi reviewApi;
+//    
+//    @MockBean
+//    private FoodApi foodApi;
+    
+    
 	////////////////////////////////////////////////////////
 	// ExecsmartDao_Test / sdao
-//	@Disabled  @Test public void ExecsmartDao_Test() {
-//        // 1. selectAll (리스트가 null이 아님을 확인)
-//        assertThat(sdao.selectAllsmart()).isNotNull();
-//        assertThat(sdao.selectAllsmart()).isInstanceOfAny(java.util.List.class);
-//        //System.out.println(".....1. " + sdao.selectAllsmart());
-//        
-//        // 2. insert
-//        ExecsmartDto sdto_i = new ExecsmartDto();
-//        //sdto_i.setPostid(1);   // 테스트용 PK (실제 DB와 충돌 없도록 큰 값 사용)
-//        sdto_i.setExecid(1);
-//        sdto_i.setUserid(1);
-//        sdto_i.setCourseid(1);
-//        sdto_i.setEtitle("title_test1");
-//        sdto_i.setEcontent("content_test1");
-//        sdto_i.setEimg("img_test1.png");
+	@Disabled  @Test public void ExecsmartDao_Test() {
+        // 1. selectAll (리스트가 null이 아님을 확인)
+        assertThat(sdao.selectAllsmart()).isNotNull();
+        assertThat(sdao.selectAllsmart()).isInstanceOfAny(java.util.List.class);
+        System.out.println(".....1. " + sdao.selectAllsmart());
+        
+        // 2. insert
+        ExecsmartDto sdto_i = new ExecsmartDto();
+        //sdto_i.setPostid(1);   // 테스트용 PK (실제 DB와 충돌 없도록 큰 값 사용)
+        sdto_i.setExecid(1);
+        sdto_i.setUserid(1);
+        sdto_i.setWid(1);
+        sdto_i.setCourseid(1);
+        sdto_i.setEtitle("title_test1");
+        sdto_i.setEcontent("content_test1");
+        sdto_i.setEimg("img_test1.png");
+
+        int insertResult = sdao.insertsmart(sdto_i); 
+        System.out.println("..... 2. " + sdto_i);	
+        assertEquals(1, insertResult); // insert 성공 확인
+
+        // 3. select (insert한 데이터 조회)
+        List<ExecsmartDto>  list = sdao.selectAllsmart();
+        assertFalse(list.isEmpty());
+        
+        ExecsmartDto selected = list.get(0);  //가장최근 insert
+        assertNotNull(selected);  
+        assertEquals("title_test1", selected.getEtitle());
+        assertEquals("content_test1", selected.getEcontent());
+        System.out.println("..... 3. " + selected);	
+        
+        // 4. update
+        ExecsmartDto sdto_u = new ExecsmartDto();
+        sdto_u.setPostid(7);
+        sdto_u.setExecid(2);
+        sdto_u.setUserid(2);
+        sdto_i.setWid(2);
+        sdto_u.setCourseid(2);
+        sdto_u.setEtitle("title_test2");
+        sdto_u.setEcontent("content_test2");
+        sdto_u.setEimg("img_test2.png");
+
+        int updateResult = sdao.updatesmart(sdto_u);
+        System.out.println("..... 4. " + sdto_u);	
+        assertEquals(1, updateResult);
+
+        // 5. delete
+        ExecsmartDto sdto_d = new ExecsmartDto();
+        sdto_d.setPostid(7);
+        sdto_d.setExecid(2);
+
+        int deleteResult = sdao.deletesmart(sdto_d);
+        System.out.println("..... 5. " + sdto_d);	
+        assertEquals(1, deleteResult);
+
+	}
+	
+	////////////////////////////////////////////////////////
+	// ExecinfoDao_Test	/ idao
+	@Disabled  @Test public void ExecinfoDao_Test () {
+		//1. selectAll
+        assertThat(idao.selectAllinfo()).isNotNull();
+        assertThat(idao.selectAllinfo()).isInstanceOfAny(java.util.List.class);
+		System.out.println(".... 1. " + idao.selectAllinfo());
+		
+		//2. insert
+		ExecinfoDto idto_i = new ExecinfoDto();
+		//idto_i.setExecid(1); 
+		idto_i.setExectype("type_test1"); 
+		idto_i.setDescription("description_test1");
+		idto_i.setAvgkcal30min(123); 
+		idto_i.setExectargetmin(123);
+		idto_i.setSuitablefor("suitable_test1");
+		idto_i.setIntensitylevel("intensity_test1");
+		
+		int insertResult_i = idao.insertinfo(idto_i);
+		System.out.println(".... 2. " + idto_i);
+		
+		//3. select
+        List<ExecinfoDto>  list = idao.selectAllinfo();
+        assertFalse(list.isEmpty());
+        
+        ExecinfoDto iselected = list.get(0);  //가장최근 insert
+        assertNotNull(iselected);  
+        assertEquals("type_test1", iselected.getExectype());
+        assertEquals("description_test1", iselected.getDescription());
+		System.out.println(".... 3." + iselected);
+		
+		//4. update/idto_u.set
+		ExecinfoDto idto_u = new ExecinfoDto();
+		idto_u.setExecid(4);
+		idto_u.setExectype("type_test2"); 
+		idto_u.setDescription("description_test2");
+		idto_u.setAvgkcal30min(234); 
+		idto_u.setExectargetmin(234); 
+		idto_u.setSuitablefor("suitable_test2");
+		idto_u.setIntensitylevel("intensity_test2");
+		
+		int updateResult_i = idao.updateinfo(idto_u);
+		System.out.println("....4." + idto_u);
+		
+		//5. delete/idto_d.set
+		ExecinfoDto idto_d = new ExecinfoDto();
+		idto_d.setExecid(4); 
+		idto_d.setExectype("type_test2");
+		
+		int deleteResult_i = idao.deleteinfo(idto_d);
+		System.out.println(".... 5." + idto_d);
+	}
 //
-//        int insertResult = sdao.insertsmart(sdto_i); 
-//       // System.out.println("..... 2. " + sdto_i);	
-//        assertEquals(1, insertResult); // insert 성공 확인
-//
-//        // 3. select (insert한 데이터 조회)
-//        List<ExecsmartDto>  list = sdao.selectAllsmart();
-//        assertFalse(list.isEmpty());
-//        
-//        ExecsmartDto selected = list.get(0);  //가장최근 insert
-//        assertNotNull(selected);  
-//        assertEquals("title_test1", selected.getEtitle());
-//        assertEquals("content_test1", selected.getEcontent());
-//        //System.out.println("..... 3. " + selected);	
-//        
-//        // 4. update
-//        ExecsmartDto sdto_u = new ExecsmartDto();
-//        //sdto_u.setPostid(sdto_i.getPostid()); // 반드시 PK 지정
-//        sdto_u.setPostid(17);
-//        sdto_u.setExecid(2);
-//        sdto_u.setUserid(2);
-//        sdto_u.setCourseid(2);
-//        sdto_u.setEtitle("title_test2");
-//        sdto_u.setEcontent("content_test2");
-//        sdto_u.setEimg("img_test2.png");
-//
-//        int updateResult = sdao.updatesmart(sdto_u);
-//        //System.out.println("..... 4. " + sdto_u);	
-//        assertEquals(1, updateResult);
-//
-//        // 5. delete
-//        ExecsmartDto sdto_d = new ExecsmartDto();
-//        sdto_d.setPostid(17);
-//        sdto_d.setExecid(2);
-//
-//        int deleteResult = sdao.deletesmart(sdto_d);
-//        //System.out.println("..... 5. " + sdto_d);	
-//        assertEquals(1, deleteResult);
-//
-//	}
 //	
 //	////////////////////////////////////////////////////////
-//	// ExecinfoDao_Test	/ idao
-//	@Disabled  @Test public void ExecinfoDao_Test () {
-//		//1. selectAll
-//        assertThat(idao.selectAllinfo()).isNotNull();
-//        assertThat(idao.selectAllinfo()).isInstanceOfAny(java.util.List.class);
-//		System.out.println(".... 1. " + idao.selectAllinfo());
-//		
-//		//2. insert
-//		ExecinfoDto idto_i = new ExecinfoDto();
-//		//idto_i.setExecid(1); 
-//		idto_i.setExectype("type_test1"); 
-//		idto_i.setDescription("description_test1");
-//		idto_i.setAvgkcal30min(123); 
-//		idto_i.setExectargetmin(123);
-//		idto_i.setSuitablefor("suitable_test1");
-//		idto_i.setIntensitylevel("intensity_test1");
-//		
-//		int insertResult_i = idao.insertinfo(idto_i);
-//		System.out.println(".... 2. " + idto_i);
-//		
-//		//3. select
-//        List<ExecinfoDto>  list = idao.selectAllinfo();
-//        assertFalse(list.isEmpty());
-//        
-//        ExecinfoDto iselected = list.get(0);  //가장최근 insert
-//        assertNotNull(iselected);  
-//        assertEquals("type_test1", iselected.getExectype());
-//        assertEquals("description_test1", iselected.getDescription());
-//		System.out.println(".... 3." + iselected);
-//		
-//		//4. update/idto_u.set
-//		ExecinfoDto idto_u = new ExecinfoDto();
-//		idto_u.setExecid(4);
-//		idto_u.setExectype("type_test2"); 
-//		idto_u.setDescription("description_test2");
-//		idto_u.setAvgkcal30min(234); 
-//		idto_u.setExectargetmin(234); 
-//		idto_u.setSuitablefor("suitable_test2");
-//		idto_u.setIntensitylevel("intensity_test2");
-//		
-//		int updateResult_i = idao.updateinfo(idto_u);
-//		System.out.println("....4." + idto_u);
-//		
-//		//5. delete/idto_d.set
-//		ExecinfoDto idto_d = new ExecinfoDto();
-//		idto_d.setExecid(4); 
-//		idto_d.setExectype("type_test2");
-//		
-//		int deleteResult_i = idao.deleteinfo(idto_d);
-//		System.out.println(".... 5." + idto_d);
-//	}
-////
-////	
-////	////////////////////////////////////////////////////////
-//	// SaveweatherDao_Test / wdao
-//	 @Disabled @Test public void SaveweatherDao_Test () {
-//		//1. selectAll
-//        assertThat(wdao.selectAllweather()).isNotNull();
-//        assertThat(wdao.selectAllweather()).isInstanceOfAny(java.util.List.class);
-//
-//		System.out.println("....1. " + wdao.selectAllweather());
-//		
-//		//2. insert / wdto.set
-//		SaveweatherDto wdto = new SaveweatherDto();
-//		//wdto.setBasedate("2025-12-29");
-//		wdto.setWeather("weather_test1"); 
-//		wdto.setMaxtemp(123); 
-//		wdto.setMintemp(321); 
-//		wdto.setMoistpercent(12); 
-//		wdto.setRainpercent(21);
-//		
-//		int insertResult_w = wdao.insertweather(wdto);
-//		System.out.println(".... 2." + wdto);
-//		
-//		//3. select
-//        List<SaveweatherDto>  list = wdao.selectAllweather();
-//        assertFalse(list.isEmpty());
-//        
-//        SaveweatherDto wselected = list.get(0);  //가장최근 insert
-//        assertNotNull(wselected);  
-//        assertEquals(123, wselected.getMaxtemp());
-//        assertEquals(321, wselected.getMintemp());
-//        
-//		System.out.println("....3. " + wselected); 
-//		
-//		//4. update/wdto_u.set
-//		SaveweatherDto wdto_u = new SaveweatherDto();
-////		wdto_u.setBasedate(2025-12-29);
-//		wdto_u.setWeather("weather_test1"); 
-//		wdto_u.setMaxtemp(234); 
-//		wdto_u.setMintemp(432);
-//		wdto_u.setMoistpercent(23); 
-//		wdto_u.setRainpercent(32);
-//		
-//		int updateResult_w = wdao.updateweather(wdto_u);
-//		System.out.println("....4. " + wdto_u);
-//		
-//		//5. delete/wdto_d.set
-//		SaveweatherDto wdto_d = new SaveweatherDto();
-//		wdto_d.setWeather("weather_test1"); 
-//		
-//		int deleteResult_w = wdao.deleteweather(wdto_d);
-//		System.out.println(".... 5. " + wdto_d);
-//	}
-//	
-//	////////////////////////////////////////////////////////
-//	// WalkingcourseDao_Test / cdao
-//	 @Disabled  @Test public void WalkingcourseDao_Test () {
-//		//1. selectAll
-//        assertThat(cdao.selectAllwalking()).isNotNull();
-//        assertThat(cdao.selectAllwalking()).isInstanceOfAny(java.util.List.class);
-//		System.out.println(".....1." + cdao.selectAllwalking());
-//		
-//		//2. insert / cdto.set
-//		WalkingcourseDto cdto = new WalkingcourseDto();
-//		//cdto.setCourseid(1); //seqeuence
-//		cdto.setPostid(1); 
-//		cdto.setLocation("location_test1"); 
-//		cdto.setLat(123); 
-//		cdto.setLng(321);
-//		
-//		int insertResult_c = cdao.insertwalking(cdto);
-//		System.out.println(".....2. " + cdto);
-//		
-//		//3. select
-//        List<WalkingcourseDto>  list = cdao.selectAllwalking();
-//        assertFalse(list.isEmpty());
-//        
-//        WalkingcourseDto cselected = list.get(0);  //가장최근 insert
-//        assertNotNull(cselected);  
-//        assertEquals(1, cselected.getPostid());
-//        assertEquals("location_test1", cselected.getLocation());
-//
-//		System.out.println(".....3. " + cselected);
-//		
-//		//4. update/cdto_u.set
-//		WalkingcourseDto cdto_u = new WalkingcourseDto();
-//		cdto_u.setCourseid(5);
-//		cdto_u.setPostid(2); 
-//		cdto_u.setLocation("location_test2");
-//		cdto_u.setLat(234); 
-//		cdto_u.setLng(432);
-//		
-//		int updateResult_c = cdao.updatewalking(cdto_u);
-//		System.out.println(".....4. " + cdto_u);
-//		
-//		//5. delete/cdto_d.set  - 삭제하기 위한 입력받는 정보를 바꿀려면 mapper에서 바꾸기.
-//		WalkingcourseDto cdto_d = new WalkingcourseDto();
-//		cdto_d.setCourseid(5);
-//		cdto_d.setPostid(2);
-//		
-//		int deleteResult_c = cdao.deletewalking(cdto_d);
-//		System.out.println("......5. " + cdto_d);
-//	}
+	// SaveweatherDao_Test / wdao
+	 @Disabled  @Test public void SaveweatherDao_Test () {
+		//1. selectAll
+        assertThat(wdao.selectAllweather()).isNotNull();
+        assertThat(wdao.selectAllweather()).isInstanceOfAny(java.util.List.class);
+
+		System.out.println("....1. " + wdao.selectAllweather());
+		
+		//2. insert / wdto.set
+		SaveweatherDto wdto = new SaveweatherDto();
+		//wdto.setBasedate("2025-12-29");
+		//wdto.setWid();
+		wdto.setWeather("weather_test1"); 
+		wdto.setMaxtemp(123); 
+		wdto.setMintemp(321); 
+		wdto.setMoistpercent(12); 
+		wdto.setRainpercent(21);
+		
+		int insertResult_w = wdao.insertweather(wdto);
+		System.out.println(".... 2." + wdto);
+		
+		//3. select
+        List<SaveweatherDto>  list = wdao.selectAllweather();
+        assertFalse(list.isEmpty());
+        
+        SaveweatherDto wselected = list.get(0);  //가장최근 insert
+        assertNotNull(wselected);  
+        assertEquals(123, wselected.getMaxtemp());
+        assertEquals(321, wselected.getMintemp());
+        
+		System.out.println("....3. " + wselected); 
+		
+		//4. update/wdto_u.set
+		SaveweatherDto wdto_u = new SaveweatherDto();
+//		wdto_u.setBasedate(2025-12-29);
+		wdto_u.setWid(3);
+		wdto_u.setWeather("weather_test1"); 
+		wdto_u.setMaxtemp(234); 
+		wdto_u.setMintemp(432);
+		wdto_u.setMoistpercent(23); 
+		wdto_u.setRainpercent(32);
+		
+		int updateResult_w = wdao.updateweather(wdto_u);
+		System.out.println("....4. " + wdto_u);
+		
+		//5. delete/wdto_d.set
+		SaveweatherDto wdto_d = new SaveweatherDto();
+		wdto_d.setWid(3); 
+		
+		int deleteResult_w = wdao.deleteweather(wdto_d);
+		System.out.println(".... 5. " + wdto_d);
+	}
+	
+	////////////////////////////////////////////////////////
+	// WalkingcourseDao_Test / cdao
+	 @Disabled  @Test public void WalkingcourseDao_Test () {
+		//1. selectAll
+        assertThat(cdao.selectAllwalking()).isNotNull();
+        assertThat(cdao.selectAllwalking()).isInstanceOfAny(java.util.List.class);
+		System.out.println(".....1." + cdao.selectAllwalking());
+		
+		//2. insert / cdto.set
+		WalkingcourseDto cdto = new WalkingcourseDto();
+		//cdto.setCourseid(1); //seqeuence
+		cdto.setPostid(1); 
+		cdto.setLocation("location_test1"); 
+		cdto.setLat(123); 
+		cdto.setLng(321);
+		
+		int insertResult_c = cdao.insertwalking(cdto);
+		System.out.println(".....2. " + cdto);
+		
+		//3. select
+        List<WalkingcourseDto>  list = cdao.selectAllwalking();
+        assertFalse(list.isEmpty());
+        
+        WalkingcourseDto cselected = list.get(0);  //가장최근 insert
+        assertNotNull(cselected);  
+        assertEquals(1, cselected.getPostid());
+        assertEquals("location_test1", cselected.getLocation());
+
+		System.out.println(".....3. " + cselected);
+		
+		//4. update/cdto_u.set
+		WalkingcourseDto cdto_u = new WalkingcourseDto();
+		cdto_u.setCourseid(5);
+		cdto_u.setPostid(2); 
+		cdto_u.setLocation("location_test2");
+		cdto_u.setLat(234); 
+		cdto_u.setLng(432);
+		
+		int updateResult_c = cdao.updatewalking(cdto_u);
+		System.out.println(".....4. " + cdto_u);
+		
+		//5. delete/cdto_d.set  - 삭제하기 위한 입력받는 정보를 바꿀려면 mapper에서 바꾸기.
+		WalkingcourseDto cdto_d = new WalkingcourseDto();
+		cdto_d.setCourseid(5);
+		cdto_d.setPostid(2);
+		
+		int deleteResult_c = cdao.deletewalking(cdto_d);
+		System.out.println("......5. " + cdto_d);
+	}
 	
 	
 	////////////////////////////////////////////////////////
@@ -275,6 +290,7 @@ public class ExecTest {
         //sdto_i.setPostid(1);   // 테스트용 PK (실제 DB와 충돌 없도록 큰 값 사용)
         sdto_si.setExecid(1);
         sdto_si.setUserid(1);
+        sdto_si.setWid(1);
         sdto_si.setCourseid(1);
         sdto_si.setEtitle("title_test3");
         sdto_si.setEcontent("content_test3");
@@ -299,27 +315,27 @@ public class ExecTest {
         // 4. update
         ExecsmartDto sbdto_u = new ExecsmartDto();
         //sdto_u.setPostid(sdto_i.getPostid()); // 반드시 PK 지정
-        sbdto_u.setPostid(21);
+        sbdto_u.setPostid(9);
         sbdto_u.setExecid(2);
         sbdto_u.setUserid(2);
+        sbdto_u.setWid(2);
         sbdto_u.setCourseid(2);
         sbdto_u.setEtitle("title_test2");
         sbdto_u.setEcontent("content_test2");
         sbdto_u.setEimg("img_test2.png");
 
-        int updateResult = sdao.updatesmart(sbdto_u);
+        int updateResult = sbservice.updatesmart(file, sbdto_u);
         System.out.println("..... 4. " + sbdto_u);	
         assertEquals(1, updateResult);
 
         // 5. delete
         ExecsmartDto sbdto_d = new ExecsmartDto();
-        sbdto_d.setPostid(21);
+        sbdto_d.setPostid(9);
         sbdto_d.setExecid(2);
 
-        int deleteResult = sdao.deletesmart(sbdto_d);
+        int deleteResult = sbservice.deletesmart(sbdto_d);
         System.out.println("..... 5. " + sbdto_d);	
         assertEquals(1, deleteResult);
-
 	}
 	
 	////////////////////////////////////////////////////////
@@ -378,7 +394,7 @@ public class ExecTest {
 	
 	////////////////////////////////////////////////////////
 	//SaveweatherService_Test / wservice
-	  @Disabled @Test public void SaveweatherService_Test () {
+	 @Disabled  @Test public void SaveweatherService_Test () {
 		//1. selectAll
 	    assertThat(wservice.selectAllweather()).isNotNull();
 	    assertThat(wservice.selectAllweather()).isInstanceOfAny(java.util.List.class);
@@ -410,6 +426,7 @@ public class ExecTest {
 		//4. update/wdto_u.set
 		SaveweatherDto wdto_su = new SaveweatherDto();
 //		wdto_u.setBasedate(2025-12-29);
+		wdto_su.setWid(7);
 		wdto_su.setWeather("weather_test3"); 
 		wdto_su.setMaxtemp(234); 
 		wdto_su.setMintemp(432);
@@ -421,7 +438,7 @@ public class ExecTest {
 		
 		//5. delete/wdto_d.set
 		SaveweatherDto wdto_sd = new SaveweatherDto();
-		wdto_sd.setWeather("weather_test3"); 
+		wdto_sd.setWid(7); 
 		
 		int deleteResult_w = wservice.deleteweather(wdto_sd);
 		System.out.println(".... 5. " + wdto_sd);

@@ -12,13 +12,13 @@ import lombok.ToString;
 @NoArgsConstructor
 
 public class SaveweatherDto {
-	private LocalDate basedate;	     //BASEDATE
+	private int 	  wid;			 //WID
 	private String    weather;		 //WEATHER
 	private int       maxtemp;		 //MAXTEMP
 	private int       mintemp;		 //MINTEMP
 	private int       moistpercent;  //MOISTPERCENT
 	private int       rainpercent;   //RAINPERCENT
-
+	private LocalDate basedate;	     //BASEDATE
 }
 /*
 이름          널?       유형           

@@ -8,8 +8,8 @@ public interface SaveweatherService {
 	public int updateweather(  SaveweatherDto wdto);
 	public int deleteweather(  SaveweatherDto wdto);
 	public List<SaveweatherDto> selectAllweather();
-	public SaveweatherDto       selectweather(int basedate);
-	public SaveweatherDto       selectweatherUpdateForm(int basedate);
+	public SaveweatherDto       selectweather(int wid);
+	public SaveweatherDto       selectweatherUpdateForm(int wid);
 	
 	/* PAGING */
 	public List<SaveweatherDto> selectweather10(int pageNo);
@@ -18,5 +18,10 @@ public interface SaveweatherService {
 	/* SEARCH + PAGING */
 	public List<SaveweatherDto> selectweather3( String keyword ,int pageNo); //##
 	public int				      selectweatherSearchTotalCnt( String keyword ); //##
+	
+	/*스케쥴링*/
+//	public void saveWeatherFromApi();
+
+	
 
 }
