@@ -2,6 +2,7 @@ package com.pawject.controller;
 
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,17 +11,23 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,10 +35,15 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.pawject.dto.paging.PagingDto10;
+import com.pawject.dto.pet.PetDto;
+import com.pawject.dto.user.AnnouncementDto;
 import com.pawject.dto.user.UserDto;
+import com.pawject.security.CustomUserDetails;
 import com.pawject.security.CustomUserDetailsService;
 import com.pawject.service.notification.NotificationService;
 import com.pawject.service.pet.PetService;
+import com.pawject.service.user.AnnouncementService;
+import com.pawject.service.user.HiddenAnnouncementService;
 import com.pawject.service.user.UserSecurityService;
 
 @Controller
@@ -47,6 +59,8 @@ public class UserController {
     private NotificationService notificationService;
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
+    
+
     
     
     private final SimpMessagingTemplate messagingTemplate;
@@ -108,10 +122,13 @@ public class UserController {
         return "redirect:/users/mainpage";
     }
     
+    
+    
     @GetMapping("/welcome")
     @ResponseBody
     public void sendWelcomeMessage(Principal principal, HttpSession session) {
-        Boolean welcome = (Boolean) session.getAttribute("welcome");
+        
+    	Boolean welcome = (Boolean) session.getAttribute("welcome");
         if (welcome != null && welcome) {
             messagingTemplate.convertAndSendToUser(
                 principal.getName(),
@@ -171,6 +188,65 @@ public class UserController {
         rttr.addFlashAttribute("success", result);
         return "redirect:/users/mypage";
     }
+    
+    // 비밀번호 변경 페이지 열기
+    @GetMapping("/changepassword")
+    public String passwordPage() {
+        return "users/changePassword";  // HTML 경로
+    }
+
+    // 실제 비밀번호 변경 처리
+    @PostMapping("/changepassword")
+    public String changePassword(@RequestParam String currentPassword,
+                                 @RequestParam String newPassword,
+                                 @RequestParam String confirmPassword,
+                                 Principal principal,
+                                 Model model) {
+
+        int userId = service.getUserIdByEmail(principal.getName());
+
+        // 1. 현재 비밀번호 확인
+        if (!service.checkCurrentPassword(userId, currentPassword)) {
+            model.addAttribute("error", "현재 비밀번호가 올바르지 않습니다.");
+            return "users/changePassword";
+        }
+
+        // 2. 새 비밀번호 확인
+        if (!newPassword.equals(confirmPassword)) {
+            model.addAttribute("error", "새 비밀번호가 일치하지 않습니다.");
+            return "users/changePassword";
+        }
+
+        // 3. 비밀번호 변경
+        service.changePassword(userId, newPassword);
+
+        // 4. mypage에 필요한 데이터 조회
+        UserDto user = service.selectEmail(principal.getName(), "local");
+        model.addAttribute("dto", user);
+        model.addAttribute("pets", pservice.selectPetsByUserId(user.getUserId()));
+        
+        model.addAttribute("success", "비밀번호가 변경되었습니다.");
+
+        return "users/mypage";
+    }
+    // 현재 비밀번호 실시간 확인 (AJAX)
+    @PostMapping("/checkCurrentPassword")
+    @ResponseBody
+    public Map<String, Object> checkCurrentPassword(@RequestParam String currentPassword, Principal principal) {
+        Map<String, Object> result = new HashMap<>();
+
+        if(principal == null) {
+            result.put("match", false);
+            return result;
+        }
+
+        int userId = service.getUserIdByEmail(principal.getName());
+        boolean match = service.checkCurrentPassword(userId, currentPassword);
+        result.put("match", match);
+        return result;
+    }
+
+
 
     // 탈퇴 폼
     @GetMapping("/delete")
@@ -199,5 +275,8 @@ public class UserController {
             return "redirect:/users/mypage";
         }
     }
+    
+    
+    
 
 }
