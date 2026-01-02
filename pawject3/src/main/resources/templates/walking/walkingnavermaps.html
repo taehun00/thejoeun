@@ -7,6 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
+<div sec:authorize="isAuthenticated()">
    <div layout:fragment="content">
      <script type="text/javascript" 
              src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=m3jz1a155u&callback=initMap"></script>
@@ -27,6 +28,18 @@
          <div id="storeList" class="list-group"></div>
        </div>
      </div>
+		<!-- <div sec:authorize="isAthenticated()"></div> -->
+		<p class="text-end">
+			<a th:href="@{/smart/smartlist}"
+				class=" text-white btn btn-mustard">운동스마트게시판</a>
+		</p>
+
+		<!-- <div sec:authorize="isAthenticated()"></div> -->
+		<p class="text-end">
+			<a th:href="@{/walking/walkinglist}"
+				class=" text-white btn btn-primary">산책코스추천</a>
+		</p>
+
 
     <script th:inline="javascript">
        let map;
@@ -116,5 +129,6 @@
        }
     </script>
    </div>
+</div>   
 </body>
 </html>

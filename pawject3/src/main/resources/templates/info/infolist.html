@@ -72,9 +72,9 @@
 				class=" text-white btn btn-mustard">운동스마트게시판</a>
 		</p>
 		
-		<!-- <div sec:authorize="isAthenticated() and hasRole('ROLE_ADMIN')"></div> -->
-		<p class="text-end"> <a  th:href="@{/info/infowrite}" class="btn btn-mint">글쓰기</a> </p>
-		
+		<div sec:authorize="isAthenticated() and hasRole('ROLE_ADMIN')">
+			<p class="text-end"> <a  th:href="@{/info/infowrite}" class="btn btn-mint">글쓰기</a> </p>
+		</div>
 		<p class="text-end alert alert-info">로그인을 하면 글쓰기가능합니다.</p> 
 		
 		<!-- 검색 part -->		

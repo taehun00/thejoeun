@@ -45,7 +45,7 @@ public class NaverOcrService {
         	  + "\"version\":\"V1\","
         	  + "\"requestId\":\"%s\","
         	  + "\"timestamp\":%d,"
-        	  + "\"images\":[{\"name\":\"sample\",\"format\":\"jpg\"}]"
+        	  + "\"images\":[{\"name\":\"sample\",\"format\":\"png\"}]"
         	  + "}",
         	    java.util.UUID.randomUUID().toString(),
         	    System.currentTimeMillis()

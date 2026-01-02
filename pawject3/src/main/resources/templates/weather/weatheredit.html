@@ -10,7 +10,7 @@
 </head>
 <body>
 
-<!-- <div sec:authorize="isAuthenticated() and hasRole('ROLE_ADMIN')"></div> -->
+<div sec:authorize="isAuthenticated() and hasRole('ROLE_ADMIN')">
 	<div layout:fragment="content">
 		<h3 class="card-header"> 날씨정보수정</h3>
 	  	
@@ -56,8 +56,8 @@
 			  	<a href="javascript:history.go(-1)"  class="btn btn-navy">BACK</a>
 			  </div>
 		 </form>
-		
 	</div> 
+</div>	
 	<!--    http://localhost:8484/pawject3/smart/smartedit -->
 </body>
 </html>

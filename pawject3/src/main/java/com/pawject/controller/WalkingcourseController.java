@@ -26,7 +26,7 @@ public class WalkingcourseController {
 	private WalkingcourseService cservice;
 	
 	//    /walking/walkinglist
-	//@PreAuthorize("isAuthenticated()")
+	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/walkinglist")
 	public String walkinglist(Model model, @RequestParam(value="pageNo", defaultValue="1") int pageNo) {
 		model.addAttribute("paging", new UtilPaging( cservice.selectwalkingTotalCnt(), pageNo));
@@ -34,7 +34,7 @@ public class WalkingcourseController {
 		return "walking/walkinglist"; //화면
 	}
 	//Search
-	//@PreAuthorize("isAuthenticated()")
+	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/search")
 	@ResponseBody
 	public Map<String, Object> search(
@@ -50,14 +50,14 @@ public class WalkingcourseController {
 	}
 	
 	//	  /walking/write(글쓰기 폼)
-	//@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
+	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 	@GetMapping("/walkingwrite") public String write_get( Model model ) { 
 		model.addAttribute("WalkingcourseDto", new WalkingcourseDto());
 		return "walking/walkingwrite";
 	}
 
 	//	  /walking/write(글쓰기기능)
-	//@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
+	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 	@PostMapping("/walkingwrite") public String write_post(
 			WalkingcourseDto cdto, RedirectAttributes rttr) {
 		String result = "글쓰기에 실패했습니다.";
@@ -67,7 +67,7 @@ public class WalkingcourseController {
 	}
 
 	//    /walking/walkingdetail(상세보기)
-	//@PreAuthorize("isAuthenticated()")
+	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/walkingdetail")
 	public String detail(int courseid, Model model) {
 		model.addAttribute("cdto", cservice.selectwalking(courseid));
@@ -75,7 +75,7 @@ public class WalkingcourseController {
 	}
 
 	//    /walking/walkingedit  (수정폼)
-	//@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
+	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 	@GetMapping("/walkingedit")
 	public String edit_get(int courseid , Model model) {
 		model.addAttribute("cdto", cservice.selectwalkingUpdateForm(courseid));   
@@ -83,7 +83,7 @@ public class WalkingcourseController {
 	}	
 
 	//    /walking/walkingedit  (수정기능)
-	//@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
+	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 	@PostMapping("/walkingedit") 
 	public String edit_post(
 			WalkingcourseDto cdto, RedirectAttributes rttr) {
@@ -94,7 +94,7 @@ public class WalkingcourseController {
 	} 	
 
 	//    /walking/walkingdelete(삭제폼)
-	//@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
+	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 	@GetMapping("/walkingdelete")
 	public String delete_get( Model model ) {  
 		model.addAttribute("WalkingcourseDto", new WalkingcourseDto());
@@ -102,7 +102,7 @@ public class WalkingcourseController {
 	}
 	
 	//    /walking/walkingdelete(삭제기능)
-	//@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
+	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 	@PostMapping("/walkingdelete") 
 	public String delete_post( WalkingcourseDto cdto, RedirectAttributes rttr) {
 		String result ="글삭제에 실패했습니다";

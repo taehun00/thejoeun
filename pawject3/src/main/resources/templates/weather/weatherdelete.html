@@ -10,7 +10,7 @@
 </head>
 <body>
 
-<!-- <div sec:authorize="isAuthenticated() and hasRole('ROLE_ADMIN')"></div> -->
+<div sec:authorize="isAuthenticated() and hasRole('ROLE_ADMIN')">
 	<div layout:fragment="content">
 		<h3 class="card-header"> 날씨정보삭제</h3>
 		  <form th:action="@{/weather/weatherdelete}"  method="post">  
@@ -26,7 +26,8 @@
 			    	   id="weather" name="weather" readonly th:value="1">
 			  </div> 
 			  
-			  <!-- 구동안되면 삭제 -->			  
+			  <!-- 구동안되면 삭제 -->
+			  <!--  -->			  
 			  <input type="hidden" name="email" th:value="${#authentication.name}" />
 				<div class="mb-3">
 				  <label for="password">비밀번호:</label>
@@ -38,8 +39,8 @@
 			  	<a href="javascript:history.go(-1)"  class="btn btn-navy">BACK</a>
 			  </div>
 		 </form>
-		
-	</div> 
+	</div>
+</div>	 
 	<!--    http://localhost:8484/boot001/board/list -->
 </body>
 </html>

@@ -10,7 +10,7 @@
 </head>
 <body>
 
-<!-- <div sec:authorize="isAuthenticated()"></div> -->
+<div sec:authorize="isAuthenticated()">
 	<div layout:fragment="content">
 		<!--  알림메시지  -->
         <div th:if="${success}" class="alert alert-info alert-dismissible fade show" role="alert">
@@ -72,16 +72,18 @@
 				</li>
 			</ul>
 		</nav>
-		<p class="text-end">
-			<a th:href="@{/smart/smartlist}"
-				class=" text-white btn btn-mustard">운동스마트게시판</a>
-		</p>
-		<!-- <div sec:authorize="isAthenticated()"></div> -->
-		<p class="text-end">
-			<a th:href="@{/execapi/walkingcourse}"
-				class=" text-white btn btn-primary">지도</a>
-		</p>
-		
+		<div sec:authorize="isAthenticated()">
+			<p class="text-end">
+				<a th:href="@{/smart/smartlist}"
+					class=" text-white btn btn-mustard">운동스마트게시판</a>
+			</p>
+		</div>
+		<div sec:authorize="isAthenticated()">
+			<p class="text-end">
+				<a th:href="@{/execapi/walkingcourse}"
+					class=" text-white btn btn-primary">지도</a>
+			</p>
+		</div>
 		<p class="text-end"> <a  th:href="@{/walking/walkingwrite}" class="btn btn-mint">글쓰기</a> </p>
 		<p class="text-end alert alert-info">로그인을 하면 글쓰기가능합니다.</p> 
 		
@@ -202,7 +204,7 @@
 		<!-- 검색 part -->		
 		<!-- 검색 part -->	
 	</div>
-
+</div>
 	<!--    http://localhost:8484/pawject3/smart/smartlist -->
 </body>
 </html>

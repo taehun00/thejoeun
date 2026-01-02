@@ -33,15 +33,18 @@ public class ApiExecController {
 	/////////////////////////////// Weather
 	@Autowired ApiKmaWeatherExec apiKmaWeatherExec; 
 	
-	@GetMapping("/saveweather")
-	public String kma_get() { return "weather/apiweather"; }
-	
-	@GetMapping(value="/saveweatherapi", produces = "application/json;charset=UTF-8")
-	@ResponseBody
-	public String kma() throws URISyntaxException {
-		return apiKmaWeatherExec.getWeatherResponse();
-	}
-///////////////////////////////Maps
+	   @GetMapping("/saveweather")
+	    public String kma_get() { 
+	        return "weather/apiweather"; 
+	    }
+
+	    @GetMapping(value="/saveweatherapi", produces = "application/xml;charset=UTF-8")
+	    @ResponseBody
+	    public String kma() throws URISyntaxException {
+	        return apiKmaWeatherExec.getWeatherResponse();
+	    }
+
+	///////////////////////////////Maps
 	@GetMapping("/walkingcourse")
 	public String maps(Model model) {
 	    model.addAttribute("location", "송도센트럴파크");
@@ -51,5 +54,5 @@ public class ApiExecController {
 	    return "walking/walkingnavermaps"; 
 	    // 파일 위치가 src/main/resources/templates/walking/walkingnavermaps.html 이어야 합니다
 	}
-
+//http://localhost:8484/pawject3/execapi/saveweatherapi
 }

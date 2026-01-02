@@ -9,7 +9,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<!-- <div sec:authorize="isAuthenticated() and hasRole('ROLE_ADMIN')"></div> -->
+<div sec:authorize="isAuthenticated() and hasRole('ROLE_ADMIN')">
 	<div layout:fragment="content">
 	  <h3 class="card-header"> 날씨정보입력란</h3>
       <!-- POSTID, ETITLE , ECONTENT  -->
@@ -19,7 +19,7 @@
       	 <div class="mb-3 mt-3">
 		    <label for="wid" class="form-label">날씨정보아이디:</label>
 		    <input type="text" class="form-control" 
-		    		id="wid"  name="wid" readonly  th:value="1"  ><!-- 시큐리티 걸고 th:value="${wdto.wid}"-->
+		    		id="wid"  name="wid" readonly  th:value="${wdto.wid}"  ><!-- 시큐리티 걸고 th:value="${wdto.wid}"-->
 		  </div>
 		  <div class="mb-3 mt-3">
 		    <label for="weather" class="form-label">날씨:</label>
@@ -48,7 +48,7 @@
 		  </div>
      </form> 
 	</div> 
-	
+</div>	
 	<!--    http://localhost:8484/pawject3/smart/smartwrite -->
 </body>
 </html>

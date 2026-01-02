@@ -28,7 +28,7 @@ public class ExecsmartController {
 	//    /smart/smartlist
 	
 	//전체글보기
-	//@PreAuthorize("isAuthenticated")
+	@PreAuthorize("isAuthenticated")
 	@GetMapping("/smartlist")
 	public String list(Model model, @RequestParam(value="pageNo", defaultValue="1") int pageNo) {
 		model.addAttribute("paging", new UtilPaging( sbservice.selectsmartTotalCnt(), pageNo ));
@@ -36,7 +36,7 @@ public class ExecsmartController {
 		return "smart/smartlist"; //화면
 	}
 	//Search
-	//@PreAuthorize("isAuthenticated")
+	@PreAuthorize("isAuthenticated")
 	@GetMapping("/search")
 	@ResponseBody
 	public Map<String, Object> search(
@@ -52,14 +52,14 @@ public class ExecsmartController {
 	}
 	
 	//	  /smart/smartwrite(글쓰기 폼)
-	//@PreAuthorize("isAuthenticated() and hasRole('ROLE_MEMBER')")
+	@PreAuthorize("isAuthenticated() and hasRole('ROLE_MEMBER')")
 	@GetMapping("/smartwrite") public String write_get( Model model ) { 
 		model.addAttribute("execsmartDto", new ExecsmartDto());
 		return "smart/smartwrite"; 
 	}
 	
 	//	  /smart/smartwrite(글쓰기기능)
-	//@PreAuthorize("isAuthenticated() and hasRole('ROLE_MEMBER')")
+	@PreAuthorize("isAuthenticated() and hasRole('ROLE_MEMBER')")
 	@PostMapping("/smartwrite") public String write_post(
 			MultipartFile file , ExecsmartDto sdto, RedirectAttributes rttr) {
 		String result = "글쓰기에 실패했습니다.";
@@ -68,21 +68,21 @@ public class ExecsmartController {
 		return "redirect:/smart/smartlist";
 	}
 	//    /smart/smartdetail(상세보기)
-	//@PreAuthorize("isAuthenticated() and hasRole('ROLE_MEMBER')")
+	@PreAuthorize("isAuthenticated() and hasRole('ROLE_MEMBER')")
 	@GetMapping("/smartdetail")
 	public String detail(int postid, Model model) {
 		model.addAttribute("sdto", sbservice.selectsmart(postid));
 		return "smart/smartdetail";
 	}
 	//    /smart/smartedit  (수정폼)
-	//@PreAuthorize("isAuthenticated()")
+	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/smartedit")
 	public String edit_get(int postid, Model model) {
 		model.addAttribute("sdto", sbservice.selectsmartUpdateForm(postid));
 		return "smart/smartedit";
 	}
 	//    /smart/smartedit  (수정기능)
-	//@PreAuthorize("isAuthenticated()")
+	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/smartedit")
 	public String edit_post( 
 			MultipartFile file , ExecsmartDto sdto, RedirectAttributes rttr ) {
@@ -93,15 +93,15 @@ public class ExecsmartController {
 	}
 	
 	//    /smart/smartdelete(삭제폼)
-	//@PreAuthorize("isAuthenticated")
+	@PreAuthorize("isAuthenticated")
 	@GetMapping("/smartdelete")
 	public String delete_get( Model model ) { 
 		model.addAttribute("ExecsmartDto", new ExecsmartDto());
 		return "smart/smartdelete"; 
 	}
 	
-	//    /smart/smartdelete(삭제기능
-	//@PreAuthorize("isAuthenticated")
+	//    /smart/smartdelete(삭제기능)
+	@PreAuthorize("isAuthenticated")
 	@PostMapping("/smartdelete")
 	public String delete_post( ExecsmartDto sdto, RedirectAttributes rttr ) {
 		String result = "글삭제에 실패했습니다.";

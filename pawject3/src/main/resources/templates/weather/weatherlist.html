@@ -74,14 +74,19 @@
 				</li>
 			</ul>
 		</nav>
+		<!-- <div sec:authorize="isAuthenticated()"></div> -->
 		<p class="text-end">
 			<a th:href="@{/smart/smartlist}"
 				class=" text-white btn btn-mustard">운동스마트게시판</a>
 		</p>
+		
+		
+		<!-- <div sec:authorize="isAuthenticated()"></div> -->
 		<p class="text-end">
 			<a th:href="@{/execapi/saveweather}"
 				class=" text-white btn btn-warning">우리동네 단기예보</a>
 		</p>
+		
 		
 		<p class="text-end"> <a  th:href="@{/weather/weatherwrite}" class="btn btn-mint">글쓰기</a> </p>
 		<p class="text-end alert alert-info">로그인을 하면 글쓰기가능합니다.</p> 

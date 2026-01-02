@@ -9,7 +9,8 @@
 <title>Insert title here</title>
 </head>
 <body>
-<!-- <div sec:authorize="isAuthenticated()"></div> -->
+
+<div sec:authorize="isAuthenticated()">
 	<div layout:fragment="content">
 		<h3 class="card-header"> 추천산책코스상세보기  <!-- ${dto} --></h3>
 			<!--  알림메시지  -->
@@ -62,6 +63,7 @@
 				</div>
 		 </div>
 	</div> 
+</div>	
 	<!--    http://localhost:8484/pawject3/smart/smartdetail -->
 </body>
 </html>

@@ -26,7 +26,7 @@ public class SaveweatherController {
 	private SaveweatherService    wservice;
 	
 	//    /weather/weatherlist
-	//@PreAuthorize("isAuthenticated()")
+	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/weatherlist")
 	public String weatherlist(Model model, @RequestParam(value="pageNo", defaultValue="1") int pageNo) {
 		model.addAttribute("paging", new UtilPaging( wservice.selectweatherTotalCnt(), pageNo));
@@ -34,7 +34,7 @@ public class SaveweatherController {
 		return "weather/weatherlist"; //화면
 	}
 	//Search
-	//@PreAuthorize("isAuthenticated()")
+	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/search")
 	@ResponseBody
 	public Map<String, Object> search(
@@ -50,14 +50,14 @@ public class SaveweatherController {
 	}
 	
 	//	  /weather/weatherwrite(글쓰기 폼)
-	//@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
+	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 	@GetMapping("/weatherwrite") public String write_get( Model model ) { 
 		model.addAttribute("SaveweatherDto", new SaveweatherDto());
 		return "weather/weatherwrite"; 
 	}
 
 	//	  /weather/weatherwrite(글쓰기기능)
-	//@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
+	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 	@PostMapping("/weatherwrite") public String write_post(
 			SaveweatherDto wdto, RedirectAttributes rttr) {
 		String result = "글쓰기에 실패했습니다.";
@@ -67,7 +67,7 @@ public class SaveweatherController {
 	}
 
 	//    /weather/weatherdetail(상세보기)
-	//@PreAuthorize("isAuthenticated()")
+	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/weatherdetail")
 	public String detail( @RequestParam(defaultValue = "0") int wid, Model model) { 
 		model.addAttribute("wdto", wservice.selectweather(wid));
@@ -75,7 +75,7 @@ public class SaveweatherController {
 	}
 
 	//    /weather/weatheredit  (수정폼)
-	//@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
+	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 	@GetMapping("/weatheredit")
 	public String edit_get(  int wid, Model model  ) {
 		model.addAttribute("wdto", wservice.selectweatherUpdateForm(wid));   
@@ -83,7 +83,7 @@ public class SaveweatherController {
 	}	
 
 	//    /weather/weatheredit  (수정기능)
-	//@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
+	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 	@PostMapping("/weatheredit") 
 	public String edit_post(
 			SaveweatherDto wdto, RedirectAttributes rttr) {
@@ -94,7 +94,7 @@ public class SaveweatherController {
 	} 	
 	
 	//    /weather/weatherdelete(삭제폼)
-	//@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
+	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 	@GetMapping("/weatherdelete")
 	public String delete_get( Model model ) { 
 		model.addAttribute("SaveweatherDto", new SaveweatherDto());
@@ -102,7 +102,7 @@ public class SaveweatherController {
 	}
 	
 	//    /weather/weatherdelete(삭제기능)
-	//@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
+	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 	@PostMapping("/weatherdelete") 
 	public String delete_post( SaveweatherDto wdto, RedirectAttributes rttr) {
 		String result ="글삭제에 실패했습니다";

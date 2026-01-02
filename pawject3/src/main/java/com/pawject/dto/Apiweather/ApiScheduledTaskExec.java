@@ -11,9 +11,9 @@ public class ApiScheduledTaskExec {
     @Autowired 
     private SaveweatherService    wservice;
 
-    @Scheduled(cron = "0 0 6 * * *") // 매일 오전 6시
-    public void runTask2() {
-    	wservice.saveWeatherFromApi();
-    }
+//    @Scheduled(cron = "0 0 6 * * *") // 매일 오전 6시
+//    public void runTask2() {
+//    	wservice.saveWeatherFromApi();
+//    }
 
 }
