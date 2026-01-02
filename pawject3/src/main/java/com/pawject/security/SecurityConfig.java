@@ -31,7 +31,8 @@ public class SecurityConfig {
 		                    "/ws/**"               // WebSocket 엔드포인트 허용
 							).permitAll()
 					// 로그인한 유저들만 접근가능
-					.antMatchers("/users/mypage", "/users/update", "/users/delete").authenticated()
+					.antMatchers("/users/mypage", "/users/update", "/users/delete",
+					        "/announcements/**").authenticated()
 					// 관리자만 접근 가능
 		            .antMatchers("/admin/**").hasRole("ADMIN")
 					.anyRequest().permitAll()
@@ -58,7 +59,7 @@ public class SecurityConfig {
 			)
 			/* 4. csrf 예외처리*/
 			.csrf( csrf -> csrf.ignoringAntMatchers("/users/join", "/users/update", "/users/delete",  "/notifications/**",
-						"/ws/**"   // WebSocket 엔드포인트도 CSRF 예외 처리)
+					"admin/announcements/**", "/ws/**"   // WebSocket 엔드포인트도 CSRF 예외 처리)
 				)
 			);
 		return http.build();

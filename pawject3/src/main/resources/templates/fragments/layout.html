@@ -4,6 +4,10 @@
 <head  lang="ko">
 <meta charset="UTF-8">
 <title>Insert title here</title>
+
+<meta name="_csrf" th:content="${_csrf.token}">
+<meta name="_csrf_header" th:content="${_csrf.headerName}">
+    
 <!-- Latest compiled and minified CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -18,6 +22,9 @@
 <!-- Latest compiled JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- SockJS + STOMP -->
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
 </head>
 <body>
 
@@ -31,6 +38,22 @@
 
 <!-- footer.html 		fragments/footer 파일의 footer 블록 -->
 <th:block	th:replace="fragments/footer :: footer" />
+
+<!-- WebSocket 연결 스크립트 -->
+<script th:inline="javascript">
+    // 페이지 로딩 시 자동 실행
+    const socket = new SockJS('/ws'); // 서버에서 등록한 endpoint
+    const stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function(frame) {
+        console.log('WebSocket Connected: ' + frame);
+
+        // 공지 구독
+        stompClient.subscribe('/topic/announcement', function(message) {
+            alert("새 공지: " + message.body);
+        });
+    });
+</script>
 
 </body>
 </html>

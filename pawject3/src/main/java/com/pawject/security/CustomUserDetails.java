@@ -78,6 +78,10 @@ public class CustomUserDetails implements UserDetails, OAuth2User{
 		this.attributes.put("provider", user.getProvider());
 	}
 	
+	public int getUserId() {
+        return user.getUserId();   // UserDto의 userId 필드 반환
+    }
+
 	
 	public UserDto getUser() {
 		return user;

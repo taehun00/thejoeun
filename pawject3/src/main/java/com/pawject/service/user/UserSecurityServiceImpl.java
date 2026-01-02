@@ -112,6 +112,7 @@ public class UserSecurityServiceImpl implements UserSecurityService {
 
         return userDao.update(dto);
     }
+    
 
     /* 회원탈퇴 */
     @Transactional
@@ -171,6 +172,11 @@ public class UserSecurityServiceImpl implements UserSecurityService {
     public int iddouble(String email, String provider) {
         return userDao.iddoubleByEmail(new UserDto(email, provider));
     }
+    
+    // 이메일로 유저아이디 찾기
+    public int getUserIdByEmail(String email) {
+        return userDao.getUserIdByEmail(email);
+    }
 
     /* 비밀번호 확인 */
     @Override
@@ -217,4 +223,23 @@ public class UserSecurityServiceImpl implements UserSecurityService {
         dto.setEmail(email);
         return userDao.myPage(dto);
 	}
+
+	
+	// 비밀번호 변경
+	@Override
+	@Transactional
+	public void changePassword(int userId, String newPassword) {
+	    String encodedPassword = passwordEncoder.encode(newPassword);
+	    userDao.updatePassword(userId, encodedPassword); // Map 대신 파라미터 2개 전달
+	}
+
+	@Override
+	public boolean checkCurrentPassword(int userId, String rawPassword) {
+	    String encodedPassword = userDao.getPasswordByUserId(userId);
+	    return passwordEncoder.matches(rawPassword, encodedPassword);
+	}
+
+	public String getEncodedPassword(int userId) {
+        return userDao.getPasswordByUserId(userId);
+    }
 }

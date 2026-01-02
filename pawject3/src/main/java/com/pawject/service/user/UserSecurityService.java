@@ -25,6 +25,8 @@ public interface UserSecurityService {
     int joinAuth(AuthDto dto);
     int deleteRolesByUserId(AuthDto dto);
 
+    // 비밀번호 변경
+    void changePassword(int userId, String newPassword);
 
     /* 로그인 권한 조회 */
     UserAuthDto readAuth(String email, String provider);
@@ -48,4 +50,14 @@ public interface UserSecurityService {
     
     // 마이페이지 조회
     UserDto myPage(String email);
+    
+    // 이메일로 userid 찾기
+    public int getUserIdByEmail(String email);
+    
+    
+    //userid로 암호화된 비밀번호 가져오기
+    public boolean checkCurrentPassword(int userId, String rawPassword);
+    
+    // DB에서 암호화된 비밀번호 조회
+    String getEncodedPassword(int userId);
 }

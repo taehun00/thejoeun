@@ -67,7 +67,7 @@
 	    fetch('/users/welcome');
 	    
 	 	// 모든 사용자에게 브로드캐스트된 공지 구독
-        stompClient.subscribe('/topic/notifications', (msg) => {
+        stompClient.subscribe('/topic/announcement', (msg) => {
         	console.log("공지 수신:", msg.body);
             showAnnouncement(msg.body);
         });

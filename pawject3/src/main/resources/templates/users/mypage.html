@@ -7,7 +7,15 @@
     <title>MYPAGE</title>
 </head>
 <body>
+
 <div layout:fragment="content">
+<div th:if="${success}">
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            alert([[${success}]]);
+            /*]]>*/
+        </script>
+    </div>
 
   <!-- 유저 카드 -->
   <div class="container my-5">
@@ -31,6 +39,7 @@
         </ul>
       </div>
       <div class="card-footer text-end">
+      	<a th:href="@{/users/changepassword}" class="btn btn-mustard">비밀번호 변경</a>
         <a th:href="@{/users/update}" class="btn btn-mustard">UPDATE</a>
         <a th:href="@{/users/delete}" class="btn btn-burgundy">DELETE</a>
       </div>
@@ -79,10 +88,7 @@
       <a th:href="@{/pet/join}" class="btn btn-mint">펫 작성하기</a>
     </div>
   </div>
-  
-  <button onclick="location.href='/notifications/test'">
-    알림 테스트 페이지로 이동
-</button>
+
   
 
 </div>
