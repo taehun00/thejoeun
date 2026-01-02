@@ -122,10 +122,13 @@ public class UserController {
         return "redirect:/users/mainpage";
     }
     
+    
+    
     @GetMapping("/welcome")
     @ResponseBody
     public void sendWelcomeMessage(Principal principal, HttpSession session) {
-        Boolean welcome = (Boolean) session.getAttribute("welcome");
+        
+    	Boolean welcome = (Boolean) session.getAttribute("welcome");
         if (welcome != null && welcome) {
             messagingTemplate.convertAndSendToUser(
                 principal.getName(),
@@ -226,7 +229,22 @@ public class UserController {
 
         return "users/mypage";
     }
+    // 현재 비밀번호 실시간 확인 (AJAX)
+    @PostMapping("/checkCurrentPassword")
+    @ResponseBody
+    public Map<String, Object> checkCurrentPassword(@RequestParam String currentPassword, Principal principal) {
+        Map<String, Object> result = new HashMap<>();
 
+        if(principal == null) {
+            result.put("match", false);
+            return result;
+        }
+
+        int userId = service.getUserIdByEmail(principal.getName());
+        boolean match = service.checkCurrentPassword(userId, currentPassword);
+        result.put("match", match);
+        return result;
+    }
 
 
 

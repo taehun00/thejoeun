@@ -16,6 +16,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         config.enableSimpleBroker("/topic", "/queue");
         // 서버로 메시지를 보낼 때 prefix
         config.setApplicationDestinationPrefixes("/app");
+        // 🔥 개인 메시지 prefix (이게 핵심)
+        config.setUserDestinationPrefix("/user");
     }
 
     

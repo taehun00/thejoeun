@@ -8,9 +8,14 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.pawject.dao.PetDao;
@@ -18,6 +23,8 @@ import com.pawject.dao.UserDao;
 import com.pawject.dto.user.AuthDto;
 import com.pawject.dto.user.UserAuthDto;
 import com.pawject.dto.user.UserDto;
+import com.pawject.security.CustomUserDetails;
+import com.pawject.service.notification.NotificationService;
 import com.pawject.util.UtilUpload;
 
 @Service
@@ -31,6 +38,8 @@ public class UserSecurityServiceImpl implements UserSecurityService {
     @Autowired private PetDao petDao;
     @Autowired private PasswordEncoder passwordEncoder;
     @Autowired private UtilUpload utilUpload;
+    @Autowired private NotificationService notificationService;
+    @Autowired private SessionRegistry sessionRegistry;
 
     /* 파일 업로드 공통 처리 */
     public String uploadFile(MultipartFile file, String existingFile) {
@@ -231,6 +240,12 @@ public class UserSecurityServiceImpl implements UserSecurityService {
 	public void changePassword(int userId, String newPassword) {
 	    String encodedPassword = passwordEncoder.encode(newPassword);
 	    userDao.updatePassword(userId, encodedPassword); // Map 대신 파라미터 2개 전달
+
+	    // 🔥 다른 세션 강제 로그아웃
+        expireOtherSessions(userId);
+        
+	    // 🔥 비밀번호 변경 후 알림 전송
+        notificationService.sendPasswordChange(userId);
 	}
 
 	@Override
@@ -242,4 +257,33 @@ public class UserSecurityServiceImpl implements UserSecurityService {
 	public String getEncodedPassword(int userId) {
         return userDao.getPasswordByUserId(userId);
     }
+	
+	// 다른 브라우저/세션을 강제 로그아웃
+	private void expireOtherSessions(int userId) {
+
+	    String currentSessionId =
+	        RequestContextHolder.currentRequestAttributes().getSessionId();
+
+	    for (Object principal : sessionRegistry.getAllPrincipals()) {
+
+	        if (!(principal instanceof CustomUserDetails)) continue;
+
+	        CustomUserDetails details = (CustomUserDetails) principal;
+
+	        // 같은 사용자만 대상
+	        if (details.getUserId() != userId) continue;
+
+	        sessionRegistry.getAllSessions(principal, false)
+	            .forEach(session -> {
+
+	                // 현재 세션은 유지
+	                if (session.getSessionId().equals(currentSessionId)) {
+	                    return;
+	                }
+
+	                session.expireNow(); // 🔥 다른 브라우저 세션 종료
+	            });
+	    }
+	}
+
 }

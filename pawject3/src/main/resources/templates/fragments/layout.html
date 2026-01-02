@@ -28,7 +28,16 @@
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
 </head>
+
+
 <body>
+
+<!-- Toast 알림 UI (전역) -->
+<div id="toast" class="toast" style="display:none; position:fixed; top:20px; right:20px; z-index:9999;">
+    <span class="icon">🎉</span>
+    <span id="toast-message"></span>
+    <span id="toast-close" style="cursor:pointer;">✖</span>
+</div>
 
 <!-- header.html 		fragments/header 파일의 header 블록 -->
 <th:block	th:replace="fragments/header :: header" />
@@ -41,21 +50,66 @@
 <!-- footer.html 		fragments/footer 파일의 footer 블록 -->
 <th:block	th:replace="fragments/footer :: footer" />
 
-<!-- WebSocket 연결 스크립트 -->
+<!-- ================= 공통 Toast UI ================= -->
+<div id="toast"
+     style="display:none; position:fixed; bottom:30px; right:30px;
+            background:#333; color:#fff; padding:15px 20px;
+            border-radius:6px; z-index:9999;">
+    <span id="toast-message"></span>
+    <button id="toast-close"
+            style="margin-left:10px; background:none; border:none; color:#fff;">
+        ✖
+    </button>
+</div>
+
+<!-- ================= WebSocket 단일 연결 ================= -->
 <script th:inline="javascript">
-    // 페이지 로딩 시 자동 실행
-    const socket = new SockJS('/ws'); // 서버에서 등록한 endpoint
-    const stompClient = Stomp.over(socket);
+const socket = new SockJS('/ws');
+const stompClient = Stomp.over(socket);
 
-    stompClient.connect({}, function(frame) {
-        console.log('WebSocket Connected: ' + frame);
+stompClient.connect({}, () => {
+  console.log("✅ STOMP 연결 성공");
 
-        // 공지 구독
-        stompClient.subscribe('/topic/announcement', function(message) {
-            alert("새 공지: " + message.body);
-        });
-    });
+  // 개인 알림 구독
+  stompClient.subscribe('/user/queue/notifications', (msg) => {
+	console.log("📨 개인 알림 수신:", msg.body);
+    showToast("🎉 " + msg.body);
+    
+    location.href = '/users/login?expired';
+  });
+  
+  //공지 알림
+  stompClient.subscribe('/topic/announcement', (msg) => {
+    alert("📢 공지: " + msg.body);
+  });
+
+  // 🔥 여기서 welcome 호출
+  fetch('/users/welcome');
+});
 </script>
+
+<!-- ================= 공통 JS ================= -->
+<script>
+function showToast(message) {
+    const toast = document.getElementById("toast");
+    const toastMessage = document.getElementById("toast-message");
+    const toastClose = document.getElementById("toast-close");
+
+    toastMessage.innerText = message;
+    toast.style.display = "block";
+
+    toastClose.onclick = () => {
+        toast.style.display = "none";
+    };
+
+    setTimeout(() => {
+        toast.style.display = "none";
+    }, 3000);
+}
+</script>
+
+<!-- 페이지별 스크립트 -->
+<th:block layout:fragment="script"/>
 
 </body>
 </html>
