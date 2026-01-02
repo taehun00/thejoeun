@@ -22,13 +22,10 @@ var csrfToken = /*[[${_csrf.token}]]*/ '';
     alert([[${success}]]);
 </script>
     <h2 class="faq-title">FAQ - 자주 묻는 질문</h2>
-    <caption class="visually-hidden">FAQ - 자주 묻는 질문</caption>
-    
      
 
    <table class="faq-table table table-bordered table-hover align-middle text-center">
    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-        <caption class="visually-hidden">FAQ</caption>
         
         <thead class="table-light">
             <tr>
