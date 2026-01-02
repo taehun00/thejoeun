@@ -22,7 +22,7 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 
         for (GrantedAuthority authority : authorities) {
             if (authority.getAuthority().equals("ROLE_ADMIN")) {
-                redirectUrl = "/admin/announcement"; // 관리자 페이지
+                redirectUrl = "/admin/announcements"; // 관리자 페이지
                 break;
             }
         }

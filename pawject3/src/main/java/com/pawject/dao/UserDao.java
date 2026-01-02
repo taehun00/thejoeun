@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.pawject.dto.user.AuthDto;
 import com.pawject.dto.user.UserAuthDto;
@@ -21,6 +22,9 @@ public interface UserDao {
 
     // 이메일로 유저정보 찾기
     UserDto findByEmail(UserDto dto);
+    
+    // 이메일로 userid 찾기
+    int getUserIdByEmail(String email);
 
     // 이메일 중복검사
     int iddoubleByEmail(UserDto dto);
@@ -28,6 +32,9 @@ public interface UserDao {
     // 정보수정 (사용자)
     int update(UserDto dto);
 
+    // 비밀번호 변경
+    void updatePassword(@Param("userId") int userId, @Param("newPassword") String newPassword);
+    
     // 회원탈퇴 (사용자)
     int deleteMember(UserDto dto);
 
@@ -49,6 +56,9 @@ public interface UserDao {
     // 정보수정 (관리자) 닉네임만 수정
     int updateNickname(UserDto dto);
 
+    // 사용자 id로 비밀번호 조회
+    String getPasswordByUserId(int userId);
+    
     // 회원탈퇴 (관리자) - 이메일로 유저 조회
     UserDto findUserByEmail(String email);
 

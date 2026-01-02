@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{fragments/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>공지사항 관리</title>
+    <style>
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        th { background-color: #f4f4f4; }
+        .btn { cursor: pointer; }
+        .header-btn { margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+
+<h1>공지사항 관리</h1>
+
+<!-- 공지 작성 버튼 -->
+<a href="/admin/announcements/new" class="btn btn-success header-btn">
+    공지 작성
+</a>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-light">
+        <tr>
+            <th>ID</th>
+            <th>내용</th>
+            <th>작성일</th>
+            <th>관리</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="item : ${announcements}">
+            <td th:text="${item.announcementId}"></td>
+            <td th:text="${item.message}"></td>
+            <td th:text="${item.createdAt}"></td>
+            <td>
+                <a th:href="@{/admin/announcements/{id}/edit(id=${item.announcementId})}" 
+                   class="btn btn-primary btn-sm me-2">
+                    수정
+                </a>
+                <button type="button" class="btn btn-danger btn-sm"
+                        th:data-id="${item.announcementId}"
+                        onclick="deleteAnnouncement(this)">
+                    삭제
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table> 
+
+<script th:inline="javascript">
+function deleteAnnouncement(button) {
+    const id = button.getAttribute('data-id'); 
+    if (!confirm("정말 삭제하시겠습니까?")) return;
+
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+    fetch(`/admin/announcement/${id}`, {
+        method: 'DELETE',
+        headers: { [csrfHeader]: csrfToken }
+    }).then(res => {
+        if (res.ok) {
+            location.reload();
+        } else {
+            alert("삭제 실패");
+        }
+    });
+}
+</script>
+
+</div>
+</body>
+</html>

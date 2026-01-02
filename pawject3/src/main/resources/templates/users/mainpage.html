@@ -17,12 +17,6 @@
 <div layout:fragment="content">
     <h2 class="d-none">메인페이지</h2>
 
-    <!-- 알림 UI -->
-    <div id="toast" class="toast">
-	  <span class="icon">🎉</span>
-	  <span id="toast-message">회원가입을 축하합니다!</span>
-	  <span id="toast-close">✖</span>
-	</div>
 
 	<!-- 메인 버튼 -->
 		<div class="sub-area row justify-content-center text-center">
@@ -104,85 +98,41 @@
         </section>
 
         <section class="part">
-            <h3>질병 정보</h3>
-            <p>질병 예방과 치료 관련 정보를 확인할 수 있습니다.</p>
+            <h3>질환 정보</h3>
+            <p>질환 관련 정보를 확인할 수 있습니다.</p>
 	  <table class="table table-sm table-hover">
 	    <thead>
 	      <tr>
-	        <th>사료</th>
-	        <th>제목</th>
-	        <th>내용</th>
+	        <th>질환명</th>
+	        <th>질환설명</th>
+	        <th>반려동물 종</th>
 	      </tr>
 	    </thead>
 	    <tbody>
-	      <tr th:each="d, stat : ${dislist}">
-	        <th:block th:if="${stat.index < 5}">
-	          <td th:text="${d.disex}"></td>
-	          <td th:text="${d.kindpet}"></td>
-	          <td th:text="${d.infval}"></td>
+	      <!-- <tr th:each="dto, stat : ${list}">
+	        <th:block th:if="${stat.index < 5}"> -->
+	        <tr th:each="dto , i : ${list} ">
+					<td
+						th:text="${paging.listtotal - ((paging.current-1)* paging.onepagelist)   -  i.index}"></td>
+					<!-- <td th:text="${list.size()-i.index}"></td> -->
+					<td><a th:href="@{/board/detail(disno=${dto.disno})}"
+						th:text="${dto.disname}"></a></td>
+	          <td th:text="${dto.disex}"></td>
+	          <td th:text="${dto.kindpet}"></td>	          
 	        </th:block>
 	      </tr>
 	    </tbody>
 	  </table>
 	
 	  <div class="text-end">
-	    <a th:href="@{/reviewboard/reviewlist}" class="btn btn-sm btn-olive">
-	      자세히 알아보기
+	    <a th:href="@{/board/list}" class="btn btn-sm btn-olive">
+	      질환명 더보기
 	    </a>
 	  </div>
         </section>
     </main>
 
 	
-
-    <!-- SockJS & STOMP 라이브러리 -->
-    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-
-    <script>
-	  const socket = new SockJS('/ws');
-	  const stompClient = Stomp.over(socket);
-	
-	  stompClient.connect({}, () => {
-	    console.log("✅ STOMP 연결 성공");
-	
-	    // 개인 알림 구독
-	    stompClient.subscribe('/user/queue/notifications', (msg) => {
-	      showToast("🎉 " + msg.body);
-	    });
-	
-	    // 서버에 환영 메시지 요청
-	    fetch('/users/welcome');
-	    
-	 	// 모든 사용자에게 브로드캐스트된 공지 구독
-        stompClient.subscribe('/topic/notifications', (msg) => {
-        	console.log("공지 수신:", msg.body);
-            showAnnouncement(msg.body);
-        });
-	  });
-	  
-	  function showAnnouncement(message) {
-	        // 간단히 alert로 표시 (나중에 UI 개선 가능)
-	        alert("📢 공지사항 알림: " + message);
-	    }
-
-	
-	  function showToast(message) {
-		  const toast = document.getElementById("toast");
-		  const toastMessage = document.getElementById("toast-message");
-		  const toastClose = document.getElementById("toast-close");
-
-		  toastMessage.innerText = message;
-		  toast.style.display = "block";
-
-		  // 닫기 버튼 클릭 시 즉시 사라지게
-		  toastClose.onclick = () => {
-		    toast.style.display = "none";
-		  };
-		}
-
-	</script>
-
 </div>
 </body>
 </html>
