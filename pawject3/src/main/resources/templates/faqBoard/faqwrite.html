@@ -9,8 +9,7 @@
 <body>
 	<div layout:fragment="content">
 	
-		<h3 class="card-header">FAQ 작성</h3>
-		 <caption class="visually-hidden">FAQ 작성</caption>
+		<h3 class="reviewwrite-title">FAQ 작성</h3>
 		<form th:action="@{/faqBoard/faqwrite}" 
 			    method="post"  >
 			
@@ -32,8 +31,8 @@
 				</select>
 			    </div>
 				<div class="mb-3  text-end col-sm-4">
-					<button type="submit" class="btn btn-primary">글쓰기</button>
-					<a th:href="@{/faqBoard/faqlist}"  class="btn btn-primary">목록보기</a>
+					<button type="submit" class="btn btn-slateBlue">글쓰기</button>
+					<a th:href="@{/faqBoard/faqlist}"  class="btn btn-mint">목록보기</a>
 				</div>			    
 			    
 			    
