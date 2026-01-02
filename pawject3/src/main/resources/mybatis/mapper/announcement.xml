@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pawject.dao.AnnouncementDao">
+
+    <!-- 공지 등록: Oracle은 시퀀스로 PK 생성 -->
+    <insert id="insertAnnouncement" parameterType="AnnouncementDto">
+        INSERT INTO ANNOUNCEMENT (ID, MESSAGE, CREATEDAT)
+        VALUES (ANNOUNCEMENT_SEQ.NEXTVAL, #{message}, SYSDATE)
+    </insert>
+
+    <!-- 공지 조회 (숨김 제외) -->
+	<select id="selectVisibleAnnouncementsByUserId" parameterType="int" resultType="AnnouncementDto">
+	    SELECT 
+	        a.ID AS announcementId,
+	        a.MESSAGE,
+	        a.CREATEDAT AS createdAt
+	    FROM ANNOUNCEMENT a
+	    WHERE NOT EXISTS (
+	        SELECT 1
+	        FROM HiddenAnnouncement h
+	        WHERE h.userId = #{userId}
+	          AND h.announcementId = a.ID
+	    )
+	    ORDER BY a.CREATEDAT DESC
+	</select>
+	<!-- 관리자: 수정페이지 폼 가기 -->
+	<select id="selectById" parameterType="int" resultType="AnnouncementDto">
+	    SELECT ID AS announcementId,
+	           MESSAGE,
+	           CREATEDAT AS createdAt
+	    FROM ANNOUNCEMENT
+	    WHERE ID = #{id}
+	</select>
+    
+	<!-- 관리자: 전체 공지 조회 -->
+	<select id="selectAllAnnouncements" resultType="AnnouncementDto">
+	    SELECT
+	        ID AS announcementId,
+	        MESSAGE,
+	        CREATEDAT AS createdAt
+	    FROM ANNOUNCEMENT
+	    ORDER BY CREATEDAT DESC
+	</select>
+	<!-- 관리자: 공지 수정 -->
+	<update id="updateAnnouncement">
+	    UPDATE ANNOUNCEMENT
+	    SET MESSAGE = #{message}
+	    WHERE ID = #{id}
+	</update>
+	<!-- 관리자: 공지 삭제 -->
+	<delete id="deleteAnnouncementById" parameterType="int">
+	    DELETE FROM ANNOUNCEMENT
+	    WHERE ID = #{id}
+	</delete>
+    
+
+</mapper>

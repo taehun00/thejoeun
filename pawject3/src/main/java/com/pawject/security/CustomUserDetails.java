@@ -78,6 +78,10 @@ public class CustomUserDetails implements UserDetails, OAuth2User{
 		this.attributes.put("provider", user.getProvider());
 	}
 	
+	public int getUserId() {
+        return user.getUserId();   // UserDto의 userId 필드 반환
+    }
+
 	
 	public UserDto getUser() {
 		return user;
@@ -94,7 +98,8 @@ public class CustomUserDetails implements UserDetails, OAuth2User{
 	}
 	@Override
 	public String getName() {
-		return user.getEmail()+":"+user.getProvider();
+		//return user.getEmail()+":"+user.getProvider();
+		return user.getEmail();
 	}
 	public void setAttributes(Map<String, Object> attributes) {
 		this.attributes = attributes;

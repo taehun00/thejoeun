@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+      
+<head>
+    <meta charset="UTF-8">
+    <title>공지 수정</title>
+</head>
+
+<body>
+<div layout:fragment="content">
+
+
+<form id="editForm">
+    <textarea id="message" name="message" rows="10" cols="80"
+              th:text="${announcement.message}"
+              required></textarea>
+    <br><br>
+    <button type="button" class="btn btn-primary" 
+    		onclick="updateAnnouncement()">수정</button>
+</form>
+
+<a href="/admin/announcements"
+	class="btn btn-secondary ms-2">목록으로</a>
+
+<script th:inline="javascript">
+function updateAnnouncement() {
+	const message = document.getElementById('message').value;
+    const id = [[${announcement.announcementId}]];
+
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+    fetch(`/admin/announcements/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            [csrfHeader]: csrfToken
+        },
+        body: new URLSearchParams({ message })
+    }).then(res => {
+        if (res.ok) {
+            location.href = '/admin/announcements';
+        } else {
+            alert("수정 실패");
+        }
+    });
+}
+</script>
+
+</div>
+</body>
+</html>

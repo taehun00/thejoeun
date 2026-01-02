@@ -30,6 +30,14 @@
         SELECT userid, email, nickname, password, ufile, mobile, createdat, provider, providerid
         FROM users WHERE email=#{email} AND provider=#{provider}
     </select>
+    
+    <!-- userId만 조회 -->
+	<select id="getUserIdByEmail" resultType="int" parameterType="string">
+	    SELECT userid
+	    FROM users
+	    WHERE email = #{email}
+	</select>
+    
 
     <!-- 이메일로 아이디 중복검사 -->
     <select id="iddoubleByEmail" resultType="int" parameterType="UserDto">
@@ -126,6 +134,18 @@
     <!-- 정보수정 (관리자) 닉네임만 수정 -->
     <update id="updateNickname" parameterType="UserDto">
         UPDATE users SET nickname = #{nickname} WHERE userid = #{userId}
+    </update>
+    
+    <!-- 사용자 ID로 비밀번호 조회 -->
+	<select id="getPasswordByUserId" resultType="String" parameterType="int">
+	    SELECT password FROM users WHERE userid = #{userId}
+	</select>
+    
+    <!-- 비밀번호 변경 -->
+    <update id="updatePassword" parameterType="map">
+        UPDATE USERS
+        SET PASSWORD = #{newPassword}
+        WHERE USERID = #{userId}
     </update>
 
     <!-- 회원탈퇴 (관리자) -->

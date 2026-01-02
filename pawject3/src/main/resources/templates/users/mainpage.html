@@ -17,12 +17,6 @@
 <div layout:fragment="content">
     <h2 class="d-none">메인페이지</h2>
 
-    <!-- 알림 UI -->
-    <div id="toast" class="toast">
-	  <span class="icon">🎉</span>
-	  <span id="toast-message">회원가입을 축하합니다!</span>
-	  <span id="toast-close">✖</span>
-	</div>
 
 	<!-- 메인 버튼 -->
 		<div class="sub-area row justify-content-center text-center">
@@ -139,55 +133,6 @@
     </main>
 
 	
-
-    <!-- SockJS & STOMP 라이브러리 -->
-    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-
-    <script>
-	  const socket = new SockJS('/ws');
-	  const stompClient = Stomp.over(socket);
-	
-	  stompClient.connect({}, () => {
-	    console.log("✅ STOMP 연결 성공");
-	
-	    // 개인 알림 구독
-	    stompClient.subscribe('/user/queue/notifications', (msg) => {
-	      showToast("🎉 " + msg.body);
-	    });
-	
-	    // 서버에 환영 메시지 요청
-	    fetch('/users/welcome');
-	    
-	 	// 모든 사용자에게 브로드캐스트된 공지 구독
-        stompClient.subscribe('/topic/notifications', (msg) => {
-        	console.log("공지 수신:", msg.body);
-            showAnnouncement(msg.body);
-        });
-	  });
-	  
-	  function showAnnouncement(message) {
-	        // 간단히 alert로 표시 (나중에 UI 개선 가능)
-	        alert("📢 공지사항 알림: " + message);
-	    }
-
-	
-	  function showToast(message) {
-		  const toast = document.getElementById("toast");
-		  const toastMessage = document.getElementById("toast-message");
-		  const toastClose = document.getElementById("toast-close");
-
-		  toastMessage.innerText = message;
-		  toast.style.display = "block";
-
-		  // 닫기 버튼 클릭 시 즉시 사라지게
-		  toastClose.onclick = () => {
-		    toast.style.display = "none";
-		  };
-		}
-
-	</script>
-
 </div>
 </body>
 </html>
