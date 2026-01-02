@@ -55,8 +55,12 @@ public class AiPetChaController {
             String imageUrl = petChaApiService.createCharacter(userid, file, kindpet);
             return ResponseEntity.ok(Map.of("url", imageUrl));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Map.of("message", "캐릭터 생성 실패", "error", e.getMessage()));
+        	return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        		    .body(Map.of("message", "OpenAI API 호출 중 오류가 발생했습니다."));
+			/*
+			 * return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+			 * .body(Map.of("message", "캐릭터 생성 실패", "error", e.getMessage()));
+			 */
         }
     }
 }

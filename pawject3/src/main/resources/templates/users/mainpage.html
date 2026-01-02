@@ -98,30 +98,35 @@
         </section>
 
         <section class="part">
-            <h3>질병 정보</h3>
-            <p>질병 예방과 치료 관련 정보를 확인할 수 있습니다.</p>
+            <h3>질환 정보</h3>
+            <p>질환 관련 정보를 확인할 수 있습니다.</p>
 	  <table class="table table-sm table-hover">
 	    <thead>
 	      <tr>
-	        <th>사료</th>
-	        <th>제목</th>
-	        <th>내용</th>
+	        <th>질환명</th>
+	        <th>질환설명</th>
+	        <th>반려동물 종</th>
 	      </tr>
 	    </thead>
 	    <tbody>
-	      <tr th:each="d, stat : ${dislist}">
-	        <th:block th:if="${stat.index < 5}">
-	          <td th:text="${d.disex}"></td>
-	          <td th:text="${d.kindpet}"></td>
-	          <td th:text="${d.infval}"></td>
+	      <!-- <tr th:each="dto, stat : ${list}">
+	        <th:block th:if="${stat.index < 5}"> -->
+	        <tr th:each="dto , i : ${list} ">
+					<td
+						th:text="${paging.listtotal - ((paging.current-1)* paging.onepagelist)   -  i.index}"></td>
+					<!-- <td th:text="${list.size()-i.index}"></td> -->
+					<td><a th:href="@{/board/detail(disno=${dto.disno})}"
+						th:text="${dto.disname}"></a></td>
+	          <td th:text="${dto.disex}"></td>
+	          <td th:text="${dto.kindpet}"></td>	          
 	        </th:block>
 	      </tr>
 	    </tbody>
 	  </table>
 	
 	  <div class="text-end">
-	    <a th:href="@{/reviewboard/reviewlist}" class="btn btn-sm btn-olive">
-	      자세히 알아보기
+	    <a th:href="@{/board/list}" class="btn btn-sm btn-olive">
+	      질환명 더보기
 	    </a>
 	  </div>
         </section>
