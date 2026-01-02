@@ -1,5 +1,32 @@
-/.metadata/
-m2e.properties
+# IDE 설정
+*.iml
+.idea/
+.classpath
+.project
+.settings/
+.sts4-cache
+.vscode/
 
-# 해당폴더의 properties파일무시
-boot001/src/main/resources/application-oauth.properties    
+# 빌드 결과물
+target/
+build/
+out/
+*.class
+
+# 로그 및 임시 파일
+*.log
+*.tmp
+*.bak
+
+# OS 자동 생성 파일
+.DS_Store
+Thumbs.db
+
+# Maven Wrapper
+.mvn/wrapper/maven-wrapper.jar
+
+# 민감 정보 (환경 설정은 별도 관리)
+application-*.properties
+application.properties
+application-oauth.properties
+application-secret.properties 
