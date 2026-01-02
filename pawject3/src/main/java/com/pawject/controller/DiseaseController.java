@@ -59,7 +59,13 @@ public class DiseaseController {
 	
 	 
 	//    /board/write (글쓰기 폼)
-	@GetMapping("/write") public String write_get() {  return "board/write";}
+	/* @GetMapping("/write") public String write_get() { return "board/write";} */
+	
+	@GetMapping("/write")
+	public String write_get(Model model) {
+	    model.addAttribute("dto", new DisswcDto());
+	    return "board/write";
+	}
 	
 	//    /board/write (글쓰기 기능)
 	@PostMapping("/write") public String write_post(

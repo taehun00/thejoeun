@@ -4,6 +4,9 @@
 	layout:decorate="~{fragments/layout}">
 <head lang="ko">
 <meta charset="UTF-8">
+<meta name="_csrf" th:content="${_csrf.token}">
+<meta name="_csrf_header" th:content="${_csrf.headerName}">
+
 <title>Insert title here</title>
 </head>
 <body>
@@ -66,11 +69,57 @@
 		  </div> -->
 		  
 		  <div class="mb-3  text-end">
-		  	<button type="submit" class="btn btn-primary">글쓰기</button>  
+				<button type="button" class="btn btn-secondary"
+					onclick="autoFillByAI()">🤖 AI 자동완성</button>
+				<button type="submit" class="btn btn-primary">글쓰기</button>  
 		  	<a th:href="@{/board/list}"  class="btn btn-primary">목록보기</a>
 		  </div>
 	 </form> 
-	</div>  
+	 
+	 
+	 
+	 
+	 <script>
+	async function autoFillByAI() {
+
+	    const disname = document.getElementById("disname").value;
+
+	    if (!disname) {
+	        alert("질환명을 먼저 입력해주세요.");
+	        return;
+	    }
+
+	    const token = document.querySelector('meta[name="_csrf"]').content;
+	    const header = document.querySelector('meta[name="_csrf_header"]').content;
+
+	    const res = await fetch("/api/ai/autocomplete", {
+	        method: "POST",
+	        headers: {
+	            "Content-Type": "application/json",
+	            [header]: token
+	        },
+	        body: JSON.stringify({ disname })
+	    });
+
+	    if (!res.ok) {
+	        alert("AI 호출 실패");
+	        return;
+	    }
+
+	    const data = await res.json();
+
+	    document.getElementById("disex").value = data.disex;
+	    document.getElementById("kindpet").value = data.kindpet;
+	    document.getElementById("infval").value = data.infval;
+	    document.getElementById("mannote").value = data.mannote;
+	}
+
+	</script>
+	</div>
+
+	
+
+
 
 </body>
 </html>

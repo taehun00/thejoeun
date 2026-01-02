@@ -1,11 +1,15 @@
 package com.pawject.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +20,7 @@ import com.pawject.dto.food.FoodDto;
 import com.pawject.dto.food.NutriDto;
 import com.pawject.dto.paging.PagingDto10;
 import com.pawject.service.food.FoodService;
+import com.pawject.service.food.NaverOcrService;
 
 
 @Controller
@@ -37,6 +42,8 @@ public class FoodController {
 	    return "foodboard/foodlist";
 	}
 
+	@Autowired NaverOcrService nservice;
+	
 	//신규등록
 	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 	@RequestMapping("/foodwrite.fn")
@@ -48,18 +55,17 @@ public class FoodController {
 		return "foodboard/foodwrite";
 	}
 	
+
+	
 	@RequestMapping(value="/foodwrite.fn", method=RequestMethod.POST)
 	public String write_post(
 		    FoodDto fdto,
 		    @RequestParam(required = false) List<String> nutrientid,  //Integer 했더니 오류남 -> String 
 		    @RequestParam(required = false) List<String> amount,
-		    @RequestParam("file") MultipartFile	file,  //이미지
-		    RedirectAttributes rttr) {
-
+		    @RequestParam("file") MultipartFile	file,  //업로드 이미지
+		    RedirectAttributes rttr)throws IOException {
 	    // 사료 입력
 	    int result1 = service.foodinsert(fdto, file);
-	    // 여기서 fdto.foodid 가 채워져 있어야 함!
-
 	    // 영양소 입력
 	    int result2 = 1;
 
@@ -165,8 +171,6 @@ public class FoodController {
 				return "redirect:/foodboard/fooddetail.fn?foodid=" + foodid;
 			}
 	}
-	
-	
 	
 
 	

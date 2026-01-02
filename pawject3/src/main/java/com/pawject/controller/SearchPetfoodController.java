@@ -25,4 +25,15 @@ public class SearchPetfoodController {
 	    
 		return "petfoodsearcher/searchpetfood";
 	}
+	
+	/*
+	 * @RequestMapping("/modaltest") public String sampletest (Model model, int
+	 * foodid) {
+	 * 
+	 * model.addAttribute("list", service.detailCard(foodid));
+	 * 
+	 * return "petfoodsearcher/modaltest"; }
+	 */
+	
+	
 }

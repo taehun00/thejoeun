@@ -1,11 +1,5 @@
 @charset "UTF-8";
 
-
-  .fakeimg {
-    height: 200px;
-    background: #aaa;
-  }
-
 	/* 그린 */
 	.btn-green {
 	  background-color: #2F7C57;
@@ -144,25 +138,3 @@
 	.btn-slateBlue:hover {
 	  color: #fff !important;
 	}
-	
-	.clickable {
-    color: blue;
-    text-decoration: underline;
-    cursor: pointer;
-}
-
-
-.filterToggle {
-    position: relative;
-    cursor: pointer;
-}
-.filter-panel {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 150px;
-    background: white;
-    border: 1px solid #ccc;
-    padding: 8px;
-    z-index: 99;
-}

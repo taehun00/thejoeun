@@ -4,14 +4,51 @@
 	layout:decorate="~{fragments/layout}">
 <head lang="ko">
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>신규 사료 등록</title>
 </head>
 <body>
 	<div layout:fragment="content">
- 
+
 <div class="container card my-5 p-4">
 
 	<h3 class="card-header">신규 사료 등록</h3>
+
+		<div class="ai-helper-box mt-4">
+			  <div class="ai-helper-header">
+			    <span class="ai-badge">AI</span>
+			    <span class="ai-helper-text">라벨 텍스트 추출</span>
+			    <button type="button" id="openBtn" class="btn btn-sm btn-olive" open-close = "false">
+				  열기
+				</button>
+			  </div>
+			  <!-- d-none 빼먹음 열려있음 -->
+	  		<div class="row mb-3 mt-4 d-none" id="ocrPanel">
+			  <label for="ocrfile" class="form-label">추출할 이미지:</label>
+			  
+			  <div class="col-3" style="width:300px;">
+			    <input type="file" class="form-control" id="ocrfile" name="ocrfile">
+			  </div>
+			  
+			  <div class="col-9">
+			    <button type="button" id="ocrbtn" class="btn btn-green">
+			      추출
+			    </button>
+			  </div>
+			  
+				<div class="col-12 mb-3">
+		            <label class="form-label">추출 결과 :</label>
+		            <textarea class="form-control" name="result" rows="5"
+		                      id="ocrResult" ></textarea>
+		        </div> 
+			  
+			</div>
+
+		  
+		  
+		</div>
+	
+
+
 
 	<form th:action="@{/foodboard/foodwrite.fn}"
 		method="post"
@@ -125,8 +162,7 @@
 		       th:each="i : ${#numbers.sequence(1, 4)}">
 		
 		    <div class="col-4">
-		      <label class="form-label"
-		             th:text="|영양소 ${i} :|"></label>
+		      <label class="form-label">영양소:</label>
 		
 		      <select name="nutrientid"
 		              class="form-control"
@@ -150,7 +186,7 @@
 		    </div>
 		
 		  </div>
-		
+		  <button type="button" class="btn btn-outline-secondary" id="addbtn">추가</button>
 		</div>
 
 
@@ -163,22 +199,94 @@
 		</div>
 
 		<div class="mb-3 text-end">
-			<button type="submit" class="btn btn-mint">사료 등록</button>
+			<button type="submit" class="btn btn-slateBlue">사료 등록</button>
 			<a th:href="@{/foodboard/foodlist.fn}"
-				class="btn btn-slateBlue"> 목록보기 </a>
+				class="btn btn-mint"> 목록보기 </a>
 		</div>
+		
+	<!--폼 토큰 -->	
 	<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+	<!--아작스 토큰 -->		
+	<input type="hidden" id="csrfHeader" th:value="${_csrf.headerName}">
+	<input type="hidden" id="csrfToken"  th:value="${_csrf.token}">
+	
 	</form>
 </div>
 
 	<script>
-
+	// 전역변수-토큰
+	let csrfToken = $("#csrfToken").val();
+	let csrfHeader = $("#csrfHeader").val();
+	
+	
 	// 단위 자동표시
 		function updateUnit(selectElem) {
 		    const unit = selectElem.selectedOptions[0].dataset.unit;
 		    selectElem.closest('.nutri-row').querySelector('.unitLabel').textContent = unit;
 		}
-	</script>
+	
+		$("#addbtn").on("click", function () {
+
+			  // 마지막 영양 row 복제
+			  const $lastRow = $(".nutri-row").last();
+			  const $newRow = $lastRow.clone();
+
+			  // 값 초기화
+			  $newRow.find("select[name='nutrientid']").val("");
+			  $newRow.find("input[name='amount']").val("");
+			  $newRow.find(".unitLabel").text("%");
+
+			  // 추가
+			  $newRow.insertBefore("#addbtn");
+			});
+
+//버튼 토글
+document.getElementById("openBtn").addEventListener("click", function () {
+    const ocrBox = document.getElementById("ocrPanel");
+    if (!ocrBox) return;
+
+    // 토글 - 그다음 오픈 순서 주의
+    ocrBox.classList.toggle("d-none");
+    const isOpen = !ocrBox.classList.contains("d-none");
+
+    // 버튼 텍스트
+    this.textContent = isOpen ? "닫기" : "열기";
+    this.setAttribute("open-close", String(isOpen));
+
+});
+
+//ocr
+$("#ocrbtn").on("click", function () {
+    const ocrfile = document.getElementById("ocrfile");
+    const ocrResult = document.getElementById("ocrResult");
+
+    if (!ocrfile.files.length) {
+        alert("추출하실 이미지를 첨부해 주세요");
+        return;
+    }
+    const formData = new FormData();  //<form enctype="multipart/form-data">
+    formData.append("ocrfile", ocrfile.files[0]);  //배열로 보냈음
+
+    $.ajax({
+        url: "/foodboard/naverocr",
+        type: "POST",
+        data: formData,
+        processData: false,  // 문자열 변환 금지	****
+        contentType: false,    // multipart/form-data 자동 설정  ***
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success: function (res) {
+        	ocrResult.value = res;
+        },
+        error: function () {
+            alert("OCR 처리 중 오류가 발생했습니다");
+        }
+    });
+});
+</script>
+	
+	
 	</div><!-- content-->
 </body>
 </html>

@@ -15,7 +15,7 @@
 
 <body>
 <div layout:fragment="content">
-    <h2>메인페이지</h2>
+    <h2 class="d-none">메인페이지</h2>
 
     <!-- 알림 UI -->
     <div id="toast" class="toast">
@@ -24,24 +24,112 @@
 	  <span id="toast-close">✖</span>
 	</div>
 
-	<!-- 메인 3가지 파트 -->
-    <main class="main-sections">
-        <section class="part">
-		<h3>사료찾기</h3>
-		<p>내 반려동물에게 딱 맞는 사료를 찾아보세요.</p>
-            <a th:href="@{/petfoodsearcher/searchpetfood}" class="btn">자세히 보기</a>
-        </section>
+	<!-- 메인 버튼 -->
+		<div class="sub-area row justify-content-center text-center">
+		  <div class="col-sm-6 col-md-4 mb-3">
+		    <a th:href="@{/petfoodsearcher/searchpetfood}" class="main-action-btn">
+		      사료 찾기
+		    </a>	
+		  </div>
+		  <div class="col-sm-6 col-md-4 mb-3">
+		    <a th:href="@{/api/pet/character}" class="main-action-btn yellow">
+		      캐릭터 생성 이벤트
+		    </a>
+		  </div>
+		</div>
+		    	
+	<!-- 메인 3가지 파트 -->	
+    <main class="main-sections"> 
+    
+	<section class="part">
+	  <h3>사료 리뷰</h3>
+	  <p>최근 등록된 리뷰를 확인해 보세요</p>
+	
+	  <table class="table table-sm table-hover">
+	    <thead>
+	      <tr>
+	        <th>사료</th>
+	        <th>제목</th>
+	        <th>내용</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	      <tr th:each="r, stat : ${reviewlist}">
+	        <th:block th:if="${stat.index < 5}">
+	          <td th:text="${r.foodname}"></td>
+	          <td th:text="${r.title}"></td>
+	          <td th:text="${r.reviewcomment}"></td>
+	        </th:block>
+	      </tr>
+	    </tbody>
+	  </table>
+	
+	  <div class="text-end">
+	    <a th:href="@{/reviewboard/reviewlist}" class="btn btn-sm btn-olive">
+	      리뷰 더보기
+	    </a>
+	  </div>
+	  
+	  
+	</section>
 
         <section class="part">
-            <h3>운동</h3>
+            <h3>운동 스마트</h3>
             <p>운동 방법과 활동량 관리 팁을 확인하세요.</p>
-            <a href="/exercise" class="btn">자세히 보기</a>
+                   
+		  <table class="table table-sm table-hover">
+		    <thead>
+		      <tr>
+		        <th>운동유형</th>
+		        <th>제목</th>
+		        <th>내용</th>
+		      </tr>
+		    </thead>
+		    <tbody>
+		      <tr th:each="s, stat : ${smartlist}">
+		        <th:block th:if="${stat.index < 5}">
+		          <td th:text="${s.exectype}"></td>
+		          <td th:text="${s.etitle}"></td>
+		          <td th:text="${s.econtent}"></td>
+		        </th:block>
+		      </tr>
+		    </tbody>
+		  </table>
+	
+		  <div class="text-end">
+		    <a th:href="@{/smart/smartlist}" class="btn btn-sm btn-olive">
+		       운동정보 더보기
+		    </a>
+		  </div>
         </section>
 
         <section class="part">
-            <h3>질병</h3>
+            <h3>질병 정보</h3>
             <p>질병 예방과 치료 관련 정보를 확인할 수 있습니다.</p>
-            <a href="/disease" class="btn">자세히 보기</a>
+	  <table class="table table-sm table-hover">
+	    <thead>
+	      <tr>
+	        <th>사료</th>
+	        <th>제목</th>
+	        <th>내용</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	      <tr th:each="d, stat : ${dislist}">
+	        <th:block th:if="${stat.index < 5}">
+	          <td th:text="${d.disex}"></td>
+	          <td th:text="${d.kindpet}"></td>
+	          <td th:text="${d.infval}"></td>
+	        </th:block>
+	      </tr>
+	    </tbody>
+	  </table>
+	
+	  <div class="text-end">
+	    <a th:href="@{/reviewboard/reviewlist}" class="btn btn-sm btn-olive">
+	      자세히 알아보기
+	    </a>
+	  </div>
         </section>
     </main>
 

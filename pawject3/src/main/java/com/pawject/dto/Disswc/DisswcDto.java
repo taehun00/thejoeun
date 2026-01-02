@@ -8,14 +8,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DisswcDto {
-	private int disno;
-	private int userid;
+	private Integer disno;
+	private Integer userid;
 	private String disname;
 	private String disex;
 	private String kindpet;
 	private String infval;
 	private String mannote;
-	private int bhit;
+	private Integer bhit;
     private String createdat;
     private String bip;
     private String bpass;

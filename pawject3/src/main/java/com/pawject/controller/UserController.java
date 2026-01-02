@@ -138,10 +138,10 @@ public class UserController {
     }
     
     // 메인페이지
-    @GetMapping("/mainpage")
-    public String mainpage() {
-        return "users/mainpage"; // templates/users/mainpage.html 뷰로 이동
-    }
+	/*
+	 * @GetMapping("/mainpage") public String mainpage() { return "users/mainpage";
+	 * // templates/users/mainpage.html 뷰로 이동 }
+	 */
 
 
 

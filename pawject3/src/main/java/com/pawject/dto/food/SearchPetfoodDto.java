@@ -15,6 +15,7 @@ public class SearchPetfoodDto {
 	private String country;
 	private String brandtype;
 	private String origin;	
+	private String brandinfo;	
 
 	//사료
 	private int foodid;
@@ -38,6 +39,8 @@ public class SearchPetfoodDto {
 	private int minvalue;
 	private int maxvalue;
 	private String rangelabel;
+
+	private String nutriinfo;
 	
 	//칼로리검색용
 	private int mincalorie;	
