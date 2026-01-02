@@ -18,6 +18,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
@@ -263,6 +264,8 @@ public class UserController {
                                HttpServletResponse response) {
         String result = "비밀번호를 확인해주세요";
         if (service.delete(dto, true) > 0) {
+        	expireAllSessions(dto.getUserId());
+        	
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             if (auth != null) {
                 new SecurityContextLogoutHandler().logout(request, response, auth);
@@ -276,7 +279,21 @@ public class UserController {
         }
     }
     
-    
+    // 🔥 helper 메서드: SessionRegistry에 남은 모든 세션 만료
+    @Autowired
+    private SessionRegistry sessionRegistry;
+
+    private void expireAllSessions(int userId) {
+        for (Object principal : sessionRegistry.getAllPrincipals()) {
+            if (!(principal instanceof CustomUserDetails)) continue;
+
+            CustomUserDetails details = (CustomUserDetails) principal;
+            if (details.getUserId() != userId) continue;
+
+            sessionRegistry.getAllSessions(principal, false)
+                .forEach(session -> session.expireNow());
+        }
+    }
     
 
 }

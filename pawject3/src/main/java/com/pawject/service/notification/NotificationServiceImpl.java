@@ -52,13 +52,13 @@ public class NotificationServiceImpl implements NotificationService {
 
     	        CustomUserDetails details = (CustomUserDetails) principal;
 
-    	        if (details.getUserId() != userId) continue;
+    	        if (details == null || details.getUserId() != userId) continue;
 
     	        sessionRegistry.getAllSessions(principal, false)
     	            .forEach(session -> {
 
     	                // 🔥 현재 세션은 제외
-    	                if (session.getSessionId().equals(currentSessionId)) {
+    	                if (currentSessionId != null && session.getSessionId().equals(currentSessionId)) {
     	                    return;
     	                }
 
