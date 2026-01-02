@@ -11,7 +11,7 @@
 <body>
 
 	<div layout:fragment="content">
-		<div sec:authorize="isAuthenticated()">
+		<!-- <div sec:authorize="isAuthenticated()"></div> -->
 			<!--  알림메시지  -->
 			<div th:if="${success}"
 				class="alert alert-info alert-dismissible fade show" role="alert">
@@ -211,7 +211,6 @@
 		</script>
 			<!-- 검색 part -->
 			<!-- 검색 part -->
-		</div>
 	</div>
 	<!--    http://localhost:8484/pawject3/weather/weatherlist -->
 </body>
