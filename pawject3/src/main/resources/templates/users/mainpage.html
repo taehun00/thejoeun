@@ -109,25 +109,25 @@
 	  <table class="table table-sm table-hover">
 	    <thead>
 	      <tr>
-	        <th>사료</th>
-	        <th>제목</th>
-	        <th>내용</th>
+	        <th>질환명</th>
+	        <th>질환설명</th>
+	        <th>반려동물 종</th>
 	      </tr>
 	    </thead>
 	    <tbody>
-	      <tr th:each="d, stat : ${dislist}">
+	      <tr th:each="dto, stat : ${list}">
 	        <th:block th:if="${stat.index < 5}">
-	          <td th:text="${d.disex}"></td>
-	          <td th:text="${d.kindpet}"></td>
-	          <td th:text="${d.infval}"></td>
+	          <td th:text="${dto.disname}"></td>
+	          <td th:text="${dto.disex}"></td>
+	          <td th:text="${dto.kindpet}"></td>	          
 	        </th:block>
 	      </tr>
 	    </tbody>
 	  </table>
 	
 	  <div class="text-end">
-	    <a th:href="@{/reviewboard/reviewlist}" class="btn btn-sm btn-olive">
-	      자세히 알아보기
+	    <a th:href="@{/board/list}" class="btn btn-sm btn-olive">
+	      질환명 더보기
 	    </a>
 	  </div>
         </section>
