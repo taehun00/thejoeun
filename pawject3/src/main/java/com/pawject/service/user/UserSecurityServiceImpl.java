@@ -82,6 +82,7 @@ public class UserSecurityServiceImpl implements UserSecurityService {
         // 6. 회원가입 실행
         int result = userDao.join(dto);
         log.debug("회원가입 DB insert 결과 result={}", result);
+        log.debug("### USERS INSERT OK");
 
         // 7. 권한 부여
         if (result > 0) {
@@ -92,11 +93,14 @@ public class UserSecurityServiceImpl implements UserSecurityService {
 
             userDao.joinRole(auth);
             log.debug("권한 부여 완료 email={}, userId={}", dto.getEmail(), dto.getUserId());
+            log.debug("### ROLE INSERT OK");
+
         }
 
 
         // 8. 최종 반환
         log.debug("회원가입 처리 완료 email={}, provider={}", dto.getEmail(), dto.getProvider());
+        log.debug("### JOIN END");
         return result;
     }
 
