@@ -68,7 +68,7 @@
 	</section>
 
         <section class="part">
-            <h3>운동 스마트게시판</h3>
+            <h3>운동 스마트</h3>
             <p>운동 방법과 활동량 관리 팁을 확인하세요.</p>
                    
 		  <table class="table table-sm table-hover">
@@ -82,7 +82,7 @@
 		    <tbody>
 		      <tr th:each="s, stat : ${smartlist}">
 		        <th:block th:if="${stat.index < 5}">
-		          <td th:text="${s.exectype}"></td>
+		          <td th:text="${s.postid}"></td>
 		          <td th:text="${s.etitle}"></td>
 		          <td th:text="${s.econtent}"></td>
 		        </th:block>
@@ -91,8 +91,8 @@
 		  </table>
 	
 		  <div class="text-end">
-		    <a th:href="@{/smart/smartlist}" class="btn btn-sm btn-olive">
-		       운동스마트게시판 더보기
+		    <a th:href="@{/info/infolist}" class="btn btn-sm btn-olive">
+		       운동정보 더보기
 		    </a>
 		  </div>
         </section>
@@ -125,6 +125,7 @@
 		    </a>
 		  </div>
         </section>
+
     </main>
 
 	
