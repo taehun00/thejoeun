@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,10 +26,17 @@ public class FAQController {
 	
 	//리스트
 	@GetMapping("/faqlist")
-	public String list(Model model) {
-			model.addAttribute("list", service.selectFAQAll());
+	public String list(Model model, Authentication authentication) {
+		
+	    if (authentication != null && authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"))) {
+	    	model.addAttribute("list", service.selectFAQAll());
+	    } else {
+	        model.addAttribute("list", service.selectFAQActive());
+	    }
+
 		return "faqBoard/faqlist";
 	}
+
 	
 	// 글쓰기
 	@GetMapping("/faqwrite") public String write_get(Model model) {  
