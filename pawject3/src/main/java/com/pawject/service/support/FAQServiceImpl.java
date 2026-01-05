@@ -36,4 +36,9 @@ public class FAQServiceImpl implements FAQService {
 		return dao.updateFAQ(dto);
 	}
 
+	@Override
+	public List<FAQDto> selectFAQActive() {
+		return dao.selectFAQActive();
+	}
+
 }
