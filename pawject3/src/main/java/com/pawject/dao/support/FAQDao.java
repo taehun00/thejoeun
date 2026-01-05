@@ -22,4 +22,7 @@ public interface FAQDao {
 	
 	//<update id="activeFAQ" parameterType="FAQDto">
 	public int activeFAQ(FAQDto dto);
+
+	//<select resultMap="FAQMap" id="selectFAQActive">
+	public List<FAQDto> selectFAQActive();
 }
