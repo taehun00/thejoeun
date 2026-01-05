@@ -44,6 +44,8 @@ public class SecurityConfig {
 			.formLogin( form -> form
 					.loginPage("/users/login") 					// 로그인 폼
 					.loginProcessingUrl("/users/loginProc")		// 로그인 경로
+					.usernameParameter("email")                
+				    .passwordParameter("password")              
 					.successHandler(customLoginSuccessHandler) 	// 로그인성공시 경로
 					.failureUrl("/users/fail")					// 로그인실패시 경로
 					.permitAll()

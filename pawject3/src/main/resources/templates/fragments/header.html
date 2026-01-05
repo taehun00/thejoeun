@@ -24,60 +24,64 @@
 
   <div class="menu-right">
 
-    <!-- 비로그인 -->
-    <sec:authorize access="isAnonymous()">
+    <!-- 공통 메뉴: 로그인 여부와 상관없이 항상 보여줌 -->
+    <div>
       <a th:href="@{/petfoodsearcher/searchpetfood}">사료찾기</a>
       <a th:href="@{/reviewboard/reviewlist}">사료리뷰</a>
       <a th:href="@{/smart/smartlist}">운동 스마트</a>
       <a th:href="@{/board/list}">질환 리스트</a>
       <a th:href="@{/faqBoard/faqlist}">고객센터</a>
+    </div>
+
+    <!-- 비로그인 -->
+    <div sec:authorize="isAnonymous()">
       <a th:href="@{/users/login}">LOGIN</a>
       <a th:href="@{/users/join}">JOIN</a>
       <a class="btn-create" th:href="@{/api/pet/character}">🐶 캐릭터 생성</a>
-    </sec:authorize>
+    </div>
 
-    <!-- 로그인 -->
-    <sec:authorize access="isAuthenticated()">
-
-      <!-- 사용자 -->
+    <!-- 로그인 사용자 -->
+    <div sec:authorize="isAuthenticated() and !hasRole('ADMIN')">
       <div class="dropdown">
         <button class="dropdown-toggle">☰</button>
         <div class="dropdown-menu">
           <a th:href="@{/users/mypage}">마이페이지</a>
           <a class="nav-link" th:href="@{/announcements}">알림받기</a>
           <form th:action="@{/users/logout}" method="post">
-            <input type="hidden" th:name="${_csrf.parameterName}"
-                   th:value="${_csrf.token}"/>
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
             <button type="submit">로그아웃</button>
           </form>
         </div>
       </div>
-    </sec:authorize>
+    </div>
 
     <!-- 관리자 -->
-    <sec:authorize access="hasRole('ADMIN')">
+    <div sec:authorize="hasRole('ADMIN')">
       <div class="dropdown admin">
+     	 <a href="#" th:onclick="'document.getElementById(\'logoutForm\').submit(); return false;'">로그아웃</a>
+
+		<form id="logoutForm" th:action="@{/users/logout}" method="post" style="display:none;">
+		    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+		</form>
         <button class="dropdown-toggle">ADMIN</button>
         <div class="dropdown-menu">
           <a th:href="@{/admin/userList}">USER 관리</a>
           <a th:href="@{/pet/listPetPage}">PET 관리</a>
+          <a th:href="@{/admin/announcements}">알림 사항</a>
           <a th:href="@{/foodboard/foodlist.fn}">사료 관리</a>
           <a th:href="@{/info/infoList}">운동 정보 관리</a>
           <a th:href="@{/board/list}">질환 리스트 관리</a>
         </div>
       </div>
-    </sec:authorize>
-
+    </div>
 
   </div>
 </nav>
 
 </th:block>
 
-<!-- Bootstrap JS (CDN 또는 로컬) -->
+<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-
 
 </body>
 </html>

@@ -55,6 +55,9 @@ public interface UserDao {
 
     // 정보수정 (관리자) 닉네임만 수정
     int updateNickname(UserDto dto);
+    
+    // 관리자가 사용자 데이터 삭제
+    int deleteUserByEmail(String email);
 
     // 사용자 id로 비밀번호 조회
     String getPasswordByUserId(int userId);

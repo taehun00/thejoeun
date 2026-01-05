@@ -153,6 +153,13 @@
         SELECT USERID, EMAIL, PASSWORD, CREATEDAT, UFILE, MOBILE, NICKNAME, PROVIDER, PROVIDERID
         FROM users WHERE EMAIL = #{email}
     </select>
+    
+    
+    <delete id="deleteUserByEmail" parameterType="string">
+	    DELETE FROM users
+	    WHERE email = #{email}
+	</delete>
+    
 
     <!-- 전체 유저 조회 (관리자) + 페이징 -->
     <select id="listUsers" resultMap="userMap" parameterType="UserDto">

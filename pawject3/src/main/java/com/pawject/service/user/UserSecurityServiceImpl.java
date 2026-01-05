@@ -166,6 +166,14 @@ public class UserSecurityServiceImpl implements UserSecurityService {
     public int deleteRolesByUserId(AuthDto dto) {
         return userDao.deleteRolesByUserId(dto.getUserId());
     }
+    
+    /* 관리자가 유저 데이터 삭제 */
+    @Transactional
+    public int deleteUser(String email) {
+    	int userId = userDao.getUserIdByEmail(email);
+        userDao.deleteRolesByUserId(userId); 
+        return userDao.deleteUserByEmail(email);
+    }
 
 
     /* 로그인 권한 조회 */
@@ -228,7 +236,10 @@ public class UserSecurityServiceImpl implements UserSecurityService {
 	    return userDao.searchUsers(params);
 	}
 
-	
+    @Override
+	public int updateNickname(UserDto dto) {
+		return userDao.updateNickname(dto);
+	}
 	
 	@Override
 	public UserDto myPage(String email) {

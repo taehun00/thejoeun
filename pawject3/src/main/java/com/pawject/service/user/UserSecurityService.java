@@ -20,7 +20,10 @@ public interface UserSecurityService {
 
     /* 회원탈퇴 */
     int delete(UserDto dto, boolean requirePasswordCheck);
-
+    
+    /* 관리자가 사용자 회원 탈퇴*/
+    int deleteUser(String email);
+    
     /* 권한 추가/삭제 */
     int joinAuth(AuthDto dto);
     int deleteRolesByUserId(AuthDto dto);
@@ -60,4 +63,7 @@ public interface UserSecurityService {
     
     // DB에서 암호화된 비밀번호 조회
     String getEncodedPassword(int userId);
+    
+    // 관리자가 회원 정보 수정( 닉네임만 )
+    public int updateNickname(UserDto dto);
 }

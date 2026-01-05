@@ -139,8 +139,10 @@
     </dependency>
       <!-- openai 자동생성 글쓰기 -->
       <!-- openai 자동생성 글쓰기 -->
-      
-      
+<dependency>
+    <groupId>org.thymeleaf.extras</groupId>
+    <artifactId>thymeleaf-extras-springsecurity5</artifactId>
+</dependency>
       
 	</dependencies>
 

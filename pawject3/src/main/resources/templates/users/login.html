@@ -20,10 +20,9 @@
     <div sec:authorize="isAnonymous()">
         <form th:action="@{/users/loginProc}"  method="post" class="needs-validation" novalidate>
             <div class="mb-3">
-                <label for="username" class="form-label">이메일</label>
-                <input type="text" id="username" name="username" class="form-control" required>
-            </div>
-
+			    <label for="email" class="form-label">이메일</label>
+			    <input type="text" id="email" name="email" class="form-control" required>
+			</div>
             <div class="mb-3">
                 <label for="password" class="form-label">비밀번호</label>
                 <input type="password" id="password" name="password" class="form-control" required>
