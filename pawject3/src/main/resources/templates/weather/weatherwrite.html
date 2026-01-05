@@ -12,7 +12,6 @@
 <body>
 
 	<div layout:fragment="content">
-
 		<!-- <div sec:authorize="isAuthenticated() and hasRole('ROLE_ADMIN')"></div> -->
 			<h3 class="card-header">날씨정보입력란</h3>
 			<form th:action="@{/weather/weatherwrite}" method="post" enctype="multipart/form-data">
