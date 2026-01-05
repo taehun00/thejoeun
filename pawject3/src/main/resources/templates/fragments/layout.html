@@ -66,17 +66,26 @@
 <script th:inline="javascript">
 const socket = new SockJS('/ws');
 const stompClient = Stomp.over(socket);
+let passwordChangeHandled = false;
 
 stompClient.connect({}, () => {
   console.log("✅ STOMP 연결 성공");
 
   // 개인 알림 구독
   stompClient.subscribe('/user/queue/notifications', (msg) => {
-	console.log("📨 개인 알림 수신:", msg.body);
-    showToast("🎉 " + msg.body);
-    
-    location.href = '/users/login?expired';
-  });
+        console.log("📨 개인 알림 수신:", msg.body);
+        showToast("🎉 " + msg.body);
+
+        // 1️. 탈퇴 후 메시지 무시
+        if (passwordChangeHandled) return;
+
+        // 2️. 비밀번호 변경 알림일 경우만 처리
+        if (msg.body.includes("비밀번호가 변경")) {
+            passwordChangeHandled = true;
+            // 로그아웃 처리
+            location.href = '/users/login?expired';
+        }
+    });
   
   //공지 알림
   stompClient.subscribe('/topic/announcement', (msg) => {
