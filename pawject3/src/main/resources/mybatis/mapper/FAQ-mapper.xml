@@ -18,7 +18,11 @@
   <select resultMap="FAQMap" id="selectFAQAll">
   	SELECT * FROM FAQ ORDER BY FAQID
   </select>
-  
+
+  <select resultMap="FAQMap" id="selectFAQActive">
+  	SELECT * FROM FAQ WHERE ISACTIVE = 1 ORDER BY FAQID 
+  </select>
+    
   <!-- 특정 답변 조회 -->	
   <select resultMap="FAQMap" id="selectFAQ" parameterType="int">
 	SELECT * FROM FAQ WHERE FAQID=#{value}
@@ -33,7 +37,7 @@
     <!-- 수정 -->
   <update id="updateFAQ" parameterType="FAQDto">
   	UPDATE FAQ SET category=#{category}, question=#{question}, 
-  	answer=#{answer}, keywords=#{keywords}, ISACTIVE=#{isactive}, UPDATEDAT=SYSDATE
+  	answer=#{answer}, keywords=#{keywords},  UPDATEDAT=SYSDATE
   	WHERE FAQID=#{faqid}
   </update>
   

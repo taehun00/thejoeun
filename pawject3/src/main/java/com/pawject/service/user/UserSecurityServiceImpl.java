@@ -82,6 +82,7 @@ public class UserSecurityServiceImpl implements UserSecurityService {
         // 6. 회원가입 실행
         int result = userDao.join(dto);
         log.debug("회원가입 DB insert 결과 result={}", result);
+        log.debug("### USERS INSERT OK");
 
         // 7. 권한 부여
         if (result > 0) {
@@ -92,11 +93,14 @@ public class UserSecurityServiceImpl implements UserSecurityService {
 
             userDao.joinRole(auth);
             log.debug("권한 부여 완료 email={}, userId={}", dto.getEmail(), dto.getUserId());
+            log.debug("### ROLE INSERT OK");
+
         }
 
 
         // 8. 최종 반환
         log.debug("회원가입 처리 완료 email={}, provider={}", dto.getEmail(), dto.getProvider());
+        log.debug("### JOIN END");
         return result;
     }
 
@@ -162,6 +166,14 @@ public class UserSecurityServiceImpl implements UserSecurityService {
     public int deleteRolesByUserId(AuthDto dto) {
         return userDao.deleteRolesByUserId(dto.getUserId());
     }
+    
+    /* 관리자가 유저 데이터 삭제 */
+    @Transactional
+    public int deleteUser(String email) {
+    	int userId = userDao.getUserIdByEmail(email);
+        userDao.deleteRolesByUserId(userId); 
+        return userDao.deleteUserByEmail(email);
+    }
 
 
     /* 로그인 권한 조회 */
@@ -224,7 +236,10 @@ public class UserSecurityServiceImpl implements UserSecurityService {
 	    return userDao.searchUsers(params);
 	}
 
-	
+    @Override
+	public int updateNickname(UserDto dto) {
+		return userDao.updateNickname(dto);
+	}
 	
 	@Override
 	public UserDto myPage(String email) {

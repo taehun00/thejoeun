@@ -68,13 +68,13 @@
 	</section>
 
         <section class="part">
-            <h3>운동 스마트</h3>
+            <h3>운동 스마트게시판</h3>
             <p>운동 방법과 활동량 관리 팁을 확인하세요.</p>
                    
 		  <table class="table table-sm table-hover">
 		    <thead>
 		      <tr>
-		        <th>운동유형</th>
+		        <th>게시글번호</th>
 		        <th>제목</th>
 		        <th>내용</th>
 		      </tr>
@@ -82,7 +82,7 @@
 		    <tbody>
 		      <tr th:each="s, stat : ${smartlist}">
 		        <th:block th:if="${stat.index < 5}">
-		          <td th:text="${s.exectype}"></td>
+		          <td th:text="${s.postid}"></td>
 		          <td th:text="${s.etitle}"></td>
 		          <td th:text="${s.econtent}"></td>
 		        </th:block>
@@ -91,8 +91,8 @@
 		  </table>
 	
 		  <div class="text-end">
-		    <a th:href="@{/info/infolist}" class="btn btn-sm btn-olive">
-		       운동정보 더보기
+		    <a th:href="@{/smart/smartlist}" class="btn btn-sm btn-olive">
+		       운동스마트게시판 더보기
 		    </a>
 		  </div>
         </section>
@@ -100,36 +100,32 @@
         <section class="part">
             <h3>질환 정보</h3>
             <p>질환 관련 정보를 확인할 수 있습니다.</p>
-	  <table class="table table-sm table-hover">
-	    <thead>
-	      <tr>
-	        <th>질환명</th>
-	        <th>질환설명</th>
-	        <th>반려동물 종</th>
-	      </tr>
-	    </thead>
-	    <tbody>
-	      <!-- <tr th:each="dto, stat : ${list}">
-	        <th:block th:if="${stat.index < 5}"> -->
-	        <tr th:each="dto , i : ${list} ">
-					<td
-						th:text="${paging.listtotal - ((paging.current-1)* paging.onepagelist)   -  i.index}"></td>
-					<!-- <td th:text="${list.size()-i.index}"></td> -->
-					<td><a th:href="@{/board/detail(disno=${dto.disno})}"
-						th:text="${dto.disname}"></a></td>
-	          <td th:text="${dto.disex}"></td>
-	          <td th:text="${dto.kindpet}"></td>	          
-	        </th:block>
-	      </tr>
-	    </tbody>
-	  </table>
+		  <table class="table table-sm table-hover">
+		    <thead>
+		      <tr>
+		        <th>질환명</th>
+		        <th>질환설명</th>
+		        <th>반려동물 종</th>
+		      </tr>
+		    </thead>
+		    <tbody>
+		      <tr th:each="d, stat : ${dislist}">
+		        <th:block th:if="${stat.index < 5}">
+		          <td th:text="${d.disname}"></td>
+		          <td th:text="${d.disex}"></td>
+		          <td th:text="${d.kindpet}"></td>
+		        </th:block>
+		      </tr>
+		    </tbody>
+		  </table>
 	
-	  <div class="text-end">
-	    <a th:href="@{/board/list}" class="btn btn-sm btn-olive">
-	      질환명 더보기
-	    </a>
-	  </div>
+		  <div class="text-end">
+		    <a th:href="@{/board/list}" class="btn btn-sm btn-olive">
+		      질환 정보 더보기
+		    </a>
+		  </div>
         </section>
+
     </main>
 
 	

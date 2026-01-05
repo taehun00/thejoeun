@@ -10,4 +10,6 @@ public interface FAQService {
 	public int insertFAQ(FAQDto dto);
 	public int updateFAQ(FAQDto dto);
 	public int activeFAQ(FAQDto dto);
+
+	public List<FAQDto> selectFAQActive();
 }

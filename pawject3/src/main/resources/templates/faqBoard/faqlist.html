@@ -34,8 +34,7 @@ var csrfToken = /*[[${_csrf.token}]]*/ '';
                 <th scope="col">질문</th>
                 <th scope="col">등록일</th>
                 <th scope="col">수정일</th>
-                <th scope="col"
-                	sec:authorize="hasRole('ROLE_ADMIN')">사용여부</th>
+				<th scope="col" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">사용여부</th>
             </tr>
         </thead>
 

@@ -1,5 +1,24 @@
 @charset "UTF-8";
+/* 타이틀 */
+.foodsearcher-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin: 40px 0 30px;
+    color: #222;
+    position: relative;
+}
 
+.foodsearcher-title::after {
+    content: "";
+    display: block;
+    width: 140px;          /* ← 핵심 */
+    height: 4px;
+    background-color: #5c7cfa;
+    margin: 16px auto 0;
+    border-radius: 2px;
+}
 
 /* 선택지 창 조절 */
 .pettypeidfilter,

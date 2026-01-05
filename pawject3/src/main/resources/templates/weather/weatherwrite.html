@@ -1,54 +1,59 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-	  layout:decorate="~{fragments/layout}">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	layout:decorate="~{fragments/layout}">
 <!-- 	#1. layout 렌더링	 -->
 <head lang="ko">
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 <body>
-<div sec:authorize="isAuthenticated() and hasRole('ROLE_ADMIN')">
+
 	<div layout:fragment="content">
-	  <h3 class="card-header"> 날씨정보입력란</h3>
-      <!-- POSTID, ETITLE , ECONTENT  -->
-      <!-- <div sec:authorize="isAuthenticated() and hasRole('ROLE_ADMIN')"></div> -->
-	  <form th:action="@{/weather/weatherwrite}"  method="post"  enctype="multipart/form-data" > 
-	      <!-- <input type="hidden"   name="postId"  value="1"> --> 	
-      	 <div class="mb-3 mt-3">
-		    <label for="wid" class="form-label">날씨정보아이디:</label>
-		    <input type="text" class="form-control" 
-		    		id="wid"  name="wid" readonly  th:value="${wdto.wid}"  ><!-- 시큐리티 걸고 th:value="${wdto.wid}"-->
-		  </div>
-		  <div class="mb-3 mt-3">
-		    <label for="weather" class="form-label">날씨:</label>
-		    <input type="text" class="form-control" placeholder="날씨를 입력해주세요." id="weather"  name="weather">
-		  </div>
-		  <div class="mb-3">
-		    <label for="maxtemp" class="form-label">최고기온:</label>
-		    <input type="text" class="form-control"  placeholder="기온을 입력해주세요." id="maxtemp" name="maxtemp"> 
-		  </div>
-		  	  <div class="mb-3">
-			    <label for="mintemp" class="form-label">최저기온:</label>
-			    <input type="text" class="form-control"  placeholder="기온을 입력해주세요." id="mintemp" name="mintemp">
-		  </div>
-		  <div class="mb-3 mt-3">
-		    <label for="moistpercent" class="form-label">습도:</label>
-		    <input type="text" class="form-control" placeholder="습도를 입력해주세요." id="moistpercent"  name="moistpercent">
-		  </div>
-		 <div class="mb-3 mt-3">
-		    <label for="rainpercent" class="form-label">강수량:</label>
-		    <input type="text" class="form-control" id="rainpercent" placeholder="강수량을 입력해주세요." name="rainpercent">
-		  </div>
-		  
-		  <div class="mb-3  text-end">
-		  	<button type="submit" class="btn btn-terra">글쓰기</button>  
-		  	<a th:href="@{/weather/weatherlist}"  class="btn btn-olive">목록보기</a>
-		  </div>
-     </form> 
-	</div> 
-</div>	
+
+		<!-- <div sec:authorize="isAuthenticated() and hasRole('ROLE_ADMIN')"></div> -->
+			<h3 class="card-header">날씨정보입력란</h3>
+			<form th:action="@{/weather/weatherwrite}" method="post" enctype="multipart/form-data">
+				<!-- <input type="hidden"   name="postId"  value="1"> -->
+				<!-- <div class="mb-3 mt-3">
+					<label for="wid" class="form-label">날씨정보아이디:</label> <input
+						type="text" class="form-control" id="wid" name="wid" readonly
+						th:value="${wdto.wid}"> 시큐리티 걸고 th:value="${wdto.wid}"
+				</div> -->
+				<div class="mb-3 mt-3">
+					<label for="weather" class="form-label">날씨:</label> <input
+						type="text" class="form-control" placeholder="날씨를 입력해주세요."
+						id="weather" name="weather">
+				</div>
+				<div class="mb-3">
+					<label for="maxtemp" class="form-label">최고기온:</label> <input
+						type="text" class="form-control" placeholder="기온을 입력해주세요."
+						id="maxtemp" name="maxtemp">
+				</div>
+				<div class="mb-3">
+					<label for="mintemp" class="form-label">최저기온:</label> <input
+						type="text" class="form-control" placeholder="기온을 입력해주세요."
+						id="mintemp" name="mintemp">
+				</div>
+				<div class="mb-3 mt-3">
+					<label for="moistpercent" class="form-label">습도:</label> <input
+						type="text" class="form-control" placeholder="습도를 입력해주세요."
+						id="moistpercent" name="moistpercent">
+				</div>
+				<div class="mb-3 mt-3">
+					<label for="rainpercent" class="form-label">강수량:</label> <input
+						type="text" class="form-control" id="rainpercent"
+						placeholder="강수량을 입력해주세요." name="rainpercent">
+				</div>
+
+				<div class="mb-3  text-end">
+					<button type="submit" class="btn btn-terra">글쓰기</button>
+					<a th:href="@{/weather/weatherlist}" class="btn btn-olive">목록보기</a>
+				</div>
+			</form>
+	</div>
 	<!--    http://localhost:8484/pawject3/smart/smartwrite -->
 </body>
 </html>

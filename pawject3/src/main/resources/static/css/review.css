@@ -4,6 +4,35 @@
     width: 100%;
 }
 
+.review-title {
+    text-align: center;
+}
+
+/* 작성, 수정 페이지 */
+.reviewwrite-title {
+    text-align: center;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+    margin: 40px 0 35px;
+    color: #222;
+    position: relative;
+}
+
+.page-title::after {
+    content: "";
+    display: block;
+    width: 120px;        /* 메인보다 살짝 겸손 */
+    height: 4px;
+    background-color: #495057; /* 차분한 다크 그레이 */
+    margin: 16px auto 0;
+    border-radius: 2px;
+}
+
+
+
+
+
 /* 셀 공통 */
 .review-table th,
 .review-table td {

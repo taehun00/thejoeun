@@ -9,11 +9,10 @@
 <body>
 	<div layout:fragment="content">
 	
-		<h3 class="card-header">FAQ 수정</h3>
+		<h3 class="reviewwrite-title">FAQ 수정</h3>
 		<form th:action="@{/faqBoard/faqedit}" 
 			    method="post"  >
 	    <input type="hidden"   name="faqid"  th:value="${dto.faqid}"> 
-			<caption class="visually-hidden">FAQ 수정</caption>
 			
 			<div class="row align-items-end">
 			    <div class="col-sm-6">
@@ -48,8 +47,8 @@
 
 			
 			<div class="mb-3  text-end">
-				<button type="submit" class="btn btn-primary">수정</button>
-				<a th:href="@{/faqBoard/faqlist}"  class="btn btn-primary">목록보기</a>
+				<button type="submit" class="btn btn-slateBlue">수정</button>
+				<a th:href="@{/faqBoard/faqlist}"  class="btn btn-mint">목록보기</a>
 			</div>
 			
 		</form> 

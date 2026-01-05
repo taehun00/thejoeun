@@ -7,17 +7,17 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>공지사항 작성</title>
+    <title>알림메세지 작성</title>
 </head>
 <body>
 <div class="container my-5" layout:fragment="content">
-    <h2>공지사항 작성</h2>
+    <h2>알림메세지 작성</h2>
     <form th:action="@{/admin/announcements}" method="post">
         <div class="mb-3">
-            <label for="message">공지 내용</label>
+            <label for="message">알림메세지 내용</label>
             <textarea id="message" name="message" class="form-control" rows="5"></textarea>
         </div>
-        <button type="submit" class="btn btn-primary">공지 등록</button>
+        <button type="submit" class="btn btn-primary">알림메세지 등록</button>
 		<a href="/admin/announcements"
            class="btn btn-secondary ms-2">
             목록으로
