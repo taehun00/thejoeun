@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
@@ -11,7 +12,6 @@
 <body>
 	<div layout:fragment="content">
 		<!-- <div sec:authorize="isAuthenticated()"></div> -->
-
 			<!--  알림메시지  -->
 			<div th:if="${success}"
 				class="alert alert-info alert-dismissible fade show" role="alert">
@@ -27,8 +27,7 @@
 				<thead>
 					<tr>
 						<th scope="col">운동아이디</th>
-						<th scope="col">운동유형</th>
-						<!-- 글상세보기 링크 -->
+						<th scope="col">운동유형</th> <!-- 글상세보기 링크 -->
 						<th scope="col">권장운동시간</th>
 						<th scope="col">운동강도</th>
 					</tr>
@@ -72,11 +71,11 @@
 				<a th:href="@{/smart/smartlist}" class=" text-white btn btn-mustard">운동스마트게시판</a>
 			</p>
 
-			<div sec:authorize="isAuthenticated() and hasRole('ROLE_ADMIN')">
+			<!-- <div sec:authorize="isAuthenticated() and hasRole('ROLE_ADMIN')"></div> -->
 				<p class="text-end">
 					<a th:href="@{/info/infowrite}" class="btn btn-mint">글쓰기</a>
 				</p>
-			</div>
+			
 			<p class="text-end alert alert-info">로그인을 하면 글쓰기가능합니다.</p>
 
 			<!-- 검색 part -->

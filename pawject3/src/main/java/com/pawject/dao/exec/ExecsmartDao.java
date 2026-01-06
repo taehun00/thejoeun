@@ -11,7 +11,7 @@ public interface ExecsmartDao {
 	public int insertsmart(  ExecsmartDto sdto);
 	public int updatesmart(  ExecsmartDto sdto);
 	public int updateHitsmart( int postid ); // 타입캐스팅: @RequestParam("postid")
-	public int deletesmart(   ExecsmartDto sdto);
+	public int deletesmart(  int postid  );
 	public List<ExecsmartDto> selectAllsmart();
 	public ExecsmartDto       selectsmart(int postid);
 	

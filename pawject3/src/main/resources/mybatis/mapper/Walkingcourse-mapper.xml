@@ -14,7 +14,7 @@
  
  
  <insert id="insertwalking" parameterType="WalkingcourseDto">
- 	insert into walkingcourse ( COURSEID,                  POSTID ,   LOCATION,    LAT,    LNG  ) 
+ 	insert into walkingcourse ( COURSEID,                  POSTID ,                     LOCATION,    LAT,    LNG  ) 
 	values                    ( walkingcourse_seq.nextval, #{postid}, #{location}, #{lat}, #{lng} )
  </insert>
  
@@ -28,7 +28,7 @@
  </update>
  
  <delete id="deletewalking" parameterType="WalkingcourseDto">
- 	delete from walkingcourse where COURSEID=#{courseid} and POSTID=#{postid}
+ 	delete from walkingcourse where COURSEID=#{courseid}
  </delete>
  
  <select resultMap="walkingcourseMap"  id="selectAllwalking" >
@@ -36,7 +36,7 @@
  </select>
  
  <select resultMap="walkingcourseMap"  id="selectwalking" parameterType="int">
- 	select * from walkingcourse order by COURSEID desc
+ 	select * from walkingcourse where COURSEID=#{courseid}
  </select>
 
 

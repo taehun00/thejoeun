@@ -6,7 +6,7 @@ import com.pawject.dto.exec.WalkingcourseDto;
 public interface WalkingcourseService {
 	public int insertwalking(  WalkingcourseDto wdto);
 	public int updatewalking(  WalkingcourseDto wdto);
-	public int deletewalking(  WalkingcourseDto wdto);
+	public int deletewalking(  int courseid);
 	public List<WalkingcourseDto> selectAllwalking();
 	public WalkingcourseDto       selectwalking(int courseid);
 	public WalkingcourseDto		   selectwalkingUpdateForm(int courseid);

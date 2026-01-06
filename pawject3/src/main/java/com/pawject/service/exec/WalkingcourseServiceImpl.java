@@ -15,7 +15,7 @@ public class WalkingcourseServiceImpl implements WalkingcourseService {
 	
 	@Override public int insertwalking(WalkingcourseDto wdto) { return cdao.insertwalking(wdto); }
 	@Override public int updatewalking(WalkingcourseDto wdto) { return cdao.updatewalking(wdto); }
-	@Override public int deletewalking(WalkingcourseDto wdto) { return cdao.deletewalking(wdto); }
+	@Override public int deletewalking(int courseid) { return cdao.deletewalking(courseid); }
 	@Override public List<WalkingcourseDto> selectAllwalking() { return cdao.selectAllwalking(); }
 	@Override public WalkingcourseDto selectwalking(int courseid) { return cdao.selectwalking(courseid); }
 	@Override public WalkingcourseDto selectwalkingUpdateForm(int courseid) { return cdao.selectwalking(courseid); }

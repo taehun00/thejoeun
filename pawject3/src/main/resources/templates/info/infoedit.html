@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
@@ -12,7 +13,7 @@
 
 	<div layout:fragment="content">
 
-		<div sec:authorize="isAuthenticated() and hasRole('ROLE_ADMIN')">
+		<!-- <div sec:authorize="isAuthenticated() and hasRole('ROLE_ADMIN')"></div> -->
 			<h3 class="card-header">운동정보게시판 글수정</h3>
 			<form th:action="@{/info/infoedit}" method="post"
 				enctype="multipart/form-data">
@@ -67,7 +68,7 @@
 					<a href="javascript:history.go(-1)" class="btn btn-navy">BACK</a>
 				</div>
 			</form>
-		</div>
+		
 	</div>
 	<!--    http://localhost:8484/pawject3/smart/smartedit -->
 </body>

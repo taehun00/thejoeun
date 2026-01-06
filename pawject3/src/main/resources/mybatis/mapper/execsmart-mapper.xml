@@ -43,30 +43,35 @@
 	 where  POSTID=#{postid} 
 </update>
 
- <delete id="deletesmart" parameterType="ExecsmartDto">
- 	delete from execsmart where POSTID=#{postid} and EXECID=#{execid}
+ <delete id="deletesmart" parameterType="int">
+ 	delete from execsmart where POSTID=#{postid}
  </delete>
  
  <select resultMap="execsmartMap"  id="selectAllsmart" >
 	select * from execsmart order by POSTID desc
  </select>
  
- <select resultMap="execsmartMap"  id="selectsmart" parameterType="int">
-	select e.postid,
-	       e.etitle,
-	       e.econtent,
-	       w.postid
-	from execsmart e
-	inner join walkingcourse w on e.courseid = w.courseid  and e.postid   = w.postid
-	where e.POSTID=#{postid}
- </select>
-  
-  
+<select resultMap="execsmartMap" id="selectsmart" parameterType="int">
+     select 
+    		e.postid,
+            e.execid,
+            e.userid,
+            e.wid,
+            e.ehit,
+    		e.etitle, 
+    		e.econtent, 
+            e.eimg,
+    		w.courseid
+    from execsmart e
+    inner join walkingcourse w on e.courseid = w.courseid
+    where e.POSTID=#{postid}
+</select>
+ 
   <!-- 페이징(1) - select10 -->
   <select id="selectsmart10" parameterType="java.util.HashMap" resultMap="execsmartMap">
 	  select *
 		from (
-		    select row_number() over (order by CREATEDAT desc) as rnum,
+		    select row_number() over (order by POSTID desc) as rnum,
 		           POSTID, EXECID, USERID, WID, COURSEID, ETITLE, ECONTENT, EIMG, EHIT,
 		           CREATEDAT, UPDATEDAT
 		    from execsmart
@@ -82,7 +87,7 @@
   <select id="selectsmart3" parameterType="java.util.HashMap" resultMap="execsmartMap">
   	select *
 		from (
-		    select row_number() over (order by CREATEDAT desc) as rnum,
+		    select row_number() over (order by POSTID desc) as rnum,
 		           POSTID, EXECID, USERID, WID, COURSEID, ETITLE, ECONTENT, EIMG, EHIT,
 		           CREATEDAT, UPDATEDAT
 		    from execsmart

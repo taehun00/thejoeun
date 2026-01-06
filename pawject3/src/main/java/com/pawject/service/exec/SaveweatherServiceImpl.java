@@ -17,7 +17,7 @@ public class SaveweatherServiceImpl implements SaveweatherService {
 	
 	@Override public int insertweather(SaveweatherDto wdto) { return wdao.insertweather(wdto); }
 	@Override public int updateweather(SaveweatherDto wdto) { return wdao.updateweather(wdto); }
-	@Override public int deleteweather(SaveweatherDto wdto) { return wdao.deleteweather(wdto); }
+	@Override public int deleteweather(int wid) { return wdao.deleteweather(wid); }
 	@Override public List<SaveweatherDto> selectAllweather() { return wdao.selectAllweather(); }
 	@Override public SaveweatherDto selectweather(int wid) { return wdao.selectweather(wid); }
 	@Override public SaveweatherDto selectweatherUpdateForm(int wid) { return wdao.selectweather(wid); }

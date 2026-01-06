@@ -1,5 +1,6 @@
 package com.pawject.controller;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,7 +17,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.pawject.dto.exec.ExecsmartDto;
 import com.pawject.dto.exec.SaveweatherDto;
+import com.pawject.dto.user.UserAuthDto;
+import com.pawject.dto.user.UserDto;
 import com.pawject.service.exec.SaveweatherService;
+import com.pawject.service.review.ReviewService;
 import com.pawject.util.UtilPaging;
 
 @Controller
@@ -24,9 +28,11 @@ import com.pawject.util.UtilPaging;
 public class SaveweatherController {
 	@Autowired
 	private SaveweatherService    wservice;
-	
+
+	@Autowired
+	private ReviewService rservice;
 	//    /weather/weatherlist
-	@PreAuthorize("isAuthenticated()")
+	//@PreAuthorize("isAuthenticated()")
 	@GetMapping("/weatherlist")
 	public String weatherlist(Model model, @RequestParam(value="pageNo", defaultValue="1") int pageNo) {
 		model.addAttribute("paging", new UtilPaging( wservice.selectweatherTotalCnt(), pageNo));
@@ -34,7 +40,7 @@ public class SaveweatherController {
 		return "weather/weatherlist"; //화면
 	}
 	//Search
-	@PreAuthorize("isAuthenticated()")
+	//@PreAuthorize("isAuthenticated()")
 	@GetMapping("/search")
 	@ResponseBody
 	public Map<String, Object> search(
@@ -50,32 +56,38 @@ public class SaveweatherController {
 	}
 	
 	//	  /weather/weatherwrite(글쓰기 폼)
-	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
-	@GetMapping("/weatherwrite") public String write_get( Model model ) { 
-		model.addAttribute("SaveweatherDto", new SaveweatherDto());
+	//@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
+	@GetMapping("/weatherwrite") public String write_get(SaveweatherDto wdto, Model model ) { 
+		model.addAttribute("wdto", wdto);
 		return "weather/weatherwrite"; 
 	}
 
 	//	  /weather/weatherwrite(글쓰기기능)
-	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
+	//@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 	@PostMapping("/weatherwrite") public String write_post(
-			SaveweatherDto wdto, RedirectAttributes rttr) {
+			SaveweatherDto wdto, RedirectAttributes rttr, Principal principal) {
 		String result = "글쓰기에 실패했습니다.";
+	    UserDto param = new UserDto(principal.getName(), null);
+
+	    UserAuthDto auth = rservice.readAuthForReview(param);
+	    int userid = rservice.selectUserIdForReview(principal.getName());
+	    wdto.setWid(userid);
+
 		if(wservice.insertweather(wdto) > 0) { result="글쓰기에 성공했습니다~!"; }
 		rttr.addFlashAttribute("success", result);
 		return "redirect:/weather/weatherlist";
 	}
 
 	//    /weather/weatherdetail(상세보기)
-	@PreAuthorize("isAuthenticated()")
+	//@PreAuthorize("isAuthenticated()")
 	@GetMapping("/weatherdetail")
-	public String detail( @RequestParam(defaultValue = "0") int wid, Model model) { 
+	public String detail( /* @RequestParam(defaultValue = "0") */int wid, Model model) { 
 		model.addAttribute("wdto", wservice.selectweather(wid));
 	    return "weather/weatherdetail";
 	}
 
 	//    /weather/weatheredit  (수정폼)
-	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
+	//@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 	@GetMapping("/weatheredit")
 	public String edit_get(  int wid, Model model  ) {
 		model.addAttribute("wdto", wservice.selectweatherUpdateForm(wid));   
@@ -83,7 +95,7 @@ public class SaveweatherController {
 	}	
 
 	//    /weather/weatheredit  (수정기능)
-	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
+	//@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 	@PostMapping("/weatheredit") 
 	public String edit_post(
 			SaveweatherDto wdto, RedirectAttributes rttr) {
@@ -94,19 +106,19 @@ public class SaveweatherController {
 	} 	
 	
 	//    /weather/weatherdelete(삭제폼)
-	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
-	@GetMapping("/weatherdelete")
-	public String delete_get( Model model ) { 
-		model.addAttribute("SaveweatherDto", new SaveweatherDto());
-		return "weather/weatherdelete";  
-	}
+	//@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
+//	@GetMapping("/weatherdelete")
+//	public String delete_get( Model model ) { 
+//		model.addAttribute("SaveweatherDto", new SaveweatherDto());
+//		return "weather/weatherdelete";  
+//	}
 	
 	//    /weather/weatherdelete(삭제기능)
-	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
-	@PostMapping("/weatherdelete") 
-	public String delete_post( SaveweatherDto wdto, RedirectAttributes rttr) {
+	//@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
+	@RequestMapping("/weatherdelete") 
+	public String delete_post( @RequestParam int wid, RedirectAttributes rttr) {
 		String result ="글삭제에 실패했습니다";
-		if(wservice.deleteweather(wdto) > 0) { result="글삭제에 성공했습니다!";}
+		if(wservice.deleteweather(wid) > 0) { result="글삭제에 성공했습니다!";}
 		rttr.addFlashAttribute("success" , result);
 		return "redirect:/weather/weatherlist";
 	} 

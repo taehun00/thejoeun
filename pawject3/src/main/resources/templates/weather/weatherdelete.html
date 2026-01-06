@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
@@ -12,23 +11,21 @@
 </head>
 <body>
 
-
 	<div layout:fragment="content">
 		<!-- <div sec:authorize="isAuthenticated() and hasRole('ROLE_ADMIN')"></div> -->
 			<h3 class="card-header">날씨정보삭제</h3>
 			<form th:action="@{/weather/weatherdelete}" method="post">
-				
 				<input type="hidden" name="wid" th:value="${param.wid}">
-				<div class="my-3">
-					<label for="wid" class="form-label">날씨아이디:</label> <input
-						type="text" class="form-control" id="wid" name="weather"
-						 readonly th:value="${wdto.wid}"> 	<!-- ${wdto.wid} -->
-				</div>
-				<div class="my-3">
+				<!-- <div class="my-3">
+					<label for="wid" class="form-label">날씨정보:</label> <input
+						type="text" class="form-control" id="wid" name="weather" readonly
+						th:value="1"> ${wdto.wid}
+				</div> -->
+				<!-- <div class="my-3">
 					<label for="weather" class="form-label">날씨:</label> <input
 						type="text" class="form-control" id="weather" name="weather"
-						th:value="${wdto.weather}">
-				</div>
+						readonly th:value="1">
+				</div> -->
 
 				<!-- 구동안되면 삭제 -->
 				<!--  -->
@@ -46,6 +43,5 @@
 		
 	</div>
 	<!--    http://localhost:8484/boot001/board/list -->
-
 </body>
 </html>
