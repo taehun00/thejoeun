@@ -10,15 +10,15 @@ import lombok.ToString;
 @NoArgsConstructor
 
 public class ExecinfoDto {
-	private int    execid;			//EXECID
-	private String exectype;		//EXECTYPE
-	private String description;		//DESCRIPTION
-	private float  avgkcal30min;	//AVGKCAL30MIN
-	private int    exectargetmin;	//EXECTARGETMIN
-	private String suitablefor; 	//SUITABLEFOR
-	private String intensitylevel;	//INTENSITYLEVEL
-	private String createdAt;		//CREATEDAT
-	private String updatedAt;		//UPDATEDAT
+	private Integer execid;			//EXECID
+	private String  exectype;		//EXECTYPE
+	private String  description;	//DESCRIPTION
+	private float   avgkcal30min;	//AVGKCAL30MIN
+	private int     exectargetmin;	//EXECTARGETMIN
+	private String  suitablefor; 	//SUITABLEFOR
+	private String  intensitylevel;	//INTENSITYLEVEL
+	private String  createdAt;		//CREATEDAT
+	private String  updatedAt;		//UPDATEDAT
 }
 /*
 Name                                      Null?    Type

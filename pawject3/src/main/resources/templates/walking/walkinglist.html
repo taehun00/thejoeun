@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
@@ -75,18 +76,18 @@
 					</li>
 				</ul>
 			</nav>
-			<div sec:authorize="isAthenticated()">
+			<!-- <div sec:authorize="isAuthenticated()"></div> -->
 				<p class="text-end">
 					<a th:href="@{/smart/smartlist}"
 						class=" text-white btn btn-mustard">운동스마트게시판</a>
 				</p>
-			</div>
-			<div sec:authorize="isAthenticated()">
+			
+			<!-- <div sec:authorize="isAuthenticated()"></div> -->
 				<p class="text-end">
 					<a th:href="@{/execapi/walkingcourse}"
 						class=" text-white btn btn-primary">지도</a>
 				</p>
-			</div>
+			
 			<p class="text-end">
 				<a th:href="@{/walking/walkingwrite}" class="btn btn-mint">글쓰기</a>
 			</p>

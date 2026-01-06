@@ -12,7 +12,7 @@ import lombok.ToString;
 @NoArgsConstructor
 
 public class SaveweatherDto {
-	private int 	  wid;			 //WID
+	private Integer 	  wid;		 //WID
 	private String    weather;		 //WEATHER
 	private int       maxtemp;		 //MAXTEMP
 	private int       mintemp;		 //MINTEMP

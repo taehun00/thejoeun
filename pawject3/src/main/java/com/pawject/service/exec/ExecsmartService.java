@@ -8,7 +8,7 @@ import com.pawject.dto.exec.ExecsmartDto;
 public interface ExecsmartService {
 	public int insertsmart( MultipartFile file , ExecsmartDto sdto);
 	public int updatesmart( MultipartFile file , ExecsmartDto sdto);
-	public int deletesmart(   ExecsmartDto sdto);
+	public int deletesmart(  int postid );
 	public List<ExecsmartDto> selectAllsmart();
 	public ExecsmartDto       selectsmart(int postid);
 	public ExecsmartDto       selectsmartUpdateForm(int postid);  //수정하기폼

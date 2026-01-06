@@ -34,7 +34,7 @@ public class ExecsmartServiceImpl implements ExecsmartService {
 		return sdao.updatesmart(sdto); 
 	}
 	
-	@Override public int deletesmart(ExecsmartDto sdto) { return sdao.deletesmart(sdto); }
+	@Override public int deletesmart(int postid) { return sdao.deletesmart(postid); }
 	@Override public List<ExecsmartDto> selectAllsmart() { return sdao.selectAllsmart(); }
 	@Override public ExecsmartDto selectsmart(int postid) { sdao.updateHitsmart(postid); return sdao.selectsmart(postid); }
 	@Override public ExecsmartDto selectsmartUpdateForm(int postid) { return sdao.selectsmart(postid); }

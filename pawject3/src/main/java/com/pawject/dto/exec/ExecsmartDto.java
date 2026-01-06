@@ -12,17 +12,17 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ExecsmartDto { 
-	private int    postid;       //POSTID 
-	private int    execid;       //EXECID
-	private int    userid;       //USERID
-	private int    wid;          //WID
-	private int    courseid;     //COURSEID
-	private String etitle;       //ETITLE
-	private String econtent;     //ECONTENT
-	private String eimg;	     //EIMG
-	private int    ehit;	     //EHIT
-	private LocalDate createdAt; //CREATEDAT
-	private LocalDate updatedAt; //UPDATEDAT
+	private int     postid;       //POSTID 
+	private int     execid;       //EXECID
+	private Integer userid;       //USERID
+	private int     wid;          //WID
+	private int     courseid;     //COURSEID
+	private String  etitle;       //ETITLE
+	private String  econtent;     //ECONTENT
+	private String  eimg;	      //EIMG
+	private int     ehit;	      //EHIT
+	private LocalDate  createdAt; //CREATEDAT
+	private LocalDate  updatedAt; //UPDATEDAT
 }
 /*
  Name                                      Null?    Type

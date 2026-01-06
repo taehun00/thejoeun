@@ -15,7 +15,7 @@ public class ExecinfoServiceImpl implements ExecinfoService {
 	
 	@Override public int insertinfo(ExecinfoDto idto) { return idao.insertinfo(idto); }
 	@Override public int updateinfo(ExecinfoDto idto) { return idao.updateinfo(idto); }
-	@Override public int deleteinfo(ExecinfoDto idto) { return idao.deleteinfo(idto); }
+	@Override public int deleteinfo(int execid) { return idao.deleteinfo(execid); }
 	@Override public List<ExecinfoDto> selectAllinfo() {  return idao.selectAllinfo(); }
 	@Override public ExecinfoDto selectinfo(int execid) { return idao.selectinfo(execid); }
 	@Override public ExecinfoDto selectinfoUpdateForm(int execid) { return idao.selectinfo(execid); }

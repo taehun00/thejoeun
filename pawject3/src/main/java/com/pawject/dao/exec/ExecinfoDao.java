@@ -9,7 +9,7 @@ import com.pawject.dto.exec.ExecinfoDto;
 public interface ExecinfoDao {
 	public int insertinfo(  ExecinfoDto idto);
 	public int updateinfo(  ExecinfoDto idto);
-	public int deleteinfo(  ExecinfoDto idto);
+	public int deleteinfo(  int execid);
 	public List<ExecinfoDto> selectAllinfo();
 	public ExecinfoDto       selectinfo(int execid);
 	

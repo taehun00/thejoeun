@@ -11,7 +11,7 @@ import com.pawject.dto.exec.SaveweatherDto;
 public interface SaveweatherDao {
 	public int insertweather(  SaveweatherDto wdto);
 	public int updateweather(  SaveweatherDto wdto);
-	public int deleteweather(  SaveweatherDto wdto);
+	public int deleteweather(  int wid);
 	public List<SaveweatherDto> selectAllweather();
 	public SaveweatherDto       selectweather(int wid);
 	

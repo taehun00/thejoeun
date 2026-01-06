@@ -31,7 +31,7 @@
  </update>
  
  <delete id="deleteinfo" parameterType="ExecinfoDto">
- 	delete from exerciseinfo   where  EXECID=#{execid} and EXECTYPE=#{exectype}
+ 	delete from exerciseinfo   where  EXECID=#{execid}
  </delete>
  
  <select resultMap="execimfoMap"  id="selectAllinfo" >

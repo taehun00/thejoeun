@@ -6,16 +6,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+
+//@Data
 @Getter @Setter @ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class WalkingcourseDto {
-	private int    courseid;	//COURSEID
-	private int    postid;		//POSTID
-	private String location;	//LOCATION
-	private int    lat;			//LAT
-	private int    lng;			//LNG
+	private Integer  courseid;	//COURSEID
+	private int  	 postid;	//POSTID
+	private String   location;	//LOCATION
+	private int      lat;	//LAT
+	private int 	 lng;	//LNG
 	private String createdAt;	//CREATEDAT
+	
 }
 /*
 이름          널?       유형           
