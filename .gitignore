@@ -30,3 +30,4 @@ application-*.properties
 application.properties
 application-oauth.properties
 application-secret.properties 
+/.metadata/
