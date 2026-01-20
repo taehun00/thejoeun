@@ -42,7 +42,8 @@ jwt:
   prefix: Bearer
 
 file:
-  upload-dir: uploads 
+  upload-dir: uploads
+  upload-path: C:/upload/foodimg
 
 server:                 
   port: 8484
