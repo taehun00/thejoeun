@@ -7,7 +7,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.SequenceGenerator;
@@ -37,8 +39,8 @@ public class Tester {
 	@Column(nullable = false)
 	private Integer userid;
 	
-	@Column
-	private Integer foodid;  // 사료게시판 사료와 연관이 있을 경우
+//	@Column
+//	private Integer foodid;  // 사료게시판 사료와 연관이 있을 경우
 	
 	@Column
 	private Integer status=0;  //0모집중 1모집완료
@@ -73,10 +75,10 @@ public class Tester {
 //	@JoinColumn(name = "USERID")
 //	private Users user;
 
-	//푸드 만들고 풀기
-//	@ManyToOne
-//	@JoinColumn(name = "FOODID")
-//	private Food food;	
+
+	@ManyToOne
+	@JoinColumn(name = "FOODID")
+	private Food food;	
 	
 }
 /**
