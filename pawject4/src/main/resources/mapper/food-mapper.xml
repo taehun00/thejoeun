@@ -137,7 +137,7 @@
 			select count(*) from food
 		</select>
 		
-		<!-- 서치 -->
+		<!-- 서치 + 페이징 -->
 		
 	<select resultMap="FoodMap" id="foodsearch" parameterType="java.util.HashMap">
 	    select f.foodid as foodid, f.foodname as foodname, 

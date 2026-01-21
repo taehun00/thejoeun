@@ -11,9 +11,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,12 +37,12 @@ import lombok.RequiredArgsConstructor;
 public class FAQController {
 	@Autowired private FAQService service;
 
-	//리스트 - 권한별 페이지 분리
+	//리스트 - 유저용
 	@GetMapping("/faquser")
 	public ResponseEntity<List<FAQDto>> forUserList() {
 	    return ResponseEntity.ok(service.selectFAQActive());
 	}
-	
+	//리스트 - 관리자용
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/faqadmin")
 	public ResponseEntity<List<FAQDto>> forAdminList() {
@@ -52,11 +56,36 @@ public class FAQController {
 	        List.of("계정", "서비스", "이벤트", "기타")
 	    );
 	}
-	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
 	public ResponseEntity<Void> write(@RequestBody FAQDto dto) {
 	    service.insertFAQ(dto);
 	    return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
+
+	// 수정
+	@Operation(summary = "게시글 수정")
+	@PreAuthorize("hasRole('ADMIN')")
+	@PutMapping("/{faqid}")
+	public ResponseEntity<Void> updatePost(
+	        @PathVariable Long faqid,
+	        @RequestBody FAQDto dto
+	) {
+	    dto.setFaqid(faqid);  // id 기준은 URL
+	    service.updateFAQ(dto);
+	    return ResponseEntity.ok().build();
+	}
+
+	@Operation(summary = "빠른 삭제")
+	@PreAuthorize("hasRole('ADMIN')")
+	@PatchMapping("/{faqid}/active")
+	public ResponseEntity<Void> quickActive(
+	        @PathVariable Long faqid,
+	        @RequestBody FAQDto dto
+	) {
+	    dto.setFaqid(faqid);
+	    service.activeFAQ(dto);
+	    return ResponseEntity.ok().build();
+	}
+
 }

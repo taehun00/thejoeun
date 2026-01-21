@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.pawject.dto.food.FoodDto;
 import com.pawject.dto.food.NutriDto;
+import com.pawject.dto.food.SearchPetfoodCondition;
 import com.pawject.dto.food.SearchPetfoodDto;
 
 public interface SearchPetfoodService {
@@ -24,13 +25,14 @@ public interface SearchPetfoodService {
 		
 		
 		//페이징추가
-		public List<SearchPetfoodDto> foodfilter10(Map<String,Object> params, String condition, int pstartno);
-		public int foodfilterCnt(Map<String,Object> params);
+		List<SearchPetfoodDto> foodfilter10(SearchPetfoodCondition cond);
+		int foodfilterCnt(SearchPetfoodCondition cond);
 		
 		//ai
 		public List<SearchPetfoodDto> aiRecommend();
 		
 		//모달조회
 		public SearchPetfoodDto detailCard(int foodid);
+		
 
 }

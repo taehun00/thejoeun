@@ -33,6 +33,6 @@ public interface CSService {
 	
 	//페이징+서치
 	public List<CSQuestionDto> selectSearchCSQ( String keyword, String searchType, String condition, int pageNo);
-	int selectSearchTotalCntCSQ(String keyword, String searchType);
+	int selectSearchTotalCntCSQ(String keyword, String searchType, String condition);
 	
 }

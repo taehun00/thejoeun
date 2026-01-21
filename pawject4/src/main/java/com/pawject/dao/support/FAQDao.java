@@ -12,7 +12,7 @@ public interface FAQDao {
 	public List<FAQDto> selectFAQAll();
 	
 	//<select resultMap="FAQMap" id="selectFAQ" parameterType="int">
-	public FAQDto selectFAQ(int faqid);
+	public FAQDto selectFAQ(Long faqid);
 	
 	//  <update id="updateFAQ" parameterType="FAQDto">
 	public int updateFAQ(FAQDto dto);
