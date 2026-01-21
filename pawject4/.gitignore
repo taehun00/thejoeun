@@ -1,9 +1,11 @@
-HELP.md
+### Gradle / Build ###
 .gradle
 build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
+out/
+*.class
+
+### Maven (사용 시) ###
+target/
 
 ### STS ###
 .apt_generated
@@ -14,24 +16,29 @@ build/
 .springBeans
 .sts4-cache
 bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
 
-### IntelliJ IDEA ###
+### IntelliJ ###
 .idea
 *.iws
 *.iml
 *.ipr
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
 
 ### VS Code ###
 .vscode/
+
+### OS ###
+.DS_Store
+Thumbs.db
+
+### Logs / Temp ###
+*.log
+*.tmp
+*.bak
+
+### Secrets ###
+.env
+application-*.yml
+application-secret.yml
+application-private.yml
+application-local.yml
+
