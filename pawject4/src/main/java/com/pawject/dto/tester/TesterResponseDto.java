@@ -2,7 +2,7 @@ package com.pawject.dto.tester;
 
 public class TesterResponseDto {
 	
-	private int testerid;
+	private Long testerid;
 	private String category;
 	private String title;
 	private String content;

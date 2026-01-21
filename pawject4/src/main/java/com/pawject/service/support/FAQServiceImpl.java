@@ -17,7 +17,7 @@ public class FAQServiceImpl implements FAQService {
 	}
 
 	@Override
-	public FAQDto selectFAQ(int faqid) {
+	public FAQDto selectFAQ(Long faqid) {
 		return dao.selectFAQ(faqid);
 	}
 
