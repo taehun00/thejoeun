@@ -55,9 +55,21 @@ public class Petdisease {
 		this.updatedat = LocalDateTime.now();
 	}
 
+	//user 만들어야됨
+//	@ManyToOne
+//	@JoinColumn(name = "ADMINID", referencedColumnName="USERID")
+//	private User user;
+	
+	//펫타입 만들고 풀기
+//	@ManyToOne
+//	@JoinColumn(name = "PETTYPEID")
+//	private Pettype pettype;	
+	
+	
+	
 }
 /**
- *-- (FK) USERID : USERS(USERID), PETTYPEID : PETTYPE(PETTYPEID)
+ *-- (FK) ADMINID : USERS(USERID), PETTYPEID : PETTYPE(PETTYPEID)
 CREATE TABLE PETDISEASE (
     disno       NUMBER PRIMARY KEY,         -- 글 번호
     adminid      NUMBER NOT NULL,           -- 작성자(운영자-users.userid 참조)

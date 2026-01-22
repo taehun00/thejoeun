@@ -14,6 +14,7 @@ import com.pawject.dto.food.FoodDto;
 import com.pawject.dto.food.NutriDto;
 import com.pawject.dto.food.SearchPetfoodDto;
 import com.pawject.util.UtilPaging;
+
 @Service
 public class SearchPetfoodServiceImpl implements SearchPetfoodService {
 	@Autowired SearchPetfoodDao dao;

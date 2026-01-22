@@ -27,7 +27,6 @@ public interface SearchPetfoodDao {
 	//<select resultType="int" id="foodfilterCnt" parameterType="java.util.HashMap">
 	public int foodfilterCnt(Map<String,Object> params);
 	
-	
 	//ai데이터용
 	//<select resultMap="SearchPetfoodMap" id="aiRecommend" >
 	public List<SearchPetfoodDto> aiRecommend();
