@@ -1,6 +1,8 @@
 package com.pawject.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,13 +17,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pawject.dto.support.CSAnswerDto;
 import com.pawject.dto.support.CSQuestionDto;
 import com.pawject.dto.support.FAQDto;
 import com.pawject.service.support.CSService;
-import com.pawject.util.PageResponse;
+import com.pawject.util.UtilPaging;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -43,53 +46,53 @@ public class CSController {
 	    return ResponseEntity.ok(service.selectCSQByEmail(email));
 	}
 	
-	//리스트 - 관리자용
+	// 리스트 - 관리자용
 	@Operation(summary = "관리자용 CS 페이징 조회")
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/cspaged")
-	public ResponseEntity<PageResponse<CSQuestionDto>> getAllCSPaged(
-	        @RequestParam(defaultValue = "1") int page,
-	        @RequestParam(required = false) String condition) {
+	@ResponseBody
+	public Map<String, Object> cspaged(
+	        @RequestParam(defaultValue = "1") int pstartno,
+	        @RequestParam(required = false) String condition){
+	    Map<String, Object> result = new HashMap<>();
 
-	    int pageSize = 10;
 	    int total = service.selectTotalCntCSQ();
-	    List<CSQuestionDto> list = service.select10CSQ(condition, page);
+	    List<CSQuestionDto> list = service.select10CSQ(condition, pstartno);
 
-	    PageResponse<CSQuestionDto> response = new PageResponse<>();
-	    response.setList(list);
-	    response.setTotal(total);
-	    response.setPage(page);
-	    response.setTotalPages((int) Math.ceil((double) total / pageSize));
-	    response.setHasPrev(page > 1);
-	    response.setHasNext(page < response.getTotalPages());
-	    
-	    return ResponseEntity.ok(response);
+	    UtilPaging paging = new UtilPaging(total, pstartno);
+
+	    result.put("paging", paging);
+	    result.put("total", total);
+	    result.put("list", list);
+
+	    return result;
 	}
 	
+	// 관리자용 CS 페이징 + 검색
 	@Operation(summary = "관리자용 CS 페이징 + 검색 조회")
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/cssearch")
-	public ResponseEntity<PageResponse<CSQuestionDto>> getSearchCSPaged(
-	        @RequestParam(defaultValue = "1") int page,
-	        @RequestParam(required = false) String condition,
-	        @RequestParam String searchType,
-	        @RequestParam(required = false) String keyword) {
+	@ResponseBody
+	public Map<String, Object> cssearch(
+	        @RequestParam("searchType") String searchType,
+	        @RequestParam(value = "pageNo", defaultValue = "1") int pageNo,
+	        @RequestParam(value = "keyword", required = false) String keyword,
+	        @RequestParam(required = false) String condition){
+	    Map<String, Object> result = new HashMap<>();
 
-	    int pageSize = 10;
-	    String safeKeyword = (keyword == null) ? "" : keyword;  //null 터짐 방지
+	    int total = service.selectSearchTotalCntCSQ(keyword, searchType, condition);
 
-	    int total = service.selectSearchTotalCntCSQ(safeKeyword, searchType, condition);
-	    List<CSQuestionDto> list=service.selectSearchCSQ(safeKeyword, searchType, condition, page);
+	    List<CSQuestionDto> list =
+	            service.selectSearchCSQ(keyword, searchType, condition, pageNo);
 
-	    PageResponse<CSQuestionDto> response = new PageResponse<>();
-	    response.setList(list);
-	    response.setTotal(total);
-	    response.setPage(page);
-	    response.setTotalPages((int) Math.ceil((double) total / pageSize));
-	    response.setHasPrev(page > 1);
-	    response.setHasNext(page < response.getTotalPages());
+	    UtilPaging paging = new UtilPaging(total, pageNo);
 
-	    return ResponseEntity.ok(response);
+	    result.put("total", total);
+	    result.put("list", list);
+	    result.put("paging", paging);
+	    result.put("search", keyword);
+
+	    return result;
 	}
 
 	//글쓰기

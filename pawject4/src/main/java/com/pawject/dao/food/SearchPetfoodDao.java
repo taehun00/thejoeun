@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.pawject.dto.food.SearchPetfoodCondition;
 import com.pawject.dto.food.SearchPetfoodDto;
 
 @Mapper
@@ -22,9 +21,11 @@ public interface SearchPetfoodDao {
 	
 	
 	//서치+페이징
-	List<SearchPetfoodDto> foodfilter10(SearchPetfoodCondition cond);
-	int foodfilterCnt(SearchPetfoodCondition cond);
+	//<select resultMap="SearchPetfoodMap" id="foodfilter10" parameterType="java.util.HashMap">
+	public List<SearchPetfoodDto> foodfilter10(Map<String,Object> params);
 	
+	//<select resultType="int" id="foodfilterCnt" parameterType="java.util.HashMap">
+	public int foodfilterCnt(Map<String,Object> params);
 	
 	//ai데이터용
 	//<select resultMap="SearchPetfoodMap" id="aiRecommend" >

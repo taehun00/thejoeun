@@ -1,24 +1,26 @@
 package com.pawject.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pawject.dto.food.SearchPetfoodCondition;
 import com.pawject.dto.food.SearchPetfoodDto;
 import com.pawject.dto.food.SearchPetfoodInitResponse;
 import com.pawject.dto.support.CSQuestionDto;
+import com.pawject.service.food.FoodApi;
 import com.pawject.service.food.FoodService;
 import com.pawject.service.food.SearchPetfoodService;
-import com.pawject.util.CalorieRangeUtil;
-import com.pawject.util.PageResponse;
+import com.pawject.util.UtilPaging;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -43,49 +45,66 @@ public class SearchPetfoodController {
         return ResponseEntity.ok(res);
     }
     
-	@Operation(summary = "사료검색+페이징")
-	@PostMapping("/foodsearch")
-	public ResponseEntity<PageResponse<SearchPetfoodDto>> search(
-	        @RequestBody SearchPetfoodCondition cond
-	) {
-		CalorieRangeUtil.calorie(cond);
-		
-	    int total = service.foodfilterCnt(cond);
-	    List<SearchPetfoodDto> list = service.foodfilter10(cond);
+ // 검색 + 페이징
+    @GetMapping("/searchfilterPaging")
+    public Map<String, Object> searchfilterPaging(    
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Integer pettypeid,
+            @RequestParam(required = false) String foodtype,
+            @RequestParam(required = false) Integer brandid,
+            @RequestParam(required = false) Integer foodid,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String petagegroup,
+            @RequestParam(required = false) String isgrainfree,
+            @RequestParam(required = false) String origin,
+            @RequestParam(required = false) Integer rangeid,
+            @RequestParam(required = false) Integer minvalue,
+            @RequestParam(required = false) Integer maxvalue,
+            @RequestParam(defaultValue = "1") int pstartno,
+            @RequestParam(required = false) String condition
+    ) { 
+        // 위치 주의
+        if (minvalue != null && minvalue < 0) minvalue = null;
+        if (maxvalue != null && maxvalue < 0) maxvalue = null;
 
-	    PageResponse<SearchPetfoodDto> res = new PageResponse<>();
-	    res.setList(list);
-	    res.setTotal(total);
-	    res.setPage(cond.getPage());
-	    res.setTotalPages((int)Math.ceil((double)total / 5));
-	    res.setHasPrev(cond.getPage() > 1);
-	    res.setHasNext(cond.getPage() < res.getTotalPages());
+        Map<String, Object> params = new HashMap<>();
+        params.put("keyword", keyword);
+        params.put("pettypeid", pettypeid);
+        params.put("foodtype", foodtype);
+        params.put("brandid", brandid);
+        params.put("foodid", foodid);
+        params.put("category", category);
+        params.put("petagegroup", petagegroup);
+        params.put("isgrainfree", isgrainfree);
+        params.put("origin", origin);
+        params.put("rangeid", rangeid);
+        params.put("minvalue", minvalue);
+        params.put("maxvalue", maxvalue);
 
-	    return ResponseEntity.ok(res);
-	}
-    
-    
-}
-/**
- *
-	
-	//api
+        int total = service.foodfilterCnt(params);
+        List<SearchPetfoodDto> list = service.foodfilter10(params, condition, pstartno);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("list", list);
+
+        UtilPaging paging = new UtilPaging(total, pstartno, 5, 10);
+        result.put("paging", paging);
+        result.put("total", total);
+
+        return result;
+    }
+
 	@Autowired FoodApi apiservice;
+	@Operation(summary = "사료 검색 AI 필터 변환")
 	@PostMapping("/foodapi")
-	@ResponseBody
-	public Map<String, Object> foodapi(@RequestParam String userMessage) { //스트링아님
-		return apiservice.aiChangeFilter(userMessage);
+	public ResponseEntity<Map<String, Object>> foodapi(@RequestParam String userMessage) {
+	    Map<String, Object> result = apiservice.aiChangeFilter(userMessage);
+	    return ResponseEntity.ok(result);
 	}
 	
-	
-	//모달정보 - model에 담을 필요x
-	@ResponseBody
-	@RequestMapping("/modalcard")
-	public SearchPetfoodDto modalcard(int foodid) {
-	    return service.detailCard(foodid);
+	@Operation(summary = "사료 상세 카드 조회")
+	@GetMapping("/modalcard/{foodid}")
+	public ResponseEntity<SearchPetfoodDto> modalcard(@PathVariable int foodid){
+	    return ResponseEntity.ok(service.detailCard(foodid));
 	}
-	
-	
-	
-}	
- */
+}
