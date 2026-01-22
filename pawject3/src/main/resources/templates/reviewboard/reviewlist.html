@@ -9,12 +9,6 @@
 <body>
 	<div layout:fragment="content">
 
-<!-- 권한 복구  '[문자열]'   [숫자] 차이 조심!-->
-<!-- <script th:inline="javascript">
-    const loginUserId = [[${userid}]];
-    const loginRole   = '[[${author}]]';
-</script>	
- -->
 <script th:inline="javascript">
     const loginRole = /*[[${author}]]*/ null;
     const loginUserId = /*[[${userid}]]*/ null;
@@ -25,11 +19,11 @@
 console.log("loginRole =", loginRole);
 console.log("loginUserId =", loginUserId);
 </script>	
+
 <div class="review-container">
 
     <h2 class="review-title">🐶사료 후기🐱</h2>
-    
-        <input type="hidden" id="currentPage" th:value="${reviewpaging.pstartno}">
+   
 		<input type="hidden" name="userid" th:value="${userid}">
 		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
     
@@ -51,10 +45,12 @@ console.log("loginUserId =", loginUserId);
 				   style="display:none;">
 				   목록보기
 				</a>
-
 		        
 		    </div>
-		
+		    	<select id="condition" class="condition form-select justify-content-end" style="width:120px;">
+			      <option value="">최신</option>
+			      <option value="old">오래된순</option>
+			    </select>
 
 		</div>		
    <table class="review-table table table-bordered table-hover align-middle text-center">
@@ -77,42 +73,6 @@ console.log("loginUserId =", loginUserId);
 
         <tbody>
         </tbody>
-		<tfoot>
-		<tr>
-		<td colspan="9">
-		    <ul class="pagination justify-content-center">
-		
-
-                    <!-- 이전 -->
-                    <li class="page-item"
-                        th:if="${reviewpaging.start > 10}">   
-                                             
-                        <a href="#" class="page-link"
-                        th:onclick="|reviewPaging(${reviewpaging.start - 1})|">이전</a>
-                    </li>
-		
-					<!-- 페이지 숫자 -->
-                    <li class="page-item"
-                        th:each="i : ${#numbers.sequence(reviewpaging.start, reviewpaging.end)}"
-                        th:classappend="${i == reviewpaging.current} ? 'active'">
-                        <a href="#" class="page-link"
-                        th:onclick="|reviewPaging(${i})|"
-                        th:text="${i}">1</a>
-                    </li>
-                    		
-		
-		        <!-- 다음 -->
-                    <li class="page-item"
-                        th:if="${reviewpaging.pagetotal > reviewpaging.end}">   
-                                           
-                        <a href="#" class="page-link"
-                        th:onclick="|reviewPaging(${reviewpaging.end + 1})|">다음</a>
-                    </li>		        
-
-		    </ul>
-		</td>
-		</tr>
-		</tfoot>
        </table>
       
 		
@@ -129,61 +89,119 @@ console.log("loginUserId =", loginUserId);
 		        		 
 		    </div>
 
-	
+		<!-- 페이징 -->
+	<div id="pagingArea" class="mt-2 text-center"  ></div>
 
 </div>
 
 <script>
 
-//전역
+//전역변수-페이징 화면 분기
 let currentMode = "list";
 let currentSearchType = "";
 let currentKeyword = "";
+let currentPageNo = 1;
 
-//초기 로딩
-$(function () {
- const params = new URLSearchParams(window.location.search);
- const foodid = params.get("foodid");
+//전역변수-정렬
+let currentCondition = null;  
 
- if (foodid) {
-     loadReviewsByFoodid(foodid);
- } else {
-     const currentPage = $("#currentPage").val() || 1;
-     reviewPaging(currentPage);
- }
+//초기 로드
+$(function(){
+  reviewPaging(1);
 });
 
-//검색
-function doReviewSearch(searchType, keyword) {
- currentMode = "search";
- currentSearchType = searchType;
- currentKeyword = keyword;
+//정렬
+$(document).on("change", ".condition", function () {
+    currentCondition = $(this).val() || null;
+    currentPageNo = 1;
 
- $("#currentPage").val(1);
+    if (currentMode === "search") {
+        doReviewSearch(currentSearchType, currentKeyword, 1);
+    } else {
+        reviewPaging(1);
+    }
+});
+
+//페이징 버튼
+$(document).on("click", ".pageBtn", function(){
+	  let page = $(this).data("page");
+	  currentPageNo = page;
+
+	  if(currentMode === "search"){
+	    doCSSearch(currentSearchType, currentKeyword, page);
+	  } else {
+	    csPaging(page);
+	  }
+	});
+
+
+//전체 리스트 페이지
+function reviewPaging(pageNo){
+  currentMode = "list";
+  currentPageNo = pageNo;
+  
+  let data = { pageNo : pageNo };
+  if (currentCondition) data.condition = currentCondition;	
+  
+  $.ajax({
+    url: "/reviewboard/reviewPaging",
+    type: "GET",
+    data: data,
+    success: function(json){	
+      csPagingResult(json, pageNo);
+      renderPaging(json.paging);
+      $("#searchlistBtn").hide();   
+    }
+  });
+}
+
+
+
+//검색
+function doReviewSearch(searchType, keyword, pageNo) {
+	  currentMode = "search";
+	  currentSearchType = searchType;
+	  currentKeyword = keyword;
+	  currentPageNo = pageNo;
+	  
+	  let data = {
+			  searchType: searchType,
+			  keyword: keyword,
+			  pageNo: pageNo
+			};
+	  if (currentCondition) data.condition = currentCondition;
+
 
  $.ajax({
      url: "/reviewboard/reviewsearch",
      type: "GET",
-     data: { keyword, searchType },
-     success: function (json) {
-         reviewPagingResult(json, 1);
-         $("#searchlistBtn").show();
-         $("tfoot").hide();
-         $("#writeBtn").hide();
-     }
- });
-}
+     data: data,
+     success: function(json){
+         if(!json.list || json.list.length === 0){
+           alert("검색 결과가 없습니다.");
+           return;
+         }
 
-function searchReview() {
- const keyword = $("#searchKeyword").val().trim();
- const searchType = $("#searchType").val();
+         reviewPagingResult(json, pageNo);
+         renderPaging(json.paging);
+         $("#searchlistBtn").show();   
+       }
+     });
+   }
 
- if (!keyword) {
-     alert("검색어를 입력해주세요.");
-     return;
- }
- doReviewSearch(searchType, keyword);
-}
+function searchReview(){
+	  let keyword = $("#searchKeyword").val().trim();
+	  let searchType = $("#searchType").val();
+	  
+
+	  if(keyword === ""){
+	    alert("검색어를 입력해주세요.");
+	    return;
+	  }
+
+	  doReviewSearch(searchType, keyword, 1);
+	}
+
 
 //foodid 조회 - 사료검색 페이지 연결용
 function loadReviewsByFoodid(foodid) {
@@ -203,19 +221,6 @@ function loadReviewsByFoodid(foodid) {
  });
 }
 
-//페이징
-function reviewPaging(pstartno) {
- currentMode = "list";
- $.ajax({
-     url: "/reviewboard/reviewPaging",
-     type: "GET",
-     data: { pstartno },
-     success: function (json) {
-         reviewPagingResult(json, pstartno);
-         $("tfoot").show();
-     }
- });
-}
 
 //평점 시각화
 function ratingToStar(rating) {
@@ -228,14 +233,10 @@ function ratingToStar(rating) {
 
 //랜더링
 function reviewPagingResult(json, pstartno) {
- console.log("json =", json);
- console.log("json.list =", json.list);
-
- const list = json.list;
- const total = json.total;
- const tbody = $(".review-table tbody");
-
- tbody.empty();
+	  let list = json.list;
+	  let total = json.total;
+	  let tbody = $(".review-table tbody");
+	  tbody.empty();
 
  tbody.off("click", ".review-row");
  tbody.on("click", ".review-row", function () {
@@ -382,6 +383,33 @@ function openImg(url) {
  window.open(url, "_blank",
      "width=800,height=600,toolbar=no,menubar=no,resizable=yes");
 }
+//페이징 랜더
+function renderPaging(p){
+  let area = $("#pagingArea");
+  area.empty();
+
+  if(!p || p.pagetotal <= 1) return;
+
+  let html = "";
+  let end = Math.min(p.end, p.pagetotal);
+
+  if(p.start > 1){
+    html += `<button class="btn btn-sm btn-outline-primary pageBtn" data-page="${p.start-1}">이전</button>`;
+  }
+
+  for(let i=p.start; i<=end; i++){
+    let active = (i === p.current) ? "btn-primary" : "btn-outline-primary";
+    html += `<button class="btn btn-sm ${active} pageBtn ms-2" data-page="${i}">${i}</button>`;
+  }
+
+  if(end < p.pagetotal){
+    html += `<button class="btn btn-sm btn-outline-primary pageBtn ms-2" data-page="${end+1}">다음</button>`;
+  }
+
+  area.html(html);
+}
+
+
 </script>
  
 	</div><!-- content-->

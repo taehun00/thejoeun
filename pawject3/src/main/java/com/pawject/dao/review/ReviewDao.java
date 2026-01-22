@@ -35,7 +35,7 @@ public interface ReviewDao {
 	//<select resultType="int" id="reviewSelectCnt">	
 		public int reviewSelectCnt();
 		
-	// 서치
+	// 서치+페이징
 	//<select  resultMap="ReviewMap" id="reviewsearch" parameterType="java.util.HashMap">
 		public List<ReviewDto> reviewsearch(HashMap<String, Object> para);
 		

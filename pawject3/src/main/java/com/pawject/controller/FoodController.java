@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.pawject.dto.food.FoodDto;
 import com.pawject.dto.food.NutriDto;
 import com.pawject.dto.paging.PagingDto10;
+import com.pawject.dto.support.CSQuestionDto;
 import com.pawject.service.food.FoodService;
 import com.pawject.service.food.NaverOcrService;
 
@@ -31,14 +32,9 @@ public class FoodController {
 
 	//리스트
 	@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
-	@RequestMapping("/foodlist.fn")
-	public String list(Model model,
-						@RequestParam(value="pstartno", defaultValue = "1") int pstartno ) { //전체 목록 게시판 뷰
-	    int total = service.foodselectcnt(); // 총 개수
-	    PagingDto10 paging = new PagingDto10(total, pstartno);
-	    model.addAttribute("foodlist", service.foodselect10(paging.getCurrent()));
-	    model.addAttribute("foodpaging", paging);
-
+	@GetMapping("/foodlist.fn")
+	public String list(Model model, FoodDto dto ) {
+	    model.addAttribute("foodlist", service.foodselectAll());
 	    return "foodboard/foodlist";
 	}
 

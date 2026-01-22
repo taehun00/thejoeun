@@ -23,6 +23,7 @@ import com.pawject.dto.user.UserDto;
 import com.pawject.service.review.ReviewApi;
 import com.pawject.service.review.ReviewService;
 import com.pawject.service.user.UserSecurityService;
+import com.pawject.util.UtilPaging;
 @RestController
 @RequestMapping("/reviewboard")
 public class ReviewAjaxController {
@@ -93,21 +94,7 @@ public class ReviewAjaxController {
     	return service.reviewimgdelete(reviewimgid);
     }
     
-    @RequestMapping("/reviewPaging")
-    public Map<String, Object> reviewPaging(
-    		@RequestParam(defaultValue="1") int pstartno){	
-    	Map<String, Object> result = new HashMap<>();
-    	
-    	int total= service.reviewSelectCnt();
-    	List<ReviewDto> list = service.reviewSelect10(pstartno);
-    	
-    	result.put("total", total);
-    	result.put("list", list);
-
-    	return result;
-    }
-    
-    
+    //모달연동
     @RequestMapping("/reviewsearchByFoodid")
     public Map<String, Object> reviewsearchByFoodid(@RequestParam int foodid){
     	Map<String, Object> result = new HashMap<>();
@@ -120,19 +107,43 @@ public class ReviewAjaxController {
     }
     
     
-    //서치
+    
+    //페이징
+    @RequestMapping("/reviewPaging")
+    public Map<String, Object> reviewPaging(
+    	     		@RequestParam(required=false) String condition,
+    			    @RequestParam(defaultValue="1") int pageNo){	
+    	Map<String, Object> result = new HashMap<>();
+    	
+    	int total= service.reviewSelectCnt();
+    	List<ReviewDto> list = service.reviewSelect10(pageNo, condition);
+
+    	UtilPaging paging = new UtilPaging(total, pageNo);  
+        result.put("paging", paging);
+    	result.put("total", total);
+    	result.put("list", list);
+
+		
+	    return result;
+	}
+    		
+    //서치+페이징
     @RequestMapping("/reviewsearch")
     public Map<String, Object> reviewsearch(
 	        @RequestParam("keyword") String keyword,
-	        @RequestParam("searchType") String searchType){
+	        @RequestParam("searchType") String searchType,
+	        @RequestParam(required=false) String condition,
+	        @RequestParam(value="pageNo", defaultValue="1") int pageNo){
     	
 	    Map<String, Object> result = new HashMap<>();
-
-	    List<ReviewDto> list = service.reviewsearch(keyword, searchType);
-
-	    result.put("list", list);
-	    result.put("total", list.size());
-	    result.put("pstartno", 1);
+	    int total = service.reviewsearchcnt(keyword, searchType);
+	    List<ReviewDto> list = service.reviewsearch(keyword, searchType, condition, pageNo);
+	    UtilPaging paging = new UtilPaging(total, pageNo);
+	    
+	      result.put("total", total);   
+	      result.put("list", list);
+	      result.put("paging", paging);
+	      result.put("search", keyword);
 
 	    return result;
 	}
