@@ -162,7 +162,7 @@
 	
 	
 	<!-- 페이징 -->
-	<select resultMap="SearchPetfoodMap" id="foodfilter10" parameterType="com.pawject.dto.food.SearchPetfoodCondition">
+	<select resultMap="SearchPetfoodMap" id="foodfilter10" parameterType="java.util.HashMap">
         SELECT * FROM(SELECT ROW_NUMBER() OVER(
 				<choose>
 				  <when test="condition == 'foodnameAsc'">
@@ -254,7 +254,7 @@
 	</select>
 	
 	
-	<select resultType="int" id="foodfilterCnt" parameterType="com.pawject.dto.food.SearchPetfoodCondition">
+	<select resultType="int" id="foodfilterCnt" parameterType="java.util.HashMap">
 		
 		SELECT COUNT(*)
 		FROM FOOD F

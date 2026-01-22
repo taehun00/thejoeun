@@ -12,9 +12,9 @@ import com.pawject.dao.food.NutriDao;
 import com.pawject.dao.food.SearchPetfoodDao;
 import com.pawject.dto.food.FoodDto;
 import com.pawject.dto.food.NutriDto;
-import com.pawject.dto.food.SearchPetfoodCondition;
 import com.pawject.dto.food.SearchPetfoodDto;
 import com.pawject.util.UtilPaging;
+
 @Service
 public class SearchPetfoodServiceImpl implements SearchPetfoodService {
 	@Autowired SearchPetfoodDao dao;
@@ -61,35 +61,45 @@ public class SearchPetfoodServiceImpl implements SearchPetfoodService {
 	}
 
 	@Override
-	public List<SearchPetfoodDto> foodfilter10(SearchPetfoodCondition cond) {
-
-	    int pageSize = 5;
-	    int start = (cond.getPage() - 1) * pageSize + 1;
-
-	    cond.setStart(start);
-	    cond.setEnd(start + pageSize - 1);
-
-	    // 정렬값 검증 (화이트리스트)
-	    if (cond.getSort() != null) {
-	        switch (cond.getSort()) {
+	public List<SearchPetfoodDto> foodfilter10(Map<String,Object> params, String condition, int pstartno) {
+		//5개씩 출력
+		int pageSize=5;
+		int start = (pstartno-1)*pageSize+1;
+		params.put("start", start);  
+		params.put("end"  , start + pageSize-1);  
+		
+	    if (condition != null) {
+	        switch (condition) {
 	            case "foodnameAsc":
-	            case "foodnameDesc":
-	            case "brandnameAsc":
-	            case "brandnameDesc":
-	            case "avgratingAsc":
-	            case "avgratingDesc":
+	            	params.put("condition", "foodnameAsc");
 	                break;
-	            default:
-	                cond.setSort(null);
+	            case "foodnameDesc":
+	            	params.put("condition", "foodnameDesc");
+	                break;
+	            case "brandnameAsc":
+	            	params.put("condition", "brandnameAsc");
+	                break;
+	            case "brandnameDesc":
+	            	params.put("condition", "brandnameDesc");
+	                break;
+	            case "avgratingAsc":
+	            	params.put("condition", "avgratingAsc");
+	                break;
+	            case "avgratingDesc":
+	            	params.put("condition", "avgratingDesc");
+	                break;
+	                
 	        }
-	    }
+	    }	
+		
 
-	    return dao.foodfilter10(cond);
+		return dao.foodfilter10(params);
 	}
 
+	
 	@Override
-	public int foodfilterCnt(SearchPetfoodCondition cond) {
-	    return dao.foodfilterCnt(cond);
+	public int foodfilterCnt(Map<String, Object> params) {
+		return dao.foodfilterCnt(params);
 	}
 
 	@Override
@@ -102,5 +112,6 @@ public class SearchPetfoodServiceImpl implements SearchPetfoodService {
 		return dao.detailCard(foodid);
 	}
 	
+
 
 }
