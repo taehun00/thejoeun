@@ -3,10 +3,9 @@ package com.pawject.service.food;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,22 +16,19 @@ import com.pawject.dto.food.BrandDto;
 import com.pawject.dto.food.FoodDto;
 import com.pawject.dto.food.FoodDtoForList;
 import com.pawject.dto.food.NutriDto;
-import org.springframework.beans.factory.annotation.Value;
-
 @Service
 public class FoodServiceImpl implements FoodService {
 	@Autowired FoodDao fdao;
 	@Autowired BrandDao bdao;
 	@Autowired NutriDao ndao;
-    
-    @Value("${file.upload-path}")
-    private String uploadPath;
-    
+//	@Autowired	ServletContext context;  폐기, 설정파일로 경로 이동
+	@Value("${file.upload-path}")
+	private String uploadPath;
+
 		@Override
 		public int foodinsert(FoodDto dto,  MultipartFile file) {
 		    String fileName = "";
-		   
-			
+
 		    if (!file.isEmpty()) {
 		        fileName = file.getOriginalFilename();
 		        File img = new File(uploadPath + fileName);
@@ -150,7 +146,7 @@ public class FoodServiceImpl implements FoodService {
 		}
 
 		@Override
-		public List<FoodDtoForList> foodselect10(int pstartno) {
+		public List<FoodDtoForList> foodselect10(int pstartno, String condition) {
 		    HashMap<String, Object> para = new HashMap<>();
 		    int start = (pstartno - 1) * 10 + 1;
 		    int end = start + 9;
@@ -158,6 +154,23 @@ public class FoodServiceImpl implements FoodService {
 		    para.put("start", start);
 		    para.put("end", end);
 		    
+		    if (condition != null) {
+		        switch (condition) {
+		            case "foodnameAsc":
+		            	para.put("condition", "foodnameAsc");
+		                break;
+		            case "foodnameDesc":
+		            	para.put("condition", "foodnameDesc");
+		                break;
+		            case "brandnameAsc":
+		            	para.put("condition", "brandnameAsc");
+		                break;
+		            case "brandnameDesc":
+		            	para.put("condition", "brandnameDesc");
+		                break;
+		                
+		        }
+		    }	
 
 		    return fdao.foodselect10(para); 
 		}
@@ -168,9 +181,16 @@ public class FoodServiceImpl implements FoodService {
 		}
 
 		@Override
-		public List<FoodDtoForList> foodsearch(String keyword, String searchType) {
+		public List<FoodDtoForList> foodsearch(String keyword, String searchType, String condition, int pstartno) {
 
 			HashMap<String, Object> para = new HashMap<>();
+		    int start = (pstartno - 1) * 10 + 1;
+		    int end = start + 9;
+
+		    para.put("start", start);
+		    para.put("end", end);
+			
+			
 			keyword = keyword.toLowerCase(); //대소문자 구분 x
 			String searchLike = "%" + keyword + "%";
 			
@@ -201,6 +221,25 @@ public class FoodServiceImpl implements FoodService {
 			
 	
 			}//switch
+			
+		    if (condition != null) {
+		        switch (condition) {
+		            case "foodnameAsc":
+		            	para.put("condition", "foodnameAsc");
+		                break;
+		            case "foodnameDesc":
+		            	para.put("condition", "foodnameDesc");
+		                break;
+		            case "brandnameAsc":
+		            	para.put("condition", "brandnameAsc");
+		                break;
+		            case "brandnameDesc":
+		            	para.put("condition", "brandnameDesc");
+		                break;
+		                
+		        }
+		    }	
+			
 			
 			return fdao.foodsearch(para);
 		}
@@ -237,6 +276,7 @@ public class FoodServiceImpl implements FoodService {
 			
 	
 			}//switch
+			
 			
 			return fdao.foodsearchcnt(para);
 		}

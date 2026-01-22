@@ -122,7 +122,25 @@
 		<!-- 페이징 -->
 		<select resultMap="FoodMap"  id="foodselect10" parameterType="java.util.Map">
 		   select *
-            from(select row_number() over(order by f.createdat desc) as rnum, 
+            from(select row_number() over(
+				<choose>
+				  <when test="condition == 'foodnameAsc'">
+				    ORDER BY F.FOODNAME, F.FOODID
+				  </when>
+				  <when test="condition == 'foodnameDesc'">
+				    ORDER BY F.FOODNAME DESC, F.FOODID DESC
+				  </when>
+				  <when test="condition == 'brandnameAsc'">
+				    ORDER BY B.BRANDNAME, F.FOODNAME, F.FOODID
+				  </when>
+				  <when test="condition == 'brandnameDesc'">
+				    ORDER BY B.BRANDNAME DESC, F.FOODNAME, F.FOODID
+				  </when>
+				  <otherwise>
+				    ORDER BY F.FOODNAME, F.FOODID
+				  </otherwise>
+				</choose>
+            ) as rnum, 
                     f.foodid as foodid, f.foodname as foodname, 
                     b.brandid as brandid, b.brandname as brandname,
                     f.pettypeid as pettypeid,
@@ -133,20 +151,41 @@
            where a.rnum between #{start} and #{end}     
 		</select>
 		
+		<!-- 페이징 카운트 -->
 		<select resultType="int" id="foodselectcnt" >
 			select count(*) from food
 		</select>
 		
-		<!-- 서치 + 페이징 -->
+		<!-- 서치 -->
 		
 	<select resultMap="FoodMap" id="foodsearch" parameterType="java.util.HashMap">
-	    select f.foodid as foodid, f.foodname as foodname, 
-	        b.brandid as brandid, b.brandname as brandname,
-	        f.pettypeid as pettypeid,
-	        TO_CHAR(f.createdat, 'YYYY-MM-DD') as createdat, 
-	        TO_CHAR(f.updatedat , 'YYYY-MM-DD') as updatedat
-	    from food f join foodbrand b on(f.brandid=b.brandid)
-	    <where>
+		   select *
+            from(select row_number() over(
+                <choose>
+				  <when test="condition == 'foodnameAsc'">
+				    ORDER BY F.FOODNAME, F.FOODID
+				  </when>
+				  <when test="condition == 'foodnameDesc'">
+				    ORDER BY F.FOODNAME DESC, F.FOODID DESC
+				  </when>
+				  <when test="condition == 'brandnameAsc'">
+				    ORDER BY B.BRANDNAME, F.FOODNAME, F.FOODID
+				  </when>
+				  <when test="condition == 'brandnameDesc'">
+				    ORDER BY B.BRANDNAME DESC, F.FOODNAME, F.FOODID
+				  </when>
+				  <otherwise>
+				    ORDER BY F.FOODNAME, F.FOODID
+				  </otherwise>
+				</choose>
+            ) as rnum, 
+                    f.foodid as foodid, f.foodname as foodname, 
+                    b.brandid as brandid, b.brandname as brandname,
+                    f.pettypeid as pettypeid,
+                    TO_CHAR(f.createdat, 'YYYY-MM-DD') as createdat, 
+                     TO_CHAR(f.updatedat , 'YYYY-MM-DD') as updatedat
+                    from food f join foodbrand b on(f.brandid=b.brandid) 
+             	    <where>
 	        <choose>
 	            <when test="searchType == 'brandname'">
 	              lower(b.brandname) like #{search}
@@ -195,10 +234,12 @@
 	                )
 	            </otherwise>
 	        </choose>
-	    </where>
-	    order by f.foodid desc
+	    </where> 
+        ) a       
+           where a.rnum between #{start} and #{end}    
 	</select>
 
+		<!-- 서치 카운트 -->
 		<select resultType="int" id="foodsearchcnt" parameterType="java.util.HashMap">
 	    select count(*)
 	     from food f join foodbrand b on(f.brandid=b.brandid)

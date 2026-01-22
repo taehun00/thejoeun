@@ -38,11 +38,13 @@ public class FAQController {
 	@Autowired private FAQService service;
 
 	//리스트 - 유저용
+	@Operation(summary = " 유저 FAQ 리스트")
 	@GetMapping("/faquser")
 	public ResponseEntity<List<FAQDto>> forUserList() {
 	    return ResponseEntity.ok(service.selectFAQActive());
 	}
 	//리스트 - 관리자용
+	@Operation(summary = "관리자 FAQ 리스트")
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/faqadmin")
 	public ResponseEntity<List<FAQDto>> forAdminList() {
@@ -50,12 +52,15 @@ public class FAQController {
 	}
 	
 	// 글쓰기
+	@Operation(summary = "FAQ 카테고리 지정")
 	@GetMapping("/categories")   //model 말고 주소창에서 받아오기
 	public ResponseEntity<List<String>> categories() {
 	    return ResponseEntity.ok(
 	        List.of("계정", "서비스", "이벤트", "기타")
 	    );
 	}
+	
+	@Operation(summary = "FAQ 글쓰기")
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
 	public ResponseEntity<Void> write(@RequestBody FAQDto dto) {
@@ -64,7 +69,7 @@ public class FAQController {
 	}
 
 	// 수정
-	@Operation(summary = "게시글 수정")
+	@Operation(summary = "FAQ 수정")
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{faqid}")
 	public ResponseEntity<Void> updatePost(
@@ -75,7 +80,6 @@ public class FAQController {
 	    service.updateFAQ(dto);
 	    return ResponseEntity.ok().build();
 	}
-
 	@Operation(summary = "빠른 삭제")
 	@PreAuthorize("hasRole('ADMIN')")
 	@PatchMapping("/{faqid}/active")

@@ -32,9 +32,10 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/petfoodsearcher") 
 @RequiredArgsConstructor 
 public class SearchPetfoodController {
-@Autowired SearchPetfoodService service;
-@Autowired FoodService fservice;
+@Autowired private SearchPetfoodService service;
+@Autowired private FoodService fservice;
 
+	@Operation(summary = "초기값 불러오기")
     @GetMapping("/init")   //검색창 초기값 기존 model -> dto로 분리
     public ResponseEntity<SearchPetfoodInitResponse> init() {
     		SearchPetfoodInitResponse res = new SearchPetfoodInitResponse();
@@ -46,6 +47,7 @@ public class SearchPetfoodController {
     }
     
  // 검색 + 페이징
+	@Operation(summary = "검색")
     @GetMapping("/searchfilterPaging")
     public Map<String, Object> searchfilterPaging(    
             @RequestParam(required = false) String keyword,
@@ -94,7 +96,8 @@ public class SearchPetfoodController {
         return result;
     }
 
-	@Autowired FoodApi apiservice;
+	
+	@Autowired private FoodApi apiservice;
 	@Operation(summary = "사료 검색 AI 필터 변환")
 	@PostMapping("/foodapi")
 	public ResponseEntity<Map<String, Object>> foodapi(@RequestParam String userMessage) {

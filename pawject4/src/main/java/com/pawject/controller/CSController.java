@@ -96,6 +96,7 @@ public class CSController {
 	}
 
 	//글쓰기
+	@Operation(summary = "CS 카테고리")
 	@GetMapping("/categories")   //model 말고 주소창에서 받아오기
 	public ResponseEntity<List<String>> categories() {
 	    return ResponseEntity.ok(
