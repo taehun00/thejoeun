@@ -114,6 +114,9 @@
 							  <when test="condition == 'old'">
 							    order by r.createdat asc, r.reviewid asc
 							  </when>
+							  <when test="condition == 'new'">
+							    order by r.createdat desc, r.reviewid desc
+							  </when>							  
 							  <otherwise>
 							    order by r.createdat desc, r.reviewid desc
 							  </otherwise>
@@ -145,11 +148,7 @@
                             </when>
                     
                             <otherwise>
-                                AND (
-                                    lower(fb.brandname) like #{search}
-                                    OR f.foodname like #{search}
-                                    OR r.reviewcomment like #{search}
-                                )
+								1=1
                             </otherwise>
                         </choose>
                     </where>
@@ -160,7 +159,7 @@
 	
 	
 	
-		<select  resultMap="ReviewMap" id="reviewsearchcnt" parameterType="java.util.HashMap">
+		<select  resultType="int" id="reviewsearchcnt" parameterType="java.util.HashMap">
 			select count(*)
 			from review r left join food f on(r.foodid=f.foodid)
                join foodbrand fb on(r.brandid=fb.brandid)
@@ -184,15 +183,10 @@
 			        </when>
 			
 			        <otherwise>
-			            AND (
-			                lower(fb.brandname) like #{search}
-			                OR f.foodname like #{search}
-			                OR r.reviewcomment like #{search}
-			            )
+						1=1
 			        </otherwise>
 			    </choose>
 			</where>
-	    order by r.reviewid desc
 	</select>	
 	
 

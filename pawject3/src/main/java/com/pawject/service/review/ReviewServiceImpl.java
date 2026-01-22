@@ -179,15 +179,13 @@ public class ReviewServiceImpl implements ReviewService {
 		para.put("start", start);
 		para.put("end", end);
 		
-		List<ReviewDto> list = rdao.reviewSelect10(para);
-		
 	    if (condition != null) {
 	        switch (condition) {
-	            case "old":
-	            	para.put("condition", "old");
-	                break;
+	            case "old": para.put("condition", "old"); break;
 	        }
 	    }	
+		
+		List<ReviewDto> list = rdao.reviewSelect10(para);
 		
 		//아작스용 - 리뷰별 아이디 매칭되는 이미지 여기서 던져주기 
 		for(ReviewDto r : list) {
@@ -245,9 +243,7 @@ public class ReviewServiceImpl implements ReviewService {
 		
 			    if (condition != null) {
 			        switch (condition) {
-			            case "old":
-			            	para.put("condition", "old");
-			                break;
+			            case "old": para.put("condition", "old"); break;
 			        }
 			    }	
 		

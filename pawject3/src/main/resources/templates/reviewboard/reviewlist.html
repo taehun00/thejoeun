@@ -128,9 +128,9 @@ $(document).on("click", ".pageBtn", function(){
 	  currentPageNo = page;
 
 	  if(currentMode === "search"){
-	    doCSSearch(currentSearchType, currentKeyword, page);
+	    doReviewSearch(currentSearchType, currentKeyword, page);
 	  } else {
-	    csPaging(page);
+	    reviewPaging(page);
 	  }
 	});
 
@@ -148,7 +148,7 @@ function reviewPaging(pageNo){
     type: "GET",
     data: data,
     success: function(json){	
-      csPagingResult(json, pageNo);
+      reviewPagingResult(json, pageNo);
       renderPaging(json.paging);
       $("#searchlistBtn").hide();   
     }
@@ -408,6 +408,24 @@ function renderPaging(p){
 
   area.html(html);
 }
+
+//리뷰 연동 모드 꼬임 방지
+function loadReviewsByFoodid(foodid) {
+	  currentMode = "food";
+	  currentPageNo = 1;
+
+	  $.ajax({
+	    url: "/reviewboard/reviewsearchByFoodid",
+	    type: "GET",
+	    data: { foodid },
+	    success: function (json) {
+	      reviewPagingResult(json, 1);
+	      $("#searchlistBtn").show();
+	      $("#pagingArea").empty(); 
+	      $("#writeBtn").hide();
+	    }
+	  });
+	}
 
 
 </script>
