@@ -19,8 +19,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.pawject.dto.food.FoodDto;
 import com.pawject.dto.food.FoodDtoForList;
+import com.pawject.dto.support.CSQuestionDto;
 import com.pawject.service.food.FoodService;
 import com.pawject.service.food.NaverOcrService;
+import com.pawject.util.UtilPaging;
 
 	
 	@RestController
@@ -32,14 +34,20 @@ import com.pawject.service.food.NaverOcrService;
 		//페이징 적용 버전
 		@RequestMapping("/foodselectForList")
 		public Map<String, Object> foodselectForList(
-		    @RequestParam(defaultValue="1") int pstartno){	
+     		@RequestParam(required=false) String condition,
+		    @RequestParam(defaultValue="1") int pageNo){	
 			Map<String, Object> result = new HashMap<>();
 			
 			int total=service.foodselectcnt();
-			List<FoodDtoForList> list = service.foodselect10(pstartno);
+			List<FoodDtoForList> list = service.foodselect10(pageNo, condition);
 			
-			result.put("total", total);
-			result.put("list", list);
+			
+	        UtilPaging paging = new UtilPaging(total, pageNo);  
+
+	        result.put("paging", paging);
+	    	result.put("total", total);
+	    	result.put("list", list);
+
 			
 		    return result;
 		}
@@ -59,19 +67,24 @@ import com.pawject.service.food.NaverOcrService;
 		@RequestMapping("/foodsearch")
 		public Map<String, Object> foodsearch(
 		        @RequestParam("keyword") String keyword,
-		        @RequestParam("searchType") String searchType) {
+		        @RequestParam("searchType") String searchType,
+		        @RequestParam(required=false) String condition,
+		        @RequestParam(value="pageNo", defaultValue="1") int pageNo) {
 
 		    Map<String, Object> result = new HashMap<>();
-
-		    List<FoodDtoForList> list = service.foodsearch(keyword, searchType);
-
-		    result.put("list", list);
-		    result.put("total", list.size());
-		    result.put("pstartno", 1);
+		    int total = service.foodsearchcnt(keyword, searchType);
+		    		
+		    List<FoodDtoForList> list = service.foodsearch(keyword, searchType, condition, pageNo);
+		    UtilPaging paging = new UtilPaging(total, pageNo);
+		    
+		      result.put("total", total);   
+		      result.put("list", list);
+		      result.put("paging", paging);
+		      result.put("search", keyword);
 
 		    return result;
 		}
-	
+		
 		
 		//api
 

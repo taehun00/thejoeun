@@ -31,11 +31,11 @@ public interface ReviewService {
 	public int reviewimgdelete(int reviewimgid);
 	public ReviewImgDto  reviewimgIdSelect(int reviewimgid);
 	
-	public List<ReviewDto> reviewSelect10(int pstartno);	
+	public List<ReviewDto> reviewSelect10(int pstartno, String condition);	
 	public int reviewSelectCnt();
 	
 
-	public List<ReviewDto> reviewsearch(String keyword, String searchType);
+	public List<ReviewDto> reviewsearch(String keyword, String searchType, String condition, int pstartno);
 	public int reviewsearchcnt(String keyword, String searchType);
 	
 	
