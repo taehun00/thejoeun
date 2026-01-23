@@ -1,4 +1,4 @@
-package com.pawject.entity;
+package com.pawject.domain;
 
 public enum RoleType {
     ROLE_MEMBER,

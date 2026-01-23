@@ -16,9 +16,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.pawject.domain.User;
 import com.pawject.dto.request.UserRequestDto;
 import com.pawject.dto.response.UserResponseDto;
-import com.pawject.entity.User;
 import com.pawject.repository.UserRepository;
 import com.pawject.service.user.UserService;
 

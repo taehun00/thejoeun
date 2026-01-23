@@ -1,9 +1,9 @@
-package com.pawject.dto.response;
+package com.pawject.dto.user;
 
 import java.time.LocalDateTime;
 
 import com.pawject.domain.User;
-import com.pawject.dto.response.UserResponseDto;
+import com.pawject.dto.user.UserResponseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,7 +35,6 @@ public class UserResponseDto {
                 .mobile(user.getMobile())
                 .provider(user.getProvider())
                 .providerId(user.getProviderId())
-                .role(user.getRole())
                 .createdAt(user.getCreatedAt())
                 .build();
     }

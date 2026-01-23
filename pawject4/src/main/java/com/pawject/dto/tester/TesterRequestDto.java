@@ -1,5 +1,10 @@
 package com.pawject.dto.tester;
 
+import lombok.Builder;
+import lombok.Data;
+
+@Data
+@Builder
 public class TesterRequestDto {
 	
 	private String category;

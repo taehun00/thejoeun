@@ -6,7 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.pawject.entity.PetType;
+import com.pawject.domain.PetType;
 import com.pawject.repository.PetTypeRepository;
 
 @Configuration

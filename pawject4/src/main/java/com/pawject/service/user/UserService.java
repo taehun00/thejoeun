@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.pawject.dto.request.LoginRequest;
-import com.pawject.dto.request.UserRequestDto;
-import com.pawject.dto.response.UserResponseDto;
-import com.pawject.entity.User;
+import com.pawject.domain.User;
+import com.pawject.dto.user.LoginRequest;
+import com.pawject.dto.user.UserRequestDto;
+import com.pawject.dto.user.UserResponseDto;
 import com.pawject.repository.UserRepository;
 import com.pawject.util.FileStorageService;
 

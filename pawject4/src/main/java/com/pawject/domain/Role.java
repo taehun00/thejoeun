@@ -1,4 +1,4 @@
-package com.pawject.entity;
+package com.pawject.domain;
 
 import java.time.LocalDateTime;
 import java.util.List;

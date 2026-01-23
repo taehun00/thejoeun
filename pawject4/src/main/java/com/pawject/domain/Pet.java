@@ -1,4 +1,4 @@
-package com.pawject.entity;
+package com.pawject.domain;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -36,7 +36,7 @@ public class Pet {
      * VARCHAR2(100)이지만 날짜 의미 → LocalDate 권장
      */
     @Column(name = "BIRTHDATE", length = 100)
-    private LocalDate birthDate;
+    private String birthDate;
 
     /**
      * PET (N) : PETTYPE (1)

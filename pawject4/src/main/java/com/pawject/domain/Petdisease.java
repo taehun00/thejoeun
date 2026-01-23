@@ -4,9 +4,12 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.SequenceGenerator;
@@ -24,12 +27,10 @@ public class Petdisease {
 	@SequenceGenerator(name = "petdisease_seq", sequenceName = "PETDISEASE_SEQ",  allocationSize = 1 )
 	private Long disno;
 	
-	@Column(nullable = false)
-	private Integer adminid;
 	
-	@Column(nullable = false)
-	private Integer pettypeid;
-	
+//	@Column(nullable = false)
+//	private Integer pettypeid;
+//	
 	@Column(nullable = false, length = 100)
 	private String disname;
 	
@@ -55,19 +56,24 @@ public class Petdisease {
 		this.updatedat = LocalDateTime.now();
 	}
 
-	//user 만들어야됨
-//	@ManyToOne
-//	@JoinColumn(name = "ADMINID", referencedColumnName="USERID")
-//	private User user;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ADMINID", referencedColumnName = "USERID")
+	private User admin;
 	
-	//펫타입 만들고 풀기
-//	@ManyToOne
-//	@JoinColumn(name = "PETTYPEID")
-//	private Pettype pettype;	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "PETTYPEID")
+	private PetType pettype;
+	
+	// 읽기 전용
+	@Column(name = "PETTYPEID", insertable = false, updatable = false)
+	private Long pettypeid;
+
+		
+	}	
 	
 	
 	
-}
+
 /**
  *-- (FK) ADMINID : USERS(USERID), PETTYPEID : PETTYPE(PETTYPEID)
 CREATE TABLE PETDISEASE (

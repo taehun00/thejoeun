@@ -1,4 +1,4 @@
-package com.pawject.entity;
+package com.pawject.domain;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -82,4 +82,12 @@ public class User {
     )
     private List<Pet> pet = new ArrayList<>();
     
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Tester> tester = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)  
+	private List<Petdisease> petdis = new ArrayList<>();
+	
+	
+	
 }

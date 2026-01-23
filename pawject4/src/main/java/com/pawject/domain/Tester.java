@@ -36,11 +36,11 @@ public class Tester {
 	@Column(nullable = false)
 	private String content; 
 	
-	@Column(nullable = false)
-	private Integer userid;
+//	@Column(nullable = false)
+//	private Integer userid;
 	
-//	@Column
-//	private Integer foodid;  // 사료게시판 사료와 연관이 있을 경우
+	@Column
+	private Integer foodid;  // 사료게시판 사료와 연관이 있을 경우
 	
 	@Column
 	private Integer status=0;  //0모집중 1모집완료
@@ -71,15 +71,10 @@ public class Tester {
 	}
 	
 	//유저 만들고 풀기
-//	@ManyToOne
-//	@JoinColumn(name = "USERID")
-//	private Users user;
-
-
 	@ManyToOne
-	@JoinColumn(name = "FOODID")
-	private Food food;	
-	
+	@JoinColumn(name = "USERID")
+	private User user;
+
 }
 /**
  * tester 테이블 필요 컬럼
