@@ -13,15 +13,7 @@ import com.pawject.domain.Petdisease;
 
 @Repository
 public interface PetdiseaseReopsitory  extends JpaRepository<Petdisease, Long> {
-	//전체 조회
-	List<Petdisease> petdiseaseSelectAll();
-	
-	//단건 조회
-	List<Petdisease> findByDisno(Long disno);
-	
-	//삭제되지 않은 게시글
-	List<Petdisease> findByDeletedFalse();
-	
+
 	//페이징+검색 -> 컨트롤러에서 처리
 	Page<Petdisease> findByDisnameContaining(
 		    String keyword, Pageable pageable
