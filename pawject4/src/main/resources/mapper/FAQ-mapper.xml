@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pawject.dao.support.FAQDao"> 
-  <resultMap id="FAQMap" type="FAQDto">
+  <resultMap id="FAQMap" type="com.pawject.dto.support.FAQDto">
     <result property="faqid" column="FAQID"/>
     <result property="category" column="CATEGORY"/>
     <result property="question"    column="QUESTION"/>

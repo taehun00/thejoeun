@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pawject.dao.support.CSQuestionDao"> 
-  <resultMap id="CSQuestionMap" type="CSQuestionDto">
+  <resultMap id="CSQuestionMap" type="com.pawject.dto.support.CSQuestionDto">
     <result property="questionid" column="QUESTIONID"/>
     <result property="userid" column="USERID"/>
     <result property="category"    column="CATEGORY"/>

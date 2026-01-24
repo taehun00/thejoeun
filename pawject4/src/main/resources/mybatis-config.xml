@@ -17,6 +17,11 @@
     </settings>
     
  	<typeAliases>
- 		<typeAlias alias="DeptUser"  type="com.thejoa703.domain.DeptUser" />
+ 	    <package name="com.pawject.dto.food"/>
+ 	    <package name="com.pawject.dto.petdisease"/>
+ 	    <package name="com.pawject.dto.review"/>
+ 	    <package name="com.pawject.dto.support"/>
+ 	    <package name="com.pawject.dto.tester"/>
+ 	    <package name="com.pawject.dto.user"/>
  	</typeAliases>
 </configuration>

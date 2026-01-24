@@ -2,7 +2,7 @@ package com.pawject.dto.response;
 
 import java.time.LocalDateTime;
 
-import com.pawject.entity.User;
+import com.pawject.domain.User;
 import com.pawject.dto.response.UserResponseDto;
 
 import lombok.AllArgsConstructor;

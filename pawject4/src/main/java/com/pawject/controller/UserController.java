@@ -4,9 +4,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.pawject.dto.request.LoginRequest;
-import com.pawject.dto.request.UserRequestDto;
-import com.pawject.dto.response.UserResponseDto;
+import com.pawject.dto.user.LoginRequest;
+import com.pawject.dto.user.UserRequestDto;
+import com.pawject.dto.user.UserResponseDto;
 import com.pawject.service.user.UserService;
 
 import lombok.RequiredArgsConstructor;

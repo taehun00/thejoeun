@@ -10,7 +10,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import com.pawject.entity.User;
+import com.pawject.domain.User;
 import com.pawject.security.JwtProperties;
 import com.pawject.security.JwtProvider;
 import com.pawject.security.TokenStore;
@@ -75,7 +75,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         String access = jwtProvider.createAccessToken(user.getUserId().toString(), Map.of(
                 "nickname", user.getNickname(),
                 "provider", user.getProvider(),
-                "role", user.getRole(),
+//                "role", user.getRole(),
                 "email", user.getEmail()
         ));
         String refresh = jwtProvider.createRefreshToken(user.getUserId().toString());

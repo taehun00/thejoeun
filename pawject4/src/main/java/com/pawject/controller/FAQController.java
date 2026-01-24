@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.pawject.domain.FAQ;
 import com.pawject.dto.support.FAQDto;
 import com.pawject.service.support.FAQService;
 import io.swagger.v3.oas.annotations.Operation;

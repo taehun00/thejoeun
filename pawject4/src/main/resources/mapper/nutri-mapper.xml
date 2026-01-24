@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 	<mapper namespace="com.pawject.dao.food.NutriDao">
-	<resultMap type="NutriDto" id="NutriMap">
+	<resultMap type="com.pawject.dto.food.NutriDto" id="NutriMap">
 		<result property="foodid"	column="FOODID"/>
 		<result property="nutrientid"	column="NUTRIENTID"/>
 		<result property="amount"	column="AMOUNT"/>

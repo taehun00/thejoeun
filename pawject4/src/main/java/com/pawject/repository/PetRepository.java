@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.pawject.entity.Pet;
+import com.pawject.domain.Pet;
 
 public interface PetRepository extends JpaRepository<Pet, Long> {
 

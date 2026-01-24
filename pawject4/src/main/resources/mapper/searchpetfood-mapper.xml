@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pawject.dao.food.SearchPetfoodDao">
-	<resultMap type="SearchPetfoodDto" id="SearchPetfoodMap">
+	<resultMap type="com.pawject.dto.food.SearchPetfoodDto" id="SearchPetfoodMap">
 	
 		
 	<!-- 펫타입-->	
