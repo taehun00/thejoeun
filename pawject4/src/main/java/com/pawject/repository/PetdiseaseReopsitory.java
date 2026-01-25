@@ -14,11 +14,25 @@ import com.pawject.domain.Petdisease;
 @Repository
 public interface PetdiseaseReopsitory  extends JpaRepository<Petdisease, Long> {
 
-	//페이징+검색 -> 컨트롤러에서 처리
-	Page<Petdisease> findByDisnameContaining(
-		    String keyword, Pageable pageable
-		);
+	//펫타입 고정 페이징
+	Page<Petdisease> findByPettypeid(Long pettypeid, Pageable pageable);
 	
-	
+	//검색 - 펫타입은 고정
+	@Query("""
+			select p
+			from Petdisease p
+			where p.pettypeid = :pettypeid
+			  and (
+			        :keyword is null
+			        or trim(:keyword) = ''
+			        or lower(p.disname) like lower(concat('%', :keyword, '%'))
+			        or lower(p.disexplain) like lower(concat('%', :keyword, '%'))
+			  )
+			""")
+			Page<Petdisease> searchKeyword(
+			        @Param("pettypeid") Long pettypeid,
+			        @Param("keyword") String keyword,
+			        Pageable pageable
+			);
 	
 }

@@ -1,7 +1,7 @@
 package com.pawject.dto.petdisease;
 
 import com.pawject.domain.Petdisease;
-import com.pawject.dto.tester.TesterRequestDto;
+import com.pawject.dto.tester.TesterAdminRequestDto;
 
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +10,7 @@ import lombok.Data;
 @Builder
 public class PetdiseaseResponseDto {
 
-	private int disno;
+	private Long disno;
 	private int adminid;
 	private Long pettypeid;
 	private String disname;
@@ -19,15 +19,20 @@ public class PetdiseaseResponseDto {
 	private String createdat;
 	private String updatedat;
 	
-	public static PetdiseaseResponseDto form(Petdisease petdis) {
+	public static PetdiseaseResponseDto from(Petdisease p){
 	    return PetdiseaseResponseDto.builder()
-	        .pettypeid(petdis.getPettypeid())
-	        .disname(petdis.getDisname())
-	        .disexplain(petdis.getDisexplain())
-	        .recommend(petdis.getRecommend())
-	        .build();
+	            .disno(p.getDisno() == null ? null : p.getDisno().longValue())
+	            .adminid(p.getAdmin() == null || p.getAdmin().getUserId() == null ? 0 : p.getAdmin().getUserId().intValue())
+	            .pettypeid(p.getPettype() == null ? null : p.getPettype().getPetTypeId())
+	            .disname(p.getDisname())
+	            .disexplain(p.getDisexplain())
+	            .recommend(p.getRecommend())
+	            .createdat(p.getCreatedat() == null ? null : p.getCreatedat().toString())
+	            .updatedat(p.getUpdatedat() == null ? null : p.getUpdatedat().toString())
+	            .build();
 	}
 }
+
 
 /**
  *-- (FK) USERID : USERS(USERID), PETTYPEID : PETTYPE(PETTYPEID)
