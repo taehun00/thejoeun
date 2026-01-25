@@ -1,5 +1,6 @@
 package com.pawject.domain;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,8 +10,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter @Setter
 @Table(name = "PETTYPE")
 public class PetType {
 
@@ -32,4 +36,6 @@ public class PetType {
     
 	@OneToMany(mappedBy = "pettype", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Petdisease> petdisease = new ArrayList<>();
+
+
 }

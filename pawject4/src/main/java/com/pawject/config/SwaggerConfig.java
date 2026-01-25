@@ -17,7 +17,7 @@ public class SwaggerConfig {
     public OpenAPI openAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Thejoa703 API")
+                        .title("Pawject API")
                         .description("Spring Boot + JWT + Redis + OAuth2 인증 API 문서")
                         .version("v1.0"))
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
