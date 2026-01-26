@@ -46,8 +46,8 @@ public class FoodController {
 	@Operation(summary = "사료리스트")
 	@RequestMapping("/foodselectForList")
 	public Map<String, Object> foodselectForList(
- 		@RequestParam(required=false) String condition,
-	    @RequestParam(defaultValue="1") int pageNo){	
+ 		@RequestParam(name="condition", required=false) String condition,
+	    @RequestParam(name="pageNo",defaultValue="1") int pageNo){	
 		Map<String, Object> result = new HashMap<>();
 		
 		int total=service.foodselectcnt();
@@ -65,7 +65,7 @@ public class FoodController {
 	//빠른 삭제
 	@Operation(summary = "빠른삭제")
 	@PostMapping("/foodquikdelete")
-	public Map<String, Object> foodquikdelete(@RequestParam int foodid){
+	public Map<String, Object> foodquikdelete(@RequestParam(name="foodid") int foodid){
 		Map<String, Object> result = new HashMap<>();
 		FoodDto fdto = new FoodDto();
 		fdto.setFoodid(foodid);
@@ -78,10 +78,10 @@ public class FoodController {
 	@Operation(summary = "검색")
 	@RequestMapping("/foodsearch")
 	public Map<String, Object> foodsearch(
-	        @RequestParam("keyword") String keyword,
-	        @RequestParam("searchType") String searchType,
-	        @RequestParam(required=false) String condition,
-	        @RequestParam(value="pageNo", defaultValue="1") int pageNo) {
+	        @RequestParam(name="keyword") String keyword,
+	        @RequestParam(name="searchType") String searchType,
+	        @RequestParam(name="condition", required=false) String condition,
+	        @RequestParam(name="pageNo", defaultValue="1") int pageNo) {
 
 	    Map<String, Object> result = new HashMap<>();
 	    int total = service.foodsearchcnt(keyword, searchType);
@@ -103,7 +103,7 @@ public class FoodController {
 	@Operation(summary = "네이버 OCR")
 	@PostMapping("/naverocr")
 	@ResponseBody  //빼먹지 말기
-    public String analyzeImage(@RequestParam("ocrfile") MultipartFile ocrfile) throws IOException {
+    public String analyzeImage(@RequestParam(name="ocrfile") MultipartFile ocrfile) throws IOException {
         File convFile = new File(System.getProperty("java.io.tmpdir") + "/" + ocrfile.getOriginalFilename());
         ocrfile.transferTo(convFile);
         String result = nservice.callOcrApi(convFile);
@@ -115,7 +115,7 @@ public class FoodController {
 	@Operation(summary = "사료 등록/수정 정보")
 	@GetMapping("/form")
 	public Map<String, Object> foodFormData(
-	        @RequestParam(required = false) Integer foodid) {
+	        @RequestParam(name="foodid", required = false) Integer foodid) {
 
 	    Map<String, Object> result = new HashMap<>();
 	    //공통
@@ -135,9 +135,9 @@ public class FoodController {
 	@PostMapping("/foodwrite")
 	public Map<String, Object> writeFood(
 	        FoodDto fdto,
-	        @RequestParam(required = false) List<String> nutrientid,
-	        @RequestParam(required = false) List<String> amount,
-	        @RequestParam("file") MultipartFile file) throws IOException {
+	        @RequestParam(name="nutrientid", required = false) List<String> nutrientid,
+	        @RequestParam(name="amount", required = false) List<String> amount,
+	        @RequestParam(name="file") MultipartFile file) throws IOException {
 	    Map<String, Object> result = new HashMap<>();
 
 	    // 사료 입력
@@ -168,7 +168,7 @@ public class FoodController {
 	
 	@Operation(summary = "사료 상세 + 영양 정보")
 	@GetMapping("/detail/{foodid}")
-	public Map<String, Object> getFoodDetail(@PathVariable int foodid) {
+	public Map<String, Object> getFoodDetail(@PathVariable(name="foodid") int foodid) {
 	    Map<String, Object> result = new HashMap<>();
 	    result.put("fdto", service.foodselectwithBrand(foodid));
 	    result.put("nutrientList", service.nutriselectWithInfo(foodid));
@@ -178,11 +178,11 @@ public class FoodController {
 	@Operation(summary = "사료 수정")
 	@PutMapping("/edit/{foodid}")
 	public Map<String, Object> updateFood(
-			@PathVariable int foodid,
+			@PathVariable(name="foodid") int foodid,
 	        FoodDto fdto,
-	        @RequestParam(required = false) List<Integer> nutrientid,
-	        @RequestParam(required = false) List<String> amount,
-	        @RequestParam("file") MultipartFile file){
+	        @RequestParam(name="nutrientid", required = false) List<Integer> nutrientid,
+	        @RequestParam(name="amount", required = false) List<String> amount,
+	        @RequestParam(name="file") MultipartFile file){
 		fdto.setFoodid(foodid);  //누락 주의
 		Map<String, Object> result = new HashMap<>();
 		// 사료 입력
@@ -210,7 +210,7 @@ public class FoodController {
 	}
 	@Operation(summary = "사료 삭제")
 	@DeleteMapping
-	public ResponseEntity<Void> deleteByFoodid(@RequestParam int foodid){
+	public ResponseEntity<Void> deleteByFoodid(@RequestParam(name="foodid") int foodid){
 
 	    service.nutrideleteAll(foodid);
 	    int result = service.fooddelete(foodid);
