@@ -69,7 +69,7 @@ export default function FoodTableColumns({
       color: "#111",          
       textDecoration: "none",
           render: (brandname) => {
-        const label = brandname 
+        const label = brandname; 
         return (
         <span
             onClick={() => onBrandFilter(brandname)}
