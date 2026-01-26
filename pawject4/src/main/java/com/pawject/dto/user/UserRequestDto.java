@@ -19,6 +19,5 @@ public class UserRequestDto {
 
     // 소셜 로그인용
     private String provider;    // local, google, kakao ...
-    private String providerId;  // 소셜 제공자 ID
 
 }

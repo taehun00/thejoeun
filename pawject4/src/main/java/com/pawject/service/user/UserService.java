@@ -1,5 +1,7 @@
 package com.pawject.service.user;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,6 +14,7 @@ import com.pawject.dto.user.LoginRequest;
 import com.pawject.dto.user.UserRequestDto;
 import com.pawject.dto.user.UserResponseDto;
 import com.pawject.repository.UserRepository;
+import com.pawject.security.JwtProvider;
 import com.pawject.util.FileStorageService;
 
 import lombok.RequiredArgsConstructor;
@@ -26,6 +29,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final FileStorageService fileStorageService;
+    private final JwtProvider jwtProvider;
+
 
     private static final String DEFAULT_PROVIDER = "local";
     private static final String DEFAULT_PROFILE_IMAGE = "uploads/default.png";
@@ -45,9 +50,10 @@ public class UserService {
         }
 
         // 닉네임 중복 체크
-        if (userRepository.existsByNickname(request.getNickname())) {
+        if (userRepository.findByNickname(request.getNickname()).isPresent()) {
             throw new IllegalArgumentException("이미 사용중인 닉네임입니다.");
         }
+
 
         String profilePath = (profileImage != null && !profileImage.isEmpty())
                 ? fileStorageService.upload(profileImage)
@@ -82,7 +88,17 @@ public class UserService {
             throw new IllegalArgumentException("비밀번호 불일치");
         }
 
-        return UserResponseDto.fromEntity(user);
+        // ★ 토큰 발급
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", user.getRole());
+        claims.put("provider", user.getProvider());
+
+        String accessToken = jwtProvider.createAccessToken(user.getEmail(), claims);
+        String refreshToken = jwtProvider.createRefreshToken(user.getEmail());
+
+        
+        return UserResponseDto.fromEntity(user, accessToken, refreshToken);
+
     }
 
     /* =========================
@@ -103,7 +119,8 @@ public class UserService {
      ========================= */
     public UserResponseDto updateNickname(Long userId, String newNickname) {
 
-        if (userRepository.existsByNickname(newNickname)) {
+    	if (userRepository.findByNickname(newNickname).isPresent()) {
+
             throw new IllegalArgumentException("이미 사용중인 닉네임입니다.");
         }
 
@@ -114,6 +131,19 @@ public class UserService {
 
         return UserResponseDto.fromEntity(userRepository.save(user));
     }
+    
+	 // 프로필 이미지 변경
+	    public UserResponseDto updateProfileImage(Long userId, MultipartFile profileImage) {
+	        User user = userRepository.findById(userId)
+	                .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
+	
+	        user.setUfile(profileImage != null && !profileImage.isEmpty()
+	                ? fileStorageService.upload(profileImage)
+	                : DEFAULT_PROFILE_IMAGE);
+	
+	        return UserResponseDto.fromEntity(userRepository.save(user));
+	    }
+
 
     /* =========================
        사용자 탈퇴

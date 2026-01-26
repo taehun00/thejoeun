@@ -22,9 +22,13 @@ public class UserResponseDto {
     private String ufile;
     private String mobile;
     private String provider;
-    private String providerId;
     private String role;
     private LocalDateTime createdAt;
+    
+ // ★ 토큰 필드 추가
+    private String accessToken;
+    private String refreshToken;
+
 
     public static UserResponseDto fromEntity(User user) {
         return UserResponseDto.builder()
@@ -34,8 +38,23 @@ public class UserResponseDto {
                 .ufile(user.getUfile())
                 .mobile(user.getMobile())
                 .provider(user.getProvider())
-                .providerId(user.getProviderId())
                 .createdAt(user.getCreatedAt())
                 .build();
     }
+ // ★ 토큰 포함 버전
+    public static UserResponseDto fromEntity(User user, String accessToken, String refreshToken) {
+        return UserResponseDto.builder()
+                .userId(user.getUserId())
+                .email(user.getEmail())
+                .nickname(user.getNickname())
+                .ufile(user.getUfile())
+                .mobile(user.getMobile())
+                .provider(user.getProvider())
+                .role(user.getRole())
+                .createdAt(user.getCreatedAt())
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
 }

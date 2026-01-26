@@ -2,11 +2,14 @@ package com.pawject.security;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
+
 import lombok.Data;
 
 // 1. 토큰 (출입증) 
 @Data
-@Configuration  // 설정클래스
+//@Configuration  // 설정클래스
+@Component
 @ConfigurationProperties(prefix = "jwt")  // application.yml  jwt.* 연결
 public class JwtProperties {
     private String issuer;  // JWT 발급주체
