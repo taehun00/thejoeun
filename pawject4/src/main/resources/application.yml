@@ -1,4 +1,7 @@
 spring:
+  profiles:
+    active: private
+
   datasource:
     url: jdbc:oracle:thin:@localhost:1521/xe
     username: SCOTT
@@ -7,7 +10,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update   # dev 환경에서는 update, test 환경에서는 create-drop 권장
+      ddl-auto: update   # dev=update / test=create-drop 권장
     properties:
       hibernate:
         format_sql: true
@@ -17,7 +20,7 @@ spring:
     multipart:
       enabled: true
       max-file-size: 10MB
-      max-request-size: 20MB      
+      max-request-size: 20MB
 
   data:
     redis:
@@ -28,10 +31,13 @@ spring:
   config:
     import: optional:application-oauth.yml
 
+server:
+  port: 8484
+
 mybatis:
   config-location: classpath:mybatis-config.xml
   mapper-locations: classpath:mapper/**/*.xml
-  type-aliases-package: com.pawject.domain 
+  type-aliases-package: com.pawject.domain
 
 jwt:
   issuer: pawject
@@ -42,8 +48,16 @@ jwt:
   prefix: Bearer
 
 file:
-  upload-dir: uploads
-  upload-path: C:/upload/foodimg
+  upload-dir: C:/upload
+  upload-path: C:/upload
 
-server:                 
-  port: 8484
+## 개인 api 오류 방지용 - 빈값 넣어주세요 (공용)
+openai:
+  api:
+    key:
+      hj: ""
+
+naver:
+  ocr:
+    key: ""
+    url: ""

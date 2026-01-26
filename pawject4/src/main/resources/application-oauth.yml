@@ -44,19 +44,3 @@ spring:
 app:
   oauth2:
     redirect-url: http://localhost:3000/oauth2/callback
-
-  ## application-local.yml에 진짜 값 넣고 활성화
-  spring:
-    profiles:
-      active: local		
-
-  ## 개인 api 오류 방지용 - 빈값 넣어주세요
-openai:
-  api:
-    key:
-      hj: ""
-
-naver:
-  ocr:
-    key: ""
-    url: ""

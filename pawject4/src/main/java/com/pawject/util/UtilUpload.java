@@ -12,16 +12,20 @@ import org.springframework.web.multipart.MultipartFile;
 @Component
 public class UtilUpload {
 
-    @Value("${file.upload-path}")
-    private String resourcePath;
+	@Value("${file.upload-dir}")
+	private String resourcePath;
 
-    public String fileUpload(MultipartFile file) throws IOException {
+    public String fileUpload(MultipartFile file, String subDir) throws IOException {
         UUID uid = UUID.randomUUID();
         String save = uid + "_" + file.getOriginalFilename();
 
-        File target = new File(resourcePath, save);
+        File targetDir = new File(resourcePath, subDir);
+        if (!targetDir.exists()) targetDir.mkdirs();
+
+        File target = new File(targetDir, save);
         FileCopyUtils.copy(file.getBytes(), target);
 
-        return save;
+        return subDir + "/" + save;  // DB엔 "foodimg/xxx.png" 식으로 저장
     }
+  
 }

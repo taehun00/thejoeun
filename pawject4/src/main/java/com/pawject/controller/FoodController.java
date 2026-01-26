@@ -11,21 +11,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.pawject.dto.food.BrandDto;
 import com.pawject.dto.food.FoodDto;
 import com.pawject.dto.food.FoodDtoForList;
 import com.pawject.dto.food.NutriDto;
-import com.pawject.dto.support.FAQDto;
 import com.pawject.service.food.FoodService;
 import com.pawject.service.food.NaverOcrService;
 import com.pawject.util.UtilPaging;
@@ -38,7 +36,7 @@ import lombok.RequiredArgsConstructor;
 @RestController 
 @RequiredArgsConstructor 
 @RequestMapping("/foodboard")
-@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
+//@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 public class FoodController {
 	@Autowired private FoodService service;
 
@@ -134,10 +132,11 @@ public class FoodController {
 	@Operation(summary = "신규 사료 등록")
 	@PostMapping("/foodwrite")
 	public Map<String, Object> writeFood(
-	        FoodDto fdto,
-	        @RequestParam(name="nutrientid", required = false) List<String> nutrientid,
-	        @RequestParam(name="amount", required = false) List<String> amount,
-	        @RequestParam(name="file") MultipartFile file) throws IOException {
+	        @ModelAttribute FoodDto fdto,
+	        @RequestParam(name="nutrientid", required=false) List<String> nutrientid,
+	        @RequestParam(name="amount", required=false) List<String> amount,
+	        @RequestParam(name="file", required=false) MultipartFile file
+	        ) throws IOException {
 	    Map<String, Object> result = new HashMap<>();
 
 	    // 사료 입력
@@ -182,7 +181,7 @@ public class FoodController {
 	        FoodDto fdto,
 	        @RequestParam(name="nutrientid", required = false) List<Integer> nutrientid,
 	        @RequestParam(name="amount", required = false) List<String> amount,
-	        @RequestParam(name="file") MultipartFile file){
+	        @RequestParam(name="file" , required = false) MultipartFile file){
 		fdto.setFoodid(foodid);  //누락 주의
 		Map<String, Object> result = new HashMap<>();
 		// 사료 입력

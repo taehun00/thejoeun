@@ -55,10 +55,8 @@ const foodSlice = createSlice({
   name: "food",
   initialState,
   reducers: {
-    // =========================
-    // 목록
-    // payload: { pageNo, condition }
-    // =========================
+
+    // 목록 - payload: { pageNo, condition } 컨트롤러 값 참고
     fetchFoodsRequest: (state, action) => {
       state.loading = true;
       state.error = null;
@@ -76,10 +74,7 @@ const foodSlice = createSlice({
       state.error = action.payload;
     },
 
-    // =========================
-    // 검색
-    // payload: { keyword, searchType, pageNo, condition }
-    // =========================
+    // 검색 - payload: { keyword, searchType, pageNo, condition }
     searchFoodsRequest: (state, action) => {
       state.loading = true;
       state.error = null;
@@ -101,17 +96,12 @@ const foodSlice = createSlice({
       state.error = action.payload;
     },
 
-    // =========================
-    // 정렬
-    // =========================
+    //정렬
     setCondition: (state, action) => {
       state.condition = action.payload || "";
     },
 
-    // =========================
-    // 상세
-    // payload: { foodid }
-    // =========================
+    // 상세 payload: { foodid }
     fetchFoodDetailRequest: (state, action) => {
       state.loading = true;
       state.error = null;
@@ -127,14 +117,11 @@ const foodSlice = createSlice({
       state.detail = null;
     },
 
-    // =========================
-    // 폼 데이터 (등록/수정 공통)
-    // payload: { foodid? }
-    // =========================
-    fetchFoodFormRequest: (state, action) => {
+    // 폼 데이터 (등록/수정 공통) - payload: { foodid? }
+    fetchFoodFormRequest: (state) => {
       state.loading = true;
       state.error = null;
-      state.formData = null;
+      // 기존 formData 유지하면서 loading만
     },
     fetchFoodFormSuccess: (state, action) => {
       state.loading = false;
@@ -146,10 +133,7 @@ const foodSlice = createSlice({
       state.formData = null;
     },
 
-    // =========================
-    // OCR
-    // payload: { file }
-    // =========================
+    // OCR payload: { file }
     foodOcrRequest: (state, action) => {
       state.ocrLoading = true;
       state.ocrError = null;
@@ -164,10 +148,7 @@ const foodSlice = createSlice({
       state.ocrError = action.payload;
     },
 
-    // =========================
-    // 등록
-    // payload: { dto, nutrientid[], amount[], file }
-    // =========================
+    // 등록  payload: { dto, nutrientid[], amount[], file }
     createFoodRequest: (state, action) => {
       state.writeLoading = true;
       state.writeSuccess = false;
@@ -183,10 +164,8 @@ const foodSlice = createSlice({
       state.writeError = action.payload;
     },
 
-    // =========================
     // 수정
     // payload: { foodid, dto, nutrientid[], amount[], file }
-    // =========================
     updateFoodRequest: (state, action) => {
       state.editLoading = true;
       state.editSuccess = false;
@@ -201,10 +180,7 @@ const foodSlice = createSlice({
       state.editError = action.payload;
     },
 
-    // =========================
-    // 삭제 (정식 삭제)
-    // payload: { foodid }
-    // =========================
+    // 일반 삭제 payload: { foodid }
     deleteFoodRequest: (state, action) => {
       state.deleteLoading = true;
       state.deleteSuccess = false;
@@ -223,10 +199,7 @@ const foodSlice = createSlice({
       state.deleteError = action.payload;
     },
 
-    // =========================
-    // 빠른삭제
-    // payload: { foodid }
-    // =========================
+    // 빠른삭제 payload: { foodid }
     quickDeleteFoodRequest: (state, action) => {
       state.deleteLoading = true;
       state.deleteSuccess = false;
@@ -245,9 +218,7 @@ const foodSlice = createSlice({
       state.deleteError = action.payload;
     },
 
-    // =========================
-    // 플래그 리셋 (페이지 이동 시 유용)
-    // =========================
+    // 플래그 리셋 (성공, 실패 초기화)
     resetFoodFlags: (state) => {
       state.writeSuccess = false;
       state.writeError = null;
