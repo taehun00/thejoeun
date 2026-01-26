@@ -68,12 +68,12 @@
 		update review set brandid=#{brandid}, foodid=#{foodid}, 
 						rating=#{rating}, title=#{title}, 
 						reviewcomment=#{reviewcomment}, updatedat=sysdate
-			where reviewid=#{reviewid} 
+			where reviewid=#{reviewid}  and userid = #{userid}
 	</update>
 	
 	<!-- 삭제 -->
 	<delete id="reviewDelete" parameterType="int">
-		delete from review where reviewid=#{reviewid} 
+		delete from review where reviewid=#{reviewid}   and userid = #{userid}
 	</delete>
 	
 	

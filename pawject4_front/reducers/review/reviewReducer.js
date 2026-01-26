@@ -1,279 +1,326 @@
-// reducers/foodReducer.js
+// reducers/reviewReducer.js
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   // 목록
-  foods: [],
+  reviews: [],
   total: 0,
   paging: null,
   mode: "list", // "list" | "search"
   pageNo: 1,
+  condition: "new",
 
-  // 검색/정렬
+  // 상세 (토글용)
+  detail: {
+    reviewid: null,
+    dto: null, // ReviewDto (dto 안에 reviewimglist 포함)
+    loading: false,
+    error: null,
+  },
+
+  // 모달 전용 (foodid 리뷰 목록)
+  modal: {
+    foodid: null,
+    total: 0,
+    list: [],
+    loading: false,
+    error: null,
+    open: false,
+  },
+
+  // 검색
   keyword: "",
   searchType: "all",
-  condition: "",
 
-  // 상세
-  detail: null, // { fdto, nutrientList }
-
-  // 폼 데이터
+  // 폼 데이터 (/reviewboard/form)
   formData: null,
-  // formData 구조 (컨트롤러 /foodboard/form)
-  // {
-  //   brandlist: [],
-  //   nutrientlist: [],
-  //   dto?: 수정 시 fdto,
-  //   nutriList?: 수정 시 기존 영양소 리스트
-  // }
 
-  // OCR
-  ocrLoading: false,
-  ocrResult: "",
-  ocrError: null,
+  // 문장 순화 API (/reviewboard/reviewapi)
+  polishLoading: false,
+  polishResult: "",
+  polishError: null,
+  polishSuccess: false,
 
-  // 등록/수정
+  // 등록
   writeLoading: false,
   writeSuccess: false,
   writeError: null,
+  createdReviewId: null,
 
+  // 수정
   editLoading: false,
   editSuccess: false,
   editError: null,
+  updatedReviewId: null,
 
-  // 삭제+빠른삭제
+  // 삭제
   deleteLoading: false,
   deleteSuccess: false,
   deleteError: null,
 
-  // 공통 
+  // 공통
   loading: false,
   error: null,
 };
 
-const foodSlice = createSlice({
-  name: "food",
+const reviewSlice = createSlice({
+  name: "review",
   initialState,
   reducers: {
 
-    // 목록 - payload: { pageNo, condition } 컨트롤러 값 참고
-    fetchFoodsRequest: (state, action) => {
+    // 목록
+    // payload: { pageNo, condition }
+    fetchReviewsRequest: (state, action) => {
       state.loading = true;
       state.error = null;
-    },
-    fetchFoodsSuccess: (state, action) => {
-      state.loading = false;
       state.mode = "list";
-      state.foods = action.payload?.list || [];
+      state.pageNo = action.payload?.pageNo || 1;
+      state.condition = action.payload?.condition || state.condition;
+    },
+    // payload: { list, total, paging }
+    fetchReviewsSuccess: (state, action) => {
+      state.loading = false;
+      state.reviews = action.payload?.list || [];
       state.total = action.payload?.total || 0;
       state.paging = action.payload?.paging || null;
-      state.pageNo = action.payload?.pageNo || 1;
     },
-    fetchFoodsFailure: (state, action) => {
+    fetchReviewsFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
     },
 
-    // 검색 - payload: { keyword, searchType, pageNo, condition }
-    searchFoodsRequest: (state, action) => {
+    // 검색
+    // payload: { keyword, searchType, pageNo, condition }
+    searchReviewsRequest: (state, action) => {
       state.loading = true;
       state.error = null;
 
       state.mode = "search";
       state.keyword = action.payload?.keyword || "";
       state.searchType = action.payload?.searchType || "all";
+      state.pageNo = action.payload?.pageNo || 1;
+      state.condition = action.payload?.condition || state.condition;
     },
-    searchFoodsSuccess: (state, action) => {
+    // payload: { list, total, paging }
+    searchReviewsSuccess: (state, action) => {
       state.loading = false;
-      state.mode = "search";
-      state.foods = action.payload?.list || [];
+      state.reviews = action.payload?.list || [];
       state.total = action.payload?.total || 0;
       state.paging = action.payload?.paging || null;
-      state.pageNo = action.payload?.pageNo || 1;
     },
-    searchFoodsFailure: (state, action) => {
+    searchReviewsFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
     },
 
-    //정렬
+    // 정렬
+    // payload: condition (string)
     setCondition: (state, action) => {
-      state.condition = action.payload || "";
+      state.condition = action.payload || "new";
     },
 
-    // 상세 payload: { foodid }
-    fetchFoodDetailRequest: (state, action) => {
+    // 폼 데이터 GET (/reviewboard/form)
+    // payload: { reviewid? }
+    fetchReviewFormRequest: (state) => {
       state.loading = true;
       state.error = null;
-      state.detail = null;
     },
-    fetchFoodDetailSuccess: (state, action) => {
-      state.loading = false;
-      state.detail = action.payload;
-    },
-    fetchFoodDetailFailure: (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-      state.detail = null;
-    },
-
-    // 폼 데이터 (등록/수정 공통) - payload: { foodid? }
-    fetchFoodFormRequest: (state) => {
-      state.loading = true;
-      state.error = null;
-      // 기존 formData 유지하면서 loading만
-    },
-    fetchFoodFormSuccess: (state, action) => {
+    // payload: { brandlist, foodlist, dto?, imglist? }
+    fetchReviewFormSuccess: (state, action) => {
       state.loading = false;
       state.formData = action.payload;
     },
-    fetchFoodFormFailure: (state, action) => {
+    fetchReviewFormFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
       state.formData = null;
     },
 
-    // OCR payload: { file }
-    foodOcrRequest: (state, action) => {
-      state.ocrLoading = true;
-      state.ocrError = null;
-      state.ocrResult = "";
+    // 문장 순화 API (/reviewboard/reviewapi)
+    // payload: { title, reviewcomment }
+    reviewPolishRequest: (state) => {
+      state.polishLoading = true;
+      state.polishResult = "";
+      state.polishError = null;
+      state.polishSuccess = false;
     },
-    foodOcrSuccess: (state, action) => {
-      state.ocrLoading = false;
-      state.ocrResult = action.payload || "";
+    // payload: string
+    reviewPolishSuccess: (state, action) => {
+      state.polishLoading = false;
+      state.polishResult = action.payload || "";
+      state.polishError = null;
+      state.polishSuccess = true;
     },
-    foodOcrFailure: (state, action) => {
-      state.ocrLoading = false;
-      state.ocrError = action.payload;
+    reviewPolishFailure: (state, action) => {
+      state.polishLoading = false;
+      state.polishError = action.payload;
+      state.polishSuccess = false;
     },
 
-    // 등록  payload: { dto, nutrientid[], amount[], file }
-    createFoodRequest: (state, action) => {
+    // 등록 (글+이미지 통합)
+    // POST /reviewboard/reviewwrite
+    // payload: { dto, files? }
+    createReviewRequest: (state) => {
       state.writeLoading = true;
       state.writeSuccess = false;
       state.writeError = null;
+      state.createdReviewId = null;
     },
-    createFoodSuccess: (state, action) => {
+    // payload: reviewid (number)
+    createReviewSuccess: (state, action) => {
       state.writeLoading = false;
       state.writeSuccess = true;
-      // action.payload: { success, foodid }
+      state.createdReviewId = action.payload;
     },
-    createFoodFailure: (state, action) => {
+    createReviewFailure: (state, action) => {
       state.writeLoading = false;
       state.writeError = action.payload;
     },
 
-    // 수정
-    // payload: { foodid, dto, nutrientid[], amount[], file }
-    updateFoodRequest: (state, action) => {
+    // 수정 (글+이미지 통합)
+    // POST /reviewboard/reviewedit/{reviewid}
+    // payload: { reviewid, dto, files? }
+    updateReviewRequest: (state) => {
       state.editLoading = true;
       state.editSuccess = false;
       state.editError = null;
+      state.updatedReviewId = null;
     },
-    updateFoodSuccess: (state, action) => {
+    // payload: reviewid (number)
+    updateReviewSuccess: (state, action) => {
       state.editLoading = false;
       state.editSuccess = true;
+      state.updatedReviewId = action.payload;
     },
-    updateFoodFailure: (state, action) => {
+    updateReviewFailure: (state, action) => {
       state.editLoading = false;
       state.editError = action.payload;
     },
 
-    // 일반 삭제 payload: { foodid }
-    deleteFoodRequest: (state, action) => {
+    // 삭제
+    // DELETE /reviewboard?reviewid=xx
+    // payload: reviewid
+    deleteReviewRequest: (state) => {
       state.deleteLoading = true;
       state.deleteSuccess = false;
       state.deleteError = null;
     },
-    deleteFoodSuccess: (state, action) => {
+    // payload: reviewid
+    deleteReviewSuccess: (state, action) => {
       state.deleteLoading = false;
       state.deleteSuccess = true;
 
-      const foodid = action.payload;
-      state.foods = state.foods.filter((f) => f.foodid !== foodid);
+      const reviewid = action.payload;
+      state.reviews = state.reviews.filter((r) => r.reviewid !== reviewid);
       state.total = state.total > 0 ? state.total - 1 : 0;
     },
-    deleteFoodFailure: (state, action) => {
+    deleteReviewFailure: (state, action) => {
       state.deleteLoading = false;
       state.deleteError = action.payload;
     },
 
-    // 빠른삭제 payload: { foodid }
-    quickDeleteFoodRequest: (state, action) => {
-      state.deleteLoading = true;
-      state.deleteSuccess = false;
-      state.deleteError = null;
+    // 모달 foodid 리뷰 목록
+    // GET /reviewboard/reviewsearchByFoodid?foodid=xx
+    // payload: foodid
+    fetchModalReviewsRequest: (state, action) => {
+      state.modal.loading = true;
+      state.modal.error = null;
+      state.modal.open = true;
+      state.modal.foodid = action.payload;
     },
-    quickDeleteFoodSuccess: (state, action) => {
-      state.deleteLoading = false;
-      state.deleteSuccess = true;
+    // payload: { total, list }
+    fetchModalReviewsSuccess: (state, action) => {
+      state.modal.loading = false;
+      state.modal.total = action.payload?.total || 0;
+      state.modal.list = action.payload?.list || [];
+    },
+    fetchModalReviewsFailure: (state, action) => {
+      state.modal.loading = false;
+      state.modal.error = action.payload;
+    },
+    closeModalReviews: (state) => {
+      state.modal.open = false;
+      state.modal.foodid = null;
+      state.modal.total = 0;
+      state.modal.list = [];
+      state.modal.loading = false;
+      state.modal.error = null;
+    },
 
-      const foodid = action.payload;
-      state.foods = state.foods.filter((f) => f.foodid !== foodid);
-      state.total = state.total > 0 ? state.total - 1 : 0;
-    },
-    quickDeleteFoodFailure: (state, action) => {
-      state.deleteLoading = false;
-      state.deleteError = action.payload;
-    },
-
-    // 플래그 리셋 (성공, 실패 초기화)
-    resetFoodFlags: (state) => {
+    // 플래그 리셋
+    resetReviewFlags: (state) => {
       state.writeSuccess = false;
       state.writeError = null;
+      state.createdReviewId = null;
 
       state.editSuccess = false;
       state.editError = null;
+      state.updatedReviewId = null;
 
       state.deleteSuccess = false;
       state.deleteError = null;
 
-      state.ocrError = null;
+      state.polishSuccess = false;
+      state.polishError = null;
+    },
+
+    // detail 토글용 (API 호출 x)
+    // payload: ReviewDto
+    openReviewDetail: (state, action) => {
+      state.detail.reviewid = action.payload?.reviewid || null;
+      state.detail.dto = action.payload || null;
+      state.detail.loading = false;
+      state.detail.error = null;
+    },
+    closeReviewDetail: (state) => {
+      state.detail.reviewid = null;
+      state.detail.dto = null;
+      state.detail.loading = false;
+      state.detail.error = null;
     },
   },
 });
 
 export const {
-  fetchFoodsRequest,
-  fetchFoodsSuccess,
-  fetchFoodsFailure,
+  fetchReviewsRequest,
+  fetchReviewsSuccess,
+  fetchReviewsFailure,
 
-  searchFoodsRequest,
-  searchFoodsSuccess,
-  searchFoodsFailure,
+  searchReviewsRequest,
+  searchReviewsSuccess,
+  searchReviewsFailure,
 
   setCondition,
 
-  fetchFoodDetailRequest,
-  fetchFoodDetailSuccess,
-  fetchFoodDetailFailure,
+  fetchReviewFormRequest,
+  fetchReviewFormSuccess,
+  fetchReviewFormFailure,
 
-  fetchFoodFormRequest,
-  fetchFoodFormSuccess,
-  fetchFoodFormFailure,
+  reviewPolishRequest,
+  reviewPolishSuccess,
+  reviewPolishFailure,
 
-  foodOcrRequest,
-  foodOcrSuccess,
-  foodOcrFailure,
+  createReviewRequest,
+  createReviewSuccess,
+  createReviewFailure,
 
-  createFoodRequest,
-  createFoodSuccess,
-  createFoodFailure,
+  updateReviewRequest,
+  updateReviewSuccess,
+  updateReviewFailure,
 
-  updateFoodRequest,
-  updateFoodSuccess,
-  updateFoodFailure,
+  deleteReviewRequest,
+  deleteReviewSuccess,
+  deleteReviewFailure,
 
-  deleteFoodRequest,
-  deleteFoodSuccess,
-  deleteFoodFailure,
+  fetchModalReviewsRequest,
+  fetchModalReviewsSuccess,
+  fetchModalReviewsFailure,
+  closeModalReviews,
 
-  quickDeleteFoodRequest,
-  quickDeleteFoodSuccess,
-  quickDeleteFoodFailure,
+  openReviewDetail,
+  closeReviewDetail,
 
-  resetFoodFlags,
-} = foodSlice.actions;
+  resetReviewFlags,
+} = reviewSlice.actions;
 
-export default foodSlice.reducer;
+export default reviewSlice.reducer;

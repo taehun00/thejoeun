@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,9 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.pawject.dto.review.ReviewDto;
-import com.pawject.dto.review.ReviewImgDto;
-import com.pawject.dto.user.UserAuthDto;
-import com.pawject.dto.user.UserDto;
 import com.pawject.service.food.FoodService;
 import com.pawject.service.review.ReviewApi;
 import com.pawject.service.review.ReviewService;
@@ -35,8 +34,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor 
 @RequestMapping("/reviewboard")
 public class ReviewController {
-	@Autowired private ReviewService service;
-    @Autowired private FoodService fservice;
+	 private final ReviewService service;
+     private final FoodService fservice;
 	
 	@Operation(summary = "리뷰 등록/수정 정보")
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MEMBER')")
@@ -57,66 +56,37 @@ public class ReviewController {
 	}
 	
 	
-    // 글 업로드 - get은 기존 컨트롤러 활용
-	@Operation(summary = "리뷰작성")
-    @PostMapping("/reviewwrite")
-    @PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER')") 
-    public int writeAjax(ReviewDto dto,  Principal principal) {
-	
-	    UserDto param = new UserDto(principal.getName(), null);
-	    UserAuthDto auth = service.readAuthForReview(param);
+	@Operation(summary = "리뷰작성 (글+이미지)")
+	@PostMapping("/reviewwrite")
+	@PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER')")
+	public int write(
+	        @ModelAttribute ReviewDto dto,
+	        @RequestParam(required = false) List<MultipartFile> files,
+	        Principal principal
+	) {
 	    int userid = service.selectUserIdForReview(principal.getName());
 	    dto.setUserid(userid);
-        service.reviewInsert(dto);
-        return dto.getReviewid();
-    }
 
-	@Operation(summary = "이미지 업로드")
-    @PostMapping("/reviewimg/upload")
-    public Map<String, Object> reviewUpload(
-            @RequestParam("reviewid") int reviewid,
-            @RequestParam("file") MultipartFile file) {
+	    return service.reviewInsertWithImg(dto, files);
+	}
 
-        ReviewImgDto dto = service.reviewimginsert(reviewid, file);
+	
+	@Operation(summary = "리뷰 수정 (글+이미지)")
+	@PostMapping("/reviewedit/{reviewid}")
+	public int update(
+	    @PathVariable int reviewid,
+	    @ModelAttribute ReviewDto dto,
+	    @RequestParam(required=false) List<MultipartFile> files,
+	    Principal principal
+	) {
+	    int userid = service.selectUserIdForReview(principal.getName());
+	    dto.setUserid(userid);
+	    dto.setReviewid(reviewid);
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("success", true);
-        result.put("reviewimgname", dto.getReviewimgname());
-        result.put("reviewimgid", dto.getReviewimgid());
-
-        return result;
-    }
-    
-	@Operation(summary = "리뷰 수정")
-    @PostMapping("/reviewedit")
-    @PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER')") 
-    public int updateAjax(ReviewDto dto) {
-    	service.reviewUpdate(dto);
-    	return dto.getReviewid();
-    }
-    
-	@Operation(summary = "이미지 수정")
-    @PostMapping("/reviewimg/update")
-    public Map<String, Object> reviewUpdate(
-            @RequestParam("reviewimgid") int reviewimgid,
-            @RequestParam("file") MultipartFile file) {
-
-        ReviewImgDto dto = service.reviewimgupdate(reviewimgid, file);
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("success", true);
-        result.put("reviewimgname", dto.getReviewimgname());
-        result.put("reviewimgid", dto.getReviewimgid());
-
-        return result;
-    }
-    
-	@Operation(summary = "이미지 삭제")
-    @PostMapping("/reviewimg/delete")
-    public int deletereviewimg( @RequestParam("reviewimgid") int reviewimgid) {
-    	return service.reviewimgdelete(reviewimgid);
-    }
-    
+	    return service.reviewUpdatetWithImg(dto, files);
+	}
+	
+	
 	@Operation(summary = "모달 연동")
     @RequestMapping("/reviewsearchByFoodid")
     public Map<String, Object> reviewsearchByFoodid(@RequestParam int foodid){
@@ -169,17 +139,23 @@ public class ReviewController {
 
 	    return result;
 	}
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MEMBER')")
-	@Operation(summary = "리뷰 삭제")
+
 	@DeleteMapping
-	public ResponseEntity<Void> deleteByFoodid(@RequestParam int reviewid){
-		service.reviewimgdeleteAll(reviewid);
-		int result = service.reviewDelete(reviewid);
-		if(result>0) {
-	        return ResponseEntity.noContent().build(); // 204
-	    }
-	    return ResponseEntity.notFound().build(); // 404 
+	public ResponseEntity<Void> deleteByreviewid(
+	        @RequestParam int reviewid,
+	        Principal principal
+	) {
+	    int userid = service.selectUserIdForReview(principal.getName());
+	    service.reviewimgdeleteById(reviewid);
+	    int result = service.reviewDelete(reviewid, userid);
+
+	    if (result > 0) return ResponseEntity.noContent().build();
+	    return ResponseEntity.status(403).build(); // 또는 notFound 구분
 	}
+	
+	
+	
+	
 	@Autowired private ReviewApi apiservice;
 	@Operation(summary = "리뷰 api")
 	@PostMapping("/reviewapi")
