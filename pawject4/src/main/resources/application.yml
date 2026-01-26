@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: jdbc:oracle:thin:@localhost:1521/xe
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    username: SCOTT
+    password: tiger
     driver-class-name: oracle.jdbc.OracleDriver
 
   jpa:
@@ -34,8 +34,8 @@ mybatis:
   type-aliases-package: com.pawject.domain 
 
 jwt:
-  issuer: thejoa703
-  secret: ${JWT_SECRET}
+  issuer: pawject
+  secret: very-very-long-secret-key-at-least-32-characters
   access-token-exp-seconds: 900       # 15분
   refresh-token-exp-seconds: 1209600  # 14일
   header: Authorization

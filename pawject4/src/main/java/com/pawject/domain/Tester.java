@@ -1,13 +1,19 @@
 package com.pawject.domain;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.SequenceGenerator;
@@ -34,20 +40,23 @@ public class Tester {
 	@Column(nullable = false)
 	private String content; 
 	
-	@Column(nullable = false)
-	private Integer userid;
+//	@Column(nullable = false)
+//	private Integer userid;
 	
 	@Column
 	private Integer foodid;  // 사료게시판 사료와 연관이 있을 경우
 	
 	@Column
-	private Integer status=0;  //0모집중 1모집완료
+	private Integer status=0;  //0모집중 1모집완료 - 관리자 기능
 	
 	@Column
-	private Integer views;
+	private Integer views=0;
 	
 	@Column
-	private Integer isnotice=0; //0공지x 1공지중
+	private Integer isnotice=0; //0공지x 1공지중  - 관리자 기능
+	
+	@Column
+	private Integer posttype = 0; // 0 일반글(유저글) / 1 모집공고(관리자 공고) - 관리자 기능
 	
 	@Column(nullable = false , name="CREATEDAT")
 	private LocalDateTime createdat; // 생성일시
@@ -69,14 +78,12 @@ public class Tester {
 	}
 	
 	//유저 만들고 풀기
-//	@ManyToOne
-//	@JoinColumn(name = "USERID")
-//	private Users user;
+	@ManyToOne
+	@JoinColumn(name = "USERID")
+	private User user;
 
-	//푸드 만들고 풀기
-//	@ManyToOne
-//	@JoinColumn(name = "FOODID")
-//	private Food food;	
+	@OneToMany(mappedBy = "tester", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Testerimg> testerimg = new ArrayList<>();
 	
 }
 /**

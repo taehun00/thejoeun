@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 	<mapper namespace="com.pawject.dao.review.ReviewDao">
-	<resultMap type="ReviewDto" id="ReviewMap">
+	<resultMap type="com.pawject.dto.review.ReviewDto" id="ReviewMap">
 		<result property="reviewid"	column="REVIEWID"/>
 		<result property="userid"	column="USERID"/>
 		<result property="brandid"	column="BRANDID"/>
@@ -79,31 +79,20 @@
 	
 	<!-- 페이징 -->
 	<select resultMap="ReviewMap" id="reviewSelect10"  parameterType="java.util.Map">
-		    select 
-                    		a.reviewid as reviewid, 
-                            a.brandname as brandname, 
-                            a.foodid as foodid,
-                            a.foodname as foodname, 
-                            a.foodimg as foodimg, 
-                            a.rating as rating, 
-                            a.title as title, 
-                            a.reviewcomment as reviewcomment, 
-                            a.nickname as nickname, 
-                            a.userid as userid,
-                            a.createdat as createdat, 
-                            a.updatedat  as updatedat,
-                            a.rnum as rnum
-        from(select row_number() over(order by r.createdat desc, r.reviewid desc) as rnum,
-                    r.reviewid as reviewid, 
-                            fb.brandname as brandname, 
-                            f.foodid as foodid,
-                            f.foodname as foodname, 
-                            f.foodimg as foodimg, 
-                            r.rating as rating, 
-                            r.title as title, 
-                            r.reviewcomment as reviewcomment, 
-                            u.nickname as nickname, 
-                            u.userid as userid,
+                           
+                  select *
+                from(select row_number() over(
+					<choose>
+					  <when test="condition == 'old'">
+					    order by r.createdat asc, r.reviewid asc
+					  </when>
+					  <otherwise>
+					    order by r.createdat desc, r.reviewid desc
+					  </otherwise>
+					</choose>
+	                ) as rnum,
+                             r.reviewid,  fb.brandname ,  f.foodid, f.foodname,    f.foodimg , 
+                            r.rating,    r.title ,   r.reviewcomment,  u.nickname,   u.userid,
                             TO_CHAR(r.createdat, 'YYYY-MM-DD') as createdat, 
                             TO_CHAR(r.updatedat , 'YYYY-MM-DD') as updatedat
                         from review r left join food f on(r.foodid=f.foodid)
@@ -117,56 +106,60 @@
 	</select>
 	
 	
-	<!-- 서치 -->
+	<!-- 서치 + 페이징 -->
 		<select  resultMap="ReviewMap" id="reviewsearch" parameterType="java.util.HashMap">
-		 select r.reviewid as reviewid, 
-		 		fb.brandname as brandname, 
-		 		f.foodid as foodid,
-		 		f.foodname as foodname, 
-		 		f.foodimg as foodimg, 
-		 		r.rating as rating, 
-		 		r.title as title, 
-		 		r.reviewcomment as reviewcomment, 
-		 		u.nickname as nickname, 
-		 		u.userid as userid,
-		        TO_CHAR(r.createdat, 'YYYY-MM-DD') as createdat, 
-        		TO_CHAR(r.updatedat , 'YYYY-MM-DD') as updatedat
-			from review r left join food f on(r.foodid=f.foodid)
-               join foodbrand fb on(r.brandid=fb.brandid)
-               left join users u on(u.userid=r.userid)
-		<where>
-		    <choose>
-		        <when test="searchType == 'brandname'">
-		            AND lower(fb.brandname) like #{search}
-		        </when>
-		
-		        <when test="searchType == 'foodname'">
-		            AND f.foodname like #{search}
-		        </when>
-		
-		        <when test="searchType == 'pettypeid'">
-		            AND f.pettypeid = #{search}
-		        </when>
-		
-		        <when test="searchType == 'reviewcomment'">
-		            AND r.reviewcomment like #{search}
-		        </when>
-		
-		        <otherwise>
-		            AND (
-		                lower(fb.brandname) like #{search}
-		                OR f.foodname like #{search}
-		                OR r.reviewcomment like #{search}
-		            )
-		        </otherwise>
-		    </choose>
-		</where>
-	    order by r.reviewid desc
+                  select *
+                from(select row_number() over(
+							<choose>
+							  <when test="condition == 'old'">
+							    order by r.createdat asc, r.reviewid asc
+							  </when>
+							  <when test="condition == 'new'">
+							    order by r.createdat desc, r.reviewid desc
+							  </when>							  
+							  <otherwise>
+							    order by r.createdat desc, r.reviewid desc
+							  </otherwise>
+							</choose>
+							) as rnum,
+                             r.reviewid,  fb.brandname ,  f.foodid, f.foodname,    f.foodimg , 
+                            r.rating,    r.title ,   r.reviewcomment,  u.nickname,   u.userid,
+                            TO_CHAR(r.createdat, 'YYYY-MM-DD') as createdat, 
+                            TO_CHAR(r.updatedat , 'YYYY-MM-DD') as updatedat
+                        from review r left join food f on(r.foodid=f.foodid)
+                           join foodbrand fb on(r.brandid=fb.brandid)
+                           left join users u on(u.userid=r.userid)      
+                                    <where>
+                        <choose>
+                            <when test="searchType == 'brandname'">
+                                AND lower(fb.brandname) like #{search}
+                            </when>
+                    
+                            <when test="searchType == 'foodname'">
+                                AND f.foodname like #{search}
+                            </when>
+                    
+                            <when test="searchType == 'pettypeid'">
+                                AND f.pettypeid = #{search}
+                            </when>
+                    
+                            <when test="searchType == 'reviewcomment'">
+                                AND r.reviewcomment like #{search}
+                            </when>
+                    
+                            <otherwise>
+								1=1
+                            </otherwise>
+                        </choose>
+                    </where>
+     
+                           ) a
+                           where a.rnum between #{start} and #{end}
 	</select>
 	
 	
 	
-		<select  resultMap="ReviewMap" id="reviewsearchcnt" parameterType="java.util.HashMap">
+		<select  resultType="int" id="reviewsearchcnt" parameterType="java.util.HashMap">
 			select count(*)
 			from review r left join food f on(r.foodid=f.foodid)
                join foodbrand fb on(r.brandid=fb.brandid)
@@ -190,15 +183,10 @@
 			        </when>
 			
 			        <otherwise>
-			            AND (
-			                lower(fb.brandname) like #{search}
-			                OR f.foodname like #{search}
-			                OR r.reviewcomment like #{search}
-			            )
+						1=1
 			        </otherwise>
 			    </choose>
 			</where>
-	    order by r.reviewid desc
 	</select>	
 	
 

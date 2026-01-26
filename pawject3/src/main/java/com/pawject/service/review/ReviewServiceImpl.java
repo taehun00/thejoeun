@@ -170,7 +170,7 @@ public class ReviewServiceImpl implements ReviewService {
 	
 	//페이징
 	@Override
-	public List<ReviewDto> reviewSelect10(int pstartno) {
+	public List<ReviewDto> reviewSelect10(int pstartno, String condition) {
 		HashMap<String, Object> para = new HashMap<>();
 		
 		int start = (pstartno-1)*10+1;
@@ -179,8 +179,13 @@ public class ReviewServiceImpl implements ReviewService {
 		para.put("start", start);
 		para.put("end", end);
 		
-		List<ReviewDto> list = rdao.reviewSelect10(para);
+	    if (condition != null) {
+	        switch (condition) {
+	            case "old": para.put("condition", "old"); break;
+	        }
+	    }	
 		
+		List<ReviewDto> list = rdao.reviewSelect10(para);
 		
 		//아작스용 - 리뷰별 아이디 매칭되는 이미지 여기서 던져주기 
 		for(ReviewDto r : list) {
@@ -197,8 +202,15 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 	@Override
-	public List<ReviewDto> reviewsearch(String keyword, String searchType) {
+	public List<ReviewDto> reviewsearch(String keyword, String searchType, String condition, int pstartno) {
 		HashMap<String, Object> para = new HashMap<>();
+		int start = (pstartno-1)*10+1;
+		int end = start+9;
+		
+		para.put("start", start);
+		para.put("end", end);
+		
+		if (searchType == null) searchType = "all";
 		keyword = keyword.toLowerCase(); //대소문자 구분 x
 		String searchLike = "%" + keyword + "%";
 		
@@ -226,11 +238,15 @@ public class ReviewServiceImpl implements ReviewService {
 				//분기4. 제목+내용+브랜드
 				case "all" : para.put("searchType", "all");
 							para.put("search", searchLike);	break;
-												
 
-							
-		
 				}//switch
+		
+			    if (condition != null) {
+			        switch (condition) {
+			            case "old": para.put("condition", "old"); break;
+			        }
+			    }	
+		
 				    List<ReviewDto> list = rdao.reviewsearch(para);
 			
 				    // 이미지도 여기서 넣어줘야됨!!

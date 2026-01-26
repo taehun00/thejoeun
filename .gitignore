@@ -6,12 +6,15 @@
 .settings/
 .sts4-cache
 .vscode/
+*.sublime-workspace
 
 # 빌드 결과물
 target/
 build/
 out/
 *.class
+dist/
+.next/
 
 # 로그 및 임시 파일
 *.log
@@ -32,3 +35,29 @@ application-oauth.properties
 application-secret.properties 
 .env
 /.metadata/
+
+# Node.js 의존성
+node_modules/
+
+
+# 환경 변수 파일
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 로그 파일
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# 캐시 및 임시 파일
+.cache/
+.tmp/
+.DS_Store
+*.swp
+
+# 테스트 관련
+coverage/

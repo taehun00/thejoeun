@@ -59,12 +59,12 @@ public interface FoodService {
 
 	
 
-	public List<FoodDtoForList> foodselect10(int pstartno); 
+	public List<FoodDtoForList> foodselect10(int pstartno, String condition); 
 	
 	public int foodselectcnt();
 	
 	//dao랑 다름!!
-	public List<FoodDtoForList> foodsearch(String keyword, String searchType);
+	public List<FoodDtoForList> foodsearch(String keyword, String searchType, String condition, int pstartno);
 	
 	public int foodsearchcnt(String keyword, String searchType);
 	

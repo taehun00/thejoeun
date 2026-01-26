@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pawject.dao.review.ReviewImgDao">
-	<resultMap type="ReviewImgDto" id="ReviewImgMap">
+	<resultMap type="com.pawject.dto.review.ReviewImgDto" id="ReviewImgMap">
 		<result property="reviewimgid"	column="REVIEWIMGID"/>
 		<result property="reviewid"	column="REVIEWID"/>
 		<result property="reviewimgname"	column="REVIEWIMGNAME"/>

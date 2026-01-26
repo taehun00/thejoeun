@@ -86,8 +86,6 @@ public class CSServiceImpl implements CSService {
 	                break;
 	        }
 	    }	    
-    
-	    
 
 	    List<CSQuestionDto> questions = qdao.select10CSQ(para);
 
@@ -158,7 +156,7 @@ public class CSServiceImpl implements CSService {
 		}
 
 	@Override
-	public int selectSearchTotalCntCSQ(String keyword, String searchType) {
+	public int selectSearchTotalCntCSQ(String keyword, String searchType, String condition) {
 
 	    if (keyword == null) keyword = "";   
 	    keyword = keyword.toLowerCase();     
@@ -183,6 +181,17 @@ public class CSServiceImpl implements CSService {
 	            para.put("searchType", "all");
 	            para.put("search", searchLike);
 	            break;
+	    }
+	    
+	    if (condition != null) {
+	        switch (condition) {
+	            case "noanswer":
+	                para.put("condition", "noanswer");
+	                break;
+	            case "answerend":
+	                para.put("condition", "answerend");
+	                break;
+	        }
 	    }
 
 	    return qdao.selectSearchTotalCntCSQ(para);

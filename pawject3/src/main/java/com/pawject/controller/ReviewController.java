@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.pawject.dto.food.FoodDto;
 import com.pawject.dto.paging.PagingDto10;
 import com.pawject.dto.review.ReviewDto;
 import com.pawject.dto.review.ReviewImgDto;
@@ -39,26 +40,33 @@ public class ReviewController {
 	UserSecurityService uservice;
 
 	// 전체 리스트 페이지+시큐리티
-	@RequestMapping("/reviewlist")
-	public String reviewlist(Model model, @RequestParam(value = "pstartno", defaultValue = "1") int pstartno,
-			Principal principal) {
-
-		int total = service.reviewSelectCnt();
-		PagingDto10 paging = new PagingDto10(total, pstartno);
-		model.addAttribute("reviewlist", service.reviewSelect10(paging.getCurrent()));
-		model.addAttribute("reviewpaging", paging);
-
-		if (principal != null) {
-		    UserDto param = new UserDto(principal.getName(), null);
-
-		    UserAuthDto auth = service.readAuthForReview(param);
-		    int userid = service.selectUserIdForReview(principal.getName());
-
-		    model.addAttribute("author", auth.getAuthList().get(0).getAuth());
-		    model.addAttribute("userid", userid);
-		}
-
-		return "reviewboard/reviewlist";
+//	@RequestMapping("/reviewlist")
+//	public String reviewlist(Model model, @RequestParam(value = "pstartno", defaultValue = "1") int pstartno,
+//			Principal principal) {
+//
+//		int total = service.reviewSelectCnt();
+//		PagingDto10 paging = new PagingDto10(total, pstartno);
+//		model.addAttribute("reviewlist", service.reviewSelect10(paging.getCurrent()));
+//		model.addAttribute("reviewpaging", paging);
+//
+//		if (principal != null) {
+//		    UserDto param = new UserDto(principal.getName(), null);
+//
+//		    UserAuthDto auth = service.readAuthForReview(param);
+//		    int userid = service.selectUserIdForReview(principal.getName());
+//
+//		    model.addAttribute("author", auth.getAuthList().get(0).getAuth());
+//		    model.addAttribute("userid", userid);
+//		}
+//
+//		return "reviewboard/reviewlist";
+//	}
+	
+	
+	@GetMapping("/reviewlist")
+	public String list(Model model, ReviewDto dto ) {
+	    model.addAttribute("reviewlist", service.reviewSelectAll());
+	    return "reviewboard/reviewlist";
 	}
 
 	// 글쓰기 get

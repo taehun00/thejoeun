@@ -149,7 +149,7 @@ public class FoodServiceImpl implements FoodService {
 		}
 
 		@Override
-		public List<FoodDtoForList> foodselect10(int pstartno) {
+		public List<FoodDtoForList> foodselect10(int pstartno, String condition) {
 		    HashMap<String, Object> para = new HashMap<>();
 		    int start = (pstartno - 1) * 10 + 1;
 		    int end = start + 9;
@@ -157,6 +157,23 @@ public class FoodServiceImpl implements FoodService {
 		    para.put("start", start);
 		    para.put("end", end);
 		    
+		    if (condition != null) {
+		        switch (condition) {
+		            case "foodnameAsc":
+		            	para.put("condition", "foodnameAsc");
+		                break;
+		            case "foodnameDesc":
+		            	para.put("condition", "foodnameDesc");
+		                break;
+		            case "brandnameAsc":
+		            	para.put("condition", "brandnameAsc");
+		                break;
+		            case "brandnameDesc":
+		            	para.put("condition", "brandnameDesc");
+		                break;
+		                
+		        }
+		    }	
 
 		    return fdao.foodselect10(para); 
 		}
@@ -167,9 +184,16 @@ public class FoodServiceImpl implements FoodService {
 		}
 
 		@Override
-		public List<FoodDtoForList> foodsearch(String keyword, String searchType) {
+		public List<FoodDtoForList> foodsearch(String keyword, String searchType, String condition, int pstartno) {
 
 			HashMap<String, Object> para = new HashMap<>();
+		    int start = (pstartno - 1) * 10 + 1;
+		    int end = start + 9;
+
+		    para.put("start", start);
+		    para.put("end", end);
+			
+			
 			keyword = keyword.toLowerCase(); //대소문자 구분 x
 			String searchLike = "%" + keyword + "%";
 			
@@ -200,6 +224,25 @@ public class FoodServiceImpl implements FoodService {
 			
 	
 			}//switch
+			
+		    if (condition != null) {
+		        switch (condition) {
+		            case "foodnameAsc":
+		            	para.put("condition", "foodnameAsc");
+		                break;
+		            case "foodnameDesc":
+		            	para.put("condition", "foodnameDesc");
+		                break;
+		            case "brandnameAsc":
+		            	para.put("condition", "brandnameAsc");
+		                break;
+		            case "brandnameDesc":
+		            	para.put("condition", "brandnameDesc");
+		                break;
+		                
+		        }
+		    }	
+			
 			
 			return fdao.foodsearch(para);
 		}
@@ -236,6 +279,7 @@ public class FoodServiceImpl implements FoodService {
 			
 	
 			}//switch
+			
 			
 			return fdao.foodsearchcnt(para);
 		}
