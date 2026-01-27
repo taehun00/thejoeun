@@ -30,6 +30,13 @@ public class NaverOcrService {
     private String apiUrl;
     
     public String callOcrApi(File imageFile) {
+        if (apiUrl == null || apiUrl.isBlank()) {
+            throw new IllegalStateException("naver.ocr.url 설정이 비어있음");
+        }
+        if (secretKey == null || secretKey.isBlank()) {
+            throw new IllegalStateException("naver.ocr.key 설정이 비어있음");
+        }
+        
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
@@ -54,6 +61,8 @@ public class NaverOcrService {
         
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
+        System.out.println("OCR apiUrl = [" + apiUrl + "]");
+        
         ResponseEntity<String> response = restTemplate.exchange(
                 apiUrl,
                 HttpMethod.POST,

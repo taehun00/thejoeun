@@ -23,5 +23,6 @@
  	    <package name="com.pawject.dto.support"/>
  	    <package name="com.pawject.dto.tester"/>
  	    <package name="com.pawject.dto.user"/>
+ 	    <package name="com.pawject.dto.exec"/>
  	</typeAliases>
 </configuration>

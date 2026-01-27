@@ -16,34 +16,43 @@ import com.pawject.dto.food.BrandDto;
 import com.pawject.dto.food.FoodDto;
 import com.pawject.dto.food.FoodDtoForList;
 import com.pawject.dto.food.NutriDto;
+import com.pawject.util.UtilUpload;
 @Service
 public class FoodServiceImpl implements FoodService {
 	@Autowired FoodDao fdao;
 	@Autowired BrandDao bdao;
 	@Autowired NutriDao ndao;
 //	@Autowired	ServletContext context;  폐기, 설정파일로 경로 이동
-	@Value("${file.upload-path}")
-	private String uploadPath;
+	@Autowired private UtilUpload utilUpload;
+	
+    @Value("${file.upload-dir}")    
+    private String uploadDir;
+
+
 
 		@Override
-		public int foodinsert(FoodDto dto,  MultipartFile file) {
+		public int foodinsert(FoodDto dto, MultipartFile file) {
 		    String fileName = "";
-
-		    if (!file.isEmpty()) {
+		
+		    if (file != null && !file.isEmpty()) {
+		        File dir = new File(uploadDir, "foodimg");
+		        if (!dir.exists()) dir.mkdirs();
+		
 		        fileName = file.getOriginalFilename();
-		        File img = new File(uploadPath + fileName);
-
+		        File img = new File(dir, fileName);
+		
 		        try {
 		            file.transferTo(img);
 		        } catch (Exception e) {
 		            e.printStackTrace();
 		        }
 		    }
-
-		    dto.setFoodimg(fileName); // 항상 파일명을 설정
+		
+		    dto.setFoodimg(fileName);
 		    return fdao.foodinsert(dto);
 		}
-
+	
+	
 		@Override
 		public List<FoodDto> foodselectAll() {
 			return fdao.foodselectAll();
@@ -56,11 +65,18 @@ public class FoodServiceImpl implements FoodService {
 
 		@Override
 		public int foodupdate(FoodDto dto, MultipartFile file) {
-		    String fileName = dto.getFoodimg();
 
-		    if (!file.isEmpty()) {
+		    // 기존 데이터 조회해서 기존 파일명 확보
+		    FoodDto old = fdao.foodselect(dto.getFoodid());
+		    String fileName = (old != null) ? old.getFoodimg() : "";
+
+		    // 새 파일 들어온 경우에만 교체 (원본파일명 그대로 저장 + 덮어쓰기)
+		    if (file != null && !file.isEmpty()) {
+		        File dir = new File(uploadDir, "foodimg");
+		        if (!dir.exists()) dir.mkdirs();
+
 		        fileName = file.getOriginalFilename();
-		        File img = new File(uploadPath + fileName);
+		        File img = new File(dir, fileName);
 
 		        try {
 		            file.transferTo(img);
@@ -69,10 +85,11 @@ public class FoodServiceImpl implements FoodService {
 		        }
 		    }
 
-		    dto.setFoodimg(fileName); 
+		    // DB 반영 (파일 없으면 기존 유지)
+		    dto.setFoodimg(fileName);
 		    return fdao.foodupdate(dto);
 		}
-		
+		    
 
 		@Override
 		public int fooddelete(int foodid) {

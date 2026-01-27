@@ -1,324 +1,273 @@
 package com.pawject.service.review;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.pawject.dao.review.ReviewDao;
 import com.pawject.dao.review.ReviewImgDao;
 import com.pawject.dto.review.ReviewDto;
 import com.pawject.dto.review.ReviewImgDto;
-import com.pawject.dto.user.UserAuthDto;
-import com.pawject.dto.user.UserDto;
+import com.pawject.util.UtilUpload;
+
 @Service
 public class ReviewServiceImpl implements ReviewService {
-	@Autowired ReviewDao rdao;
-	@Autowired ReviewImgDao idao;
-	
-	@Override
-	public List<ReviewDto> reviewSelectAll() {
-		return rdao.reviewSelectAll();
-	}
+    @Autowired private ReviewDao rdao;
+    @Autowired private ReviewImgDao idao;
+    @Autowired private UtilUpload utilUpload;
 
-	@Override
-	public ReviewDto  reviewSelect(int reviewid) {
-		return rdao.reviewSelect(reviewid);
-	}
+    
+    // 단건조회
+    @Override
+    public ReviewDto reviewSelect(int reviewid) {
+        return rdao.reviewSelect(reviewid);
+    }
+    
+    //리뷰-이미지리스트 매칭
+    @Override
+    public List<ReviewImgDto> reviewimgSelect(int reviewid) {
+        return idao.reviewimgSelect(reviewid);
+    }
+    
+    //유저확인
+    @Override
+    public int selectUserIdForReview(String email) {
+        return rdao.selectUserIdForReview(email);
+    }
 
-	@Override
-	public int reviewInsert(ReviewDto dto) {
-		return rdao.reviewInsert(dto);
-	}
+    //글쓰기
+    @Transactional
+    @Override
+    public int reviewInsertWithImg(ReviewDto dto, List<MultipartFile> files) {
+        rdao.reviewInsert(dto);
+        int reviewid = dto.getReviewid();
 
-	@Override
-	public int reviewUpdate(ReviewDto dto) {
-		return rdao.reviewUpdate(dto);
-	}
+        saveReviewImages(reviewid, files);
 
-	@Override
-	public int reviewDelete(int reviewid) {
-		return rdao.reviewDelete(reviewid);
-	}
+        return reviewid;
+    }
 
-	@Override
-	public List<ReviewImgDto> reviewimgselectAll() {
-		return idao.reviewimgselectAll();
-	}
+    // 수정
+    @Transactional
+    @Override
+    public int reviewUpdatetWithImg(ReviewDto dto, List<MultipartFile> files) {
+        int updated = rdao.reviewUpdate(dto);
+        if (updated == 0) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "본인 글만 수정할 수 있습니다.");
+        }
+        int reviewid = dto.getReviewid();
 
-	@Override
-	public List<ReviewImgDto> reviewimgSelect(int reviewid) {
-		return idao.reviewimgSelect(reviewid);
-	}
+        // 기존 이미지 조회
+        List<ReviewImgDto> oldImgs = idao.reviewimgSelect(reviewid);
 
-	@Override  
-	public ReviewImgDto reviewimginsert(int reviewid,  MultipartFile file) {//아작스 버전
-		//  ㄴint 아님 주의!
+        // DB 삭제
+        idao.reviewimgdeleteAll(reviewid);
 
-		if (file == null || file.isEmpty()) {
-		    return null;
-		}
+        // 파일 삭제
+        if (oldImgs != null) {
+            for (ReviewImgDto img : oldImgs) {
+                if (img != null && img.getReviewimgname() != null) {
+                    filedelete(img.getReviewimgname());
+                }
+            }
+        }
+        // 신규 insert
+        saveReviewImages(reviewid, files);
 
-		String uuid = UUID.randomUUID().toString();
-        String originName = file.getOriginalFilename();
-        String fileName = uuid + "_" + originName;
-        String uploadPath =  "C:/upload/";
+        return reviewid;
+    }
 
-        File img = new File(uploadPath + fileName);
+    // 이미지 삭제
+    @Override
+    public int reviewimgdeleteById(int reviewid) {
+        List<ReviewImgDto> imgList = idao.reviewimgSelect(reviewid);
 
-	    try {
-	        file.transferTo(img);
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
+        if (imgList != null) {
+            for (ReviewImgDto dto : imgList) {
+                if (dto != null && dto.getReviewimgname() != null) {
+                    filedelete(dto.getReviewimgname());
+                }
+            }
+        }
 
-	    ReviewImgDto dto = new ReviewImgDto();
-	    dto.setReviewid(reviewid);
-	    dto.setReviewimgname(fileName);
+        return idao.reviewimgdeleteAll(reviewid);
+    }
 
-	    idao.reviewimginsert(dto);
+    //글삭제
+    @Override
+    public int reviewDelete(int reviewid, int userid) {
+        int deleted = rdao.reviewDelete(reviewid, userid);
+        if (deleted == 0) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "본인 글만 삭제할 수 있습니다.");
+        }
+        return deleted;
+    }
+    
+    //페이징카운트
+    @Override
+    public int reviewSelectCnt() {
+        return rdao.reviewSelectCnt();
+    }
+    
+    //페이징
+    @Override
+    public List<ReviewDto> reviewSelect10(int pageNo, String condition) {
+        HashMap<String, Object> para = new HashMap<>();
 
-	    return dto;
-	}
-	
-	
-	
-	@Override  //다 만들고 나니까 깨달은 건데 이거 필요없엉..... 왜했지
-	public ReviewImgDto reviewimgupdate(int reviewimgid,MultipartFile file) {
-		if (file == null || file.isEmpty()) {
-		    return null;
-		}
+        int start = (pageNo - 1) * 10 + 1;
+        int end = start + 9;
 
-		ReviewImgDto olddto= idao.reviewimgIdSelect(reviewimgid);
-		
-		String uuid = UUID.randomUUID().toString();
-        String originName = file.getOriginalFilename();
-        String fileName = uuid + "_" + originName;
-        String uploadPath =  "C:/upload/";
+        para.put("start", start);
+        para.put("end", end);
 
-        File img = new File(uploadPath + fileName);
+        if ("old".equals(condition)) {
+            para.put("condition", "old");
+        }
 
-	    try {
-	        file.transferTo(img);
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
+        List<ReviewDto> list = rdao.reviewSelect10(para);
 
-	    ReviewImgDto dto = new ReviewImgDto();
-	    dto.setReviewimgid(reviewimgid);   //인서트와 동일하지만 이미지 교체의 경우 리뷰아이디 대신 이미지아이디 필요**
-	    dto.setReviewimgname(fileName);
+        for (ReviewDto r : list) {
+            List<ReviewImgDto> imgs = idao.reviewimgSelect(r.getReviewid());
+            r.setReviewimglist(imgs);
+        }
 
-	    int update= idao.reviewimgupdate(dto);
+        return list;
+    }
+    
+    //검색카운ㅌ
+    @Override
+    public int reviewsearchcnt(String keyword, String searchType) {
+        HashMap<String, Object> para = new HashMap<>();
 
-	    if(update>0 && olddto!=null) {
-	    	filedelete(olddto.getReviewimgname());
-	    }
-	    
-	    return dto;
-	}
+        keyword = keyword.toLowerCase();
+        String searchLike = "%" + keyword + "%";
 
-	
-	
+        if (searchType == null) searchType = "all";
 
-	//파일 삭제 전용 메서드
-	private void filedelete(String fileName) {
-		String uploadPath = "C:/upload/";
-		File img = new File(uploadPath + fileName);
-		
-		if(img.exists()) {
-			img.delete();
-		}
-	}
+        switch (searchType) {
+            case "pettypeid":
+                para.put("searchType", "pettypeid");
+                if ("고양이".equals(keyword)) para.put("search", "1");
+                else if ("강아지".equals(keyword)) para.put("search", "2");
+                else para.put("search", "-1");
+                break;
 
-	@Override
-	public int reviewimgdeleteAll(int reviewid) {
-		
-		List<ReviewImgDto> img = idao.reviewimgSelect(reviewid);
-		
-	    for (ReviewImgDto dto : img) {
-	    		String fileName=dto.getReviewimgname();
-	    		filedelete(dto.getReviewimgname());
-	    }
-		
-		return idao.reviewimgdeleteAll(reviewid);
-	}
+            case "brandname":
+                para.put("searchType", "brandname");
+                para.put("search", searchLike);
+                break;
 
-	@Override
-	public int reviewimgdelete(int reviewimgid) {
-		ReviewImgDto img = idao.reviewimgIdSelect(reviewimgid);
-		
-		if(img==null) {return 0;}
-		
-		int result=idao.reviewimgdelete(reviewimgid);
-		if(result>0) {
-			filedelete(img.getReviewimgname());	 //if 안쓰면 냅다 파일부터 날려버림 주의
-		}
-		
-		return idao.reviewimgdelete(reviewimgid);
-	}
+            case "foodname":
+                para.put("searchType", "foodname");
+                para.put("search", searchLike);
+                break;
 
-	@Override
-	public ReviewImgDto reviewimgIdSelect(int reviewimgid) {
-		return idao.reviewimgIdSelect(reviewimgid);
-	}
+            default:
+                para.put("searchType", "all");
+                para.put("search", searchLike);
+                break;
+        }
 
-	
-	
-	//페이징
-	@Override
-	public List<ReviewDto> reviewSelect10(int pstartno, String condition) {
-		HashMap<String, Object> para = new HashMap<>();
-		
-		int start = (pstartno-1)*10+1;
-		int end = start+9;
-		
-		para.put("start", start);
-		para.put("end", end);
-		
-	    if (condition != null) {
-	        switch (condition) {
-	            case "old": para.put("condition", "old"); break;
-	        }
-	    }	
-		
-		List<ReviewDto> list = rdao.reviewSelect10(para);
-		
-		//아작스용 - 리뷰별 아이디 매칭되는 이미지 여기서 던져주기 
-		for(ReviewDto r : list) {
-			List<ReviewImgDto> imgs = idao.reviewimgSelect(r.getReviewid());
-			r.setReviewimglist(imgs);
-						}
-		
-		return list;
-	}
+        return rdao.reviewsearchcnt(para);
+    }
+    //검색
+    @Override
+    public List<ReviewDto> reviewsearch(String keyword, String searchType, String condition, int pageNo) {
+        HashMap<String, Object> para = new HashMap<>();
 
-	@Override
-	public int reviewSelectCnt() {
-		return rdao.reviewSelectCnt();
-	}
+        int start = (pageNo - 1) * 10 + 1;
+        int end = start + 9;
 
-	@Override
-	public List<ReviewDto> reviewsearch(String keyword, String searchType, String condition, int pstartno) {
-		HashMap<String, Object> para = new HashMap<>();
-		int start = (pstartno-1)*10+1;
-		int end = start+9;
-		
-		para.put("start", start);
-		para.put("end", end);
-		
-		if (searchType == null) searchType = "all";
-		keyword = keyword.toLowerCase(); //대소문자 구분 x
-		String searchLike = "%" + keyword + "%";
-		
-		switch(searchType) {
-		case "pettypeid" :	            
-			para.put("searchType", "pettypeid");
-				//분기1.펫타입
-		        if ("고양이".equals(keyword)) {
-		            para.put("search", "1");
-		        } else if ("강아지".equals(keyword)) {
-		            para.put("search", "2");
-		        } else {
-		            para.put("search", "-1");
-		        }
-		        break;
-		        
-				//분기2. 브랜드
-				case "brandname" : para.put("searchType", "brandname");
-				 				   para.put("search", searchLike);	break;
+        para.put("start", start);
+        para.put("end", end);
 
-				//분기3. 사료이름
-				case "foodname" : para.put("searchType", "foodname"); 
-								  para.put("search", searchLike);	break;
-		
-				//분기4. 제목+내용+브랜드
-				case "all" : para.put("searchType", "all");
-							para.put("search", searchLike);	break;
+        if (searchType == null) searchType = "all";
 
-				}//switch
-		
-			    if (condition != null) {
-			        switch (condition) {
-			            case "old": para.put("condition", "old"); break;
-			        }
-			    }	
-		
-				    List<ReviewDto> list = rdao.reviewsearch(para);
-			
-				    // 이미지도 여기서 넣어줘야됨!!
-				    for (ReviewDto r : list) {
-				        List<ReviewImgDto> imgs = idao.reviewimgSelect(r.getReviewid());
-				        r.setReviewimglist(imgs);
-				    }
-			
-				    return list;
-	}
+        keyword = keyword.toLowerCase();
+        String searchLike = "%" + keyword + "%";
 
-	@Override
-	public int reviewsearchcnt(String keyword, String searchType) {
-		HashMap<String, Object> para = new HashMap<>();
-		keyword = keyword.toLowerCase(); //대소문자 구분 x
-		String searchLike = "%" + keyword + "%";
-		
-		switch(searchType) {
-		case "pettypeid" :	            
-			para.put("searchType", "pettypeid");
-				//분기1.펫타입
-		        if ("고양이".equals(keyword)) {
-		            para.put("search", "1");
-		        } else if ("강아지".equals(keyword)) {
-		            para.put("search", "2");
-		        } else {
-		            para.put("search", "-1");
-		        }
-		        break;
-		        
-				//분기2. 브랜드
-				case "brandname" : para.put("searchType", "brandname");
-				 				   para.put("search", searchLike);	break;
+        switch (searchType) {
+            case "pettypeid":
+                para.put("searchType", "pettypeid");
+                if ("고양이".equals(keyword)) para.put("search", "1");
+                else if ("강아지".equals(keyword)) para.put("search", "2");
+                else para.put("search", "-1");
+                break;
 
-				//분기3. 사료이름
-				case "foodname" : para.put("searchType", "foodname"); 
-								  para.put("search", searchLike);	break;
-		
-				//분기4. 제목+내용+브랜드
-				case "all" : para.put("searchType", "all");
-							para.put("search", searchLike);	break;
-				
-							 
-				}//switch
+            case "brandname":
+                para.put("searchType", "brandname");
+                para.put("search", searchLike);
+                break;
 
-		
-		return rdao.reviewsearchcnt(para);
-	}
+            case "foodname":
+                para.put("searchType", "foodname");
+                para.put("search", searchLike);
+                break;
 
-	
-	@Override
-	public UserAuthDto readAuthForReview(UserDto udto){
-		return rdao.readAuthForReview(udto);
-	}
-	
-	@Override
-	public int selectUserIdForReview(String email) {
-		return rdao.selectUserIdForReview(email);
-	}
+            default:
+                para.put("searchType", "all");
+                para.put("search", searchLike);
+                break;
+        }
 
-	@Override
-	public List<ReviewDto> reviewsearchByFoodid(int foodid) {
-		return rdao.reviewsearchByFoodid(foodid);
-	}
+        if ("old".equals(condition)) para.put("condition", "old");
 
-	@Override
-	public int reviewsearchByFoodidCnt(int foodid) {
-		return rdao.reviewsearchByFoodidCnt(foodid);
-	}
-	
-	
-	
-	
-	
+        List<ReviewDto> list = rdao.reviewsearch(para);
+
+        for (ReviewDto r : list) {
+            List<ReviewImgDto> imgs = idao.reviewimgSelect(r.getReviewid());
+            r.setReviewimglist(imgs);
+        }
+
+        return list;
+    }
+
+    // 모달(foodid 검색-검색게시판 연동)
+    @Override
+    public List<ReviewDto> reviewsearchByFoodid(int foodid) {
+        return rdao.reviewsearchByFoodid(foodid);
+    }
+
+    @Override
+    public int reviewsearchByFoodidCnt(int foodid) {
+        return rdao.reviewsearchByFoodidCnt(foodid);
+    }
+
+
+    // 내부 공통 부품
+    private void saveReviewImages(int reviewid, List<MultipartFile> files) {
+        if (files == null || files.isEmpty()) return;
+
+        for (MultipartFile file : files) {
+            if (file == null || file.isEmpty()) continue;
+
+            String savedPath;
+            try {
+                savedPath = utilUpload.fileUpload(file, "reviewimg");
+            } catch (IOException e) {
+                throw new RuntimeException("이미지 업로드 실패", e);
+            }
+
+            ReviewImgDto imgDto = new ReviewImgDto();
+            imgDto.setReviewid(reviewid);
+            imgDto.setReviewimgname(savedPath);
+
+            idao.reviewimginsert(imgDto);
+        }
+    }
+    
+    //파일삭제
+    private void filedelete(String savedPath) {
+        // savedPath: "reviewimg/xxx.png"
+        File img = new File("C:/upload/", savedPath);
+        if (img.exists()) img.delete();
+    }
 }

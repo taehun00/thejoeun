@@ -14,38 +14,28 @@ import com.pawject.dto.user.UserDto;
 public interface ReviewService {
 	
 	//리뷰테이블
-	public List<ReviewDto> reviewSelectAll();
-	public ReviewDto reviewSelect(int reviewid);
-	public int reviewInsert(ReviewDto dto);
-	public int reviewUpdate(ReviewDto dto);
-	public int reviewDelete(int reviewid);	
+	public ReviewDto reviewSelect(int reviewid) ;
+	public int reviewDelete(int reviewid, int userid);
+	
+	public int reviewSelectCnt();
+	public List<ReviewDto> reviewSelect10(int pageNo, String condition);
+	public int reviewsearchcnt(String keyword, String searchType);
+	public List<ReviewDto> reviewsearch(String keyword, String searchType, String condition, int pageNo);
 	
 	//이미지테이블
-	public List<ReviewImgDto> reviewimgselectAll();
 	public List<ReviewImgDto> reviewimgSelect(int reviewid);
-//	public int reviewimginsert(int reviewid, List<MultipartFile> files);	//mvc용
-	public ReviewImgDto reviewimginsert(int reviewid, MultipartFile file);  //아작스용
-//	public int reviewimgupdate(int reviewid, List<MultipartFile> files);	//mvc
-	public ReviewImgDto reviewimgupdate(int reviewimgid, MultipartFile file);
-	public int reviewimgdeleteAll(int reviewid);
-	public int reviewimgdelete(int reviewimgid);
-	public ReviewImgDto  reviewimgIdSelect(int reviewimgid);
-	
-	public List<ReviewDto> reviewSelect10(int pstartno, String condition);	
-	public int reviewSelectCnt();
-	
-
-	public List<ReviewDto> reviewsearch(String keyword, String searchType, String condition, int pstartno);
-	public int reviewsearchcnt(String keyword, String searchType);
-	
-	
+	 public int reviewimgdeleteById(int reviewid);
 	
 	//권한
-	public UserAuthDto readAuthForReview(UserDto udto);
 	public int selectUserIdForReview(String email);
-	
 	
 	//사료-리뷰 연결
 	public List<ReviewDto> reviewsearchByFoodid(int foodid);
 	public int reviewsearchByFoodidCnt(int foodid);
+	
+	
+	//리액트용 신규
+	public int reviewInsertWithImg(ReviewDto dto, List<MultipartFile> files);
+	public int reviewUpdatetWithImg(ReviewDto dto, List<MultipartFile> files);
+	
 }
