@@ -1,7 +1,9 @@
 // components/reviewboard/ReviewEditModal.jsx
-import { useEffect, useMemo, useState } from "react";
-import { Modal, Form, Input, Select, Rate, Upload, Button, Space, Typography } from "antd";
+
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Modal, Form, Input, Select, Rate, Upload, Space, Typography } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
+import { fileUrl } from "../../utils/fileUrl";
 
 const { Text } = Typography;
 
@@ -10,18 +12,26 @@ export default function ReviewEditModal({
   onClose,
 
   reviewid,
-  formData,        // store.review.formData
-  loading,         // store.review.loading
-  editLoading,     // store.review.editLoading
+  formData,
+  loading,
+  editLoading,
 
-  onFetchForm,     // (reviewid) => dispatch(fetchReviewFormRequest({reviewid}))
-  onSubmitEdit,    // ({reviewid, dto, files, keepImgIds}) => dispatch(updateReviewRequest(...))
+  onFetchForm,
+  onSubmitEdit,
 }) {
   const [form] = Form.useForm();
-  const [files, setFiles] = useState([]); // 새로 업로드할 파일들
 
-  // 기존 이미지 중 유지할 id 목록
+  // ✅ 기존 + 신규 모두 Upload fileList로 관리
+  const [uiFileList, setUiFileList] = useState([]);
+
+  // ✅ 유지할 기존 이미지 id 목록 (서버로 전송)
   const [keepImgIds, setKeepImgIds] = useState([]);
+
+  // 초기 setFieldsValue 중 foodid 초기화 방지
+  const lockFoodResetRef = useRef(false);
+
+  const pettypeid = Form.useWatch("pettypeid", form);
+  const brandid = Form.useWatch("brandid", form);
 
   // 모달 열리면 수정폼 데이터 로드
   useEffect(() => {
@@ -30,64 +40,134 @@ export default function ReviewEditModal({
     }
   }, [open, reviewid]);
 
+  // 모달 닫히면 상태 초기화
+  useEffect(() => {
+    if (!open) {
+      lockFoodResetRef.current = false;
+      setUiFileList([]);
+      setKeepImgIds([]);
+      form.resetFields();
+    }
+  }, [open]);
+
   // 이미지 목록
   const imglist = useMemo(() => formData?.imglist || [], [formData]);
 
-  // formData 들어오면 폼 채우기 + keepImgIds 초기화
+  // 종/브랜드 기반 사료 필터
+  const filteredFoodList = useMemo(() => {
+    const list = formData?.foodlist || [];
+    if (!pettypeid || !brandid) return list;
+
+    return list.filter(
+      (f) =>
+        String(f.pettypeid) === String(pettypeid) &&
+        String(f.brandid) === String(brandid)
+    );
+  }, [formData, pettypeid, brandid]);
+
+  // formData 들어오면 폼 채우기 + 기존 이미지 세팅
   useEffect(() => {
     const dto = formData?.dto;
-    if (!dto) return;
+    if (!dto || !open) return;
+
+    lockFoodResetRef.current = true;
+
+    const foodidStr = dto.foodid != null ? String(dto.foodid) : undefined;
+
+    const food = (formData?.foodlist || []).find(
+      (f) => String(f.foodid) === foodidStr
+    );
 
     form.setFieldsValue({
-      pettypeid: dto.pettypeid,
-      brandid: dto.brandid,
-      foodid: dto.foodid,
-      rating: dto.rating,
-      title: dto.title,
-      reviewcomment: dto.reviewcomment,
+      pettypeid: food?.pettypeid != null ? String(food.pettypeid) : undefined,
+      brandid: dto.brandid != null ? String(dto.brandid) : undefined,
+      foodid: foodidStr,
+
+      rating: dto.rating != null ? Number(dto.rating) : 5,
+      title: dto.title ?? "",
+      reviewcomment: dto.reviewcomment ?? "",
     });
 
-    // 초기에는 기존 이미지 전부 유지
+    // ✅ 초기에는 기존 이미지 전부 유지
     const initKeep = (formData?.imglist || []).map((img) => img.reviewimgid);
     setKeepImgIds(initKeep);
 
-    // 새 업로드 파일 초기화(안전)
-    setFiles([]);
-  }, [formData]);
+    // ✅ 기존 이미지를 Upload fileList 형식으로 변환 (origin=old 고정)
+    const oldUiFiles = (formData?.imglist || []).map((img) => ({
+      uid: `old-${img.reviewimgid}`,
+      name: img.reviewimgname,
+      status: "done",
+      url: fileUrl(img.reviewimgname),
 
-  // Upload 컴포넌트 연결 (자동업로드 방지)
+      origin: "old",
+      reviewimgid: img.reviewimgid,
+    }));
+
+    setUiFileList(oldUiFiles);
+
+    setTimeout(() => {
+      lockFoodResetRef.current = false;
+    }, 0);
+  }, [formData, open]);
+
+  // 종/브랜드 바뀌면 foodid 초기화 (초기 setFieldsValue 때는 금지)
+  useEffect(() => {
+    if (!open) return;
+    if (lockFoodResetRef.current) return;
+
+    form.setFieldsValue({ foodid: undefined });
+  }, [pettypeid, brandid]);
+
+  // ✅ Upload: 수업 방식(onChange) + 기존이미지 keepImgIds 연동
   const uploadProps = {
     multiple: true,
-    fileList: files,
-    beforeUpload: (file) => {
-      setFiles((prev) => [...prev, file]);
-      return false;
-    },
-    onRemove: (file) => {
-      setFiles((prev) => prev.filter((f) => f.uid !== file.uid));
-    },
-  };
+    accept: "image/*",
+    listType: "picture-card",
+    beforeUpload: () => false,
 
-  const toggleKeep = (imgid) => {
-    setKeepImgIds((prev) => {
-      if (prev.includes(imgid)) return prev.filter((id) => id !== imgid);
-      return [...prev, imgid];
-    });
+    fileList: uiFileList,
+
+    onChange: ({ fileList }) => {
+      // antd fileList 그대로 쓰되, 기존(old) 항목은 유지
+      setUiFileList(fileList);
+    },
+
+    onRemove: (file) => {
+      // ✅ 기존 이미지 삭제 -> keepImgIds에서 제거
+      if (file.origin === "old") {
+        setKeepImgIds((prev) => prev.filter((id) => id !== file.reviewimgid));
+      }
+      // uiFileList 제거는 antd가 자동
+      return true;
+    },
+
+    onPreview: (file) => {
+      const url =
+        file.url ||
+        (file.originFileObj ? URL.createObjectURL(file.originFileObj) : "");
+
+      if (url) window.open(url, "_blank");
+    },
   };
 
   const handleOk = async () => {
     const values = await form.validateFields();
 
     const dto = {
-      pettypeid: values.pettypeid,
-      brandid: values.brandid,
-      foodid: values.foodid,
+      brandid: values.brandid != null ? Number(values.brandid) : null,
+      foodid: values.foodid != null ? Number(values.foodid) : null,
       rating: values.rating,
       title: values.title,
       reviewcomment: values.reviewcomment,
     };
 
-    onSubmitEdit?.({ reviewid, dto, files, keepImgIds });
+    // ✅ 신규 파일만 서버로 전송: originFileObj 있는 것만 = 신규
+    const realFiles = (uiFileList || [])
+      .filter((f) => f.origin !== "old")
+      .map((f) => f.originFileObj)
+      .filter(Boolean);
+
+    onSubmitEdit?.({ reviewid, dto, files: realFiles, keepImgIds });
   };
 
   return (
@@ -100,6 +180,7 @@ export default function ReviewEditModal({
       okText="수정"
       cancelText="취소"
       width={800}
+      destroyOnClose
     >
       <Form form={form} layout="vertical">
         <Space size={12} style={{ width: "100%" }} align="start">
@@ -109,12 +190,10 @@ export default function ReviewEditModal({
             rules={[{ required: true, message: "종을 선택하세요" }]}
             style={{ flex: 1 }}
           >
-            <Select
-              options={[
-                { value: 1, label: "고양이" },
-                { value: 2, label: "강아지" },
-              ]}
-            />
+            <Select placeholder="종 선택">
+              <Select.Option value="1">고양이</Select.Option>
+              <Select.Option value="2">강아지</Select.Option>
+            </Select>
           </Form.Item>
 
           <Form.Item
@@ -124,8 +203,11 @@ export default function ReviewEditModal({
             style={{ flex: 1 }}
           >
             <Select
+              placeholder="브랜드 선택"
+              showSearch
+              optionFilterProp="label"
               options={(formData?.brandlist || []).map((b) => ({
-                value: b.brandid,
+                value: String(b.brandid),
                 label: b.brandname,
               }))}
             />
@@ -138,10 +220,11 @@ export default function ReviewEditModal({
             style={{ flex: 2 }}
           >
             <Select
+              placeholder="제품 선택"
               showSearch
               optionFilterProp="label"
-              options={(formData?.foodlist || []).map((f) => ({
-                value: f.foodid,
+              options={filteredFoodList.map((f) => ({
+                value: String(f.foodid),
                 label: f.foodname,
               }))}
             />
@@ -172,68 +255,18 @@ export default function ReviewEditModal({
           <Input.TextArea rows={5} />
         </Form.Item>
 
-        {/* 기존 이미지 */}
-        <div style={{ marginBottom: 12 }}>
-          <Text strong>기존 이미지</Text>
-
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 8 }}>
-            {imglist.length === 0 ? (
-              <Text type="secondary">등록된 이미지 없음</Text>
-            ) : (
-              imglist.map((img) => {
-                const keep = keepImgIds.includes(img.reviewimgid);
-
-                return (
-                  <div
-                    key={img.reviewimgid}
-                    style={{
-                      position: "relative",
-                      width: 120,
-                      height: 120,
-                      borderRadius: 8,
-                      overflow: "hidden",
-                      border: keep ? "2px solid #1677ff" : "2px dashed #aaa",
-                      opacity: keep ? 1 : 0.35,
-                      cursor: "pointer",
-                    }}
-                    onClick={() => toggleKeep(img.reviewimgid)}
-                    title={keep ? "유지" : "삭제(제외)"}
-                  >
-                    <img
-                      src={`/upload/${img.reviewimgname}`}
-                      alt="review"
-                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        window.open(`/upload/${img.reviewimgname}`, "_blank");
-                      }}
-                    />
-
-                    <div style={{ position: "absolute", bottom: 6, left: 6 }}>
-                      <Button size="small" type={keep ? "primary" : "default"}>
-                        {keep ? "유지" : "삭제"}
-                      </Button>
-                    </div>
-                  </div>
-                );
-              })
-            )}
-          </div>
-
-          <div style={{ marginTop: 6 }}>
-            <Text type="secondary">
-              ※ 클릭하면 유지/삭제 토글됩니다. 
-            </Text>
-          </div>
-        </div>
-
-        {/* 새 이미지 */}
         <div style={{ marginBottom: 6 }}>
-          <Text strong>새 이미지 업로드 </Text>
+          <Text strong>이미지 첨부</Text>
+          <Text type="secondary" style={{ marginLeft: 8 }}>
+            (선택)
+          </Text>
         </div>
 
-        <Upload {...uploadProps} listType="picture">
-          <Button icon={<UploadOutlined />}>이미지 선택</Button>
+        <Upload {...uploadProps}>
+          <div style={{ textAlign: "center" }}>
+            <UploadOutlined />
+            <div style={{ marginTop: 8 }}>추가</div>
+          </div>
         </Upload>
       </Form>
     </Modal>

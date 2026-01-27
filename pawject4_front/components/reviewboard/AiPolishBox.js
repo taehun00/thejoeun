@@ -69,7 +69,7 @@ export default function AiPolishBox({
     }
 
     onApply?.({ title: parsed.title, content: parsed.content });
-    message.success("AI 문장을 적용했습니다.");
+    message.success("AI 추천 문장을 적용했습니다.");
   };
 
   return (
@@ -79,7 +79,7 @@ export default function AiPolishBox({
           <Space>
             <RobotOutlined />
             <Text strong>AI 리뷰 다듬기</Text>
-            <Text type="secondary">비속어/과한 표현을 정중하게 순화</Text>
+            <Text type="secondary">작성하신 리뷰를 좀 더 부드럽게 다듬어 볼까요?</Text>
           </Space>
 
           <Button type="primary" onClick={handleRequest} loading={loading}>

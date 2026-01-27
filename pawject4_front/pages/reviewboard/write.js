@@ -19,12 +19,12 @@ import {
 import { UploadOutlined } from "@ant-design/icons";
 
 import BoardCard from "../../components/common/BoardCard";
-import AiPolishBox from "../../components/common/AiPolishBox";
+import AiPolishBox from "../../components/reviewboard/AiPolishBox";
 
 import {
   fetchReviewFormRequest,
   createReviewRequest,
-  polishReviewRequest,
+  reviewPolishRequest,
 } from "../../reducers/review/reviewReducer";
 
 const { TextArea } = Input;
@@ -87,7 +87,7 @@ export default function ReviewWritePage() {
     );
   }, [formData, pettypeid, brandid]);
 
-  // 종/브랜드 바뀌면 제품 초기화(타임리프랑 동일)
+  // 종/브랜드 바뀌면 제품 초기화
   useEffect(() => {
     form.setFieldsValue({ foodid: undefined });
   }, [pettypeid, brandid]);
@@ -109,14 +109,14 @@ export default function ReviewWritePage() {
   const onSubmit = async () => {
     const values = await form.validateFields();
 
-    const dto = {
-      pettypeid: values.pettypeid,
-      brandid: values.brandid,
-      foodid: values.foodid,
-      rating: values.rating,
-      title: values.title,
-      reviewcomment: values.reviewcomment,
-    };
+  const dto = {
+    pettypeid: Number(values.pettypeid),
+    brandid: Number(values.brandid),
+    foodid: Number(values.foodid),
+    rating: values.rating,
+    title: values.title,
+    reviewcomment: values.reviewcomment,
+  };
 
     const realFiles = (files || [])
       .map((f) => f.originFileObj)
@@ -125,12 +125,12 @@ export default function ReviewWritePage() {
     dispatch(createReviewRequest({ dto, files: realFiles }));
   };
 
-  // AI 요청/적용 (선택)
+  // AI 요청/적용 
   const titleValue = Form.useWatch("title", form) || "";
   const contentValue = Form.useWatch("reviewcomment", form) || "";
 
   const onRequestPolish = ({ title, reviewcomment }) => {
-    dispatch(polishReviewRequest({ title, reviewcomment })); // POST /reviewboard/reviewapi
+    dispatch(reviewPolishRequest({ title, reviewcomment })); // POST /reviewboard/reviewapi
   };
 
   const onApplyPolish = ({ title, content }) => {
@@ -248,7 +248,7 @@ export default function ReviewWritePage() {
           <Button icon={<UploadOutlined />}>이미지 선택</Button>
         </Upload>
 
-        {/* ✅ AI 다듬기: 기본 숨김 */}
+        {/* AI 다듬기: 기본 숨김 */}
         <Collapse style={{ marginTop: 16 }}>
           <Panel header="AI 리뷰 다듬기 (선택)" key="ai">
             <AiPolishBox

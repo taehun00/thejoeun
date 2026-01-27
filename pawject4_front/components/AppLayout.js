@@ -21,6 +21,8 @@ export default function AppLayout({ children }) {
       { key: "/reviewboard", label: <Link href="/reviewboard">사료리뷰</Link> },
       { key: "/disease", label: <Link href="/disease">질환리스트</Link> },
       { key: "/faq", label: <Link href="/faq">고객센터</Link> },
+      { key: "/user/login", label: <Link href="/user/login">로그인</Link> },
+      { key: "/user/signup", label: <Link href="/user/signup">회원가입</Link> },
     ],
     []
   );

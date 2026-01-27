@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
+import { parseJwt } from "../../utils/jwt";
 
 import { Button, Select, Spin, Alert, message } from "antd";
 import BoardCard from "../../components/common/BoardCard";
@@ -46,8 +47,9 @@ export default function ReviewBoardIndex() {
     deleteError,
   } = useSelector((state) => state.review);
 
-    const loginRole = useSelector((state) => state.auth?.loginRole);
-    const loginUserId = useSelector((state) => state.auth?.loginUserId);
+
+const [loginRole, setLoginRole] = useState(null);
+const [loginUserId, setLoginUserId] = useState(null);
 
   const [searchType, setSearchTypeUI] = useState("all");
   const [keyword, setKeywordUI] = useState("");
@@ -62,7 +64,19 @@ export default function ReviewBoardIndex() {
   const isSearchMode = useMemo(() => mode === "search", [mode]);
   const pageSize = 10;
 
-  const canWrite = loginRole === "ROLE_ADMIN" || loginRole === "ROLE_MEMBER";
+    const canWrite = loginRole === "ROLE_ADMIN" || loginRole === "ROLE_MEMBER";
+
+useEffect(() => {
+  if (typeof window === "undefined") return;
+
+  const token = localStorage.getItem("accessToken");
+  const payload = token ? parseJwt(token) : null;
+
+  // payload.subject = userid / payload.role = ROLE_XXX 구조일 가능성이 큼
+  setLoginRole(payload?.role ?? null);
+  setLoginUserId(payload?.sub ? Number(payload.sub) : null);
+}, []);
+
 
 useEffect(() => {
   console.log("[auth debug]", { loginRole, loginUserId });
@@ -257,41 +271,52 @@ useEffect(() => {
         </div>
       </div>
 
-      {/* ✅ 토글 테이블 */}
-    <BoardToggleTable
-    rowKey="reviewid"
-    columns={columns}
-    dataSource={reviews}
-    loading={loading}
-    total={total}
-    pageNo={pageNo}
-    pageSize={pageSize}
-    onChangePage={onChangePage}
-    expandedRowRender={(record) => <ReviewDetailRow review={record} />}
 
-    expandedRowKeys={expandedRowKeys}
-    onExpand={(expanded, record) => {
+{/* ✅ 토글 테이블 */}
+<BoardToggleTable
+  rowKey="reviewid"
+  columns={columns}
+  dataSource={reviews}
+  loading={loading}
+  total={total}
+  pageNo={pageNo}
+  pageSize={pageSize}
+  onChangePage={onChangePage}
+  expandedRowRender={(record) => (
+    <ReviewDetailRow
+      review={record}
+      loginRole={loginRole}
+      loginUserId={loginUserId}
+      onOpenEditModal={onOpenEditModal}
+      onDelete={onDelete}
+      deleteLoading={deleteLoading}
+    />
+  )}
+  expandedRowKeys={expandedRowKeys}
+  onExpand={(expanded, record) => {
     setExpandedRowKeys((prev) => {
-        const key = record.reviewid;
-        if (expanded) return [...prev, key];       // ✅ 추가
-        return prev.filter((k) => k !== key);      // ✅ 제거
+      const key = record.reviewid;
+      if (expanded) return [...prev, key];      // ✅ 여러개 열기
+      return prev.filter((k) => k !== key);     // ✅ 닫기
     });
-    }}
+  }}
 
+  // ✅ UX: + 버튼 없이 행 클릭으로 토글
+  expandRowByClick
+  expandIcon={() => null}
+/>
 
-    /**
-     *   // ✅ controlled toggle (1개만 열기)
+{/* // ✅ controlled toggle (1개만 열기) - 나중에 다른 게시판 적용용
+<BoardToggleTable
+  ...
   expandedRowKeys={expandedRowKeys}
   onExpand={(expanded, record) => {
     setExpandedRowKeys(expanded ? [record.reviewid] : []);
   }}
-
-     */
-
-  // ✅ UX: + 버튼 없이 행 클릭으로 토글
-    expandRowByClick
-    expandIcon={() => null}
-    />
+  expandRowByClick
+  expandIcon={() => null}
+/>
+*/}
 
       {/* 수정 모달 */}
       <ReviewEditModal

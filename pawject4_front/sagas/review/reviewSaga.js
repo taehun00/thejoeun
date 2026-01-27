@@ -17,7 +17,7 @@ import {
 // 목록
 function* fetchReviews(action) {
   try {
-    const { pageNo = 1, condition = "" } = action.payload || {};
+    const { pageNo = 1, condition = "new" } = action.payload || {};
 
     const { data } = yield call(() =>
       axios.get("/reviewboard/reviewPaging", {
@@ -38,7 +38,7 @@ function* searchReviews(action) {
       keyword = "",
       searchType = "all",
       pageNo = 1,
-      condition = "",
+      condition = "new",
     } = action.payload || {};
 
     const { data } = yield call(() =>

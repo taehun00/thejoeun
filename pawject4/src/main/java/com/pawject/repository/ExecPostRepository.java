@@ -13,7 +13,7 @@ import com.pawject.domain.ExecPost;
 @Repository  //★
 public interface ExecPostRepository extends JpaRepository<ExecPost, Long> { //Entity , PK ★
 	// 해쉬태그 이름으로 게시글 검색 (글 쓰기후 검색확인)
-	List<ExecPost> findByHashtags_NameAndDeletedFalse(String name);
+	List<ExecPost> findByExecHashtags_NameAndDeletedFalse(String name);
 
 	// 조회 :  삭제되지 않은 게시글 
 	List<ExecPost> findByDeletedFalse();

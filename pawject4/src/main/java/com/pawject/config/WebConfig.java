@@ -14,8 +14,8 @@ public class WebConfig implements WebMvcConfigurer {
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-	    registry.addResourceHandler("/uploads/**")
-	            .addResourceLocations("file:" + uploadDir + "/");
+		registry.addResourceHandler("/upload/**", "/uploads/**")
+        .addResourceLocations("file:" + uploadDir + "/");
 	}
     @Override
     public void addCorsMappings(CorsRegistry registry) { 
@@ -27,4 +27,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowCredentials(false)
                 .maxAge(3600);
     }
+    
+    
+    
 }

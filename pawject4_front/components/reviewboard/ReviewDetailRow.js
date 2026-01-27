@@ -1,4 +1,5 @@
 import { Button, Popconfirm, Descriptions } from "antd";
+import { fileUrl } from "../../utils/fileUrl";
 
 export default function ReviewDetailRow({
   review,
@@ -10,11 +11,9 @@ export default function ReviewDetailRow({
 }) {
   if (!review) return null;
 
-  const canEditDelete = () => {
-    if (loginRole === "ROLE_ADMIN") return true;
-    if (loginRole === "ROLE_MEMBER" && Number(review.userid) === Number(loginUserId)) return true;
-    return false;
-  };
+  const canEditDelete =
+    loginRole === "ROLE_ADMIN" ||
+    (loginRole === "ROLE_MEMBER" && Number(review.userid) === Number(loginUserId));
 
   const openImg = (url) => {
     window.open(url, "_blank", "width=800,height=600,toolbar=no,menubar=no,resizable=yes");
@@ -27,43 +26,75 @@ export default function ReviewDetailRow({
         <img
           src={`/foodimg/${review.foodimg}`}
           alt="food"
-          style={{ width: "100%", borderRadius: 12, cursor: "pointer" }}
+          style={{
+            width: "100%",
+            height: 160,
+            objectFit: "cover",
+            borderRadius: 12,
+            cursor: "pointer",
+          }}
           onClick={(e) => {
             e.stopPropagation();
             openImg(`/foodimg/${review.foodimg}`);
           }}
+          onError={(e) => {
+            e.currentTarget.style.display = "none";
+          }}
         />
       </div>
 
-      <div style={{ flex: 1 }}>
-        {/* 날짜(상세로 이동) */}
-        <Descriptions size="small" column={2} style={{ marginBottom: 8 }}>
-          <Descriptions.Item label="등록일">{review.createdat || "-"}</Descriptions.Item>
-          <Descriptions.Item label="수정일">{review.updatedat || "-"}</Descriptions.Item>
-        </Descriptions>
-
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0 }}>
         {/* 리뷰 이미지 */}
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 12 }}>
-          {Array.isArray(review.reviewimglist) &&
-            review.reviewimglist.map((img) => (
-              <img
-                key={img.reviewimgid ?? img.reviewimgname}
-                src={`/upload/${img.reviewimgname}`}
-                alt="review"
-                style={{ width: 120, height: 120, objectFit: "cover", borderRadius: 12, cursor: "pointer" }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  openImg(`/upload/${img.reviewimgname}`);
-                }}
-              />
-            ))}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            marginBottom: 10,
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "flex-end",
+              gap: 6,
+              maxWidth: 320, // 너무 가로로 길어지지 않게 제한
+            }}
+          >
+            {Array.isArray(review.reviewimglist) &&
+              review.reviewimglist.map((img) => (
+                <img
+                  key={img.reviewimgid ?? img.reviewimgname}
+                  src={fileUrl(img.reviewimgname)} 
+                  alt="review"
+                  style={{
+                    width: 64,
+                    height: 64,
+                    objectFit: "cover",
+                    borderRadius: 10,
+                    cursor: "pointer",
+                    border: "1px solid #e5e7eb",
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    openImg(fileUrl(img.reviewimgname));
+                  }}
+                  onError={(e) => {
+                    e.currentTarget.style.display = "none";
+                  }}
+                />
+              ))}
+          </div>
         </div>
 
-        <div style={{ whiteSpace: "pre-wrap", lineHeight: 1.6 }}>{review.reviewcomment}</div>
+        {/* 리뷰 내용 */}
+        <div style={{ whiteSpace: "pre-wrap", lineHeight: 1.6, wordBreak: "break-word" }}>
+          {review.reviewcomment}
+        </div>
 
-        {/* 수정/삭제 */}
-        {canEditDelete() && (
-          <div style={{ display: "flex", justifyContent: "flex-end", gap: 8, marginTop: 24 }}>
+        {/* 버튼 */}
+        {canEditDelete && (
+          <div style={{ display: "flex", justifyContent: "flex-end", gap: 8, marginTop: 14 }}>
             <Button
               onClick={(e) => {
                 e.stopPropagation();
@@ -85,6 +116,14 @@ export default function ReviewDetailRow({
             </Popconfirm>
           </div>
         )}
+
+        {/* 날짜 */}
+        <div style={{ marginTop: "auto", paddingTop: 12 }}>
+          <Descriptions size="small" column={2}>
+            <Descriptions.Item label="등록일">{review.createdat || "-"}</Descriptions.Item>
+            <Descriptions.Item label="수정일">{review.updatedat || "-"}</Descriptions.Item>
+          </Descriptions>
+        </div>
       </div>
     </div>
   );
