@@ -8,7 +8,7 @@ const initialState = {
   paging: null,
   mode: "list", // "list" | "search"
   pageNo: 1,
-  condition: "new",
+  condition: "",
 
   // 상세 (토글용)
   detail: {
