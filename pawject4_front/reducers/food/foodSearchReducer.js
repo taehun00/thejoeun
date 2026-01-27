@@ -1,5 +1,4 @@
 // reducers/searchReducer.js
-// reducers/petfoodsearch/petfoodSearchReducer.js
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -41,9 +40,9 @@ const initialState = {
   // AI 필터 변환
   ai: {
     loading: false,
-    result: null,   // 서버 응답 Map
+    result: null,
     error: null,
-    open: false,    // UI에서 토글
+    open: false,
   },
 
   // 상세 모달
@@ -90,12 +89,29 @@ const petfoodSearchSlice = createSlice({
     searchFilterPagingRequest: (state, action) => {
       state.loading = true;
       state.error = null;
+
+      // 요청 페이지번호 store에 즉시 반영 (UI 꼬임 방지)
+      // payload가 { pstartno } 형태로 들어오는 구조를 전제로 함
+      if (action?.payload?.pstartno) {
+        state.pstartno = action.payload.pstartno;
+      }
     },
     searchFilterPagingSuccess: (state, action) => {
       state.loading = false;
       state.list = action.payload?.list || [];
       state.total = action.payload?.total || 0;
       state.paging = action.payload?.paging || null;
+
+      // ✅ 성공 시에도 pstartno를 paging 기반으로 동기화 (서버 paging 기준 최종 확정)
+      // UtilPaging 구조가 프로젝트마다 다를 수 있으니 방어적으로 처리
+      const serverPage =
+        action.payload?.paging?.pstartno ||
+        action.payload?.paging?.pageNo ||
+        action.payload?.paging?.currentPage;
+
+      if (serverPage) {
+        state.pstartno = serverPage;
+      }
     },
     searchFilterPagingFailure: (state, action) => {
       state.loading = false;

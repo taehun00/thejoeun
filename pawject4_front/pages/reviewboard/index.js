@@ -54,10 +54,10 @@ const [loginUserId, setLoginUserId] = useState(null);
   const [searchType, setSearchTypeUI] = useState("all");
   const [keyword, setKeywordUI] = useState("");
 
-  // ✅ 1개만 열리는 토글
+  // 1개만 열리는 토글
   const [expandedRowKeys, setExpandedRowKeys] = useState([]);
 
-  // ✅ 수정 모달
+  // 수정 모달
   const [editOpen, setEditOpen] = useState(false);
   const [editReviewId, setEditReviewId] = useState(null);
 
@@ -72,7 +72,7 @@ useEffect(() => {
   const token = localStorage.getItem("accessToken");
   const payload = token ? parseJwt(token) : null;
 
-  // payload.subject = userid / payload.role = ROLE_XXX 구조일 가능성이 큼
+  // payload.subject = userid / payload.role = ROLE_XXX
   setLoginRole(payload?.role ?? null);
   setLoginUserId(payload?.sub ? Number(payload.sub) : null);
 }, []);
@@ -272,7 +272,7 @@ useEffect(() => {
       </div>
 
 
-{/* ✅ 토글 테이블 */}
+{/* 토글 테이블 */}
 <BoardToggleTable
   rowKey="reviewid"
   columns={columns}
@@ -296,17 +296,17 @@ useEffect(() => {
   onExpand={(expanded, record) => {
     setExpandedRowKeys((prev) => {
       const key = record.reviewid;
-      if (expanded) return [...prev, key];      // ✅ 여러개 열기
-      return prev.filter((k) => k !== key);     // ✅ 닫기
+      if (expanded) return [...prev, key];      // 여러 개 열기
+      return prev.filter((k) => k !== key);     //  닫기
     });
   }}
 
-  // ✅ UX: + 버튼 없이 행 클릭으로 토글
+  //  버튼 없이 행 클릭으로 토글
   expandRowByClick
   expandIcon={() => null}
 />
 
-{/* // ✅ controlled toggle (1개만 열기) - 나중에 다른 게시판 적용용
+{/* //  controlled toggle (1개만 열기) - 나중에 다른 게시판 적용용
 <BoardToggleTable
   ...
   expandedRowKeys={expandedRowKeys}

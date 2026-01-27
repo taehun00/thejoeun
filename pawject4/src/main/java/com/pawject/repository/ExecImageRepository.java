@@ -11,7 +11,7 @@ import com.pawject.domain.ExecImage;
 @Repository  //★
 public interface ExecImageRepository extends JpaRepository<ExecImage, Long> { //Entity , PK ★
     // 특정 게시글에 속한 이미지 목록 조회
-    List<ExecImage> findByExecPostId(Long execPostId);
+    List<ExecImage> findByExecPost_Postid(Long execPostId);
 }
 
 /*
