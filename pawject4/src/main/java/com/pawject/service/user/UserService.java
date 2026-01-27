@@ -1,5 +1,7 @@
 package com.pawject.service.user;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,6 +14,7 @@ import com.pawject.dto.user.LoginRequest;
 import com.pawject.dto.user.UserRequestDto;
 import com.pawject.dto.user.UserResponseDto;
 import com.pawject.repository.UserRepository;
+import com.pawject.security.JwtProvider;
 import com.pawject.util.FileStorageService;
 
 import lombok.RequiredArgsConstructor;
@@ -26,6 +29,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final FileStorageService fileStorageService;
+    private final JwtProvider jwtProvider;
+
 
     private static final String DEFAULT_PROVIDER = "local";
     private static final String DEFAULT_PROFILE_IMAGE = "uploads/default.png";
@@ -40,14 +45,15 @@ public class UserService {
                 : DEFAULT_PROVIDER;
 
         // 이메일 + provider 중복 체크
-        if (userRepository.existsByEmailAndProvider(request.getEmail(), provider)) {
+        if (userRepository.existsByEmailAndProviderNative(request.getEmail(), provider) > 0) {
             throw new IllegalArgumentException("이미 존재하는 사용자입니다.");
         }
 
         // 닉네임 중복 체크
-        if (userRepository.existsByNickname(request.getNickname())) {
+        if (userRepository.findByNickname(request.getNickname()).isPresent()) {
             throw new IllegalArgumentException("이미 사용중인 닉네임입니다.");
         }
+
 
         String profilePath = (profileImage != null && !profileImage.isEmpty())
                 ? fileStorageService.upload(profileImage)
@@ -74,7 +80,7 @@ public class UserService {
                 ? request.getProvider()
                 : DEFAULT_PROVIDER;
 
-        User user = userRepository.findByEmailAndProvider(
+        User user = userRepository.findByEmailAndProviderNative(
                 request.getEmail(), provider
         ).orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
 
@@ -82,7 +88,18 @@ public class UserService {
             throw new IllegalArgumentException("비밀번호 불일치");
         }
 
-        return UserResponseDto.fromEntity(user);
+        // ★ 토큰 발급
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", user.getRole());
+        claims.put("provider", user.getProvider());
+
+
+        String accessToken = jwtProvider.createAccessToken(String.valueOf(user.getUserId()), claims);
+        String refreshToken = jwtProvider.createRefreshToken(String.valueOf(user.getUserId()));
+
+        
+        return UserResponseDto.fromEntity(user, accessToken, refreshToken);
+
     }
 
     /* =========================
@@ -93,9 +110,16 @@ public class UserService {
                 .map(UserResponseDto::fromEntity)
                 .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
     }
+    
+    public UserResponseDto findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .map(UserResponseDto::fromEntity)
+                .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
+    }
 
-    public Optional<User> findByEmailAndProvider(String email, String provider) {
-        return userRepository.findByEmailAndProvider(email, provider);
+
+    public Optional<User> findByEmailAndProviderNative(String email, String provider) {
+        return userRepository.findByEmailAndProviderNative(email, provider);
     }
 
     /* =========================
@@ -103,7 +127,8 @@ public class UserService {
      ========================= */
     public UserResponseDto updateNickname(Long userId, String newNickname) {
 
-        if (userRepository.existsByNickname(newNickname)) {
+    	if (userRepository.findByNickname(newNickname).isPresent()) {
+
             throw new IllegalArgumentException("이미 사용중인 닉네임입니다.");
         }
 
@@ -114,6 +139,19 @@ public class UserService {
 
         return UserResponseDto.fromEntity(userRepository.save(user));
     }
+    
+	 // 프로필 이미지 변경
+	    public UserResponseDto updateProfileImage(Long userId, MultipartFile profileImage) {
+	        User user = userRepository.findById(userId)
+	                .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
+	
+	        user.setUfile(profileImage != null && !profileImage.isEmpty()
+	                ? fileStorageService.upload(profileImage)
+	                : DEFAULT_PROFILE_IMAGE);
+	
+	        return UserResponseDto.fromEntity(userRepository.save(user));
+	    }
+
 
     /* =========================
        사용자 탈퇴
