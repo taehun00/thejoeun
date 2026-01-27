@@ -13,7 +13,7 @@ import com.pawject.domain.ExecPost;
 @Repository  //★
 public interface ExecPostRepository extends JpaRepository<ExecPost, Long> { //Entity , PK ★
 	// 해쉬태그 이름으로 게시글 검색 (글 쓰기후 검색확인)
-	List<ExecPost> findByHashtags_NameAndDeletedFalse(String name);
+	List<ExecPost> findByExecHashtags_NameAndDeletedFalse(String name);
 
 	// 조회 :  삭제되지 않은 게시글 
 	List<ExecPost> findByDeletedFalse();
@@ -38,13 +38,13 @@ public interface ExecPostRepository extends JpaRepository<ExecPost, Long> { //En
     	              "FROM ( " +
     	              "   SELECT sns.* " +
     	              "   FROM EXECSNS sns " +
-    	              "   WHERE sn.ID IN ( " +
-    	              "       SELECT DISTINCT pl.POST_ID " +
-    	              "       FROM POST_LIKES pl " +
-    	              "       WHERE pl.APP_USER_ID = :userId " +
-    	              "   ) AND po.DELETED = 0 " +  
-    	              "   ORDER BY po.CREATED_AT DESC " +  
-    	              ") p " +
+    	              "   WHERE sn.POSTID IN ( " +
+    	              "       SELECT DISTINCT sn.EXECPOSTID" +
+    	              "       FROM EXECPOSTLIKES pl " +
+    	              "       WHERE pl.USERID = :userId " +
+    	              "   ) AND sns.DELETED = 0 " +  
+    	              "   ORDER BY sns.CREATEDAT DESC " +  
+    	              ") sn " +
     	              ") " +
     	              "WHERE rnum BETWEEN :start AND :end",
     	      nativeQuery = true
@@ -54,21 +54,21 @@ public interface ExecPostRepository extends JpaRepository<ExecPost, Long> { //En
     // 내가 쓴글 + 내가 리트윗한 글 (합쳐서 조회)
     @Query(
     	      value = "SELECT * FROM ( " +
-    	              "SELECT p.*, ROWNUM AS rnum " +
+    	              "SELECT sn.*, ROWNUM AS rnum " +
     	              "FROM ( " +
-    	              "   SELECT po.ID, po.CONTENT, po.CREATED_AT, po.DELETED, po.UPDATED_AT, po.APP_USER_ID " +  
-    	              "   FROM POSTS po " +
-    	              "   WHERE po.APP_USER_ID = :userId AND po.DELETED = 0 " +
+    	              "   SELECT sn.POSTID, sn.ECONTENT, sn.CREATEDAT, sn.DELETED, sn.UPDATEDAT, sn.USERID " +  
+    	              "   FROM EXECSNS sns " +
+    	              "   WHERE sns.USERID = :userId AND sns.DELETED = 0 " +
     	              "   UNION ALL " +
-    	              "   SELECT po.ID, po.CONTENT, po.CREATED_AT, po.DELETED, po.UPDATED_AT, po.APP_USER_ID " + 
-    	              "   FROM POSTS po " +
-    	              "   WHERE po.ID IN ( " +
+    	              "   SELECT sns.POSTID, sns.ECONTENT, sns.CREATEDAT, sns.DELETED, sns.UPDATEDAT, sns.USERID " + 
+    	              "   FROM EXECSNS sns " +
+    	              "   WHERE sns.POSTID IN ( " +
     	              "       SELECT DISTINCT r.ORIGINAL_POST_ID " +
     	              "       FROM RETWEETS r " +
-    	              "       WHERE r.APP_USER_ID = :userId " +
+    	              "       WHERE r.USERID = :userId " +
     	              "   ) AND po.DELETED = 0 " +
-    	              "   ORDER BY CREATED_AT DESC " +  
-    	              ") p " +
+    	              "   ORDER BY CREATEDAT DESC " +  
+    	              ") sn " +
     	              ") " +
     	              "WHERE rnum BETWEEN :start AND :end",
     	      nativeQuery = true
