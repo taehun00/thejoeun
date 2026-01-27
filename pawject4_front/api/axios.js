@@ -1,59 +1,72 @@
 // api/axios.js
-
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8484", 
-  // 기본 api 서버주소, 환경변수가 없으면 로컬서버 사용
-  withCredentials: true, 
-  // refresh Token 이 HttpOnly 쿠키에  저장이 되어 있으면 자동 포함 필요
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8484",
+  withCredentials: true,
   headers: {
-    "Content-Type": "application/json",   // → 요청기본 json
-    Accept: "application/json",           // → 응답을 JSON으로 받도록 지정 
+    "Content-Type": "application/json",
+    Accept: "application/json",
   },
 });
-// 요청 인터셉터: 요청 보내기 전에 Access Token을 헤더에 추가  
+
+// ✅ 요청 인터셉터: AccessToken 헤더 자동 첨부
 api.interceptors.request.use(
   (config) => {
-    if (typeof window !== "undefined") {  //→ CSR 환경에서만 localStorage 접근
-      const accessToken = localStorage.getItem("accessToken"); //→ 저장된 Access Token 가져오기 
+    if (typeof window !== "undefined") {
+      const accessToken = localStorage.getItem("accessToken");
       if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`;  //→ Authorization 헤더에 추가
+        config.headers.Authorization = `Bearer ${accessToken}`;
       }
     }
-    return config;  
+    return config;
   },
-  (error) => Promise.reject(error)  // 요청에러처리
-); 
+  (error) => Promise.reject(error)
+);
+
+// ✅ 응답 인터셉터: 401이면 refresh 후 원요청 재시도
 api.interceptors.response.use(
-  (res) => res, // → 정상 응답은 그대로 반환
+  (res) => res,
   async (error) => {
-    const original = error.config; // → 원래 요청 정보
-    const status = error.response?.status; // → 응답 상태 코드
-    // 401 발생시 Refresh Token 재발급
+    const original = error.config;
+    const status = error.response?.status;
+
+    // 원래 요청 정보가 없으면 그대로 throw
+    if (!original) return Promise.reject(error);
+
+    // ✅ refresh API 호출 자체가 401이면 재시도 금지 (무한루프 방지 핵심)
+    if (original.url?.includes("/api/users/refresh")) {
+      return Promise.reject(error);
+    }
+
+    // ✅ 401 & 아직 재시도 안했을 때만 refresh
     if (status === 401 && !original._retry) {
-      original._retry = true; // → 무한 루프 방지 플래그
+      original._retry = true;
+
       try {
-        const { data } = await api.post("/auth/refresh"); 
-        const newAccessToken = data?.accessToken;  
+        const { data } = await api.post("/api/users/refresh");
+        const newAccessToken = data?.accessToken;
 
         if (typeof window !== "undefined" && newAccessToken) {
-          localStorage.setItem("accessToken", newAccessToken);  // local 저장
+          localStorage.setItem("accessToken", newAccessToken);
         }
 
-        original.headers.Authorization = `Bearer ${newAccessToken}`;  // 원 요청 헤더 갱신
-        return api(original); 
+        // 원 요청에 새 토큰 세팅
+        original.headers = original.headers || {};
+        original.headers.Authorization = `Bearer ${newAccessToken}`;
+
+        return api(original);
       } catch (refreshErr) {
         if (typeof window !== "undefined") {
-          localStorage.removeItem("accessToken");  // Access Token 제거
-          window.location.href = "/login";         // 로그인 페이지로 이동
+          localStorage.removeItem("accessToken");
+          window.location.href = "/login";
         }
-        return Promise.reject(refreshErr);  
+        return Promise.reject(refreshErr);
       }
     }
 
-    return Promise.reject(error);  
+    return Promise.reject(error);
   }
 );
- 
+
 export default api;

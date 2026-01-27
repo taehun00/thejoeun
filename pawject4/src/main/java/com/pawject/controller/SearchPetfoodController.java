@@ -50,20 +50,20 @@ public class SearchPetfoodController {
 	@Operation(summary = "검색")
     @GetMapping("/searchfilterPaging")
     public Map<String, Object> searchfilterPaging(    
-            @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) Integer pettypeid,
-            @RequestParam(required = false) String foodtype,
-            @RequestParam(required = false) Integer brandid,
-            @RequestParam(required = false) Integer foodid,
-            @RequestParam(required = false) String category,
-            @RequestParam(required = false) String petagegroup,
-            @RequestParam(required = false) String isgrainfree,
-            @RequestParam(required = false) String origin,
-            @RequestParam(required = false) Integer rangeid,
-            @RequestParam(required = false) Integer minvalue,
-            @RequestParam(required = false) Integer maxvalue,
-            @RequestParam(defaultValue = "1") int pstartno,
-            @RequestParam(required = false) String condition
+            @RequestParam(name="keyword", required = false) String keyword,
+            @RequestParam(name="pettypeid", required = false) Integer pettypeid,
+            @RequestParam(name="foodtype", required = false) String foodtype,
+            @RequestParam(name="brandid", required = false) Integer brandid,
+            @RequestParam(name="foodid", required = false) Integer foodid,
+            @RequestParam(name="category", required = false) String category,
+            @RequestParam(name="petagegroup", required = false) String petagegroup,
+            @RequestParam(name="isgrainfree", required = false) String isgrainfree,
+            @RequestParam(name="origin", required = false) String origin,
+            @RequestParam(name="rangeid", required = false) Integer rangeid,
+            @RequestParam(name="minvalue", required = false) Integer minvalue,
+            @RequestParam(name="maxvalue", required = false) Integer maxvalue,
+            @RequestParam(name="pstartno", defaultValue = "1") int pstartno,
+            @RequestParam(name="condition", required = false) String condition
     ) { 
         // 위치 주의
         if (minvalue != null && minvalue < 0) minvalue = null;
@@ -100,14 +100,14 @@ public class SearchPetfoodController {
 	@Autowired private FoodApi apiservice;
 	@Operation(summary = "사료 검색 AI 필터 변환")
 	@PostMapping("/foodapi")
-	public ResponseEntity<Map<String, Object>> foodapi(@RequestParam String userMessage) {
+	public ResponseEntity<Map<String, Object>> foodapi(@RequestParam(name="userMessage") String userMessage) {
 	    Map<String, Object> result = apiservice.aiChangeFilter(userMessage);
 	    return ResponseEntity.ok(result);
 	}
 	
 	@Operation(summary = "사료 상세 카드 조회")
 	@GetMapping("/modalcard/{foodid}")
-	public ResponseEntity<SearchPetfoodDto> modalcard(@PathVariable int foodid){
+	public ResponseEntity<SearchPetfoodDto> modalcard(@PathVariable(name="foodid") int foodid){
 	    return ResponseEntity.ok(service.detailCard(foodid));
 	}
 }

@@ -47,6 +47,6 @@ public class DevAuthController {
                 "accessToken=" + accessToken + "; Path=/; SameSite=Lax");
 
         // 프론트 이동
-        return "redirect:http://localhost:3000/foodboard/list";
+        return "redirect:http://localhost:3000/foodboard";
     }
 }

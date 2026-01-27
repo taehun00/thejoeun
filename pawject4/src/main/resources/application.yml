@@ -10,7 +10,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update   # dev=update / test=create-drop 권장
+      ddl-auto: update   
     properties:
       hibernate:
         format_sql: true

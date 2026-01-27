@@ -1,0 +1,334 @@
+// pages/reviewboard/index.js
+import { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/router";
+import { parseJwt } from "../../utils/jwt";
+
+import { Button, Select, Spin, Alert, message } from "antd";
+import BoardCard from "../../components/common/BoardCard";
+import BoardSearchBar from "../../components/common/BoardSearchBar";
+import BoardToggleTable from "../../components/common/BoardToggleTable";
+
+import ReviewTableColumns from "../../components/reviewboard/ReviewTableColumns";
+import ReviewDetailRow from "../../components/reviewboard/ReviewDetailRow";
+import ReviewEditModal from "../../components/reviewboard/ReviewEditModal";
+
+import {
+  fetchReviewsRequest,
+  searchReviewsRequest,
+  setCondition,
+  fetchReviewFormRequest,
+  updateReviewRequest,
+  deleteReviewRequest,
+} from "../../reducers/review/reviewReducer";
+
+const { Option } = Select;
+
+export default function ReviewBoardIndex() {
+  const router = useRouter();
+  const dispatch = useDispatch();
+
+  const {
+    reviews,
+    total,
+    mode,
+    pageNo,
+    condition,
+    loading,
+    error,
+
+    formData,
+    editLoading,
+    editSuccess,
+    editError,
+
+    deleteLoading,
+    deleteSuccess,
+    deleteError,
+  } = useSelector((state) => state.review);
+
+
+const [loginRole, setLoginRole] = useState(null);
+const [loginUserId, setLoginUserId] = useState(null);
+
+  const [searchType, setSearchTypeUI] = useState("all");
+  const [keyword, setKeywordUI] = useState("");
+
+  // 1개만 열리는 토글
+  const [expandedRowKeys, setExpandedRowKeys] = useState([]);
+
+  // 수정 모달
+  const [editOpen, setEditOpen] = useState(false);
+  const [editReviewId, setEditReviewId] = useState(null);
+
+  const isSearchMode = useMemo(() => mode === "search", [mode]);
+  const pageSize = 10;
+
+    const canWrite = loginRole === "ROLE_ADMIN" || loginRole === "ROLE_MEMBER";
+
+useEffect(() => {
+  if (typeof window === "undefined") return;
+
+  const token = localStorage.getItem("accessToken");
+  const payload = token ? parseJwt(token) : null;
+
+  // payload.subject = userid / payload.role = ROLE_XXX
+  setLoginRole(payload?.role ?? null);
+  setLoginUserId(payload?.sub ? Number(payload.sub) : null);
+}, []);
+
+
+useEffect(() => {
+  console.log("[auth debug]", { loginRole, loginUserId });
+}, [loginRole, loginUserId]);
+
+  useEffect(() => {
+    dispatch(fetchReviewsRequest({ pageNo: 1, condition }));
+  }, []);
+
+  useEffect(() => {
+    setExpandedRowKeys([]);
+
+    if (isSearchMode) {
+      dispatch(
+        searchReviewsRequest({
+          keyword: keyword.trim(),
+          searchType,
+          pageNo: 1,
+          condition,
+        })
+      );
+    } else {
+      dispatch(fetchReviewsRequest({ pageNo: 1, condition }));
+    }
+  }, [condition]);
+
+  useEffect(() => {
+    if (deleteError) message.error(deleteError);
+  }, [deleteError]);
+
+  useEffect(() => {
+    if (editError) message.error(editError);
+  }, [editError]);
+
+  useEffect(() => {
+    if (!editSuccess) return;
+
+    message.success("수정 완료");
+    setEditOpen(false);
+    setEditReviewId(null);
+    setExpandedRowKeys([]);
+
+    if (isSearchMode) {
+      dispatch(
+        searchReviewsRequest({
+          keyword: keyword.trim(),
+          searchType,
+          pageNo,
+          condition,
+        })
+      );
+    } else {
+      dispatch(fetchReviewsRequest({ pageNo, condition }));
+    }
+  }, [editSuccess]);
+
+  useEffect(() => {
+    if (!deleteSuccess) return;
+
+    message.success("삭제 완료");
+    setExpandedRowKeys([]);
+
+    if (isSearchMode) {
+      dispatch(
+        searchReviewsRequest({
+          keyword: keyword.trim(),
+          searchType,
+          pageNo: 1,
+          condition,
+        })
+      );
+    } else {
+      dispatch(fetchReviewsRequest({ pageNo: 1, condition }));
+    }
+  }, [deleteSuccess]);
+
+  const onSearch = () => {
+    const kw = keyword.trim();
+    if (!kw) {
+      message.warning("검색어를 입력해주세요.");
+      return;
+    }
+    setExpandedRowKeys([]);
+    dispatch(searchReviewsRequest({ keyword: kw, searchType, pageNo: 1, condition }));
+  };
+
+  const onBackToList = () => {
+    setKeywordUI("");
+    setSearchTypeUI("all");
+    setExpandedRowKeys([]);
+    dispatch(fetchReviewsRequest({ pageNo: 1, condition }));
+  };
+
+  const onChangePage = (p) => {
+    setExpandedRowKeys([]);
+
+    if (isSearchMode) {
+      dispatch(searchReviewsRequest({ keyword: keyword.trim(), searchType, pageNo: p, condition }));
+    } else {
+      dispatch(fetchReviewsRequest({ pageNo: p, condition }));
+    }
+  };
+
+  const onToggleDetail = (review) => {
+    if (!review) return;
+
+    const key = review.reviewid;
+    setExpandedRowKeys((prev) => (prev?.[0] === key ? [] : [key]));
+  };
+
+  const onOpenEditModal = (reviewid) => {
+    setEditOpen(true);
+    setEditReviewId(reviewid);
+    dispatch(fetchReviewFormRequest({ reviewid }));
+  };
+
+  const onSubmitEdit = ({ reviewid, dto, files, keepImgIds }) => {
+    dispatch(updateReviewRequest({ reviewid, dto, files, keepImgIds }));
+  };
+
+  const onDelete = (reviewid) => {
+    dispatch(deleteReviewRequest({ reviewid }));
+  };
+
+  const columns = useMemo(
+    () =>
+      ReviewTableColumns({
+        total,
+        pageNo,
+        pageSize,
+
+        onToggleDetail,
+        onOpenEditModal,
+        onDelete,
+
+        deleteLoading,
+        loginRole,
+        loginUserId,
+      }),
+    [total, pageNo, deleteLoading, loginRole, loginUserId, expandedRowKeys]
+  );
+
+  const searchTypeOptions = [
+    { value: "all", label: "전체" },
+    { value: "pettypeid", label: "강아지/고양이" },
+    { value: "brandname", label: "브랜드명" },
+    { value: "foodname", label: "사료명" },
+  ];
+
+  if (loading && reviews.length === 0) return <Spin tip="불러오는 중..." />;
+  if (error) return <Alert type="error" message="목록 조회 실패" description={error} />;
+
+  return (
+    <BoardCard
+      title="🐶사료 후기🐱"
+      extra={
+        canWrite ? (
+          <Button type="primary" onClick={() => router.push("/reviewboard/write")}>
+            리뷰 작성
+          </Button>
+        ) : null
+      }
+    >
+      {/* 검색(가운데) + 정렬(오른쪽) */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 12,
+          marginBottom: 12,
+        }}
+      >
+        <div style={{ flex: 1 }} />
+        <div style={{ flex: 2, display: "flex", justifyContent: "center" }}>
+          <BoardSearchBar
+            searchType={searchType}
+            setSearchType={setSearchTypeUI}
+            keyword={keyword}
+            setKeyword={setKeywordUI}
+            searchTypeOptions={searchTypeOptions}
+            onSearch={onSearch}
+            showBackToList={isSearchMode}
+            onBackToList={onBackToList}
+          />
+        </div>
+        <div style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
+          <Select value={condition} onChange={(v) => dispatch(setCondition(v))} style={{ width: 160 }}>
+            <Option value="">최신</Option>
+            <Option value="old">오래된순</Option>
+          </Select>
+        </div>
+      </div>
+
+
+{/* 토글 테이블 */}
+<BoardToggleTable
+  rowKey="reviewid"
+  columns={columns}
+  dataSource={reviews}
+  loading={loading}
+  total={total}
+  pageNo={pageNo}
+  pageSize={pageSize}
+  onChangePage={onChangePage}
+  expandedRowRender={(record) => (
+    <ReviewDetailRow
+      review={record}
+      loginRole={loginRole}
+      loginUserId={loginUserId}
+      onOpenEditModal={onOpenEditModal}
+      onDelete={onDelete}
+      deleteLoading={deleteLoading}
+    />
+  )}
+  expandedRowKeys={expandedRowKeys}
+  onExpand={(expanded, record) => {
+    setExpandedRowKeys((prev) => {
+      const key = record.reviewid;
+      if (expanded) return [...prev, key];      // 여러 개 열기
+      return prev.filter((k) => k !== key);     //  닫기
+    });
+  }}
+
+  //  버튼 없이 행 클릭으로 토글
+  expandRowByClick
+  expandIcon={() => null}
+/>
+
+{/* //  controlled toggle (1개만 열기) - 나중에 다른 게시판 적용용
+<BoardToggleTable
+  ...
+  expandedRowKeys={expandedRowKeys}
+  onExpand={(expanded, record) => {
+    setExpandedRowKeys(expanded ? [record.reviewid] : []);
+  }}
+  expandRowByClick
+  expandIcon={() => null}
+/>
+*/}
+
+      {/* 수정 모달 */}
+      <ReviewEditModal
+        open={editOpen}
+        onClose={() => setEditOpen(false)}
+        reviewid={editReviewId}
+        formData={formData}
+        loading={loading}
+        editLoading={editLoading}
+        onFetchForm={(rid) => dispatch(fetchReviewFormRequest({ reviewid: rid }))}
+        onSubmitEdit={onSubmitEdit}
+      />
+    </BoardCard>
+  );
+}

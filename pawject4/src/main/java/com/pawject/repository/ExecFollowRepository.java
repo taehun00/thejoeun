@@ -13,25 +13,25 @@ import com.pawject.domain.ExecFollow;
 @Repository  //★
 public interface ExecFollowRepository extends JpaRepository<ExecFollow, Long> { //Entity , PK ★
     // 팔로우 관계 단건 조회  (findBy)
-	Optional<ExecFollow>  findByFollower_IdAndFollowee_Id(Long followerId  , Long followeeId);
+	Optional<ExecFollow>  findByFollower_UserIdAndFollowee_UserId(Long followerId  , Long followeeId);
 
 	
     // 팔로잉 목록 조회 (지연 로딩 방지: followee 조인 : findBy)  
 	@EntityGraph(attributePaths = {"followee"})
-	List<ExecFollow> findByFollower_Id(Long followerId);  
+	List<ExecFollow> findByFollower_UserId(Long followerId);
 
     // 팔로워 목록 조회 (지연 로딩 방지: follower 조인 :  findBy) 
 	@EntityGraph(attributePaths = {"follower"})
-	List<ExecFollow> findByFollowee_Id(Long followeeId);  
+	List<ExecFollow> findByFollowee_UserId(Long followeeId);
 	
 	
     /////////////////////////////////////////////
     // 팔로잉 수 집계   (countBy)
 
-	long countByFollower_Id(Long followerId); 
+	long countByFollower_UserId(Long followerId); 
 
     // 팔로워 수 집계   (countBy)
-	long countByFollowee_Id(Long followeeId);   	
+	long countByFollowee_UserId(Long followeeId);   	
 
 	
 }
