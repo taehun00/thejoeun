@@ -11,3 +11,5 @@ public class Pawject4Application {
 	}
 
 }
+
+// http://localhost:8484/swagger-ui/index.html

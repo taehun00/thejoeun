@@ -2,8 +2,14 @@ package com.pawject.domain;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "PETS")
@@ -12,6 +18,7 @@ import jakarta.persistence.*;
         sequenceName = "PET_SEQ",
         allocationSize = 1
 )
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Pet {
 
     @Id
@@ -19,9 +26,7 @@ public class Pet {
     @Column(name = "PETID")
     private Long petId;
 
-    /**
-     * USER (1) : PET (N)
-     */
+    /** USER (1) : PET (N) */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USERID", nullable = false)
     private User user;
@@ -32,16 +37,10 @@ public class Pet {
     @Column(name = "PETBREED", length = 100)
     private String petBreed;
 
-    /**
-     * VARCHAR2(100)이지만 날짜 의미 → LocalDate 권장
-     */
     @Column(name = "BIRTHDATE", length = 100)
     private String birthDate;
 
-    /**
-     * PET (N) : PETTYPE (1)
-     * FK: PETS.PETTYPEID → PETTYPE.PETTYPEID
-     */
+    /** PET (N) : PETTYPE (1) */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PETTYPEID", nullable = false)
     private PetType petType;
@@ -52,15 +51,11 @@ public class Pet {
     @Column(name = "CREATEDAT", updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "AGE")
-    private Integer age;
+    @Column(name = "PAGE")
+    private Integer page;
 
-    @Column(name = "GENDER", length = 10)
-    private String gender;
-
-    protected Pet() {
-        // JPA 기본 생성자
-    }
+    @Column(name = "PGENDER", length = 10)
+    private String pGender;
 
     public Pet(User user, String petName) {
         this.user = user;

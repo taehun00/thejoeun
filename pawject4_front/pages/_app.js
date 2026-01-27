@@ -16,5 +16,6 @@ function MyApp({Component, pageProps}){
         </div>
     );
 }
+
 // next-redix-wrapper로 Redux store 연결
 export default wrapper.withRedux(MyApp);

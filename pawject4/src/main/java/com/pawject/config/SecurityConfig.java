@@ -22,6 +22,7 @@ import com.pawject.oauth2.OAuth2SuccessHandler;
 import com.pawject.security.JwtAuthenticationFilter;
 import com.pawject.security.JwtProvider;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 
@@ -64,7 +65,8 @@ public class SecurityConfig {
                     "/auth/**", "/login/**", "/oauth2/**",
                     "/swagger-ui/**", "/v3/api-docs/**",
                     "/swagger-resources/**", "/webjars/**",
-                    "/configuration/**", "/upload/**"  , "/api/deptusers/**" , "/api/likes/**"
+                    "/configuration/**", "/upload/**"  , "/api/likes/**",
+                    "/api/users/signup", "/api/users/login"
                 ).permitAll()
                 // 전체조회만 허용
                 .requestMatchers(HttpMethod.GET, "/api/posts").permitAll()   
@@ -75,13 +77,20 @@ public class SecurityConfig {
                 .requestMatchers("/api/posts/paged").permitAll() 
                 // /api/요청은 JWT 인증 필요
                 .requestMatchers("/api/**").authenticated()
+                .requestMatchers("/api/users/mypage").authenticated()
+                .requestMatchers("/api/pets/**").authenticated()
                 // 나머지는 모두 허용
                 .anyRequest().permitAll()
             )
             // Oauth2 로그인은 소셜로그인 전용
             .oauth2Login(oauth2 -> oauth2.successHandler(oAuth2SuccessHandler))
             // JWT 필터 추가
-            .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+        	.exceptionHandling(ex -> ex
+                .authenticationEntryPoint((request, response, authException) ->
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")
+                )
+            );
 
         return http.build();
     }
