@@ -45,7 +45,7 @@ public class UserService {
                 : DEFAULT_PROVIDER;
 
         // 이메일 + provider 중복 체크
-        if (userRepository.existsByEmailAndProvider(request.getEmail(), provider)) {
+        if (userRepository.existsByEmailAndProviderNative(request.getEmail(), provider) > 0) {
             throw new IllegalArgumentException("이미 존재하는 사용자입니다.");
         }
 
@@ -80,7 +80,7 @@ public class UserService {
                 ? request.getProvider()
                 : DEFAULT_PROVIDER;
 
-        User user = userRepository.findByEmailAndProvider(
+        User user = userRepository.findByEmailAndProviderNative(
                 request.getEmail(), provider
         ).orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
 
@@ -93,8 +93,9 @@ public class UserService {
         claims.put("role", user.getRole());
         claims.put("provider", user.getProvider());
 
-        String accessToken = jwtProvider.createAccessToken(user.getEmail(), claims);
-        String refreshToken = jwtProvider.createRefreshToken(user.getEmail());
+
+        String accessToken = jwtProvider.createAccessToken(String.valueOf(user.getUserId()), claims);
+        String refreshToken = jwtProvider.createRefreshToken(String.valueOf(user.getUserId()));
 
         
         return UserResponseDto.fromEntity(user, accessToken, refreshToken);
@@ -109,9 +110,16 @@ public class UserService {
                 .map(UserResponseDto::fromEntity)
                 .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
     }
+    
+    public UserResponseDto findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .map(UserResponseDto::fromEntity)
+                .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
+    }
 
-    public Optional<User> findByEmailAndProvider(String email, String provider) {
-        return userRepository.findByEmailAndProvider(email, provider);
+
+    public Optional<User> findByEmailAndProviderNative(String email, String provider) {
+        return userRepository.findByEmailAndProviderNative(email, provider);
     }
 
     /* =========================

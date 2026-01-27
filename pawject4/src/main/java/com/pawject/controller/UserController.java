@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -107,4 +108,15 @@ public class UserController {
 	     userService.deleteUserByEmail(email);
 	     return ResponseEntity.noContent().build();
 	 }
+	 
+	 /* =========================
+	    마이페이지
+	  ========================= */
+	 @GetMapping("/mypage")
+	 public ResponseEntity<UserResponseDto> getMyPage(Authentication authentication) {
+	     String email = authentication.getName(); // 현재 로그인한 사용자 이메일
+	     UserResponseDto dto = userService.findByEmail(email);
+	     return ResponseEntity.ok(dto);
+	 }
+
 }

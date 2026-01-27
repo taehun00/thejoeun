@@ -62,6 +62,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             } catch (Exception e) {
                 SecurityContextHolder.clearContext();
                 // log.warn("JWT 인증 실패: {}", e.getMessage());
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired JWT token");
+                return; // 필터 체인 중단
+
             }
         }
 

@@ -63,7 +63,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             default: throw new IllegalArgumentException("지원하지 않는 Provider: " + registrationId);
         }
         // DB 조회 / 저장
-        User user = userService.findByEmailAndProvider(userInfo.getEmail(), userInfo.getProvider())
+        User user = userService.findByEmailAndProviderNative(userInfo.getEmail(), userInfo.getProvider())
                 .orElseGet(() -> userService.saveSocialUser(
                         userInfo.getEmail(),
                         userInfo.getProvider(),
