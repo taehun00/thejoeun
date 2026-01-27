@@ -44,7 +44,6 @@ public class ExecFollow {
     
 
     public ExecFollow(User follower, User followee) {
-		super();
 		this.follower = follower;
 		this.followee = followee;
 	}
