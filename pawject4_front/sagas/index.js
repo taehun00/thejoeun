@@ -5,7 +5,8 @@ import foodSaga      from './food/foodSaga';
 import reviewSaga      from './review/reviewSaga';
 import foodSearchSaga      from './food/foodSearchSaga';
 import authSaga from "./user/authSaga";
-
+import faqSaga from "./support/faqSaga";
+import csSaga from "./support/csSaga";
 
 export default  function * rootSaga(){
   yield all([
@@ -13,5 +14,7 @@ export default  function * rootSaga(){
     fork( reviewSaga ) ,
     fork(foodSearchSaga),
     fork(authSaga), 
+    fork(faqSaga),
+    fork(csSaga),
   ]);  
 } 

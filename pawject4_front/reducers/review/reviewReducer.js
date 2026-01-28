@@ -288,17 +288,7 @@ const reviewSlice = createSlice({
       state.detail.error = null;
     },
 
-    //추가
-  clearEditState: (state) => {
-    state.editLoading = false;
-    state.editSuccess = false;
-    state.editError = null;
-  },
-  clearDeleteState: (state) => {
-    state.deleteLoading = false;
-    state.deleteSuccess = false;
-    state.deleteError = null;
-  },
+
 
 
   },
@@ -343,9 +333,7 @@ export const {
   openReviewDetail,
   closeReviewDetail,
 
-  clearEditState,
-  clearDeleteState,
-  
+
   resetReviewFlags,
 } = reviewSlice.actions;
 

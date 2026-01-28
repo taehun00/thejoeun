@@ -12,7 +12,6 @@
     <result property="status"  column="STATUS"/>
     <result property="createdat"      column="CREATEDAT"/>
     <result property="nickname"      column="NICKNAME"/>
-
   </resultMap> 
   
   <!-- 전체 조회 -->
@@ -120,11 +119,8 @@
 			    <when test="searchType == 'nickname'">
 			        lower(u.nickname) like #{search}
 			    </when>
-			    <when test="searchType == 'all'">
-			        lower(q.title) like #{search} or lower(q.content) like #{search}
-			    </when>
 			    <otherwise>
-			        1=1
+			       lower(q.title) like #{search} or lower(q.content) like #{search}
 			    </otherwise>
 			</choose>
 	    </where>
@@ -154,13 +150,9 @@
 		            <when test="searchType == 'nickname'">
 		                lower(U.NICKNAME) like #{search}
 		            </when>
-		            <when test="searchType == 'all'">
-		                lower(Q.TITLE) like #{search}
-		                or lower(Q.CONTENT) like #{search}
-		            </when>
-		            <otherwise>
-		                1=1
-		            </otherwise>
+			    <otherwise>
+			       lower(q.title) like #{search} or lower(q.content) like #{search}
+			    </otherwise>
 		        </choose>
 		    </where>
 		</select>
