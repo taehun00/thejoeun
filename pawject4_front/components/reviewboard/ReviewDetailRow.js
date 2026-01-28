@@ -116,14 +116,6 @@ export default function ReviewDetailRow({
             </Popconfirm>
           </div>
         )}
-
-        {/* 날짜 */}
-        <div style={{ marginTop: "auto", paddingTop: 12 }}>
-          <Descriptions size="small" column={2}>
-            <Descriptions.Item label="등록일">{review.createdat || "-"}</Descriptions.Item>
-            <Descriptions.Item label="수정일">{review.updatedat || "-"}</Descriptions.Item>
-          </Descriptions>
-        </div>
       </div>
     </div>
   );

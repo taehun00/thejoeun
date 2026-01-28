@@ -90,15 +90,17 @@ function* searchFilterPaging(action) {
   try {
     const payload = action.payload || {};
 
-    const stateFilters = yield select((state) => state.petfoodSearch?.filters || {});
-    const statePstartno = yield select((state) => state.petfoodSearch?.pstartno || 1);
+    const stateFilters = yield select((state) => state.search?.filters || {});
+    const statePstartno = yield select((state) => state.search?.pstartno || 1);
 
     const merged = {
       ...stateFilters,
       ...(payload.filters || {}),
     };
 
-    const nextPstartno = payload.pstartno || statePstartno || 1;
+  const nextPstartno =
+    payload.pstartno !== undefined && payload.pstartno !== null
+      ? payload.pstartno : (statePstartno || 1);
 
     // store 페이지번호 동기화
     yield put(setPstartno(nextPstartno));
@@ -150,7 +152,7 @@ function* openModalAndFetch(action) {
     const { data } = yield call(() => modalCardApi(foodid));
 
     //  레이스 가드 - 응답 꼬임 방지
-    const modal = yield select((state) => state.petfoodSearch?.modal);
+    const modal = yield select((state) => state.search?.modal);
     if (!modal?.open) return;
     if (modal?.foodid !== foodid) return;
 

@@ -1,4 +1,4 @@
-// reducers/searchReducer.js
+// reducers/food/foodSearchReducer.js
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -91,8 +91,8 @@ const petfoodSearchSlice = createSlice({
       state.error = null;
 
       // 요청 페이지번호 store에 즉시 반영 (UI 꼬임 방지)
-      // payload가 { pstartno } 형태로 들어오는 구조를 전제로 함
-      if (action?.payload?.pstartno) {
+      // payload가 { pstartno }
+      if (action?.payload?.pstartno !== undefined && action?.payload?.pstartno !== null) {
         state.pstartno = action.payload.pstartno;
       }
     },
@@ -102,7 +102,7 @@ const petfoodSearchSlice = createSlice({
       state.total = action.payload?.total || 0;
       state.paging = action.payload?.paging || null;
 
-      // ✅ 성공 시에도 pstartno를 paging 기반으로 동기화 (서버 paging 기준 최종 확정)
+      // 성공 시에도 pstartno를 paging 기반으로 동기화 (서버 paging 기준 최종 확정)
       // UtilPaging 구조가 프로젝트마다 다를 수 있으니 방어적으로 처리
       const serverPage =
         action.payload?.paging?.pstartno ||

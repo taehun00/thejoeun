@@ -1,7 +1,7 @@
 // components/petfoodsearch/PetfoodSearchFilters.jsx
 import { useMemo, useState, useCallback } from "react";
 import { Card, Row, Col, Select, Input, Button, Space, Divider, InputNumber } from "antd";
-import { SearchOutlined, FilterOutlined } from "@ant-design/icons";
+import { SearchOutlined, FilterOutlined, ReloadOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 
@@ -17,13 +17,11 @@ export default function PetfoodSearchFilters({
   const foodList = initData?.foodList || [];
   const rangeList = initData?.rangeList || [];
 
-// pettypeid/ brandid 조건에 맞는 사료만 노출
+  // pettypeid/ brandid 조건에 맞는 사료만 노출
   const filteredFoodOptions = useMemo(() => {
     const pet = filters?.pettypeid ? String(filters.pettypeid) : "";
     const brand = filters?.brandid ? String(filters.brandid) : "";
 
-    // initData.foodList가 어떤 형태든 최대한 맞춰줌
-    // 예상 필드: foodid, foodname, pettypeid, brandid
     return foodList.filter((f) => {
       if (!f) return false;
       const foodPet = f.pettypeid != null ? String(f.pettypeid) : "";
@@ -36,7 +34,7 @@ export default function PetfoodSearchFilters({
     });
   }, [foodList, filters?.pettypeid, filters?.brandid]);
 
-// 펫타입 선택에 따라 rangeList 필터링
+  // 펫타입 선택에 따라 rangeList 필터링
   const filteredRangeOptions = useMemo(() => {
     const pet = filters?.pettypeid ? String(filters.pettypeid) : "";
     if (!pet) return rangeList;
@@ -48,7 +46,7 @@ export default function PetfoodSearchFilters({
     });
   }, [rangeList, filters?.pettypeid]);
 
-//공통 변경
+  // 공통 변경
   const set = useCallback(
     (patch) => {
       onChangeFilters?.(patch);
@@ -56,19 +54,39 @@ export default function PetfoodSearchFilters({
     [onChangeFilters]
   );
 
-// pettypeid 바꾸면 foodid/rangeid 리셋
+  //  전체 초기화 버튼
+  const onReset = useCallback(() => {
+    set({
+      keyword: "",
+      pettypeid: null,
+      foodtype: null,
+      brandid: null,
+      foodid: null,
+      category: null,
+      petagegroup: null,
+      isgrainfree: null,
+      origin: null,
+      rangeid: null,
+      minvalue: null,
+      maxvalue: null,
+      condition: null,
+    });
+  }, [set]);
+
+  // pettypeid 바꾸면 foodid/rangeid/petagegroup 리셋
   const onChangePettypeid = useCallback(
     (v) => {
       set({
         pettypeid: v ?? null,
-        foodid: null,   
-        rangeid: null,  
+        foodid: null,
+        rangeid: null,
+        petagegroup: null, // 연령도 추가 - 키튼/퍼피 구분
       });
     },
     [set]
   );
 
-// brandid 바꾸면 foodid 리셋
+  // brandid 바꾸면 foodid 리셋
   const onChangeBrandid = useCallback(
     (v) => {
       set({
@@ -84,13 +102,21 @@ export default function PetfoodSearchFilters({
       size="small"
       title="검색 조건"
       extra={
-        <Button
-          icon={<FilterOutlined />}
-          size="small"
-          onClick={() => setDetailOpen((prev) => !prev)}
-        >
-          {detailOpen ? "상세조건 닫기" : "상세조건"}
-        </Button>
+        <Space>
+          {/*  초기화 버튼 */}
+          <Button icon={<ReloadOutlined />} size="small" onClick={onReset}>
+            초기화
+          </Button>
+
+          {/* 상세조건 토글 */}
+          <Button
+            icon={<FilterOutlined />}
+            size="small"
+            onClick={() => setDetailOpen((prev) => !prev)}
+          >
+            {detailOpen ? "상세조건 닫기" : "상세조건"}
+          </Button>
+        </Space>
       }
     >
       {/* 1줄: pettype / foodtype / brandid / foodid */}
@@ -99,10 +125,10 @@ export default function PetfoodSearchFilters({
           <Select
             style={{ width: "100%" }}
             placeholder="-- 모든 펫타입 --"
-            value={filters?.pettypeid ?? undefined}
-            allowClear
-            onChange={onChangePettypeid}
+            value={filters?.pettypeid ?? ""}
+            onChange={(v) => onChangePettypeid(v === "" ? null : v)}
           >
+            <Option value="">-- 모든 펫타입 --</Option>
             <Option value={1}>고양이</Option>
             <Option value={2}>강아지</Option>
           </Select>
@@ -112,10 +138,10 @@ export default function PetfoodSearchFilters({
           <Select
             style={{ width: "100%" }}
             placeholder="-- 건식/습식 --"
-            value={filters?.foodtype ?? undefined}
-            allowClear
-            onChange={(v) => set({ foodtype: v ?? null })}
+            value={filters?.foodtype ?? ""}
+            onChange={(v) => set({ foodtype: v === "" ? null : v })}
           >
+            <Option value="">-- 건식/습식 --</Option>
             <Option value="건식">건식</Option>
             <Option value="습식">습식</Option>
           </Select>
@@ -125,15 +151,14 @@ export default function PetfoodSearchFilters({
           <Select
             style={{ width: "100%" }}
             placeholder="-- 모든 브랜드 --"
-            value={filters?.brandid ?? undefined}
-            allowClear
-            onChange={onChangeBrandid}
+            value={filters?.brandid ?? ""}
+            onChange={(v) => onChangeBrandid(v === "" ? null : v)}
             showSearch
             optionFilterProp="label"
-            options={brandList.map((b) => ({
-              value: b.brandid,
-              label: b.brandname,
-            }))}
+            options={[
+              { value: "", label: "-- 모든 브랜드 --" },
+              ...brandList.map((b) => ({ value: b.brandid, label: b.brandname })),
+            ]}
           />
         </Col>
 
@@ -141,15 +166,14 @@ export default function PetfoodSearchFilters({
           <Select
             style={{ width: "100%" }}
             placeholder="-- 모든 사료 --"
-            value={filters?.foodid ?? undefined}
-            allowClear
-            onChange={(v) => set({ foodid: v ?? null })}
+            value={filters?.foodid ?? ""}
+            onChange={(v) => set({ foodid: v === "" ? null : v })}
             showSearch
             optionFilterProp="label"
-            options={filteredFoodOptions.map((f) => ({
-              value: f.foodid,
-              label: f.foodname,
-            }))}
+            options={[
+              { value: "", label: "-- 모든 사료 --" },
+              ...filteredFoodOptions.map((f) => ({ value: f.foodid, label: f.foodname })),
+            ]}
           />
         </Col>
       </Row>
@@ -188,10 +212,10 @@ export default function PetfoodSearchFilters({
               <Select
                 style={{ width: "100%" }}
                 placeholder="-- 모든 유형 --"
-                value={filters?.category ?? undefined}
-                allowClear
-                onChange={(v) => set({ category: v ?? null })}
+                value={filters?.category ?? ""}
+                onChange={(v) => set({ category: v === "" ? null : v })}
               >
+                <Option value="">-- 모든 유형 --</Option>
                 <Option value="일반">일반</Option>
                 <Option value="처방식">처방식</Option>
                 <Option value="기능식">기능식</Option>
@@ -202,14 +226,20 @@ export default function PetfoodSearchFilters({
               <Select
                 style={{ width: "100%" }}
                 placeholder="-- 모든 연령 --"
-                value={filters?.petagegroup ?? undefined}
-                allowClear
-                onChange={(v) => set({ petagegroup: v ?? null })}
+                value={filters?.petagegroup ?? ""}
+                onChange={(v) => set({ petagegroup: v === "" ? null : v })}
               >
+                <Option value="">-- 모든 연령 --</Option>
                 <Option value="어덜트">어덜트</Option>
                 <Option value="시니어">시니어</Option>
-                <Option value="키튼">키튼</Option>
-                <Option value="퍼피">퍼피</Option>
+
+                {String(filters?.pettypeid || "") !== "1" && (
+                  <Option value="퍼피">퍼피</Option>
+                )}
+
+                {String(filters?.pettypeid || "") !== "2" && (
+                  <Option value="키튼">키튼</Option>
+                )}
               </Select>
             </Col>
 
@@ -217,10 +247,10 @@ export default function PetfoodSearchFilters({
               <Select
                 style={{ width: "100%" }}
                 placeholder="-- 그레인프리? --"
-                value={filters?.isgrainfree ?? undefined}
-                allowClear
-                onChange={(v) => set({ isgrainfree: v ?? null })}
+                value={filters?.isgrainfree ?? ""}
+                onChange={(v) => set({ isgrainfree: v === "" ? null : v })}
               >
+                <Option value="">-- 그레인프리? --</Option>
                 <Option value="Y">Y</Option>
                 <Option value="N">N</Option>
               </Select>
@@ -230,10 +260,10 @@ export default function PetfoodSearchFilters({
               <Select
                 style={{ width: "100%" }}
                 placeholder="-- 국내/해외 --"
-                value={filters?.origin ?? undefined}
-                allowClear
-                onChange={(v) => set({ origin: v ?? null })}
+                value={filters?.origin ?? ""}
+                onChange={(v) => set({ origin: v === "" ? null : v })}
               >
+                <Option value="">-- 국내/해외 --</Option>
                 <Option value="국내">국내</Option>
                 <Option value="해외">해외</Option>
               </Select>
@@ -245,15 +275,17 @@ export default function PetfoodSearchFilters({
               <Select
                 style={{ width: "100%" }}
                 placeholder="-- 영양소 범위 --"
-                value={filters?.rangeid ?? undefined}
-                allowClear
-                onChange={(v) => set({ rangeid: v ?? null })}
+                value={filters?.rangeid ?? ""}
+                onChange={(v) => set({ rangeid: v === "" ? null : v })}
                 showSearch
                 optionFilterProp="label"
-                options={filteredRangeOptions.map((r) => ({
-                  value: r.rangeid,
-                  label: r.rangelabel,
-                }))}
+                options={[
+                  { value: "", label: "-- 영양소 범위 --" },
+                  ...filteredRangeOptions.map((r) => ({
+                    value: r.rangeid,
+                    label: r.rangelabel,
+                  })),
+                ]}
               />
             </Col>
 
