@@ -6,23 +6,24 @@ import { RobotOutlined } from "@ant-design/icons";
 const { Text, Paragraph } = Typography;
 
 export default function PetfoodSearchAiBox({
-  open,
   loading,
   result,
   error,
   onAsk,
   onApplyAiFilters,
 }) {
-  const [panelOpen, setPanelOpen] = useState(false); // thymeleaf openBtn 역할
+  // openBtn 역할: 기본 닫힘
+  const [panelOpen, setPanelOpen] = useState(false);
   const [userMessage, setUserMessage] = useState("");
 
-
+  // 출력 메시지
   const displayMessage = useMemo(() => {
     if (!result?.message) return "";
     return `${result.message}\n\n검색 버튼을 눌러 결과를 확인해 보세요.`;
   }, [result]);
 
-
+  // ✅ AI 결과가 와도 "자동 열림 금지"
+  // ✅ 필터 적용만 수행
   useEffect(() => {
     if (result?.filters) {
       onApplyAiFilters?.(result.filters);
@@ -49,19 +50,20 @@ export default function PetfoodSearchAiBox({
         </Space>
       }
       extra={
+        // ✅ 열기/닫기 버튼 반드시 유지
         <Button size="small" onClick={() => setPanelOpen((prev) => !prev)}>
           {panelOpen ? "닫기" : "열기"}
         </Button>
       }
     >
-      {/* 닫힌 상태에서는 안내만 */}
+      {/* ✅ 닫힌 상태: 타임리프처럼 안내만 */}
       {!panelOpen && (
         <Text type="secondary">
           검색 조건을 자연어로 입력하면 AI가 필터를 추천합니다.
         </Text>
       )}
 
-      {/* 열린 상태 */}
+      {/* ✅ 열린 상태 */}
       {panelOpen && (
         <>
           <Paragraph style={{ marginBottom: 8 }}>
@@ -80,9 +82,7 @@ export default function PetfoodSearchAiBox({
               질문하기
             </Button>
             <Button
-              onClick={() => {
-                setUserMessage("");
-              }}
+              onClick={() => setUserMessage("")}
               disabled={loading}
             >
               초기화

@@ -17,6 +17,7 @@ export default function AppLayout({ children }) {
   // 메뉴 구성 
   const menuItems = useMemo(
     () => [
+      { key: "/petfoodsearch", label: <Link href="/petfoodsearch">사료찾기</Link> },
       { key: "/foodboard", label: <Link href="/foodboard">사료관리</Link> },
       { key: "/reviewboard", label: <Link href="/reviewboard">사료리뷰</Link> },
       { key: "/disease", label: <Link href="/disease">질환리스트</Link> },
