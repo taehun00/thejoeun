@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,17 +37,17 @@ public class PetdiseaseController {
 	@Operation(summary = "게시글 단건 조회 (공개)")
 	@GetMapping("/{disno}")
 	public ResponseEntity<PetdiseaseResponseDto> getPetdis(
-			@PathVariable(name = "disno") Long disno){
+			@PathVariable("disno") Long disno){
 		return ResponseEntity.ok(service.getPetdis(disno));
 	}
 
 	@Operation(summary = "페이징+정렬(공개)")
     @GetMapping("/list")
     public Page<Petdisease> list(
-            @RequestParam Long pettypeid,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) String condition
+            @RequestParam(name="pettypeid") Long pettypeid,
+            @RequestParam(name="page", defaultValue = "1") int page,
+            @RequestParam(name="size", defaultValue = "10") int size,
+            @RequestParam(name="condition", required = false) String condition
     ) {
         return service.getPetdiseasePage(page, size, condition, pettypeid);
     }
@@ -54,43 +55,44 @@ public class PetdiseaseController {
 	@Operation(summary = "페이징+정렬+검색(공개)")
     @GetMapping("/search")
     public Page<PetdiseaseResponseDto> search(
-            @RequestParam Long pettypeid,
-            @RequestParam(required = false) String keyword,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) String condition
+            @RequestParam("pettypeid") Long pettypeid,
+            @RequestParam(name="keyword", required = false) String keyword,
+            @RequestParam(name="page", defaultValue = "1") int page,
+            @RequestParam(name="size", defaultValue = "10") int size,
+            @RequestParam(name="condition", required = false) String condition
     ) {
         Pageable pageable = PageRequest.of(page - 1, size); 
         return service.list(pettypeid, keyword, pageable, condition);
     }
 	
 	@Operation(summary = "게시글 작성 (JWT 인증 필요)")
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
 	public ResponseEntity<PetdiseaseResponseDto> createPetdis(
 	        Authentication authentication,
-	        @RequestParam Long pettypeid,
+	        @RequestParam("pettypeid") Long pettypeid,
 	        @ModelAttribute PetdiseaseRequestDto dto){
 	    Long userid = authUserJwtService.getCurrentUserId(authentication);
 	    return ResponseEntity.ok(service.createPost(userid, dto, pettypeid));
 	}
 	
 	@Operation(summary = "게시글 수정 (JWT 인증 필요)")
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping(value = "/{disno}")
 	public ResponseEntity<PetdiseaseResponseDto> updatePetdis(
 	        Authentication authentication,
-	        @PathVariable(name = "disno") Long disno,
-	        @RequestParam Long pettypeid,
+	        @PathVariable("disno") Long disno,
+	        @RequestParam("pettypeid") Long pettypeid,
 	        @ModelAttribute PetdiseaseRequestDto dto){
-		Long userid = authUserJwtService.getCurrentUserId(authentication);
 		return ResponseEntity.ok(service.updatePetdis(disno, dto, pettypeid));
 	}
 	
     @Operation(summary = "게시글 삭제 (JWT 인증 필요)")
-    @DeleteMapping("/{petdis}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{disno}")
     public ResponseEntity<Void> deletePetdis(
             Authentication authentication,
-            @PathVariable(name = "disno") Long disno){
-    	Long userid = authUserJwtService.getCurrentUserId(authentication);
+            @PathVariable("disno") Long disno){
     	service.deletePetdis(disno);
     	return ResponseEntity.noContent().build(); 
     }

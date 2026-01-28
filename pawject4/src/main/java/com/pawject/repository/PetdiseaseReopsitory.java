@@ -19,20 +19,19 @@ public interface PetdiseaseReopsitory  extends JpaRepository<Petdisease, Long> {
 	
 	//검색 - 펫타입은 고정
 	@Query("""
-			select p
-			from Petdisease p
-			where p.pettypeid = :pettypeid
-			  and (
-			        :keyword is null
-			        or trim(:keyword) = ''
-			        or lower(p.disname) like lower(concat('%', :keyword, '%'))
-			        or lower(p.disexplain) like lower(concat('%', :keyword, '%'))
-			  )
-			""")
-			Page<Petdisease> searchKeyword(
-			        @Param("pettypeid") Long pettypeid,
-			        @Param("keyword") String keyword,
-			        Pageable pageable
-			);
+		    select p
+		    from Petdisease p
+		    where p.pettypeid = :pettypeid
+		      and (
+		            :keyword is null
+		            or trim(:keyword) = ''
+		            or lower(p.disname) like lower(concat('%', :keyword, '%'))
+		      )
+		    """)
+		Page<Petdisease> searchKeyword(
+		        @Param("pettypeid") Long pettypeid,
+		        @Param("keyword") String keyword,
+		        Pageable pageable
+		);
 	
 }
