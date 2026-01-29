@@ -66,7 +66,7 @@ public class SecurityConfig {
                     "/swagger-ui/**", "/v3/api-docs/**",
                     "/swagger-resources/**", "/webjars/**",
                     "/configuration/**", "/upload/**"  , "/api/likes/**",
-                    "/api/users/signup", "/api/users/login",
+                    "/api/users/signup", "/api/users/login", "/api/users/refresh",
                     "/api/test/openai/**"
                 ).permitAll()
                 // 전체조회만 허용

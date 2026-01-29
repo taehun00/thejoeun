@@ -26,7 +26,7 @@ export function* signup(action) {
     yield call(signupApi, action.payload);
     yield put(signupSuccess());
     message.success("회원가입 성공!");
-    Router.push("/login");
+    Router.push("/user/login");
   } catch (err) {
     yield put(signupFailure(err.response?.data?.error || err.message));
     message.error("회원가입 실패");
@@ -52,7 +52,7 @@ export function* login(action) {
       }
       yield put(loginSuccess({ user, accessToken }));
       message.success(`${user.nickname}님 환영합니다!`);
-      Router.push("/mypage");
+      Router.push("/user/mypage");
     } else {
       yield put(loginFailure("로그인 실패"));
       message.error("아이디/비밀번호를 확인하세요.");
@@ -103,7 +103,7 @@ export function* logoutFlow(action) {
     }
     yield put(logout());
     message.success("로그아웃 완료");
-    Router.push("/login");
+    Router.push("/user/login");
   } catch (err) {
     yield put(logoutFailure(err.response?.data?.error || err.message));
   }

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import com.pawject.domain.Pet;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,6 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(description = "펫 등록 요청 DTO")
 public class PetResponseDto {
 	private Long petId;
     private Long userId;
@@ -20,11 +22,11 @@ public class PetResponseDto {
     private String petBreed;
     private String birthDate;
     private Long petTypeId;
-    private String pFile;
     private LocalDateTime createdAt;
-    private Integer page;
+    private Integer pAge;
     private String pGender;
-
+    private String imageUrl;
+    
     // 엔티티 → DTO 변환
     public static PetResponseDto fromEntity(Pet pet) {
         PetResponseDto dto = new PetResponseDto();
@@ -34,10 +36,10 @@ public class PetResponseDto {
         dto.petBreed = pet.getPetBreed();
         dto.birthDate = pet.getBirthDate();
         dto.petTypeId = pet.getPetType() != null ? pet.getPetType().getPetTypeId() : null;
-        dto.pFile = pet.getPfile();
         dto.createdAt = pet.getCreatedAt();
-        dto.page = pet.getPage();
+        dto.pAge = pet.getPAge();
         dto.pGender = pet.getPGender();
+        dto.imageUrl = pet.getPFile();
         return dto;
     }
 
