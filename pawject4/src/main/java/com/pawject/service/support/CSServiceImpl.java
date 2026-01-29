@@ -10,211 +10,208 @@ import com.pawject.dao.support.CSAnswerDao;
 import com.pawject.dao.support.CSQuestionDao;
 import com.pawject.dto.support.CSAnswerDto;
 import com.pawject.dto.support.CSQuestionDto;
+
 @Service
 public class CSServiceImpl implements CSService {
-	@Autowired CSQuestionDao qdao;
-	@Autowired CSAnswerDao adao;
 
-	@Override
-	public List<CSQuestionDto> selectCSQAll() {
-		List<CSQuestionDto> questions = qdao.selectCSQAll();
-		//답변 가져오기
-	    for(CSQuestionDto q : questions) {
-	    	q.setAnswers(adao.selectByQuestionid(q.getQuestionid()));
-	    }
-	    return questions;
-	}
-	
-	@Override
-	public CSQuestionDto selectCSQ(int questionid) {
-		return qdao.selectCSQ(questionid);
-	}
+    @Autowired CSQuestionDao qdao;
+    @Autowired CSAnswerDao adao;
 
-	@Override
-	public int insertCSQ(CSQuestionDto dto) {
-		return qdao.insertCSQ(dto);
-	}
+    @Override
+    public List<CSQuestionDto> selectCSQAll() {
+        List<CSQuestionDto> questions = qdao.selectCSQAll();
+        for (CSQuestionDto q : questions) {
+            q.setAnswers(adao.selectByQuestionid(q.getQuestionid()));
+        }
+        return questions;
+    }
 
-	@Override
-	public int answerCSQ(CSQuestionDto dto) {
-		return qdao.answerCSQ(dto);
-	}
+    @Override
+    public CSQuestionDto selectCSQ(int questionid) {
+        return qdao.selectCSQ(questionid);
+    }
 
-	@Override
-	public int deleteCSQ(int questionid) {
-		return qdao.deleteCSQ(questionid);
-	}
+    @Override
+    public int insertCSQ(CSQuestionDto dto) {
+        return qdao.insertCSQ(dto);
+    }
 
-	@Override
-	public int insertCSA(CSAnswerDto dto) {
-		
-		return adao.insertCSA(dto);
-	}
-	
-	//질문+답변 매칭
-	@Override
-	public List<CSQuestionDto> selectCSQUser(CSQuestionDto dto) {
-		List<CSQuestionDto> questions = qdao.selectCSQUser(dto);
-		
-	    for(CSQuestionDto q : questions) {
-	    	q.setAnswers(adao.selectByQuestionid(q.getQuestionid()));
-	    }
-	    
-	    return questions;
-	}
+    @Override
+    public int answerCSQ(CSQuestionDto dto) {
+        return qdao.answerCSQ(dto);
+    }
 
-	@Override
-	public List<CSAnswerDto> selectByQuestionid(int questionid) {
-		return adao.selectByQuestionid(questionid);
-	}
+    @Override
+    public int deleteCSQ(int questionid) {
+        return qdao.deleteCSQ(questionid);
+    }
 
-	@Override
-	public List<CSQuestionDto> select10CSQ(String condition, int pageNo) {
-	    HashMap<String,Object> para = new HashMap<>();
-	    int start = (pageNo-1)*10 + 1; 
-	    int end   = start + 9;
-	    para.put("start", start);
-	    para.put("end", end);
-	
-	    if (condition != null) {
-	        switch (condition) {
-	            case "noanswer":
-	                para.put("condition", "noanswer");
-	                break;
-	            case "answerend":
-	                para.put("condition", "answerend");
-	                break;
-	        }
-	    }	    
+    @Override
+    public int insertCSA(CSAnswerDto dto) {
+        return adao.insertCSA(dto);
+    }
 
-	    List<CSQuestionDto> questions = qdao.select10CSQ(para);
+    // 질문+답변 매칭
+    @Override
+    public List<CSQuestionDto> selectCSQUser(CSQuestionDto dto) {
+        List<CSQuestionDto> questions = qdao.selectCSQUser(dto);
+        for (CSQuestionDto q : questions) {
+            q.setAnswers(adao.selectByQuestionid(q.getQuestionid()));
+        }
+        return questions;
+    }
 
-	    for(CSQuestionDto q : questions) {
-	        q.setAnswers(adao.selectByQuestionid(q.getQuestionid()));
-	    }
+    @Override
+    public List<CSAnswerDto> selectByQuestionid(int questionid) {
+        return adao.selectByQuestionid(questionid);
+    }
 
-	    return questions;
-	}
+    @Override
+    public List<CSQuestionDto> select10CSQ(String condition, int pageNo) {
+        HashMap<String, Object> para = new HashMap<>();
+        int start = (pageNo - 1) * 10 + 1;
+        int end = start + 9;
+        para.put("start", start);
+        para.put("end", end);
 
-	@Override
-	public int selectTotalCntCSQ() {
-		return qdao.selectTotalCntCSQ();
-	}
+        if (condition != null) {
+            switch (condition) {
+                case "noanswer":
+                    para.put("condition", "noanswer");
+                    break;
+                case "answerend":
+                    para.put("condition", "answerend");
+                    break;
+            }
+        }
 
-	//페이징+서치
-	@Override
-	public List<CSQuestionDto> selectSearchCSQ(String keyword, String searchType, String condition,int pageNo) {
+        List<CSQuestionDto> questions = qdao.select10CSQ(para);
+        for (CSQuestionDto q : questions) {
+            q.setAnswers(adao.selectByQuestionid(q.getQuestionid()));
+        }
+        return questions;
+    }
 
-		    if (keyword == null) keyword = "";   
-		    keyword = keyword.toLowerCase();     
+    @Override
+    public int selectTotalCntCSQ() {
+        return qdao.selectTotalCntCSQ();
+    }
 
-		    HashMap<String,Object> para = new HashMap<>();
-		    int start = (pageNo-1)*10 + 1; 
-		    int end   = start + 9;
-		    para.put("start", start);
-		    para.put("end", end);
-		    para.put("search", keyword);
+    // 페이징+서치
+    @Override
+    public List<CSQuestionDto> selectSearchCSQ(String keyword, String searchType, String condition, int pageNo) {
 
-		    String searchLike = "%" + keyword + "%";
-		    switch(searchType) {
-		        case "title":
-		            para.put("searchType", "title");
-		            para.put("search", searchLike);
-		            break;
-		        case "content":
-		            para.put("searchType", "content");
-		            para.put("search", searchLike);
-		            break;
-		        case "nickname":
-		            para.put("searchType", "nickname");
-		            para.put("search", searchLike);
-		            break;
-		        case "all":
-		            para.put("searchType", "all");
-		            para.put("search", searchLike);
-		            break;
-		    }
+        if (keyword == null) keyword = "";
+        keyword = keyword.toLowerCase();
 
-		    if (condition != null) {
-		        switch (condition) {
-		            case "noanswer":
-		                para.put("condition", "noanswer");
-		                break;
-		            case "answerend":
-		                para.put("condition", "answerend");
-		                break;
-		        }
-		    }			    
-		    
-		    
+        HashMap<String, Object> para = new HashMap<>();
+        int start = (pageNo - 1) * 10 + 1;
+        int end = start + 9;
+        para.put("start", start);
+        para.put("end", end);
 
-		    List<CSQuestionDto> questions = qdao.selectSearchCSQ(para);
-		    for(CSQuestionDto q : questions) {
-		        q.setAnswers(adao.selectByQuestionid(q.getQuestionid()));
-		    }
-		    return questions;
-		}
+        String searchLike = "%" + keyword + "%";
+        switch (searchType) {
+            case "title":
+                para.put("searchType", "title");
+                para.put("search", searchLike);
+                break;
+            case "content":
+                para.put("searchType", "content");
+                para.put("search", searchLike);
+                break;
+            case "nickname":
+                para.put("searchType", "nickname");
+                para.put("search", searchLike);
+                break;
+            default:
+                para.put("searchType", "");
+                para.put("search", searchLike);
+                break;
+        }
 
-	@Override
-	public int selectSearchTotalCntCSQ(String keyword, String searchType, String condition) {
+        if (condition != null) {
+            switch (condition) {
+                case "noanswer":
+                    para.put("condition", "noanswer");
+                    break;
+                case "answerend":
+                    para.put("condition", "answerend");
+                    break;
+            }
+        }
 
-	    if (keyword == null) keyword = "";   
-	    keyword = keyword.toLowerCase();     
-	    
-	    HashMap<String, Object> para = new HashMap<>();
-	    String searchLike = "%" + keyword + "%";
+        List<CSQuestionDto> questions = qdao.selectSearchCSQ(para);
+        for (CSQuestionDto q : questions) {
+            q.setAnswers(adao.selectByQuestionid(q.getQuestionid()));
+        }
+        return questions;
+    }
 
-	    switch (searchType) {
-	        case "title":
-	            para.put("searchType", "title");
-	            para.put("search", searchLike);
-	            break;
-	        case "content":
-	            para.put("searchType", "content");
-	            para.put("search", searchLike);
-	            break;
-	        case "nickname":
-	            para.put("searchType", "nickname");
-	            para.put("search", searchLike);
-	            break;
-	        case "all":
-	            para.put("searchType", "all");
-	            para.put("search", searchLike);
-	            break;
-	    }
-	    
-	    if (condition != null) {
-	        switch (condition) {
-	            case "noanswer":
-	                para.put("condition", "noanswer");
-	                break;
-	            case "answerend":
-	                para.put("condition", "answerend");
-	                break;
-	        }
-	    }
+    @Override
+    public int selectSearchTotalCntCSQ(String keyword, String searchType, String condition) {
 
-	    return qdao.selectSearchTotalCntCSQ(para);
-	}
+        if (keyword == null) keyword = "";
+        keyword = keyword.toLowerCase();
 
-	//이메일로 본인 아이디 찾아서 글 가져오기
-	@Override
-	public List<CSQuestionDto> selectCSQByEmail(String email) {
-	    List<CSQuestionDto> list = qdao.selectCSQByEmail(email);
-	    //답변도
-	    for (CSQuestionDto q : list) {
-	        List<CSAnswerDto> answers = adao.selectByQuestionid(q.getQuestionid());
-	        q.setAnswers(answers);
-	    }
+        HashMap<String, Object> para = new HashMap<>();
+        String searchLike = "%" + keyword + "%";
 
-	    return list;
-	}
+        switch (searchType) {
+            case "title":
+                para.put("searchType", "title");
+                para.put("search", searchLike);
+                break;
+            case "content":
+                para.put("searchType", "content");
+                para.put("search", searchLike);
+                break;
+            case "nickname":
+                para.put("searchType", "nickname");
+                para.put("search", searchLike);
+                break;
+            default:
+                para.put("searchType", "");
+                para.put("search", searchLike);
+                break;
+        }
 
+        if (condition != null) {
+            switch (condition) {
+                case "noanswer":
+                    para.put("condition", "noanswer");
+                    break;
+                case "answerend":
+                    para.put("condition", "answerend");
+                    break;
+            }
+        }
 
-	//이메일 - 아이디 매칭
-	@Override
-	public int selectUserIdByEmail(String email) {
-		return qdao.selectUserIdByEmail(email);
-	}
+        return qdao.selectSearchTotalCntCSQ(para);
+    }
 
+    //유저 인증 방식 교체 - 임시 메서드 폐기
+    public List<CSQuestionDto> selectCSQByUserId(int userid) {
+        CSQuestionDto dto = new CSQuestionDto();
+        dto.setUserid(userid);
+
+        List<CSQuestionDto> list = qdao.selectCSQUser(dto);
+
+        for (CSQuestionDto q : list) {
+            List<CSAnswerDto> answers = adao.selectByQuestionid(q.getQuestionid());
+            q.setAnswers(answers);
+        }
+        return list;
+    }
+
+    //폐기
+    @Override
+    public List<CSQuestionDto> selectCSQByEmail(String email) {
+        return List.of();
+    }
+
+    @Override
+    public int selectUserIdByEmail(String email) {
+        return 0;
+    }
 }

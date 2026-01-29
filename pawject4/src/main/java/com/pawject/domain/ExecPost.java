@@ -70,12 +70,9 @@ public class ExecPost {
 	}
 
 
-	// 테스트생성자
-	public ExecPost( String etitle, String econtent) {
-		super();
-		this.etitle = etitle;
-		this.econtent = econtent;
-	}
+
+	
+	
 	////// 글(Post) 쪽에서는 누가★ 썼는지 기억 (ManyToOne)
 	@ManyToOne
 	@JoinColumn(  name="USERID" , nullable=false )
@@ -113,5 +110,7 @@ public class ExecPost {
 	public int getCommentCount() {
 		return execComments != null? execComments.size() : 0 ;
 	}
+
+
 	
 }

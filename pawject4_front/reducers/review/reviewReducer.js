@@ -210,9 +210,18 @@ const reviewSlice = createSlice({
       state.deleteLoading = false;
       state.deleteSuccess = true;
 
-      const reviewid = action.payload;
+      const reviewid = Number(action.payload);
+
       state.reviews = state.reviews.filter((r) => r.reviewid !== reviewid);
       state.total = state.total > 0 ? state.total - 1 : 0;
+
+      if (Number(state.detail.reviewid) === reviewid) {
+        state.detail.reviewid = null;
+        state.detail.dto = null;
+        state.detail.loading = false;
+        state.detail.error = null;
+      }
+
     },
     deleteReviewFailure: (state, action) => {
       state.deleteLoading = false;
@@ -278,6 +287,10 @@ const reviewSlice = createSlice({
       state.detail.loading = false;
       state.detail.error = null;
     },
+
+
+
+
   },
 });
 
@@ -319,6 +332,7 @@ export const {
 
   openReviewDetail,
   closeReviewDetail,
+
 
   resetReviewFlags,
 } = reviewSlice.actions;

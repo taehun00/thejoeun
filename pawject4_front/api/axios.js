@@ -6,7 +6,7 @@ const api = axios.create({
   withCredentials: true,
   headers: {
     Accept: "application/json",
-    // ❌ Content-Type을 여기서 고정하지 않는다
+    // "Content-Type": "application/json", ❌ Content-Type을 여기서 고정하지 않는다
   },
 });
 
@@ -14,12 +14,14 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     // ✅ Access Token 추가
+
     if (typeof window !== "undefined") {
       const accessToken = localStorage.getItem("accessToken");
       if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`;
       }
     }
+
 
     // ✅ FormData면 Content-Type 제거 → axios가 multipart 자동 설정
     if (config.data instanceof FormData) {
@@ -34,12 +36,14 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// 응답 인터셉터
+
+// ✅ 응답 인터셉터: 401이면 refresh 후 원요청 재시도
 api.interceptors.response.use(
   (res) => res,
   async (error) => {
     const original = error.config;
     const status = error.response?.status;
+
 
     // 회원가입 / 로그인 / refresh는 재시도 안 함
     if (
@@ -61,6 +65,8 @@ api.interceptors.response.use(
           localStorage.setItem("accessToken", newAccessToken);
         }
 
+        // 원 요청에 새 토큰 세팅
+        original.headers = original.headers || {};
         original.headers.Authorization = `Bearer ${newAccessToken}`;
         return api(original);
       } catch (refreshErr) {

@@ -24,8 +24,8 @@ public interface ReviewDao {
 	//	<update id="reviewUpdate" parameterType="ReviewDto">
 		public int reviewUpdate(ReviewDto dto);
 		
-	//	<delete id="reviewDelete" parameterType="int">
-		public int reviewDelete(int reviewid, int userid);
+	//	<delete id="reviewDelete" parameterType="ReviewDto">
+		public int reviewDelete(ReviewDto dto);
 		
 		
 		//페이징

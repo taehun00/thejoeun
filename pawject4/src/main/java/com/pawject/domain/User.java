@@ -61,12 +61,11 @@ public class User {
     @Column(name = "GRADE", length = 50)
     private String grade;
     
-    
-   @PrePersist
-   void onCreate() {
-      this.createdAt = LocalDateTime.now();
-   }
-   
+
+	@PrePersist
+	void onCreate() {
+		this.createdAt = LocalDateTime.now();
+	}
     public User(String email, String nickname, String password) {
         this.email = email;
         this.nickname = nickname;
@@ -78,8 +77,8 @@ public class User {
     }
     
     @Builder.Default
-   @Column(nullable = false , length = 50)
-   private String role="ROLE_MEMBER"; // 기본 권한
+	@Column(nullable = false , length = 50)
+	private String role="ROLE_MEMBER"; // 기본 권한
     
     @OneToMany(
             mappedBy = "user",

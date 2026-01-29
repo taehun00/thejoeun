@@ -54,36 +54,50 @@ public class ReviewServiceImpl implements ReviewService {
 
         return reviewid;
     }
-
-    // 수정
+    //수정
     @Transactional
     @Override
-    public int reviewUpdatetWithImg(ReviewDto dto, List<MultipartFile> files) {
+    public int reviewUpdatetWithImg(ReviewDto dto, List<MultipartFile> files, List<Integer> keepImgIds) {
+
+        // 글 수정 권한 체크
         int updated = rdao.reviewUpdate(dto);
         if (updated == 0) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "본인 글만 수정할 수 있습니다.");
         }
+
         int reviewid = dto.getReviewid();
 
-        // 기존 이미지 조회
+        // 기존 이미지 목록 조회
         List<ReviewImgDto> oldImgs = idao.reviewimgSelect(reviewid);
 
-        // DB 삭제
-        idao.reviewimgdeleteAll(reviewid);
+        // keepImgIds null 방어
+        if (keepImgIds == null) keepImgIds = List.of();
 
-        // 파일 삭제
+        // 기존 이미지 중 keep에 없는 것만 삭제
         if (oldImgs != null) {
             for (ReviewImgDto img : oldImgs) {
-                if (img != null && img.getReviewimgname() != null) {
-                    filedelete(img.getReviewimgname());
+                if (img == null) continue;
+
+                int imgId = img.getReviewimgid();
+
+                if (!keepImgIds.contains(imgId)) {
+                    // DB 개별 삭제
+                    idao.reviewimgdelete(imgId);
+
+                    // 파일 삭제
+                    if (img.getReviewimgname() != null) {
+                        filedelete(img.getReviewimgname());
+                    }
                 }
             }
         }
-        // 신규 insert
+
+        // 새 이미지 추가 저장 (없으면 그냥 통과)
         saveReviewImages(reviewid, files);
 
         return reviewid;
     }
+
 
     // 이미지 삭제
     @Override
@@ -103,8 +117,8 @@ public class ReviewServiceImpl implements ReviewService {
 
     //글삭제
     @Override
-    public int reviewDelete(int reviewid, int userid) {
-        int deleted = rdao.reviewDelete(reviewid, userid);
+    public int reviewDelete(ReviewDto dto) {
+        int deleted = rdao.reviewDelete(dto);
         if (deleted == 0) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "본인 글만 삭제할 수 있습니다.");
         }
@@ -132,15 +146,10 @@ public class ReviewServiceImpl implements ReviewService {
             para.put("condition", "old");
         }
 
-        List<ReviewDto> list = rdao.reviewSelect10(para);
-
-        for (ReviewDto r : list) {
-            List<ReviewImgDto> imgs = idao.reviewimgSelect(r.getReviewid());
-            r.setReviewimglist(imgs);
-        }
-
-        return list;
+        // ReviewMap의 <collection>에서 reviewimglist 자동 매핑됨
+        return rdao.reviewSelect10(para);
     }
+    
     
     //검색카운ㅌ
     @Override
@@ -169,7 +178,17 @@ public class ReviewServiceImpl implements ReviewService {
                 para.put("searchType", "foodname");
                 para.put("search", searchLike);
                 break;
-
+                
+            case "title":
+                para.put("searchType", "title");
+                para.put("search", searchLike);
+                break;
+                
+            case "reviewcomment":
+                para.put("searchType", "reviewcomment");
+                para.put("search", searchLike);
+                break;                
+                
             default:
                 para.put("searchType", "all");
                 para.put("search", searchLike);
@@ -211,7 +230,15 @@ public class ReviewServiceImpl implements ReviewService {
                 para.put("searchType", "foodname");
                 para.put("search", searchLike);
                 break;
-
+            case "title":
+                para.put("searchType", "title");
+                para.put("search", searchLike);
+                break;
+                
+            case "reviewcomment":
+                para.put("searchType", "reviewcomment");
+                para.put("search", searchLike);
+                break;   
             default:
                 para.put("searchType", "all");
                 para.put("search", searchLike);
@@ -220,16 +247,10 @@ public class ReviewServiceImpl implements ReviewService {
 
         if ("old".equals(condition)) para.put("condition", "old");
 
-        List<ReviewDto> list = rdao.reviewsearch(para);
-
-        for (ReviewDto r : list) {
-            List<ReviewImgDto> imgs = idao.reviewimgSelect(r.getReviewid());
-            r.setReviewimglist(imgs);
-        }
-
-        return list;
+        // ReviewMap의 <collection>에서 reviewimglist 자동 매핑됨
+        return rdao.reviewsearch(para);
     }
-
+    
     // 모달(foodid 검색-검색게시판 연동)
     @Override
     public List<ReviewDto> reviewsearchByFoodid(int foodid) {
@@ -242,7 +263,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
 
-    // 내부 공통 부품
+    // 이미지 관련 
     private void saveReviewImages(int reviewid, List<MultipartFile> files) {
         if (files == null || files.isEmpty()) return;
 
@@ -264,10 +285,31 @@ public class ReviewServiceImpl implements ReviewService {
         }
     }
     
-    //파일삭제
+    //이미지 파일 자체 삭제
     private void filedelete(String savedPath) {
-        // savedPath: "reviewimg/xxx.png"
-        File img = new File("C:/upload/", savedPath);
-        if (img.exists()) img.delete();
+        try {
+            if (savedPath == null || savedPath.isBlank()) return;
+
+            // 절대경로면 그대로 삭제
+            File imgFile;
+            if (savedPath.matches("^[a-zA-Z]:\\\\.*") || savedPath.matches("^[a-zA-Z]:/.*")) {
+                imgFile = new File(savedPath);
+            } else {
+                // 앞 "/" 제거해서 "C:/upload/" 기준으로 붙이기
+                String normalized = savedPath.replace("\\", "/");
+                if (normalized.startsWith("/")) normalized = normalized.substring(1);
+
+                imgFile = new File("C:/upload/", normalized);
+            }
+
+            if (imgFile.exists()) imgFile.delete();
+        } catch (Exception e) {
+            // 삭제 실패해도 나머지 실행은 되게 하기
+        }
     }
+
+	@Override
+	public int reviewimgdelete(int reviewimgid) {
+		return idao.reviewimgdelete(reviewimgid);
+	}
 }

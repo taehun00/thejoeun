@@ -15,7 +15,7 @@ public interface ReviewService {
 	
 	//리뷰테이블
 	public ReviewDto reviewSelect(int reviewid) ;
-	public int reviewDelete(int reviewid, int userid);
+	public int reviewDelete(ReviewDto dto);
 	
 	public int reviewSelectCnt();
 	public List<ReviewDto> reviewSelect10(int pageNo, String condition);
@@ -25,7 +25,7 @@ public interface ReviewService {
 	//이미지테이블
 	public List<ReviewImgDto> reviewimgSelect(int reviewid);
 	 public int reviewimgdeleteById(int reviewid);
-	
+	 public int reviewimgdelete(int reviewimgid);
 	//권한
 	public int selectUserIdForReview(String email);
 	
@@ -36,6 +36,5 @@ public interface ReviewService {
 	
 	//리액트용 신규
 	public int reviewInsertWithImg(ReviewDto dto, List<MultipartFile> files);
-	public int reviewUpdatetWithImg(ReviewDto dto, List<MultipartFile> files);
-	
+	public int reviewUpdatetWithImg(ReviewDto dto, List<MultipartFile> files, List<Integer> keepImgIds);
 }
