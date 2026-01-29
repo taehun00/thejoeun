@@ -5,16 +5,20 @@ import java.util.Map;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.pawject.domain.User;
 import com.pawject.dto.user.LoginRequest;
 import com.pawject.dto.user.UserRequestDto;
 import com.pawject.dto.user.UserResponseDto;
+import com.pawject.dto.user.UserUpdateRequestDto;
 import com.pawject.security.JwtProvider;
 import com.pawject.security.TokenStore;
 import com.pawject.service.user.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -29,13 +33,17 @@ public class UserController {
 	/* =========================
 	    회원가입 (프로필 이미지 포함)
 	  ========================= */
-	 @PostMapping("/signup")
-	 public ResponseEntity<UserResponseDto> signup(
-			 @ModelAttribute UserRequestDto  request,
-	         @RequestPart(value = "ufile", required = false) MultipartFile profileImage
-	 ) {
-	     return ResponseEntity.ok(userService.signup(request, profileImage));
-	 }
+    @Operation(summary = "회원가입 (프로필 이미지 포함)")
+    @PostMapping(
+        value = "/signup",
+        consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public ResponseEntity<UserResponseDto> signup(
+            @ModelAttribute UserRequestDto request,
+            @RequestPart(value = "ufile", required = false) MultipartFile profileImage
+    ) {
+        return ResponseEntity.ok(userService.signup(request, profileImage));
+    }
 	
 	 /* =========================
 	    로그인
@@ -54,6 +62,20 @@ public class UserController {
 	 public ResponseEntity<UserResponseDto> findById(@PathVariable("userId") Long userId) {
 	     return ResponseEntity.ok(userService.findById(userId));
 	 }
+	 
+	 /* =========================
+	    전체 정보 수정
+	  ========================= */
+	 @PutMapping("/me")
+	 public ResponseEntity<UserResponseDto> updateMyInfo(
+	         Authentication authentication,
+	         @RequestBody UserUpdateRequestDto request
+	 ) {
+	     Long userId = Long.parseLong(authentication.getName());
+	     UserResponseDto updated = userService.updateUserInfo(userId, request);
+	     return ResponseEntity.ok(updated);
+	 }
+
 	
 	 /* =========================
 	    닉네임 변경
@@ -69,13 +91,19 @@ public class UserController {
 	 /* =========================
 	     프로필 이미지 변경
 	 ========================= */
-	 @PostMapping(value = "/{userId}/profile-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	 public ResponseEntity<UserResponseDto> updateProfileImage(
-	         @PathVariable("userId") Long userId,
-	         @RequestParam("ufile") MultipartFile ufile
-	 ) {
-	     return ResponseEntity.ok(userService.updateProfileImage(userId, ufile));
-	 }
+	 @PostMapping(
+	    value = "/me/profile-image",
+	    consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+	)
+	public ResponseEntity<UserResponseDto> updateProfileImage(
+			Authentication authentication,
+	        @RequestPart("ufile") MultipartFile ufile
+	) {
+		 Long userId = Long.parseLong(authentication.getName());
+	    return ResponseEntity.ok(
+	            userService.updateProfileImage(userId, ufile)
+	    );
+	}
 	
 	 /* =========================
 	     Access Token 재발급
@@ -103,20 +131,30 @@ public class UserController {
 	 /* =========================
 	    사용자 탈퇴
 	  ========================= */
-	 @DeleteMapping
-	 public ResponseEntity<Void> deleteByEmail(@RequestParam String email) {
-	     userService.deleteUserByEmail(email);
+//	 @DeleteMapping
+//	 public ResponseEntity<Void> deleteByEmail(@RequestParam("email") String email) {
+//	     userService.deleteUserByEmail(email);
+//	     return ResponseEntity.noContent().build();
+//	 }
+	 
+	 @DeleteMapping("/me")
+	 public ResponseEntity<Void> deleteMyAccount(Authentication authentication) {
+	     // JWT 토큰의 sub 값이 userId로 들어있다고 가정
+	     Long userId = Long.parseLong(authentication.getName());
+	     userService.deleteUserById(userId);
 	     return ResponseEntity.noContent().build();
 	 }
+
 	 
 	 /* =========================
 	    마이페이지
 	  ========================= */
-	 @GetMapping("/mypage")
-	 public ResponseEntity<UserResponseDto> getMyPage(Authentication authentication) {
-	     String email = authentication.getName(); // 현재 로그인한 사용자 이메일
-	     UserResponseDto dto = userService.findByEmail(email);
-	     return ResponseEntity.ok(dto);
-	 }
+	    @GetMapping("/mypage")
+	    public ResponseEntity<UserResponseDto> getMyPage(Authentication authentication) {
+	        Long userId = Long.parseLong(authentication.getName());
+	        UserResponseDto dto = userService.findById(userId);
+	        return ResponseEntity.ok(dto);
+	    }
+
 
 }
