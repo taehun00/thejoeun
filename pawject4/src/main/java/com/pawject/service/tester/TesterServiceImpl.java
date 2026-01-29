@@ -29,44 +29,56 @@ public class TesterServiceImpl implements TesterService {
 	private final  UserRepository urepo;
 	private final FileStorageService fileStorageService;
 
+	//단건조회
 	@Transactional(readOnly = true)
-    @Override  //단건조회
-    public TesterAdminResponseDto findById(Long testerid) {
-        dao.updateViews(testerid); //조회수 증가
-        Tester t = repo.findById(testerid).orElseThrow(() -> new IllegalArgumentException("글 없음"));
-        return TesterAdminResponseDto.from(t);
-    }
+	@Override
+	public TesterAdminResponseDto findById(Long testerid) {
+
+	    Tester t = repo.findById(testerid)
+	            .filter(x -> !x.isDeleted())   //delete도 같이 조회됨 제거 필요
+	            .orElseThrow(() -> new IllegalArgumentException("글 없음"));
+
+	    dao.updateViews(testerid); // 조회수 증가
+
+	    return TesterAdminResponseDto.from(t);
+	}
 
     //관리자 글쓰기
 	@Override
 	public TesterAdminResponseDto adminWrite(Long userid, TesterAdminRequestDto dto, List<MultipartFile> files) {
-		  //유저 확인
-			User user = urepo.findById(userid).orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
-		  //글 내용 채우기
-		  Tester tester = new Tester();
-		  tester.setCategory(dto.getCategory());
-		  tester.setTitle(dto.getTitle());
-		  tester.setContent(dto.getContent());
-		  tester.setFoodid(dto.getFoodid());
-		  tester.setStatus(dto.getStatus());
-		  tester.setIsnotice(dto.getIsnotice());
-		  tester.setPosttype(dto.getPosttype());
-		  tester.setPosttype(dto.getPosttype() == null ? 1 : dto.getPosttype());
-		  tester.setUser(user);
-		  
-		// 이미지 업로드
-		  if (files != null && !files.isEmpty()) {
-			    files.forEach(file -> {
-			        String url = fileStorageService.upload(file);
-			        Testerimg img = new Testerimg();
-			        img.setImgsrc(url);
-			        img.setTester(tester);
-			        tester.getTesterimg().add(img);
-			    });
-			}
-		  
-		    Tester saved = repo.save(tester);
-		    return TesterAdminResponseDto.from(saved);
+
+	    User user = urepo.findById(userid).orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
+
+	    Tester tester = new Tester();
+	    tester.setCategory(dto.getCategory());
+	    tester.setTitle(dto.getTitle());
+	    tester.setContent(dto.getContent());
+
+	    // foodid: 0이면 미선택으로 보고 null 처리
+	    if (dto.getFoodid() == 0) tester.setFoodid(null);
+	    else tester.setFoodid(dto.getFoodid());
+
+	    tester.setStatus(dto.getStatus());
+	    tester.setIsnotice(dto.getIsnotice());
+
+	    // posttype: null이면 관리자 공고(1)로 고정
+	    tester.setPosttype(dto.getPosttype() == null ? 1 : dto.getPosttype());
+
+	    tester.setUser(user);
+
+	    // 이미지 업로드
+	    if (files != null && !files.isEmpty()) {
+	        files.forEach(file -> {
+	            String url = fileStorageService.upload(file);
+	            Testerimg img = new Testerimg();
+	            img.setImgsrc(url);
+	            img.setTester(tester);
+	            tester.getTesterimg().add(img);
+	        });
+	    }
+
+	    Tester saved = repo.save(tester);
+	    return TesterAdminResponseDto.from(saved);
 	}
 
 		//유저 글쓰기
@@ -99,40 +111,46 @@ public class TesterServiceImpl implements TesterService {
 		    Tester saved = repo.save(tester);
 		    return TesterUserResponseDto.from(saved);
 	}
+	
 	//관리자 수정
 	@Override
-	public TesterAdminResponseDto adminUpdate(Long userid, Long testerid, TesterAdminRequestDto dto,
-			List<MultipartFile> files) {
-		Tester tester = repo.findById(testerid)
-                .filter(t -> !t.isDeleted())
-                .orElseThrow(() -> new IllegalArgumentException("게시글 없음"));
-//			if(!tester.getUser().getUserId().equals(userid)){
-//			throw new SecurityException("본인 글만 수정할 수 있습니다.");
-//			}
-			//내용 수정
-			tester.setCategory(dto.getCategory());
-			tester.setTitle(dto.getTitle());
-			tester.setContent(dto.getContent());
-			tester.setFoodid(dto.getFoodid());
-			tester.setStatus(dto.getStatus());
-			tester.setIsnotice(dto.getIsnotice());
-			tester.setPosttype(dto.getPosttype());
-			
-			// 이미지 갱신 로직
-			if (files != null && !files.isEmpty()) {
-			    tester.getTesterimg().clear();  //초기화
-			    files.forEach(file -> {
-			        String url = fileStorageService.upload(file);
-			        Testerimg image = new Testerimg();
-			        image.setImgsrc(url);
-			        image.setTester(tester);
-			        tester.getTesterimg().add(image);
-			    });
-			} 
-			
-			Tester update = repo.save(tester);
-			return TesterAdminResponseDto.from(update);
-			}
+	public TesterAdminResponseDto adminUpdate(Long userid, Long testerid, TesterAdminRequestDto dto, List<MultipartFile> files) {
+
+	    Tester tester = repo.findById(testerid)
+	            .filter(t -> !t.isDeleted())
+	            .orElseThrow(() -> new IllegalArgumentException("게시글 없음"));
+
+	    tester.setCategory(dto.getCategory());
+	    tester.setTitle(dto.getTitle());
+	    tester.setContent(dto.getContent());
+
+	    // foodid: 0이면 미선택으로 보고 null 처리
+	    if (dto.getFoodid() == 0) tester.setFoodid(null);
+	    else tester.setFoodid(dto.getFoodid());
+
+	    tester.setStatus(dto.getStatus());
+	    tester.setIsnotice(dto.getIsnotice());
+
+	    // posttype: null이면 기존값 유지
+	    if (dto.getPosttype() != null) {
+	        tester.setPosttype(dto.getPosttype());
+	    }
+
+	    // 이미지 갱신 로직
+	    if (files != null && !files.isEmpty()) {
+	        tester.getTesterimg().clear();
+	        files.forEach(file -> {
+	            String url = fileStorageService.upload(file);
+	            Testerimg image = new Testerimg();
+	            image.setImgsrc(url);
+	            image.setTester(tester);
+	            tester.getTesterimg().add(image);
+	        });
+	    }
+
+	    Tester update = repo.save(tester);
+	    return TesterAdminResponseDto.from(update);
+	}
 	
 	//유저 수정
 	@Override
@@ -167,12 +185,24 @@ public class TesterServiceImpl implements TesterService {
 	//삭제
 	@Override
 	public void delete(Long testerid, Long userid) {
-		Tester tester = repo.findById(testerid).orElseThrow(() -> new IllegalArgumentException("게시글 없음"));
-		if(!tester.getUser().getUserId().equals(userid)){
-			throw new SecurityException("본인 글만 삭제할 수 있습니다.");
-		}
-		tester.setDeleted(true);
-		repo.save(tester);
+
+	    Tester tester = repo.findById(testerid)
+	            .filter(t -> !t.isDeleted())
+	            .orElseThrow(() -> new IllegalArgumentException("게시글 없음"));
+
+	    User loginUser = urepo.findById(userid)
+	            .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
+
+	    //본인만->관리자도 가능하게 교체 
+	    boolean isOwner = tester.getUser() != null && tester.getUser().getUserId().equals(userid);
+	    boolean isAdmin = loginUser.getRole() != null && loginUser.getRole().equals("ROLE_ADMIN");
+
+	    if (!isOwner && !isAdmin) {
+	        throw new SecurityException("삭제 권한이 없습니다.");
+	    }
+
+	    tester.setDeleted(true);
+	    repo.save(tester);
 	}
 
 	///////////

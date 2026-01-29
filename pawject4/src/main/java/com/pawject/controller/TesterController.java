@@ -61,7 +61,7 @@ public class TesterController {
 	}
 	
 	@Operation(summary = "게시글 작성-관리자 (JWT 인증 필요)")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	@PostMapping(value="/admin", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<TesterAdminResponseDto> createTesterAdmin(
             Authentication authentication,
