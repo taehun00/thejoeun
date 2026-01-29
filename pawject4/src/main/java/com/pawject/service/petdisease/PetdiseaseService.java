@@ -1,9 +1,11 @@
 package com.pawject.service.petdisease;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,18 +32,15 @@ public class PetdiseaseService {
     // 게시글 작성
     public PetdiseaseResponseDto createPost(Long userid, PetdiseaseRequestDto dto, Long pettypeid) {
 
-        // 유저 확인
         User user = urepo.findById(userid)
                 .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
 
-        // 펫타입 확인
         PetType pettype = petrepo.findById(pettypeid)
                 .orElseThrow(() -> new IllegalArgumentException("펫타입 없음"));
 
-        // 엔티티 생성 및 값 세팅
         Petdisease petdis = new Petdisease();
-        petdis.setAdmin(user);        // ADMINID FK
-        petdis.setPettype(pettype);   // PETTYPEID FK
+        petdis.setAdmin(user);
+        petdis.setPettype(pettype);
 
         petdis.setDisname(dto.getDisname());
         petdis.setDefinition(dto.getDefinition());
@@ -50,10 +49,8 @@ public class PetdiseaseService {
         petdis.setTreatment(dto.getTreatment());
         petdis.setTip(dto.getTip());
 
-        // 저장
         Petdisease saved = disrepo.save(petdis);
 
-        // dto 반환
         return PetdiseaseResponseDto.from(saved);
     }
 
@@ -96,48 +93,43 @@ public class PetdiseaseService {
         return PetdiseaseResponseDto.from(petdis);
     }
 
-    // 게시글 조회 - 페이징/정렬 (pettypeid 고정)
+    // 게시글 조회
     @Transactional(readOnly = true)
     public Page<Petdisease> getPetdiseasePage(int page, int size, String condition, Long pettypeid) {
 
-        Sort sort;
-        if (condition == null) condition = "new";
-        switch (condition) {
-            case "disnameAsc": sort = Sort.by("disname").ascending(); break;
-            case "disnameDesc": sort = Sort.by("disname").descending(); break;
-            case "old": sort = Sort.by("disno").ascending(); break;
-            case "new": sort = Sort.by("disno").descending(); break;
-            default: sort = Sort.by("disno").descending(); break;
-        }
+        if (page < 1) page = 1;
+        if (size < 1) size = 10;
+        if (condition == null || condition.isBlank()) condition = "new";
 
-        Pageable pageable = PageRequest.of(page - 1, size, sort);
+        int start = (page - 1) * size + 1;
+        int end = page * size;
 
-        return disrepo.findByPettypeid(pettypeid, pageable);
+        List<Petdisease> list = disrepo.findPetdiseaseWithPaging(pettypeid, condition, start, end);
+        long total = disrepo.countByPettypeid(pettypeid);
+
+        Pageable pageable = PageRequest.of(page - 1, size);
+
+        return new PageImpl<>(list, pageable, total);
     }
 
-    // 검색
+    // 검색 
     @Transactional(readOnly = true)
     public Page<PetdiseaseResponseDto> list(Long pettypeid, String keyword, Pageable pageable, String condition) {
 
-        Sort sort;
-        if (condition == null) condition = "new";
-        switch (condition) {
-            case "disnameAsc": sort = Sort.by("disname").ascending(); break;
-            case "disnameDesc": sort = Sort.by("disname").descending(); break;
-            case "old": sort = Sort.by("disno").ascending(); break;
-            case "new": sort = Sort.by("disno").descending(); break;
-            default: sort = Sort.by("disno").descending(); break;
-        }
+        if (pageable == null) pageable = PageRequest.of(0, 10);
+        if (condition == null || condition.isBlank()) condition = "new";
 
-        Pageable sortedPageable = PageRequest.of(
-                pageable.getPageNumber(),
-                pageable.getPageSize(),
-                sort
-        );
+        int page = pageable.getPageNumber() + 1;
+        int size = pageable.getPageSize();
 
-        Page<Petdisease> pageResult = disrepo.searchKeyword(pettypeid, keyword, sortedPageable);
+        int start = (page - 1) * size + 1;
+        int end = page * size;
+
+        List<Petdisease> list = disrepo.searchPetdiseaseWithPaging(pettypeid, keyword, condition, start, end);
+        long total = disrepo.countSearch(pettypeid, keyword);
+
+        Page<Petdisease> pageResult = new PageImpl<>(list, pageable, total);
 
         return pageResult.map(PetdiseaseResponseDto::from);
     }
-
 }

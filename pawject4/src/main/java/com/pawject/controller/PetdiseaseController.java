@@ -42,15 +42,16 @@ public class PetdiseaseController {
 	}
 
 	@Operation(summary = "페이징+정렬(공개)")
-    @GetMapping("/list")
-    public Page<Petdisease> list(
-            @RequestParam(name="pettypeid") Long pettypeid,
-            @RequestParam(name="page", defaultValue = "1") int page,
-            @RequestParam(name="size", defaultValue = "10") int size,
-            @RequestParam(name="condition", required = false) String condition
-    ) {
-        return service.getPetdiseasePage(page, size, condition, pettypeid);
-    }
+	@GetMapping("/list")
+	public ResponseEntity<Page<PetdiseaseResponseDto>> list(
+	        @RequestParam(name="pettypeid") Long pettypeid,
+	        @RequestParam(name="page", defaultValue = "1") int page,
+	        @RequestParam(name="size", defaultValue = "10") int size,
+	        @RequestParam(name="condition", required = false) String condition
+	) {
+	    Page<Petdisease> result = service.getPetdiseasePage(page, size, condition, pettypeid);
+	    return ResponseEntity.ok(result.map(PetdiseaseResponseDto::from));
+	}
 	
 	@Operation(summary = "페이징+정렬+검색(공개)")
     @GetMapping("/search")
