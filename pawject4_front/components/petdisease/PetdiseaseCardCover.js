@@ -1,4 +1,4 @@
-// components/petdisease/PetdiseaseCardCover.jsx
+// components/petdisease/PetdiseaseCardCover.js
 import { Button, Divider, Space, Tag, Typography } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 

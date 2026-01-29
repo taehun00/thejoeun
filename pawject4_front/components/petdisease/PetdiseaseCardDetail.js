@@ -1,4 +1,4 @@
-// components/petdisease/PetdiseaseCardDetail.jsx
+// components/petdisease/PetdiseaseCardDetail.js
 import { Alert, Button, Card, Collapse, Space, Spin, Tag, Typography } from "antd";
 import { EditOutlined, DeleteOutlined, CloseOutlined } from "@ant-design/icons";
 

@@ -70,7 +70,7 @@ export default function AppLayout({ children }) {
       );
     } else {  //로그인x
       items.push(
-        { key: "/mypage", label: <Link href="/mypage">마이페이지</Link> },
+        { key: "/mypage", label: <Link href="/user/mypage">마이페이지</Link> },
         { key: "/user/logout", label: <Link href="/user/logout">로그아웃</Link> }
       );
     }

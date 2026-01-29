@@ -1,4 +1,4 @@
-// components/petdisease/PetdiseaseWriteModal.jsx
+// components/petdisease/PetdiseaseWriteModal.js
 import { useEffect } from "react";
 import { Modal, Form, Space, Tag, Typography } from "antd";
 import PetdiseaseForm from "./PetdiseaseForm";

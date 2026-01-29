@@ -1,4 +1,4 @@
-// components/petdisease/PetdiseaseForm.jsx
+// components/petdisease/PetdiseaseForm.js
 import { Form, Input } from "antd";
 
 const { TextArea } = Input;

@@ -27,3 +27,11 @@ a {
 .faq-row-open td {
   background: #fafafa;
 }
+
+
+
+/* 체험단 공지글 행 강조 */
+.tester-notice-row td {
+  background: #fff7e6 !important; /* 연한 주황 */
+  font-weight: 600;
+}

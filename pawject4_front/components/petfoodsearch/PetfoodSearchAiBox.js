@@ -1,4 +1,4 @@
-// components/petfoodsearch/PetfoodSearchAiBox.jsx
+// components/petfoodsearch/PetfoodSearchAiBox.js
 import { useEffect, useMemo, useState } from "react";
 import { Card, Button, Input, Space, Typography, Alert, Divider } from "antd";
 import { RobotOutlined } from "@ant-design/icons";

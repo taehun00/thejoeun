@@ -1,4 +1,4 @@
-// reducers/food/foodSearchReducer.js
+// components/tester/TesterDetailRow.js
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -23,20 +23,14 @@ import {
   deleteTesterRequest,
 } from "../../reducers/tester/testerReducer";
 
-// 사료 상세 모달 연계 
-import {
-  openModal as openFoodModal,
-  fetchModalCardRequest,
-} from "../../reducers/food/foodSearchReducer";
-
 const { Title, Text } = Typography;
 
-// 카테고리 Tag 렌더
+// 카테고리 태그 
 function categoryToTag(category) {
   if (category === "공지") return <Tag color="gold">공지</Tag>;
-  if (category === "모집") return <Tag color="green">모집</Tag>;
+  if (category === "모집") return <Tag color="green">모집중</Tag>;
   if (category === "모집완료") return <Tag color="default">모집완료</Tag>;
-  if (category === "후기") return <Tag color="blue">후기</Tag>;
+  if (category === "후기") return <Tag>후기</Tag>;
   return <Tag>{category || "-"}</Tag>;
 }
 
@@ -52,10 +46,10 @@ export default function TesterDetailRow({
 
   const testerid = record?.testerid;
 
-  // 상세가 이 row에 해당하는지
+  // 현재 펼쳐진 row인지
   const isThisOpen = detail?.testerid === testerid;
 
-  // 관리자/유저 권한 판단
+  // 로그인 정보
   const [loginRole, setLoginRole] = useState(null);
   const [loginUserid, setLoginUserid] = useState(null);
 
@@ -67,19 +61,14 @@ export default function TesterDetailRow({
 
     setLoginRole(payload?.role ?? null);
 
-    // userid 파싱 방어
+    // userid 필드명 방어
     const uid = payload?.userid ?? payload?.userId ?? payload?.id ?? null;
     setLoginUserid(uid);
   }, []);
 
   const isAdmin = loginRole === "ROLE_ADMIN";
-  const isOwner = useMemo(() => {
-    if (!loginUserid) return false;
-    if (!record?.userid) return false;
-    return Number(loginUserid) === Number(record.userid);
-  }, [loginUserid, record?.userid]);
 
-  // 열릴 때 상세 호출
+  // 열릴 때 상세 호출 (한번만)
   useEffect(() => {
     if (!testerid) return;
     if (!isThisOpen) return;
@@ -88,8 +77,24 @@ export default function TesterDetailRow({
     dispatch(fetchTesterDetailRequest({ testerid }));
   }, [dispatch, testerid, isThisOpen, detail?.dto]);
 
-  // 화면 데이터: 상세dto 우선
-  const dto = isThisOpen ? (detail?.dto || record) : record;
+  if (!isThisOpen) return null;
+
+  // 상세 dto가 있으면 그걸 우선
+  const dto = detail?.dto || record;
+
+  // 소유자 판별: dto.userid 우선, 없으면 record.userid
+  const ownerUserid = dto?.userid ?? record?.userid ?? null;
+  const isOwner = useMemo(() => {
+    if (!loginUserid) return false;
+    if (!ownerUserid) return false;
+    return Number(loginUserid) === Number(ownerUserid);
+  }, [loginUserid, ownerUserid]);
+
+  const canEdit = isAdmin || isOwner;
+  const canDelete = isAdmin || isOwner;
+
+  // 관리자 토글 버튼 노출 조건
+  const canAdminToggle = isAdmin && Number(dto?.posttype) === 1;
 
   // 이미지 목록
   const imgList = useMemo(() => {
@@ -103,35 +108,9 @@ export default function TesterDetailRow({
   const createdDate = dto?.createdat ? String(dto.createdat).slice(0, 10) : "-";
   const updatedDate = dto?.updatedat ? String(dto.updatedat).slice(0, 10) : "-";
 
-  const canEdit = isAdmin || isOwner;
-  const canDelete = isAdmin || isOwner;
-
-  // 관리자 토글 버튼은 관리자 + posttype==1 일 때만
-  const canAdminToggle = isAdmin && Number(dto?.posttype) === 1;
-
-  const handleToggleNotice = () => {
-    dispatch(toggleTesterNoticeRequest({ testerid }));
-  };
-
-  const handleToggleStatus = () => {
-    dispatch(toggleTesterStatusRequest({ testerid }));
-  };
-
-  const handleDelete = () => {
-    dispatch(deleteTesterRequest({ testerid }));
-  };
-
-  // foodid 연계
-  const foodid = dto?.foodid;
-  const canOpenFood = Number(foodid) > 0;
-
-  const handleOpenFood = () => {
-    if (!canOpenFood) return;
-    dispatch(openFoodModal(foodid));
-    dispatch(fetchModalCardRequest({ foodid }));
-  };
-
-  if (!isThisOpen) return null;
+  const handleToggleNotice = () => dispatch(toggleTesterNoticeRequest({ testerid }));
+  const handleToggleStatus = () => dispatch(toggleTesterStatusRequest({ testerid }));
+  const handleDelete = () => dispatch(deleteTesterRequest({ testerid }));
 
   return (
     <div style={{ padding: "12px 10px" }}>
@@ -148,16 +127,19 @@ export default function TesterDetailRow({
 
       {!detail?.loading && !detail?.error && (
         <>
-          {/* 카테고리+제목 */}
-          <div style={{ marginBottom: 6 }}>
-            <div style={{ marginBottom: 6 }}>{categoryToTag(dto?.category)}</div>
-
-            <Title level={4} style={{ marginBottom: 0 }}>
+          {/* 제목 라인 (관리자는 카테고리 Tag 작게 붙임) */}
+          <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
+            {isAdmin && (
+              <div style={{ transform: "translateY(2px)" }}>
+                {categoryToTag(dto?.category)}
+              </div>
+            )}
+            <Title level={4} style={{ marginBottom: 6 }}>
               {dto?.title || "(제목 없음)"}
             </Title>
           </div>
 
-          {/* 작성정보 + 관리자 토글버튼 */}
+          {/* 작성정보 + 관리자 토글 */}
           <div
             style={{
               display: "flex",
@@ -172,20 +154,18 @@ export default function TesterDetailRow({
                 {dto?.nickname || "-"} / {createdDate} / 조회 {dto?.views ?? 0}
               </Text>
 
-              {/* 상단공지 상태 표시 */}
-              {Number(dto?.isnotice) === 1 && (
-                <Tag color="red">상단공지</Tag>
-              )}
+              {/* 유저 화면에선 카테고리 표시 안함 */}
+              {/* 관리자 토글 상태 표시 */}
+              {canAdminToggle && Number(dto?.isnotice) === 1 && <Tag color="red">상단공지</Tag>}
 
-              {/* 모집 상태 표시 (posttype==1인 글만) */}
-              {Number(dto?.posttype) === 1 && (
+              {canAdminToggle && (
                 <Tag color={Number(dto?.status) === 0 ? "green" : "default"}>
                   {Number(dto?.status) === 0 ? "모집중" : "모집완료"}
                 </Tag>
               )}
             </div>
 
-            {/*  관리자 토글 */}
+            {/* 관리자 전용 토글 */}
             {canAdminToggle && (
               <Space>
                 <Button size="small" loading={noticeLoading} onClick={handleToggleNotice}>
@@ -201,14 +181,14 @@ export default function TesterDetailRow({
 
           <Divider style={{ margin: "12px 0" }} />
 
-          {/* 이미지 - 위쪽 그리드 */}
+          {/* ✅ 이미지: 위에 그리드 / 글 방해 X */}
           {imgList.length > 0 && (
             <div style={{ marginBottom: 16 }}>
               <Image.PreviewGroup>
                 <div
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
+                    gridTemplateColumns: "repeat(auto-fill, minmax(170px, 1fr))",
                     gap: 10,
                   }}
                 >
@@ -219,9 +199,9 @@ export default function TesterDetailRow({
                       alt="tester-img"
                       style={{
                         width: "100%",
-                        height: 140,
+                        height: 150,
                         objectFit: "cover",
-                        borderRadius: 8,
+                        borderRadius: 10,
                       }}
                     />
                   ))}
@@ -235,35 +215,16 @@ export default function TesterDetailRow({
             {dto?.content || "-"}
           </div>
 
-          {/* foodid 연계 버튼 */}
-          {canOpenFood && (
-            <div style={{ marginTop: 18, textAlign: "right" }}>
-              <Button type="primary" onClick={handleOpenFood}>
-                관련 사료 상세보기
-              </Button>
-            </div>
-          )}
-
           <Divider style={{ margin: "12px 0" }} />
 
           {/* 수정/삭제 */}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: 12,
-              flexWrap: "wrap",
-            }}
-          >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <Text type="secondary" style={{ fontSize: 12 }}>
               수정일: {updatedDate}
             </Text>
 
             <Space>
-              {canEdit && (
-                <Button onClick={() => onEdit?.(testerid)}>수정</Button>
-              )}
+              {canEdit && <Button onClick={() => onEdit?.(testerid)}>수정</Button>}
 
               {canDelete && (
                 <Popconfirm

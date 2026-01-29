@@ -1,4 +1,4 @@
-// components/reviewboard/ReviewEditModal.jsx
+// components/reviewboard/ReviewEditModal.js
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Modal, Form, Input, Select, Rate, Upload, Space, Typography } from "antd";

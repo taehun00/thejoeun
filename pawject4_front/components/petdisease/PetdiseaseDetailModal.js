@@ -1,4 +1,4 @@
-// components/petdisease/PetdiseaseDetailModal.jsx
+// components/petdisease/PetdiseaseDetailModal.js
 import { Modal, Button, Space, Spin, Alert, Empty, Descriptions, Divider, Typography, Popconfirm } from "antd";
 
 const { Text } = Typography;

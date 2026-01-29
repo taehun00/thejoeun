@@ -1,4 +1,4 @@
-// components/petdisease/PetdiseaseFilterBar.jsx
+// components/petdisease/PetdiseaseFilterBar.js
 import { Button, Input, Radio, Select, Space, Typography } from "antd";
 import {
   SearchOutlined,
