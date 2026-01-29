@@ -17,7 +17,7 @@ import com.pawject.dto.tester.TesterUserRequestDto;
 import com.pawject.dto.tester.TesterUserResponseDto;
 import com.pawject.repository.TesterRepository;
 import com.pawject.repository.UserRepository;
-import com.pawject.util.FileStorageService;
+import com.pawject.util.UtilUpload;
 
 import lombok.RequiredArgsConstructor;
 @Service
@@ -27,7 +27,7 @@ public class TesterServiceImpl implements TesterService {
 	private final  TesterDao dao;
 	private final  TesterRepository repo;  
 	private final  UserRepository urepo;
-	private final FileStorageService fileStorageService;
+	private final UtilUpload utilUpload;
 
 	//단건조회
 	@Transactional(readOnly = true)
@@ -35,7 +35,7 @@ public class TesterServiceImpl implements TesterService {
 	public TesterAdminResponseDto findById(Long testerid) {
 
 	    Tester t = repo.findById(testerid)
-	            .filter(x -> !x.isDeleted())   //delete도 같이 조회됨 제거 필요
+	            .filter(x -> !x.isDeleted())
 	            .orElseThrow(() -> new IllegalArgumentException("글 없음"));
 
 	    dao.updateViews(testerid); // 조회수 증가
@@ -43,7 +43,7 @@ public class TesterServiceImpl implements TesterService {
 	    return TesterAdminResponseDto.from(t);
 	}
 
-    //관리자 글쓰기
+	//관리자 글쓰기
 	@Override
 	public TesterAdminResponseDto adminWrite(Long userid, TesterAdminRequestDto dto, List<MultipartFile> files) {
 
@@ -54,64 +54,72 @@ public class TesterServiceImpl implements TesterService {
 	    tester.setTitle(dto.getTitle());
 	    tester.setContent(dto.getContent());
 
-	    // foodid: 0이면 미선택으로 보고 null 처리
-	    if (dto.getFoodid() == 0) tester.setFoodid(null);
-	    else tester.setFoodid(dto.getFoodid());
+	    // foodid 0이면 null
+	    tester.setFoodid(dto.getFoodid() == 0 ? null : dto.getFoodid());
 
-	    tester.setStatus(dto.getStatus());
-	    tester.setIsnotice(dto.getIsnotice());
+	    tester.setStatus(dto.getStatus());     // int라 null검증 의미없음
+	    tester.setIsnotice(dto.getIsnotice()); // int라 null검증 의미없음
 
-	    // posttype: null이면 관리자 공고(1)로 고정
+	    // posttype null이면 관리자 공고(1)
 	    tester.setPosttype(dto.getPosttype() == null ? 1 : dto.getPosttype());
 
 	    tester.setUser(user);
 
 	    // 이미지 업로드
 	    if (files != null && !files.isEmpty()) {
-	        files.forEach(file -> {
-	            String url = fileStorageService.upload(file);
-	            Testerimg img = new Testerimg();
-	            img.setImgsrc(url);
-	            img.setTester(tester);
-	            tester.getTesterimg().add(img);
-	        });
+	        for (MultipartFile file : files) {
+	            try {
+	                String savedPath = utilUpload.fileUpload(file, "testerimg");
+	                Testerimg img = new Testerimg();
+	                img.setImgsrc(savedPath);
+	                img.setTester(tester);
+	                tester.getTesterimg().add(img);
+	            } catch (Exception e) {
+	                throw new RuntimeException("이미지 업로드 실패", e);
+	            }
+	        }
 	    }
 
 	    Tester saved = repo.save(tester);
 	    return TesterAdminResponseDto.from(saved);
 	}
-
-		//유저 글쓰기
+	
+	//유저 글쓰기
 	@Override
 	public TesterUserResponseDto userWrite(Long userid, TesterUserRequestDto dto, List<MultipartFile> files) {
-		  //유저 확인
-			User user = urepo.findById(userid).orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
-		  //글 내용 채우기
-		  Tester tester = new Tester();
-		  tester.setCategory("후기");
-		  tester.setTitle(dto.getTitle());
-		  tester.setContent(dto.getContent());
-		  tester.setUser(user);
-		  //고정 - status 의미x
-		  tester.setPosttype(0);
-		  tester.setIsnotice(0);
-		  tester.setStatus(0);
-		  
-		// 이미지 업로드
-		  if (files != null && !files.isEmpty()) {
-			    files.forEach(file -> {
-			        String url = fileStorageService.upload(file);
-			        Testerimg img = new Testerimg();
-			        img.setImgsrc(url);
-			        img.setTester(tester);
-			        tester.getTesterimg().add(img);
-			    });
-			}
-		  
-		    Tester saved = repo.save(tester);
-		    return TesterUserResponseDto.from(saved);
+
+	    User user = urepo.findById(userid).orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
+
+	    Tester tester = new Tester();
+	    tester.setCategory("후기");
+	    tester.setTitle(dto.getTitle());
+	    tester.setContent(dto.getContent());
+	    tester.setUser(user);
+
+	    // 고정값
+	    tester.setPosttype(0);
+	    tester.setIsnotice(0);
+	    tester.setStatus(0);
+
+	    // 이미지 업로드 
+	    if (files != null && !files.isEmpty()) {
+	        for (MultipartFile file : files) {
+	            try {
+	                String savedPath = utilUpload.fileUpload(file, "testerimg");
+	                Testerimg img = new Testerimg();
+	                img.setImgsrc(savedPath);
+	                img.setTester(tester);
+	                tester.getTesterimg().add(img);
+	            } catch (Exception e) {
+	                throw new RuntimeException("이미지 업로드 실패", e);
+	            }
+	        }
+	    }
+
+	    Tester saved = repo.save(tester);
+	    return TesterUserResponseDto.from(saved);
 	}
-	
+
 	//관리자 수정
 	@Override
 	public TesterAdminResponseDto adminUpdate(Long userid, Long testerid, TesterAdminRequestDto dto, List<MultipartFile> files) {
@@ -124,28 +132,31 @@ public class TesterServiceImpl implements TesterService {
 	    tester.setTitle(dto.getTitle());
 	    tester.setContent(dto.getContent());
 
-	    // foodid: 0이면 미선택으로 보고 null 처리
-	    if (dto.getFoodid() == 0) tester.setFoodid(null);
-	    else tester.setFoodid(dto.getFoodid());
+	    tester.setFoodid(dto.getFoodid() == 0 ? null : dto.getFoodid());
 
 	    tester.setStatus(dto.getStatus());
 	    tester.setIsnotice(dto.getIsnotice());
 
-	    // posttype: null이면 기존값 유지
+	    // posttype - null이면 기존 유지
 	    if (dto.getPosttype() != null) {
 	        tester.setPosttype(dto.getPosttype());
 	    }
 
-	    // 이미지 갱신 로직
+	    // 이미지 갱신 (files 있을 때만 덮어쓰기)
 	    if (files != null && !files.isEmpty()) {
 	        tester.getTesterimg().clear();
-	        files.forEach(file -> {
-	            String url = fileStorageService.upload(file);
-	            Testerimg image = new Testerimg();
-	            image.setImgsrc(url);
-	            image.setTester(tester);
-	            tester.getTesterimg().add(image);
-	        });
+
+	        for (MultipartFile file : files) {
+	            try {
+	                String savedPath = utilUpload.fileUpload(file, "testerimg");
+	                Testerimg image = new Testerimg();
+	                image.setImgsrc(savedPath);
+	                image.setTester(tester);
+	                tester.getTesterimg().add(image);
+	            } catch (Exception e) {
+	                throw new RuntimeException("이미지 업로드 실패", e);
+	            }
+	        }
 	    }
 
 	    Tester update = repo.save(tester);
@@ -155,32 +166,37 @@ public class TesterServiceImpl implements TesterService {
 	//유저 수정
 	@Override
 	public TesterUserResponseDto userUpdate(Long userid, Long testerid, TesterUserRequestDto dto, List<MultipartFile> files) {
-		Tester tester = repo.findById(testerid)
-                .filter(t -> !t.isDeleted())
-                .orElseThrow(() -> new IllegalArgumentException("게시글 없음"));
-			if(!tester.getUser().getUserId().equals(userid)){
-			throw new SecurityException("본인 글만 수정할 수 있습니다.");
-			}
-			//내용 수정
-			tester.setTitle(dto.getTitle());
-			tester.setContent(dto.getContent());
-			
-			// 이미지 갱신 로직
-			if (files != null && !files.isEmpty()) {
-			    tester.getTesterimg().clear();  //초기화
-			    files.forEach(file -> {
-			        String url = fileStorageService.upload(file);
-			        Testerimg image = new Testerimg();
-			        image.setImgsrc(url);
-			        image.setTester(tester);
-			        tester.getTesterimg().add(image);
-			    });
-			} 
-			
-			Tester update = repo.save(tester);
-			return TesterUserResponseDto.from(update);
-		}
 
+	    Tester tester = repo.findById(testerid)
+	            .filter(t -> !t.isDeleted())
+	            .orElseThrow(() -> new IllegalArgumentException("게시글 없음"));
+
+	    if (!tester.getUser().getUserId().equals(userid)) {
+	        throw new SecurityException("본인 글만 수정할 수 있습니다.");
+	    }
+
+	    tester.setTitle(dto.getTitle());
+	    tester.setContent(dto.getContent());
+
+	    if (files != null && !files.isEmpty()) {
+	        tester.getTesterimg().clear();
+
+	        for (MultipartFile file : files) {
+	            try {
+	                String savedPath = utilUpload.fileUpload(file, "testerimg");
+	                Testerimg image = new Testerimg();
+	                image.setImgsrc(savedPath);
+	                image.setTester(tester);
+	                tester.getTesterimg().add(image);
+	            } catch (Exception e) {
+	                throw new RuntimeException("이미지 업로드 실패", e);
+	            }
+	        }
+	    }
+
+	    Tester update = repo.save(tester);
+	    return TesterUserResponseDto.from(update);
+	}
 
 	//삭제
 	@Override
@@ -193,9 +209,9 @@ public class TesterServiceImpl implements TesterService {
 	    User loginUser = urepo.findById(userid)
 	            .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
 
-	    //본인만->관리자도 가능하게 교체 
+	    //유저본인+관리자 둘 다 권한o
 	    boolean isOwner = tester.getUser() != null && tester.getUser().getUserId().equals(userid);
-	    boolean isAdmin = loginUser.getRole() != null && loginUser.getRole().equals("ROLE_ADMIN");
+	    boolean isAdmin = "ROLE_ADMIN".equals(loginUser.getRole());
 
 	    if (!isOwner && !isAdmin) {
 	        throw new SecurityException("삭제 권한이 없습니다.");

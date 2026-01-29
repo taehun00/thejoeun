@@ -44,7 +44,7 @@ public class TesterController {
 	private final TesterService service;
 
 	@Operation(summary = "게시글 단건 조회 (공개)")
-	@GetMapping("{testerid}")
+	@GetMapping("/{testerid}")
 	public ResponseEntity<TesterAdminResponseDto> getTester(@PathVariable(name = "testerid") Long testerid){
 		return ResponseEntity.ok(service.findById(testerid));
 	}
