@@ -1,7 +1,7 @@
 // import { combineReducers }  from  'redux';
 import { combineReducers } from "@reduxjs/toolkit";
 import foodReducer from "./food/foodReducer";
-import foodReducer from "./review/reviewReducer";
+import reviewReducer from "./review/reviewReducer";
 import authReducer from "./user/authReducer";
 
 const rootReducer = combineReducers({

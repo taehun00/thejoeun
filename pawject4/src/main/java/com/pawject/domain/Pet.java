@@ -46,16 +46,17 @@ public class Pet {
     private PetType petType;
 
     @Column(name = "PFILE", length = 255)
-    private String pfile;
+    private String pFile;
 
     @Column(name = "CREATEDAT", updatable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "PAGE")
-    private Integer page;
+    private Integer pAge;
 
     @Column(name = "PGENDER", length = 10)
     private String pGender;
+
 
     public Pet(User user, String petName) {
         this.user = user;

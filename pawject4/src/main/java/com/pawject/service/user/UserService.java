@@ -1,5 +1,6 @@
 package com.pawject.service.user;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -13,9 +14,10 @@ import com.pawject.domain.User;
 import com.pawject.dto.user.LoginRequest;
 import com.pawject.dto.user.UserRequestDto;
 import com.pawject.dto.user.UserResponseDto;
+import com.pawject.dto.user.UserUpdateRequestDto;
 import com.pawject.repository.UserRepository;
 import com.pawject.security.JwtProvider;
-import com.pawject.util.FileStorageService;
+import com.pawject.util.UtilUpload;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,8 +30,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final FileStorageService fileStorageService;
     private final JwtProvider jwtProvider;
+    private final UtilUpload utilUpload;
 
 
     private static final String DEFAULT_PROVIDER = "local";
@@ -55,9 +57,15 @@ public class UserService {
         }
 
 
-        String profilePath = (profileImage != null && !profileImage.isEmpty())
-                ? fileStorageService.upload(profileImage)
-                : DEFAULT_PROFILE_IMAGE;
+        String profilePath = DEFAULT_PROFILE_IMAGE; // 기본 이미지
+        if (profileImage != null && !profileImage.isEmpty()) {
+            try {
+                profilePath = utilUpload.fileUpload(profileImage, "userimg"); // 업로드 성공 시 경로 반환
+            } catch (IOException e) {
+                profilePath = DEFAULT_PROFILE_IMAGE; // 실패 시 기본 이미지로 대체
+            }
+        }
+
 
         User user = User.builder()
                 .email(request.getEmail())
@@ -121,6 +129,39 @@ public class UserService {
     public Optional<User> findByEmailAndProviderNative(String email, String provider) {
         return userRepository.findByEmailAndProviderNative(email, provider);
     }
+    
+	 /* =========================
+	    전체 정보 수정
+	  ========================= */
+    public UserResponseDto updateUserInfo(Long userId, UserUpdateRequestDto request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
+
+        // 수정 가능한 필드만 업데이트
+        if (request.getNickname() != null && !request.getNickname().isBlank()) {
+
+            userRepository.findByNickname(request.getNickname())
+                .filter(u -> !u.getUserId().equals(userId))
+                .ifPresent(u -> {
+                    throw new IllegalArgumentException("이미 사용중인 닉네임입니다.");
+                });
+
+            user.setNickname(request.getNickname());
+        }
+        if (request.getMobile() != null) {
+            user.setMobile(request.getMobile());
+        }
+        
+        // local 사용자만 비밀번호 수정 가능
+        if ("local".equals(user.getProvider()) && request.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
+
+
+        return UserResponseDto.fromEntity(userRepository.save(user));
+    }
+
+
 
     /* =========================
        닉네임 변경
@@ -141,31 +182,45 @@ public class UserService {
     }
     
 	 // 프로필 이미지 변경
-	    public UserResponseDto updateProfileImage(Long userId, MultipartFile profileImage) {
-	        User user = userRepository.findById(userId)
-	                .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
-	
-	        user.setUfile(profileImage != null && !profileImage.isEmpty()
-	                ? fileStorageService.upload(profileImage)
-	                : DEFAULT_PROFILE_IMAGE);
-	
-	        return UserResponseDto.fromEntity(userRepository.save(user));
-	    }
+    public UserResponseDto updateProfileImage(Long userId, MultipartFile profileImage) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
+
+        String profilePath = DEFAULT_PROFILE_IMAGE; // 기본 이미지
+        if (profileImage != null && !profileImage.isEmpty()) {
+            try {
+                profilePath = utilUpload.fileUpload(profileImage); // 업로드 성공 시 경로 반환
+            } catch (IOException e) {
+                profilePath = DEFAULT_PROFILE_IMAGE; // 실패 시 기본 이미지로 대체
+            }
+        }
+
+        user.setUfile(profilePath);
+        return UserResponseDto.fromEntity(userRepository.save(user));
+    }
+
 
 
     /* =========================
        사용자 탈퇴
      ========================= */
-    public void deleteUserByEmail(String email) {
+//    public void deleteUserByEmail(String email) {
+//
+//        User user = userRepository.findByEmail(email)
+//                .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
+//
+//        // 연관 데이터 있다면 여기서 처리
+//        // petRepository.deleteByUser(user);
+//
+//        userRepository.deleteByEmail(email);
+//    }
+	    
+	    public void deleteUserById(Long userId) {
+	        User user = userRepository.findById(userId)
+	                .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
+	        userRepository.delete(user);
+	    }
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
-
-        // 연관 데이터 있다면 여기서 처리
-        // petRepository.deleteByUser(user);
-
-        userRepository.deleteByEmail(email);
-    }
 
     /* =========================
        소셜 로그인 사용자 저장

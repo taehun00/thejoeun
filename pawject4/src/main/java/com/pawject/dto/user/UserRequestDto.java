@@ -16,6 +16,7 @@ public class UserRequestDto {
     private String email;
     private String password;
     private String nickname;
+    private String mobile;
 
     // 소셜 로그인용
     private String provider;    // local, google, kakao ...
