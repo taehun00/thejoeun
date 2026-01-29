@@ -1,0 +1,7 @@
+// pages/tester/detail/[testerid].js
+
+import TesterDetailPage from "../../../components/tester/TesterDetailPage";
+
+export default function TesterDetailPage() {
+  return <TesterDetailPage />;
+}

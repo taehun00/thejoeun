@@ -14,8 +14,10 @@ public interface TesterService {
 	public TesterAdminResponseDto findById(Long testerid);
     public TesterAdminResponseDto adminWrite(Long userid, TesterAdminRequestDto dto, List<MultipartFile> files);
     public TesterUserResponseDto userWrite(Long userid, TesterUserRequestDto dto, List<MultipartFile> files);
-    public TesterAdminResponseDto adminUpdate(Long userid, Long testerid, TesterAdminRequestDto dto, List<MultipartFile> files);
-    public TesterUserResponseDto userUpdate(Long userid, Long testerid, TesterUserRequestDto dto, List<MultipartFile> files);
+	public TesterAdminResponseDto adminUpdate(Long userid, Long testerid, TesterAdminRequestDto dto,
+			List<MultipartFile> files, List<Long> keepImgIds);
+	public TesterUserResponseDto userUpdate(Long userid, Long testerid, TesterUserRequestDto dto,
+			List<MultipartFile> files, List<Long> keepImgIds);
     public void delete(Long testerid, Long userid);   // 소프트삭제
 	
 	//mybatis

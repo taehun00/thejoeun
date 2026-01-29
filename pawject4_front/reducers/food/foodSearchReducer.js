@@ -1,286 +1,197 @@
 // reducers/food/foodSearchReducer.js
-import { useEffect, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  Button,
-  Space,
-  Spin,
-  Alert,
-  Typography,
-  Tag,
-  Popconfirm,
-  Divider,
-  Image,
-} from "antd";
+import { createSlice } from "@reduxjs/toolkit";
 
-import { fileUrl } from "../../utils/fileUrl";
-import { parseJwt } from "../../utils/jwt";
+const initialState = {
+  // init
+  initData: {
+    brandList: [],
+    foodList: [],
+    nutrientList: [],
+    rangeList: [],
+  },
+  initLoading: false,
+  initError: null,
 
-import {
-  fetchTesterDetailRequest,
-  toggleTesterNoticeRequest,
-  toggleTesterStatusRequest,
-  deleteTesterRequest,
-} from "../../reducers/tester/testerReducer";
+  // 검색 결과
+  list: [],
+  total: 0,
+  paging: null,
+  loading: false,
+  error: null,
 
-// 사료 상세 모달 연계 
-import {
-  openModal as openFoodModal,
+  // 필터(화면 상태)
+  filters: {
+    keyword: "",
+    pettypeid: null,
+    foodtype: null,
+    brandid: null,
+    foodid: null,
+    category: null,
+    petagegroup: null,
+    isgrainfree: null,
+    origin: null,
+    rangeid: null,
+    minvalue: null,
+    maxvalue: null,
+    condition: null,
+  },
+  pstartno: 1,
+
+  // AI 필터 변환
+  ai: {
+    loading: false,
+    result: null,
+    error: null,
+    open: false,
+  },
+
+  // 상세 모달
+  modal: {
+    open: false,
+    foodid: null,
+    loading: false,
+    dto: null,
+    error: null,
+  },
+};
+
+const petfoodSearchSlice = createSlice({
+  name: "petfoodSearch",
+  initialState,
+  reducers: {
+    // init
+    fetchInitRequest: (state) => {
+      state.initLoading = true;
+      state.initError = null;
+    },
+    fetchInitSuccess: (state, action) => {
+      state.initLoading = false;
+      state.initData = action.payload;
+    },
+    fetchInitFailure: (state, action) => {
+      state.initLoading = false;
+      state.initError = action.payload;
+    },
+
+    // filter set
+    setFilters: (state, action) => {
+      state.filters = { ...state.filters, ...(action.payload || {}) };
+    },
+    resetFilters: (state) => {
+      state.filters = { ...initialState.filters };
+      state.pstartno = 1;
+    },
+    setPstartno: (state, action) => {
+      state.pstartno = action.payload || 1;
+    },
+
+    // search
+    searchFilterPagingRequest: (state, action) => {
+      state.loading = true;
+      state.error = null;
+
+      // 요청 페이지번호 store에 즉시 반영 (UI 꼬임 방지)
+      // payload가 { pstartno }
+      if (action?.payload?.pstartno !== undefined && action?.payload?.pstartno !== null) {
+        state.pstartno = action.payload.pstartno;
+      }
+    },
+    searchFilterPagingSuccess: (state, action) => {
+      state.loading = false;
+      state.list = action.payload?.list || [];
+      state.total = action.payload?.total || 0;
+      state.paging = action.payload?.paging || null;
+
+      // 성공 시에도 pstartno를 paging 기반으로 동기화 (서버 paging 기준 최종 확정)
+      // UtilPaging 구조가 프로젝트마다 다를 수 있으니 방어적으로 처리
+      const serverPage =
+        action.payload?.paging?.pstartno ||
+        action.payload?.paging?.pageNo ||
+        action.payload?.paging?.currentPage;
+
+      if (serverPage) {
+        state.pstartno = serverPage;
+      }
+    },
+    searchFilterPagingFailure: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+
+    // ai
+    openAiBox: (state) => {
+      state.ai.open = true;
+    },
+    closeAiBox: (state) => {
+      state.ai.open = false;
+    },
+    foodApiRequest: (state) => {
+      state.ai.loading = true;
+      state.ai.error = null;
+      state.ai.result = null;
+    },
+    foodApiSuccess: (state, action) => {
+      state.ai.loading = false;
+      state.ai.result = action.payload;
+    },
+    foodApiFailure: (state, action) => {
+      state.ai.loading = false;
+      state.ai.error = action.payload;
+    },
+
+    // modal card
+    openModal: (state, action) => {
+      state.modal.open = true;
+      state.modal.foodid = action.payload;
+      state.modal.dto = null;
+      state.modal.error = null;
+    },
+    closeModal: (state) => {
+      state.modal.open = false;
+      state.modal.foodid = null;
+      state.modal.dto = null;
+      state.modal.error = null;
+    },
+    fetchModalCardRequest: (state) => {
+      state.modal.loading = true;
+      state.modal.error = null;
+      state.modal.dto = null;
+    },
+    fetchModalCardSuccess: (state, action) => {
+      state.modal.loading = false;
+      state.modal.dto = action.payload;
+    },
+    fetchModalCardFailure: (state, action) => {
+      state.modal.loading = false;
+      state.modal.error = action.payload;
+    },
+  },
+});
+
+export const {
+  fetchInitRequest,
+  fetchInitSuccess,
+  fetchInitFailure,
+
+  setFilters,
+  resetFilters,
+  setPstartno,
+
+  searchFilterPagingRequest,
+  searchFilterPagingSuccess,
+  searchFilterPagingFailure,
+
+  openAiBox,
+  closeAiBox,
+  foodApiRequest,
+  foodApiSuccess,
+  foodApiFailure,
+
+  openModal,
+  closeModal,
   fetchModalCardRequest,
-} from "../../reducers/food/foodSearchReducer";
+  fetchModalCardSuccess,
+  fetchModalCardFailure,
+} = petfoodSearchSlice.actions;
 
-const { Title, Text } = Typography;
-
-// 카테고리 Tag 렌더
-function categoryToTag(category) {
-  if (category === "공지") return <Tag color="gold">공지</Tag>;
-  if (category === "모집") return <Tag color="green">모집</Tag>;
-  if (category === "모집완료") return <Tag color="default">모집완료</Tag>;
-  if (category === "후기") return <Tag color="blue">후기</Tag>;
-  return <Tag>{category || "-"}</Tag>;
-}
-
-export default function TesterDetailRow({
-  record, // 테이블 row record
-  onEdit, // 수정 클릭 시 이동 콜백: (testerid)=>void
-}) {
-  const dispatch = useDispatch();
-
-  const { detail, noticeLoading, statusLoading, deleteLoading } = useSelector(
-    (state) => state.tester
-  );
-
-  const testerid = record?.testerid;
-
-  // 상세가 이 row에 해당하는지
-  const isThisOpen = detail?.testerid === testerid;
-
-  // 관리자/유저 권한 판단
-  const [loginRole, setLoginRole] = useState(null);
-  const [loginUserid, setLoginUserid] = useState(null);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const token = localStorage.getItem("accessToken");
-    const payload = token ? parseJwt(token) : null;
-
-    setLoginRole(payload?.role ?? null);
-
-    // userid 파싱 방어
-    const uid = payload?.userid ?? payload?.userId ?? payload?.id ?? null;
-    setLoginUserid(uid);
-  }, []);
-
-  const isAdmin = loginRole === "ROLE_ADMIN";
-  const isOwner = useMemo(() => {
-    if (!loginUserid) return false;
-    if (!record?.userid) return false;
-    return Number(loginUserid) === Number(record.userid);
-  }, [loginUserid, record?.userid]);
-
-  // 열릴 때 상세 호출
-  useEffect(() => {
-    if (!testerid) return;
-    if (!isThisOpen) return;
-    if (detail?.dto) return;
-
-    dispatch(fetchTesterDetailRequest({ testerid }));
-  }, [dispatch, testerid, isThisOpen, detail?.dto]);
-
-  // 화면 데이터: 상세dto 우선
-  const dto = isThisOpen ? (detail?.dto || record) : record;
-
-  // 이미지 목록
-  const imgList = useMemo(() => {
-    const arr = dto?.testerimg || dto?.testerimgList || dto?.imglist || [];
-    if (!Array.isArray(arr)) return [];
-    return arr
-      .map((x) => (typeof x === "string" ? x : x?.imgsrc))
-      .filter(Boolean);
-  }, [dto]);
-
-  const createdDate = dto?.createdat ? String(dto.createdat).slice(0, 10) : "-";
-  const updatedDate = dto?.updatedat ? String(dto.updatedat).slice(0, 10) : "-";
-
-  const canEdit = isAdmin || isOwner;
-  const canDelete = isAdmin || isOwner;
-
-  // 관리자 토글 버튼은 관리자 + posttype==1 일 때만
-  const canAdminToggle = isAdmin && Number(dto?.posttype) === 1;
-
-  const handleToggleNotice = () => {
-    dispatch(toggleTesterNoticeRequest({ testerid }));
-  };
-
-  const handleToggleStatus = () => {
-    dispatch(toggleTesterStatusRequest({ testerid }));
-  };
-
-  const handleDelete = () => {
-    dispatch(deleteTesterRequest({ testerid }));
-  };
-
-  // foodid 연계
-  const foodid = dto?.foodid;
-  const canOpenFood = Number(foodid) > 0;
-
-  const handleOpenFood = () => {
-    if (!canOpenFood) return;
-    dispatch(openFoodModal(foodid));
-    dispatch(fetchModalCardRequest({ foodid }));
-  };
-
-  if (!isThisOpen) return null;
-
-  return (
-    <div style={{ padding: "12px 10px" }}>
-      {/* 로딩/에러 */}
-      {detail?.loading && (
-        <div style={{ textAlign: "center", padding: 20 }}>
-          <Spin />
-        </div>
-      )}
-
-      {!detail?.loading && detail?.error && (
-        <Alert type="error" message={detail.error} showIcon />
-      )}
-
-      {!detail?.loading && !detail?.error && (
-        <>
-          {/* 카테고리+제목 */}
-          <div style={{ marginBottom: 6 }}>
-            <div style={{ marginBottom: 6 }}>{categoryToTag(dto?.category)}</div>
-
-            <Title level={4} style={{ marginBottom: 0 }}>
-              {dto?.title || "(제목 없음)"}
-            </Title>
-          </div>
-
-          {/* 작성정보 + 관리자 토글버튼 */}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: 12,
-              flexWrap: "wrap",
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-              <Text type="secondary">
-                {dto?.nickname || "-"} / {createdDate} / 조회 {dto?.views ?? 0}
-              </Text>
-
-              {/* 상단공지 상태 표시 */}
-              {Number(dto?.isnotice) === 1 && (
-                <Tag color="red">상단공지</Tag>
-              )}
-
-              {/* 모집 상태 표시 (posttype==1인 글만) */}
-              {Number(dto?.posttype) === 1 && (
-                <Tag color={Number(dto?.status) === 0 ? "green" : "default"}>
-                  {Number(dto?.status) === 0 ? "모집중" : "모집완료"}
-                </Tag>
-              )}
-            </div>
-
-            {/*  관리자 토글 */}
-            {canAdminToggle && (
-              <Space>
-                <Button size="small" loading={noticeLoading} onClick={handleToggleNotice}>
-                  {Number(dto?.isnotice) === 1 ? "공지내림" : "공지올림"}
-                </Button>
-
-                <Button size="small" loading={statusLoading} onClick={handleToggleStatus}>
-                  {Number(dto?.status) === 1 ? "모집중으로" : "모집완료로"}
-                </Button>
-              </Space>
-            )}
-          </div>
-
-          <Divider style={{ margin: "12px 0" }} />
-
-          {/* 이미지 - 위쪽 그리드 */}
-          {imgList.length > 0 && (
-            <div style={{ marginBottom: 16 }}>
-              <Image.PreviewGroup>
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
-                    gap: 10,
-                  }}
-                >
-                  {imgList.map((src, idx) => (
-                    <Image
-                      key={`${src}-${idx}`}
-                      src={fileUrl(src)}
-                      alt="tester-img"
-                      style={{
-                        width: "100%",
-                        height: 140,
-                        objectFit: "cover",
-                        borderRadius: 8,
-                      }}
-                    />
-                  ))}
-                </div>
-              </Image.PreviewGroup>
-            </div>
-          )}
-
-          {/* 내용 */}
-          <div style={{ whiteSpace: "pre-wrap", lineHeight: 1.7, fontSize: 14 }}>
-            {dto?.content || "-"}
-          </div>
-
-          {/* foodid 연계 버튼 */}
-          {canOpenFood && (
-            <div style={{ marginTop: 18, textAlign: "right" }}>
-              <Button type="primary" onClick={handleOpenFood}>
-                관련 사료 상세보기
-              </Button>
-            </div>
-          )}
-
-          <Divider style={{ margin: "12px 0" }} />
-
-          {/* 수정/삭제 */}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: 12,
-              flexWrap: "wrap",
-            }}
-          >
-            <Text type="secondary" style={{ fontSize: 12 }}>
-              수정일: {updatedDate}
-            </Text>
-
-            <Space>
-              {canEdit && (
-                <Button onClick={() => onEdit?.(testerid)}>수정</Button>
-              )}
-
-              {canDelete && (
-                <Popconfirm
-                  title="삭제할까요?"
-                  okText="삭제"
-                  cancelText="취소"
-                  onConfirm={handleDelete}
-                >
-                  <Button danger loading={deleteLoading}>
-                    삭제
-                  </Button>
-                </Popconfirm>
-              )}
-            </Space>
-          </div>
-        </>
-      )}
-    </div>
-  );
-}
+export default petfoodSearchSlice.reducer;

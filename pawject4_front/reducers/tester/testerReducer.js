@@ -175,7 +175,8 @@ const testerSlice = createSlice({
       state.writeError = action.payload;
     },
 
-    // 수정-통합
+    // 수정-통합  
+    //// payload: { testerid, dto, files, keepImgIds }
     updateTesterRequest(state, action) {
       state.updateLoading = true;
       state.updateError = null;

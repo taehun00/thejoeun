@@ -48,7 +48,7 @@ import {
 } from "../../reducers/tester/testerReducer";
 
 /**
- * ✅ API 정리
+ *  API 정리
  * - GET    /tester/paged
  * - GET    /tester/search
  * - GET    /tester/{testerid}
@@ -188,20 +188,29 @@ function* createTesterUser(action) {
   }
 }
 
-// 수정 - multipart
-// payload: { testerid, dto, files?[] }
+// 수정(공통) - multipart
+// payload: { testerid, dto, files?[], keepImgIds?[] }
 function* updateTester(action) {
   try {
-    const { testerid, dto, files } = action.payload || {};
+    const { testerid, dto, files, keepImgIds } = action.payload || {};
     if (!testerid) throw new Error("testerid 누락");
     if (!dto) throw new Error("dto 누락");
 
     const formData = new FormData();
 
+    // dto
     Object.entries(dto || {}).forEach(([k, v]) => {
       if (v !== undefined && v !== null) formData.append(k, v);
     });
 
+    // 기존 이미지 유지
+    if (Array.isArray(keepImgIds) && keepImgIds.length > 0) {
+      keepImgIds.forEach((id) => {
+        if (id !== undefined && id !== null) formData.append("keepImgIds", id);
+      });
+    }
+
+    // files (새 이미지)
     if (Array.isArray(files) && files.length > 0) {
       files.forEach((f) => {
         if (f) formData.append("files", f);

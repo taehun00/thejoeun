@@ -16,7 +16,7 @@ const { Option } = Select;
  * - isEdit: boolean
  * - initialValues?: dto
  * - categoryOptions?: string[]  (관리자용)
- * - onSubmit: ({ dto, files }) => void
+ * - onSubmit: ({ dto, files, keepImgIds }) => void
  * - loading?: boolean
  */
 
@@ -53,15 +53,15 @@ export default function TesterForm({
     });
   }, [initialValues, form]);
 
-  // category watch (공지면 모집상태 비활성화)
+  // category watch (공지->모집상태 비활성화)
   const category = Form.useWatch("category", form);
 
-  // 기존 이미지(수정용)
+  // 기존 이미지(수정용) - DTO  imgList[{testerimgid,imgsrc}]
   const existingImages = useMemo(() => {
-    const arr = initialValues?.testerimg || initialValues?.testerimgList || [];
+    const arr = initialValues?.imgList || [];
     if (!Array.isArray(arr)) return [];
     return arr
-      .map((x) => (typeof x === "string" ? x : x?.imgsrc))
+      .map((x) => x?.imgsrc)
       .filter(Boolean);
   }, [initialValues]);
 
@@ -92,7 +92,14 @@ export default function TesterForm({
       .map((f) => f?.originFileObj)
       .filter(Boolean);
 
-    onSubmit?.({ dto, files });
+    // keepImgIds: 수정이면 기존 이미지 전부 유지
+    const keepImgIds = isEdit
+      ? (initialValues?.imgList || [])
+          .map((x) => x?.testerimgid)
+          .filter((x) => x !== undefined && x !== null)
+      : [];
+
+    onSubmit?.({ dto, files, keepImgIds });
   };
 
   return (
@@ -199,7 +206,7 @@ export default function TesterForm({
 
           <div style={{ marginTop: 8 }}>
             <Text type="secondary" style={{ fontSize: 12 }}>
-              ※ 새 이미지를 업로드하면 기존 이미지는 교체됩니다.
+              ※ 새 이미지를 업로드하면 기존 이미지는 추가됩니다.(유지 + 신규추가 방식)
             </Text>
           </div>
         </div>
@@ -212,11 +219,7 @@ export default function TesterForm({
         valuePropName="fileList"
         getValueFromEvent={(e) => e?.fileList}
       >
-        <Upload
-          multiple
-          listType="picture"
-          beforeUpload={() => false}
-        >
+        <Upload multiple listType="picture" beforeUpload={() => false}>
           <Button icon={<UploadOutlined />}>이미지 선택</Button>
         </Upload>
       </Form.Item>

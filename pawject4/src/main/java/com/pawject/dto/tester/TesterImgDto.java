@@ -1,7 +1,5 @@
 package com.pawject.dto.tester;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,11 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TesterUserRequestDto {
-	
-	private String category;
-	private String title;
-	private String content;
-	private List<TesterImgDto> imgList;
-	
+public class TesterImgDto {
+    private Long testerimgid;
+    private String imgsrc;
 }

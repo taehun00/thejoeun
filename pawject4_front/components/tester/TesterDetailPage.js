@@ -1,6 +1,7 @@
-// components/tester/TesterDetailRow.js
-import { useEffect, useMemo, useState } from "react";
+// components/tester/TesterDetailPage.js
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/router";
 import {
   Button,
   Space,
@@ -25,7 +26,7 @@ import {
 
 const { Title, Text } = Typography;
 
-// 카테고리 태그 
+// 카테고리 태그
 function categoryToTag(category) {
   if (category === "공지") return <Tag color="gold">공지</Tag>;
   if (category === "모집") return <Tag color="green">모집중</Tag>;
@@ -34,20 +35,15 @@ function categoryToTag(category) {
   return <Tag>{category || "-"}</Tag>;
 }
 
-export default function TesterDetailRow({
-  record, // 테이블 row record
-  onEdit, // 수정 클릭 시 이동 콜백: (testerid)=>void
-}) {
+export default function TesterDetailPage() {
+  const router = useRouter();
   const dispatch = useDispatch();
+
+  const { testerid } = router.query;
 
   const { detail, noticeLoading, statusLoading, deleteLoading } = useSelector(
     (state) => state.tester
   );
-
-  const testerid = record?.testerid;
-
-  // 현재 펼쳐진 row인지
-  const isThisOpen = detail?.testerid === testerid;
 
   // 로그인 정보
   const [loginRole, setLoginRole] = useState(null);
@@ -61,29 +57,23 @@ export default function TesterDetailRow({
 
     setLoginRole(payload?.role ?? null);
 
-    // userid 필드명 방어
     const uid = payload?.userid ?? payload?.userId ?? payload?.id ?? null;
     setLoginUserid(uid);
   }, []);
 
   const isAdmin = loginRole === "ROLE_ADMIN";
 
-  // 열릴 때 상세 호출 (한번만)
+  // 상세 호출
   useEffect(() => {
     if (!testerid) return;
-    if (!isThisOpen) return;
-    if (detail?.dto) return;
 
     dispatch(fetchTesterDetailRequest({ testerid }));
-  }, [dispatch, testerid, isThisOpen, detail?.dto]);
+  }, [dispatch, testerid]);
 
-  if (!isThisOpen) return null;
+  const dto = detail?.dto;
 
-  // 상세 dto가 있으면 그걸 우선
-  const dto = detail?.dto || record;
-
-  // 소유자 판별: dto.userid 우선, 없으면 record.userid
-  const ownerUserid = dto?.userid ?? record?.userid ?? null;
+  // 소유자 판별
+  const ownerUserid = dto?.userid ?? null;
   const isOwner = useMemo(() => {
     if (!loginUserid) return false;
     if (!ownerUserid) return false;
@@ -98,22 +88,37 @@ export default function TesterDetailRow({
 
   // 이미지 목록
   const imgList = useMemo(() => {
-    const arr = dto?.testerimg || dto?.testerimgList || dto?.imglist || [];
+    const arr = dto?.imgList || [];
     if (!Array.isArray(arr)) return [];
-    return arr
-      .map((x) => (typeof x === "string" ? x : x?.imgsrc))
-      .filter(Boolean);
+    return arr.map((x) => x?.imgsrc).filter(Boolean);
   }, [dto]);
 
   const createdDate = dto?.createdat ? String(dto.createdat).slice(0, 10) : "-";
   const updatedDate = dto?.updatedat ? String(dto.updatedat).slice(0, 10) : "-";
 
-  const handleToggleNotice = () => dispatch(toggleTesterNoticeRequest({ testerid }));
-  const handleToggleStatus = () => dispatch(toggleTesterStatusRequest({ testerid }));
-  const handleDelete = () => dispatch(deleteTesterRequest({ testerid }));
+  const handleToggleNotice = useCallback(() => {
+    dispatch(toggleTesterNoticeRequest({ testerid }));
+  }, [dispatch, testerid]);
+
+  const handleToggleStatus = useCallback(() => {
+    dispatch(toggleTesterStatusRequest({ testerid }));
+  }, [dispatch, testerid]);
+
+  const handleDelete = useCallback(() => {
+    dispatch(deleteTesterRequest({ testerid }));
+    router.push("/tester");
+  }, [dispatch, testerid, router]);
+
+  const onEdit = useCallback(() => {
+    router.push(`/tester/edit/${testerid}`);
+  }, [router, testerid]);
 
   return (
-    <div style={{ padding: "12px 10px" }}>
+    <div style={{ width: "80%", margin: "30px auto" }}>
+      <div style={{ marginBottom: 16 }}>
+        <Button onClick={() => router.push("/tester")}>목록</Button>
+      </div>
+
       {/* 로딩/에러 */}
       {detail?.loading && (
         <div style={{ textAlign: "center", padding: 20 }}>
@@ -125,15 +130,14 @@ export default function TesterDetailRow({
         <Alert type="error" message={detail.error} showIcon />
       )}
 
-      {!detail?.loading && !detail?.error && (
+      {!detail?.loading && !detail?.error && dto && (
         <>
-          {/* 제목 라인 (관리자는 카테고리 Tag 작게 붙임) */}
+          {/* 제목 라인 */}
           <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
-            {isAdmin && (
-              <div style={{ transform: "translateY(2px)" }}>
-                {categoryToTag(dto?.category)}
-              </div>
-            )}
+            <div style={{ transform: "translateY(2px)" }}>
+              {categoryToTag(dto?.category)}
+            </div>
+
             <Title level={4} style={{ marginBottom: 6 }}>
               {dto?.title || "(제목 없음)"}
             </Title>
@@ -154,8 +158,6 @@ export default function TesterDetailRow({
                 {dto?.nickname || "-"} / {createdDate} / 조회 {dto?.views ?? 0}
               </Text>
 
-              {/* 유저 화면에선 카테고리 표시 안함 */}
-              {/* 관리자 토글 상태 표시 */}
               {canAdminToggle && Number(dto?.isnotice) === 1 && <Tag color="red">상단공지</Tag>}
 
               {canAdminToggle && (
@@ -165,7 +167,6 @@ export default function TesterDetailRow({
               )}
             </div>
 
-            {/* 관리자 전용 토글 */}
             {canAdminToggle && (
               <Space>
                 <Button size="small" loading={noticeLoading} onClick={handleToggleNotice}>
@@ -181,7 +182,7 @@ export default function TesterDetailRow({
 
           <Divider style={{ margin: "12px 0" }} />
 
-          {/* ✅ 이미지: 위에 그리드 / 글 방해 X */}
+          {/* 이미지 */}
           {imgList.length > 0 && (
             <div style={{ marginBottom: 16 }}>
               <Image.PreviewGroup>
@@ -224,7 +225,7 @@ export default function TesterDetailRow({
             </Text>
 
             <Space>
-              {canEdit && <Button onClick={() => onEdit?.(testerid)}>수정</Button>}
+              {canEdit && <Button onClick={onEdit}>수정</Button>}
 
               {canDelete && (
                 <Popconfirm

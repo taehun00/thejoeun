@@ -31,7 +31,7 @@ public class Tester {
 	private Long testerid;
 	
 	@Column
-	private String category;
+	private String category;	
 	
 	@Column(nullable = false)
 	private String title;

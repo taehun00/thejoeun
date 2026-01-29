@@ -1,8 +1,8 @@
 package com.pawject.dto.tester;
 
-import com.pawject.domain.Petdisease;
+import java.util.List;
+
 import com.pawject.domain.Tester;
-import com.pawject.dto.petdisease.PetdiseaseResponseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,22 +30,34 @@ public class TesterAdminResponseDto {
     private String createdat;
     private String updatedat;
 
+    private List<TesterImgDto> imgList; 
+    
+    
     public static TesterAdminResponseDto from(Tester t){
+        List<TesterImgDto> imgList = (t.getTesterimg() == null) ? List.of()
+            : t.getTesterimg().stream()
+                .map(img -> TesterImgDto.builder()
+                    .testerimgid(img.getTesterimgid())
+                    .imgsrc(img.getImgsrc())
+                    .build())
+                .toList();
+
         return TesterAdminResponseDto.builder()
-                .testerid(t.getTesterid() == null ? null : t.getTesterid().longValue())
-                .category(t.getCategory())
-                .title(t.getTitle())
-                .content(t.getContent())
-                .userid(t.getUser() == null || t.getUser().getUserId() == null ? 0 : t.getUser().getUserId().intValue())
-                .foodid(t.getFoodid() == null ? null : t.getFoodid().intValue())
-                .status(t.getStatus())
-                .views(t.getViews())
-                .isnotice(t.getIsnotice())
-                .posttype(t.getPosttype())
-                .deleted(t.isDeleted())
-                .createdat(t.getCreatedat() == null ? null : t.getCreatedat().toString())
-                .updatedat(t.getUpdatedat() == null ? null : t.getUpdatedat().toString())
-                .build();
+            .testerid(t.getTesterid() == null ? null : t.getTesterid().longValue())
+            .category(t.getCategory())
+            .title(t.getTitle())
+            .content(t.getContent())
+            .userid(t.getUser() == null || t.getUser().getUserId() == null ? 0 : t.getUser().getUserId().intValue())
+            .foodid(t.getFoodid() == null ? null : t.getFoodid().intValue())
+            .status(t.getStatus())
+            .views(t.getViews())
+            .isnotice(t.getIsnotice())
+            .posttype(t.getPosttype())
+            .deleted(t.isDeleted())
+            .createdat(t.getCreatedat() == null ? null : t.getCreatedat().toString())
+            .updatedat(t.getUpdatedat() == null ? null : t.getUpdatedat().toString())
+            .imgList(imgList)
+            .build();
     }
 }
 /**
