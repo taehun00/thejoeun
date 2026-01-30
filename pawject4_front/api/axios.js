@@ -44,19 +44,23 @@ api.interceptors.response.use(
     const original = error.config;
     const status = error.response?.status;
 
+    if (!original || !original.url) {
+      return Promise.reject(error);
+    }
 
-    // 회원가입 / 로그인 / refresh는 재시도 안 함
+    // 회원가입 / 로그인 / refresh 는 재시도 X
     if (
-      original.url.includes("/user/signup") ||
-      original.url.includes("/user/login") ||
-      original.url.includes("/refresh")
+      original.url.includes("/api/users/signup") ||
+      original.url.includes("/api/users/login") ||
+      original.url.includes("/api/users/refresh")
     ) {
       return Promise.reject(error);
     }
 
-    // 401 → refresh token 시도
+    // 401 → refresh 시도
     if (status === 401 && !original._retry) {
       original._retry = true;
+
       try {
         const { data } = await api.post("/api/users/refresh");
         const newAccessToken = data?.accessToken;
@@ -65,14 +69,16 @@ api.interceptors.response.use(
           localStorage.setItem("accessToken", newAccessToken);
         }
 
-        // 원 요청에 새 토큰 세팅
-        original.headers = original.headers || {};
-        original.headers.Authorization = `Bearer ${newAccessToken}`;
+        original.headers = {
+          ...original.headers,
+          Authorization: `Bearer ${newAccessToken}`,
+        };
+
         return api(original);
       } catch (refreshErr) {
         if (typeof window !== "undefined") {
           localStorage.removeItem("accessToken");
-          window.location.href = "/login";
+          window.location.href = "/user/login";
         }
         return Promise.reject(refreshErr);
       }
@@ -81,5 +87,6 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
 
 export default api;
