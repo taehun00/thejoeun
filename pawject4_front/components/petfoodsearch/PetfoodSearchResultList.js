@@ -1,4 +1,4 @@
-// components/petfoodsearch/PetfoodSearchResultList.jsx
+// components/petfoodsearch/PetfoodSearchResultList.js
 import { useMemo } from "react";
 import {
   List,

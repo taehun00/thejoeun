@@ -6,6 +6,10 @@ import foodSearchReducer from "./food/foodSearchReducer";
 import authReducer from "./user/authReducer";
 import faqReducer from "./support/faqReducer";
 import csReducer from "./support/csReducer";
+import petdiseaseReducer from "./petdisease/petdiseaseReducer";
+import testerReducer from "./tester/testerReducer";
+
+
 const rootReducer = combineReducers({
   food: foodReducer,
   review: reviewReducer,
@@ -13,6 +17,8 @@ const rootReducer = combineReducers({
   auth: authReducer,
   faq: faqReducer,
   cs: csReducer,
+  petdisease: petdiseaseReducer,
+  tester: testerReducer,
 });
 
 export default rootReducer;

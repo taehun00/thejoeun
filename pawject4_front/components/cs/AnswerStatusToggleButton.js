@@ -1,4 +1,4 @@
-// components/cs/AnswerStatusToggleButton.jsx
+// components/cs/AnswerStatusToggleButton.js
 import { Button } from "antd";
 
 /**

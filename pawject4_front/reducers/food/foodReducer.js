@@ -49,6 +49,12 @@ const initialState = {
   // 공통 
   loading: false,
   error: null,
+
+
+  // 사료 이름 리스트 (select 용)
+  foodSelectList: [],
+  foodSelectLoading: false,
+  foodSelectError: null,
 };
 
 const foodSlice = createSlice({
@@ -231,6 +237,20 @@ const foodSlice = createSlice({
 
       state.ocrError = null;
     },
+
+
+    fetchFoodSelectListRequest: (state) => {
+      state.foodSelectLoading = true;
+      state.foodSelectError = null;
+    },
+    fetchFoodSelectListSuccess: (state, action) => {
+      state.foodSelectLoading = false;
+      state.foodSelectList = action.payload || [];
+    },
+    fetchFoodSelectListFailure: (state, action) => {
+      state.foodSelectLoading = false;
+      state.foodSelectError = action.payload;
+    },
   },
 });
 
@@ -272,6 +292,10 @@ export const {
   quickDeleteFoodRequest,
   quickDeleteFoodSuccess,
   quickDeleteFoodFailure,
+  
+  fetchFoodSelectListRequest,
+  fetchFoodSelectListSuccess,
+  fetchFoodSelectListFailure,
 
   resetFoodFlags,
 } = foodSlice.actions;

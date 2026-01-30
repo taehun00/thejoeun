@@ -1,4 +1,4 @@
-// components/petfoodsearch/PetfoodDetailModal.jsx
+// components/petfoodsearch/PetfoodDetailModal.js
 import { Modal, Row, Col, Typography, Divider, Spin, Alert, Tag } from "antd";
 
 const { Title, Text, Paragraph } = Typography;

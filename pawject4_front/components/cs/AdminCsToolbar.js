@@ -1,4 +1,4 @@
-// components/cs/AdminCsToolbar.jsx
+// components/cs/AdminCsToolbar.js
 import { Button, Select, Space } from "antd";
 import BoardSearchBar from "../common/BoardSearchBar";
 

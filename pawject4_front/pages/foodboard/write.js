@@ -69,10 +69,23 @@ export default function FoodWritePage() {
   const [fileList, setFileList] = useState([]);
 
   //이미지경로
-const getFoodImageUrl = (fdto) => {
-  if (!fdto?.foodimg) return null;
-  return `http://localhost:8484/uploads/${fdto.foodimg}`;
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8484";
+  const getFoodImageUrl = (fdto) => {
+  if (!fdto) return null;
+
+  if (fdto.foodimg) {
+    const imgPath = String(fdto.foodimg).includes("/")
+      ? fdto.foodimg
+      : `foodimg/${fdto.foodimg}`;
+
+    return `${API_URL}/uploads/${imgPath}`;
+  }
+
+  if (fdto.brandid) return `/foodimg/brand0${fdto.brandid}.png`;
+  return `/foodimg/default.png`;
 };
+
 
 //오류 확인
 useEffect(() => {
@@ -492,7 +505,7 @@ console.log("렌더링 isEdit =", isEdit, "foodid =", foodid);
         <Divider />
 
         <Space style={{ display: "flex", justifyContent: "flex-end" }}>
-          <Button onClick={() => router.push("/foodboard/list")}>목록보기</Button>
+          <Button onClick={() => router.push("/foodboard")}>목록보기</Button>
 
           <Button type="primary" loading={submitting} onClick={() => form.submit()}>
             {isEdit ? "사료 수정" : "사료 등록"}

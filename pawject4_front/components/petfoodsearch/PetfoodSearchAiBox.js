@@ -1,4 +1,4 @@
-// components/petfoodsearch/PetfoodSearchAiBox.jsx
+// components/petfoodsearch/PetfoodSearchAiBox.js
 import { useEffect, useMemo, useState } from "react";
 import { Card, Button, Input, Space, Typography, Alert, Divider } from "antd";
 import { RobotOutlined } from "@ant-design/icons";
@@ -22,13 +22,20 @@ export default function PetfoodSearchAiBox({
     return `${result.message}\n\n검색 버튼을 눌러 결과를 확인해 보세요.`;
   }, [result]);
 
-  // ✅ AI 결과가 와도 "자동 열림 금지"
-  // ✅ 필터 적용만 수행
-  useEffect(() => {
-    if (result?.filters) {
-      onApplyAiFilters?.(result.filters);
-    }
-  }, [result, onApplyAiFilters]);
+useEffect(() => {
+  if (!result) return;
+
+  //  AI 응답 오면 무조건 패널 열기
+  if (result?.message) {
+    setPanelOpen(true);
+  }
+
+  //filters가 있으면 필터 적용
+  if (result?.filters) {
+    onApplyAiFilters?.(result.filters);
+  }
+}, [result, onApplyAiFilters]);
+
 
   const onClickAsk = () => {
     const msg = userMessage.trim();

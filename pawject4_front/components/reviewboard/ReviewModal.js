@@ -1,4 +1,4 @@
-// components/reviewboard/ReviewModal.jsx
+// components/reviewboard/ReviewModal.js
 import { Modal, List, Rate, Typography, Spin, Alert, Empty } from "antd";
 
 const { Text } = Typography;
