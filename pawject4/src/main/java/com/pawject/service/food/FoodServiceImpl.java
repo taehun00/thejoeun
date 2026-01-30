@@ -298,6 +298,12 @@ public class FoodServiceImpl implements FoodService {
 			return fdao.foodsearchcnt(para);
 		}
 
+
+		@Override
+		public List<FoodDto> foodselectName() {
+			return fdao.foodselectName();
+		}
+
 		
 	}
 

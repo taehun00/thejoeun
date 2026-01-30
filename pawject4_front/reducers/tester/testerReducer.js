@@ -255,6 +255,20 @@ const testerSlice = createSlice({
       state.statusLoading = false;
       state.statusError = action.payload;
     },
+
+  // 작성/수정/삭제 상태 초기화
+  resetTesterWriteUpdateState(state) {
+    state.writeLoading = false;
+    state.writeError = null;
+
+    state.updateLoading = false;
+    state.updateError = null;
+
+    state.deleteLoading = false;
+    state.deleteError = null;
+  },
+  
+
   },
 });
 
@@ -308,6 +322,9 @@ export const {
   toggleTesterStatusRequest,
   toggleTesterStatusSuccess,
   toggleTesterStatusFailure,
+
+
+  resetTesterWriteUpdateState,
 } = testerSlice.actions;
 
 export default testerSlice.reducer;

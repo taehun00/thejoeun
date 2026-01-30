@@ -81,21 +81,30 @@ export default function TesterTable({
     },
 
     // 등록/수정
+    //작성일 + 수정일
     {
-      title: "등록/수정",
+      title: "등록일",
       key: "date",
-      width: 170,
+      width: 160,
       align: "center",
-      render: (_, record) => (
-        <div style={{ lineHeight: 1.2 }}>
-          <div style={{ fontSize: 12, color: "#888" }}>
-            {record?.createdat ? record.createdat.slice(0, 10) : "-"}
+      render: (_, record) => {
+        const createdat = record?.createdat || "-";
+        const updatedat = record?.updatedat;
+
+        return (
+          <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: "#555" }}>
+              {createdat}
+            </span>
+
+            {updatedat ? (
+              <span style={{ fontSize: 11, color: "#999" }}>
+                수정 {updatedat}
+              </span>
+            ) : null}
           </div>
-          <div style={{ fontSize: 12, color: "#888" }}>
-            {record?.updatedat ? record.updatedat.slice(0, 10) : "-"}
-          </div>
-        </div>
-      ),
+        );
+      },
     },
   ];
 

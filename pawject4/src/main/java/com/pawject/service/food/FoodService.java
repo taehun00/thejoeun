@@ -69,6 +69,8 @@ public interface FoodService {
 	public int foodsearchcnt(String keyword, String searchType);
 	
 	
+	//
+	public List<FoodDto> foodselectName();
 	
 
 }

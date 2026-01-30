@@ -51,6 +51,7 @@ export default function AppLayout({ children }) {
       { key: "/petfoodsearch", label: <Link href="/petfoodsearch">사료찾기</Link> },
       { key: "/reviewboard", label: <Link href="/reviewboard">사료리뷰</Link> },
       { key: "/disease", label: <Link href="/petdisease">질환정보</Link> },
+      { key: "/tester", label: <Link href="/tester">체험단</Link> },
       { key: "/faq", label: <Link href="/faq">고객센터</Link> },
     ];
 

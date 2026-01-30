@@ -10,7 +10,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update   
+      ddl-auto: update 
     properties:
       hibernate:
         format_sql: true
@@ -39,6 +39,9 @@ mybatis:
   mapper-locations: classpath:mapper/**/*.xml
   type-aliases-package: com.pawject.domain
 
+  mybatis:
+    configuration:
+      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 jwt:
   issuer: pawject
   secret: very-very-long-secret-key-at-least-32-characters
