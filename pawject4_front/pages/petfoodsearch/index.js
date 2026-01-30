@@ -1,77 +1,67 @@
-    // pages/petfoodsearch/index.js
+// pages/petfoodsearch/index.js
 import { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Alert, Spin, Row, Col } from "antd";
+import { Alert, Spin } from "antd";
 import BoardCard from "../../components/common/BoardCard";
 
-// 부품 4개
+// 부품 5개
 import PetfoodSearchFilters from "../../components/petfoodsearch/PetfoodSearchFilters";
 import PetfoodSearchAiBox from "../../components/petfoodsearch/PetfoodSearchAiBox";
 import PetfoodSearchResultList from "../../components/petfoodsearch/PetfoodSearchResultList";
 import PetfoodDetailModal from "../../components/petfoodsearch/PetfoodDetailModal";
+import ReviewModal from "../../components/reviewboard/ReviewModal";
 
-// reducer actions 
+// reducer actions
 import {
   fetchInitRequest,
   searchFilterPagingRequest,
   setFilters,
   setPstartno,
-
   foodApiRequest,
-
   openModal,
   closeModal,
 } from "../../reducers/food/foodSearchReducer";
+
+import {
+  fetchModalReviewsRequest,
+  closeModalReviews,
+} from "../../reducers/review/reviewReducer"; //리뷰
 
 export default function PetfoodSearchPage() {
   const dispatch = useDispatch();
 
   const {
-    // init
     initData,
     initLoading,
     initError,
 
-    // search result
     list,
     total,
     paging,
     loading,
     error,
 
-    // filters
     filters,
     pstartno,
 
-    // ai
     ai,
-
-    // modal
     modal,
   } = useSelector((state) => state.search);
 
-  //초기 로드
+  // 이건 최상단**
+  const reviewModal = useSelector((state) => state.review?.modal);
+
+  // 초기 로드
   useEffect(() => {
     dispatch(fetchInitRequest());
   }, [dispatch]);
 
-  /**
-   *  검색 실행
-   * - 기존 타임리프: searchPetfood() / doPetfoodSearch()
-   * - 리액트: dispatch로만 통일
-   */
+  //검색
   const runSearch = useCallback(
     ({ nextFilters, nextPstartno } = {}) => {
-      // 필터 변경 시 store 반영
-      if (nextFilters) {
-        dispatch(setFilters(nextFilters));
-      }
-
-      // 페이지 변경 시 store 반영
-      if (typeof nextPstartno === "number") {
-        dispatch(setPstartno(nextPstartno));
-      }
+      if (nextFilters) dispatch(setFilters(nextFilters));
+      if (typeof nextPstartno === "number") dispatch(setPstartno(nextPstartno));
 
       dispatch(
         searchFilterPagingRequest({
@@ -83,7 +73,6 @@ export default function PetfoodSearchPage() {
     [dispatch]
   );
 
-// 필터 변경
   const onChangeFilters = useCallback(
     (patch) => {
       dispatch(setFilters(patch));
@@ -91,11 +80,9 @@ export default function PetfoodSearchPage() {
     [dispatch]
   );
 
-    //검색 버튼
   const onClickSearch = useCallback(() => {
-
     const hasAnyValue = Object.entries(filters || {}).some(([k, v]) => {
-      if (k === "condition") return false; // 정렬은 검색조건 아님
+      if (k === "condition") return false;
       if (v === null || v === undefined) return false;
       if (typeof v === "string" && v.trim() === "") return false;
       return true;
@@ -109,7 +96,6 @@ export default function PetfoodSearchPage() {
     runSearch({ nextPstartno: 1 });
   }, [filters, runSearch]);
 
-//정렬 변경
   const onChangeCondition = useCallback(
     (condition) => {
       dispatch(setFilters({ condition: condition || null }));
@@ -118,7 +104,6 @@ export default function PetfoodSearchPage() {
     [dispatch, runSearch]
   );
 
- //페이지 이동
   const onChangePage = useCallback(
     (page) => {
       runSearch({ nextPstartno: page });
@@ -126,10 +111,17 @@ export default function PetfoodSearchPage() {
     [runSearch]
   );
 
-//상세 모달
   const onOpenModal = useCallback(
     (foodid) => {
       dispatch(openModal(foodid));
+    },
+    [dispatch]
+  );
+
+  // 리뷰모달 오픈
+  const onOpenReviewModal = useCallback(
+    (foodid) => {
+      dispatch(fetchModalReviewsRequest(foodid));
     },
     [dispatch]
   );
@@ -138,7 +130,10 @@ export default function PetfoodSearchPage() {
     dispatch(closeModal());
   }, [dispatch]);
 
-//ai 필터 요청
+  const onCloseReviewModal = useCallback(() => {
+    dispatch(closeModalReviews());
+  }, [dispatch]);
+
   const onAskAi = useCallback(
     (userMessage) => {
       dispatch(foodApiRequest({ userMessage }));
@@ -146,7 +141,6 @@ export default function PetfoodSearchPage() {
     [dispatch]
   );
 
-//결과 적용
   const onApplyAiFilters = useCallback(
     (filterPatch) => {
       if (!filterPatch) return;
@@ -155,38 +149,34 @@ export default function PetfoodSearchPage() {
     [dispatch]
   );
 
-////
   return (
-    <BoardCard title="사료 찾기">
-      {/* init  */}
-      {initLoading && (
-        <div style={{ padding: 24, textAlign: "center" }}>
-          <Spin />
-        </div>
-      )}
+    <>
+      <BoardCard title="사료 찾기">
+        {/* init */}
+        {initLoading && (
+          <div style={{ padding: 24, textAlign: "center" }}>
+            <Spin />
+          </div>
+        )}
 
-      {initError && (
-        <Alert
-          type="error"
-          showIcon
-          message="초기값 로드 실패"
-          description={String(initError)}
-          style={{ marginBottom: 12 }}
-        />
-      )}
-
-      {/* filters + ai */}
-      <Row gutter={[12, 12]}>
-        <Col xs={24} lg={16}>
-          <PetfoodSearchFilters
-            initData={initData}
-            filters={filters}
-            onChangeFilters={onChangeFilters}
-            onClickSearch={onClickSearch}
+        {initError && (
+          <Alert
+            type="error"
+            showIcon
+            message="초기값 로드 실패"
+            description={String(initError)}
+            style={{ marginBottom: 12 }}
           />
-        </Col>
+        )}
 
-        <Col xs={24} lg={8}>
+        <PetfoodSearchFilters
+          initData={initData}
+          filters={filters}
+          onChangeFilters={onChangeFilters}
+          onClickSearch={onClickSearch}
+        />
+
+        <div style={{ marginTop: 12 }}>
           <PetfoodSearchAiBox
             loading={ai?.loading}
             result={ai?.result}
@@ -195,42 +185,51 @@ export default function PetfoodSearchPage() {
             onAsk={onAskAi}
             onApplyAiFilters={onApplyAiFilters}
           />
-        </Col>
-      </Row>
+        </div>
 
-      {/* result */}
-      <div style={{ marginTop: 16 }}>
-        {error && (
-          <Alert
-            type="error"
-            showIcon
-            message="검색 실패"
-            description={String(error)}
-            style={{ marginBottom: 12 }}
+        <div style={{ marginTop: 16 }}>
+          {error && (
+            <Alert
+              type="error"
+              showIcon
+              message="검색 실패"
+              description={String(error)}
+              style={{ marginBottom: 12 }}
+            />
+          )}
+
+          <PetfoodSearchResultList
+            list={list}
+            total={total}
+            paging={paging}
+            loading={loading}
+            filters={filters}
+            pstartno={pstartno}
+            onChangeCondition={onChangeCondition}
+            onChangePage={onChangePage}
+            onOpenModal={onOpenModal}
+            onOpenReviewModal={onOpenReviewModal}
           />
-        )}
+        </div>
 
-        <PetfoodSearchResultList
-          list={list}
-          total={total}
-          paging={paging}
-          loading={loading}
-          filters={filters}
-          pstartno={pstartno}
-          onChangeCondition={onChangeCondition}
-          onChangePage={onChangePage}
-          onOpenModal={onOpenModal}
+        {/* 상세 모달 */}
+        <PetfoodDetailModal
+          open={modal?.open}
+          loading={modal?.loading}
+          dto={modal?.dto}
+          error={modal?.error}
+          onClose={onCloseModal}
         />
-      </div>
+      </BoardCard>
 
-      {/* modal */}
-      <PetfoodDetailModal
-        open={modal?.open}
-        loading={modal?.loading}
-        dto={modal?.dto}
-        error={modal?.error}
-        onClose={onCloseModal}
+      {/* 리뷰 모달은 BoardCard 밖에 */}
+      <ReviewModal
+        open={reviewModal?.open}
+        loading={reviewModal?.loading}
+        error={reviewModal?.error}
+        list={reviewModal?.list}
+        onClose={onCloseReviewModal}
       />
-    </BoardCard>
+    </>
   );
 }

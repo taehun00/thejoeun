@@ -23,6 +23,8 @@ public class UserResponseDto {
     private String mobile;
     private String provider;
     private String role;
+    
+    
     private LocalDateTime createdAt;
     
  // ★ 토큰 필드 추가

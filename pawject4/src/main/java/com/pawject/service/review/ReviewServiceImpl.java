@@ -178,7 +178,17 @@ public class ReviewServiceImpl implements ReviewService {
                 para.put("searchType", "foodname");
                 para.put("search", searchLike);
                 break;
-
+                
+            case "title":
+                para.put("searchType", "title");
+                para.put("search", searchLike);
+                break;
+                
+            case "reviewcomment":
+                para.put("searchType", "reviewcomment");
+                para.put("search", searchLike);
+                break;                
+                
             default:
                 para.put("searchType", "all");
                 para.put("search", searchLike);
@@ -220,7 +230,15 @@ public class ReviewServiceImpl implements ReviewService {
                 para.put("searchType", "foodname");
                 para.put("search", searchLike);
                 break;
-
+            case "title":
+                para.put("searchType", "title");
+                para.put("search", searchLike);
+                break;
+                
+            case "reviewcomment":
+                para.put("searchType", "reviewcomment");
+                para.put("search", searchLike);
+                break;   
             default:
                 para.put("searchType", "all");
                 para.put("search", searchLike);

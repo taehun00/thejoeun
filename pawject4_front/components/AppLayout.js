@@ -3,7 +3,11 @@ import { Layout, Menu, Drawer, Button, Grid } from "antd";
 import { MenuOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+
+//권한 판별
+import { parseJwt } from "../utils/jwt"; 
 
 const { Header, Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -14,33 +18,77 @@ export default function AppLayout({ children }) {
 
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  // 메뉴 구성 
-  const menuItems = useMemo(
-    () => [
-      { key: "/foodboard", label: <Link href="/foodboard">사료관리</Link> },
+  // redux auth (있으면 쓰고, 없어도 토큰으로 판별)
+  const { user } = useSelector((s) => s.auth);
+
+  const [isLogin, setIsLogin] = useState(false);
+  const [loginRole, setLoginRole] = useState(null);
+
+  //  로그인/권한 판별: auth.user + 토큰 혼합
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const token =
+      localStorage.getItem("accessToken") ||
+      localStorage.getItem("token") ||
+      localStorage.getItem("jwt");
+
+    const payload = token ? parseJwt(token) : null;
+    const roleFromToken = payload?.role ?? null;
+
+    // 로그인 여부
+    setIsLogin(!!user || !!token);
+
+    // role 우선순위: redux user.role > token role
+    setLoginRole(user?.role ?? roleFromToken);
+  }, [user]);
+
+  const canAdmin = loginRole === "ROLE_ADMIN" || loginRole === "ADMIN";
+
+  // 권한 분기 메뉴
+  const menuItems = useMemo(() => {
+    const items = [
+      { key: "/petfoodsearch", label: <Link href="/petfoodsearch">사료찾기</Link> },
       { key: "/reviewboard", label: <Link href="/reviewboard">사료리뷰</Link> },
-      { key: "/disease", label: <Link href="/disease">질환리스트</Link> },
+      { key: "/disease", label: <Link href="/disease">질환정보</Link> },
       { key: "/faq", label: <Link href="/faq">고객센터</Link> },
-      { key: "/user/login", label: <Link href="/user/login">로그인</Link> },
-      { key: "/user/signup", label: <Link href="/user/signup">회원가입</Link> },
-    ],
-    []
-  );
+    ];
+
+    // 관리자 전용 메뉴
+    if (canAdmin) {
+      items.push(
+        { key: "/foodboard", label: <Link href="/foodboard">사료관리</Link> },
+        { key: "/faq/admin", label: <Link href="/faq/admin">FAQ관리</Link> }
+      );
+    }
+
+    // 로그인o
+    if (!isLogin) {
+      items.push(
+        { key: "/user/login", label: <Link href="/user/login">로그인</Link> },
+        { key: "/user/signup", label: <Link href="/user/signup">회원가입</Link> }
+      );
+    } else {  //로그인x
+      items.push(
+        { key: "/mypage", label: <Link href="/mypage">마이페이지</Link> },
+        { key: "/user/logout", label: <Link href="/user/logout">로그아웃</Link> }
+      );
+    }
+
+    return items;
+  }, [isLogin, canAdmin]);
 
   // 현재 경로에 따른 active 메뉴 키
   const selectedKeys = useMemo(() => {
-    // 정확히 매칭되는 키가 있으면 그걸 선택
     const exact = menuItems.find((m) => m.key === router.pathname);
     if (exact) return [exact.key];
 
-    // /foodboard/detail/... 이런 하위 경로 처리
     const found = menuItems.find((m) => router.pathname.startsWith(m.key) && m.key !== "/");
     return found ? [found.key] : ["/"];
   }, [router.pathname, menuItems]);
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      {/* Header */}
       <Header
         style={{
           padding: "0 20px",
@@ -50,16 +98,16 @@ export default function AppLayout({ children }) {
           justifyContent: "space-between",
         }}
       >
-        {/* 로고 겸 홈버튼 */}
+        {/* 로고 */}
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <Link href="/" legacyBehavior>
+          <Link href="/mainpage" legacyBehavior>
             <a style={{ color: "#fff", fontWeight: 800, fontSize: 18, textDecoration: "none" }}>
               🐾 Petfood&health
             </a>
           </Link>
         </div>
 
-        {/* 메뉴 (PC) */}
+        {/* 메뉴 */}
         {screens.md ? (
           <Menu
             theme="dark"

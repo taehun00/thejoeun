@@ -13,12 +13,12 @@
  
   <!-- 등록 -->
   <insert id="insertCSA" parameterType="CSAnswerDto">
-	INSERT INTO CSANSWER(ANSWERID, QUESTIONID, ADMINID, CONTENT )
+	INSERT INTO CSANSWER(ANSWERID, QUESTIONID, ADMINID, ANSWERCONTENT )
 	        VALUES(CSANSWER_SEQ.NEXTVAL, #{questionid},#{adminid},#{answercontent})
   </insert>
   
   <select resultMap="CSAnswerMap" id="selectByQuestionid" parameterType="int">
-    SELECT ANSWERID, QUESTIONID, CONTENT AS answercontent, CREATEDAT
+    SELECT ANSWERID, QUESTIONID, ADMINID, ANSWERCONTENT, CREATEDAT
     FROM CSANSWER WHERE QUESTIONID = #{questionid}
   </select>
 

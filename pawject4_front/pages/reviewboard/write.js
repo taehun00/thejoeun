@@ -25,6 +25,7 @@ import {
   fetchReviewFormRequest,
   createReviewRequest,
   reviewPolishRequest,
+    resetReviewFlags,
 } from "../../reducers/review/reviewReducer";
 
 const { TextArea } = Input;
@@ -54,6 +55,12 @@ export default function ReviewWritePage() {
 
   const [files, setFiles] = useState([]);
 
+  //초기화
+  useEffect(() => {
+    dispatch(resetReviewFlags());    
+    dispatch(fetchReviewFormRequest({}));
+  }, []);
+
   // 공통 데이터
   useEffect(() => {
     dispatch(fetchReviewFormRequest({})); // GET /reviewboard/form
@@ -70,6 +77,7 @@ export default function ReviewWritePage() {
   useEffect(() => {
     if (!writeSuccess) return;
     message.success("리뷰 등록 성공");
+    dispatch(resetReviewFlags());  
     router.push("/reviewboard");
   }, [writeSuccess]);
 

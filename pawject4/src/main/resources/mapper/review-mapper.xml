@@ -143,14 +143,19 @@
                             <when test="searchType == 'pettypeid'">
                                 AND f.pettypeid = #{search}
                             </when>
-                    
+		                    <when test="searchType == 'title'">
+					            AND r.title like #{search}
+					        </when>	
                             <when test="searchType == 'reviewcomment'">
                                 AND r.reviewcomment like #{search}
                             </when>
                     
-                            <otherwise>
-								1=1
-                            </otherwise>
+					        <otherwise>
+					          AND (
+					            lower(r.title) like #{search}
+					            OR lower(r.reviewcomment) like #{search}
+					          )
+					        </otherwise>
                         </choose>
                     </where>
      
@@ -178,13 +183,17 @@
 			        <when test="searchType == 'pettypeid'">
 			            AND f.pettypeid = #{search}
 			        </when>
-			
+				    <when test="searchType == 'title'">
+			            AND r.title like #{search}
+			        </when>		
 			        <when test="searchType == 'reviewcomment'">
 			            AND r.reviewcomment like #{search}
 			        </when>
-			
 			        <otherwise>
-						1=1
+			          AND (
+			             lower(r.title) like #{search}
+			            OR lower(r.reviewcomment) like #{search}
+			          )
 			        </otherwise>
 			    </choose>
 			</where>

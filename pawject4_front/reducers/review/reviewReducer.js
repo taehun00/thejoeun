@@ -287,6 +287,10 @@ const reviewSlice = createSlice({
       state.detail.loading = false;
       state.detail.error = null;
     },
+
+
+
+
   },
 });
 
@@ -328,6 +332,7 @@ export const {
 
   openReviewDetail,
   closeReviewDetail,
+
 
   resetReviewFlags,
 } = reviewSlice.actions;

@@ -24,8 +24,8 @@
   </select>
     
   <!-- 특정 답변 조회 -->	
-  <select resultMap="FAQMap" id="selectFAQ" parameterType="int">
-	SELECT * FROM FAQ WHERE FAQID=#{value}
+  <select resultMap="FAQMap" id="selectFAQ" parameterType="Long">
+	SELECT * FROM FAQ WHERE FAQID=#{faqid}
   </select>
  
   <!-- 등록 -->

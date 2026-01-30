@@ -1,6 +1,17 @@
 // components/petfoodsearch/PetfoodSearchResultList.jsx
 import { useMemo } from "react";
-import { List, Card, Select, Rate, Typography, Button, Space, Pagination, Empty, Spin } from "antd";
+import {
+  List,
+  Card,
+  Select,
+  Rate,
+  Typography,
+  Button,
+  Space,
+  Pagination,
+  Empty,
+  Spin,
+} from "antd";
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -17,24 +28,21 @@ export default function PetfoodSearchResultList({
   onChangeCondition,
   onChangePage,
   onOpenModal,
+
+  // 리뷰 모달 열기 콜백
+  onOpenReviewModal,
 }) {
   const data = list || [];
 
-//페이징 계산
+  //페이징 계산
   const currentPage = useMemo(() => {
-    return (
-      paging?.current ||
-      paging?.pstartno ||
-      paging?.pageNo ||
-      pstartno ||
-      1
-    );
+    return paging?.current || paging?.pstartno || paging?.pageNo || pstartno || 1;
   }, [paging, pstartno]);
 
- //5개 고정
+  //5개 고정
   const pageSize = 5;
 
-//별점 표시
+  //별점 표시
   const renderRating = (avgrating) => {
     const value = Number(avgrating || 0);
     return (
@@ -45,19 +53,10 @@ export default function PetfoodSearchResultList({
     );
   };
 
-//이미지 경로
+  //이미지 경로
   const getImgSrc = (f) => {
     if (!f) return "/foodimg/default.png";
     return f.foodimg ? `/foodimg/${f.foodimg}` : `/foodimg/brand0${f.brandid}.png`;
-  };
-
-//리뷰모달
-  const openReviewPopup = (foodid) => {
-        window.open(
-        `/reviewboard?foodid=${foodid}`,
-        "detailPopup",
-        "width=900,height=700,scrollbars=yes,resizable=yes"
-        );
   };
 
   return (
@@ -65,7 +64,6 @@ export default function PetfoodSearchResultList({
       size="small"
       title="검색 결과"
       extra={
-        // 기존 conditionWrap: 결과 있을 때만 노출
         data.length > 0 ? (
           <Select
             value={filters?.condition ?? ""}
@@ -89,9 +87,7 @@ export default function PetfoodSearchResultList({
         </div>
       )}
 
-      {!loading && data.length === 0 && (
-        <Empty description="검색 결과가 없습니다." />
-      )}
+      {!loading && data.length === 0 && <Empty description="검색 결과가 없습니다." />}
 
       {!loading && data.length > 0 && (
         <>
@@ -113,7 +109,7 @@ export default function PetfoodSearchResultList({
                   <Button
                     key="review"
                     size="small"
-                    onClick={() => openReviewPopup(f.foodid)}
+                    onClick={() => onOpenReviewModal?.(f.foodid)} 
                   >
                     리뷰
                   </Button>,

@@ -13,10 +13,10 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "USERS",
-	uniqueConstraints = @UniqueConstraint(
-			name="UK_APPUSER_EMAIL_PROVIDER" ,	
-			columnNames = {"EMAIL" , "PROVIDER"}
-		)
+   uniqueConstraints = @UniqueConstraint(
+         name="UK_APPUSER_EMAIL_PROVIDER" ,   
+         columnNames = {"EMAIL" , "PROVIDER"}
+      )
 )
 @SequenceGenerator(
         name = "USER_SEQ_GENERATOR",
@@ -61,12 +61,11 @@ public class User {
     @Column(name = "GRADE", length = 50)
     private String grade;
     
-    
+
 	@PrePersist
 	void onCreate() {
 		this.createdAt = LocalDateTime.now();
 	}
-	
     public User(String email, String nickname, String password) {
         this.email = email;
         this.nickname = nickname;
@@ -88,12 +87,12 @@ public class User {
     )
     private List<Pet> pet = new ArrayList<>();
     
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Tester> tester = new ArrayList<>();
-	
-	@OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)  
-	private List<Petdisease> petdis = new ArrayList<>();
-	
-	
-	
+   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+   private List<Tester> tester = new ArrayList<>();
+   
+   @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)  
+   private List<Petdisease> petdis = new ArrayList<>();
+   
+   
+   
 }

@@ -8,7 +8,9 @@ import {
   loginRequest, loginSuccess, loginFailure,
   refreshTokenRequest, refreshTokenSuccess, refreshTokenFailure,
   logoutRequest, logout, logoutFailure,
-  updateNicknameRequest, updateNicknameSuccess, updateNicknameFailure,
+  updateMeRequest,
+  updateMeSuccess,
+  updateMeFailure,
   updateProfileImageRequest, updateProfileImageSuccess, updateProfileImageFailure,
 } from "../../reducers/user/authReducer";
 
@@ -26,7 +28,10 @@ export function* signup(action) {
     yield call(signupApi, action.payload);
     yield put(signupSuccess());
     message.success("회원가입 성공!");
-    Router.push("/login");
+    //Router.push("user/login");   // http://localhost:3000/user/user/login
+    //Router.push("/user/login");  // http://localhost:3000/user/user/login
+    //Router.push("/login");       //http://localhost:3000/user/user/login
+    Router.push("login");          // http://localhost:3000/login
   } catch (err) {
     yield put(signupFailure(err.response?.data?.error || err.message));
     message.error("회원가입 실패");
@@ -52,7 +57,7 @@ export function* login(action) {
       }
       yield put(loginSuccess({ user, accessToken }));
       message.success(`${user.nickname}님 환영합니다!`);
-      Router.push("/mypage");
+      Router.push("/mainpage");
     } else {
       yield put(loginFailure("로그인 실패"));
       message.error("아이디/비밀번호를 확인하세요.");
@@ -103,51 +108,44 @@ export function* logoutFlow(action) {
     }
     yield put(logout());
     message.success("로그아웃 완료");
-    Router.push("/login");
+    Router.push("/user/login");
   } catch (err) {
     yield put(logoutFailure(err.response?.data?.error || err.message));
   }
 }
 
-/* =========================
-   닉네임 변경 API
-========================= */
-function updateNicknameApi({ userId, nickname }) {
-  return api.patch(`/api/users/${userId}/nickname`, null, {
-    params: { nickname },
-  });
+function updateMeApi(payload) {
+  return api.put("/api/users/me", payload);
 }
 
-export function* updateNickname(action) {
+function* updateMe(action) {
   try {
-    const { data } = yield call(updateNicknameApi, action.payload);
-    yield put(updateNicknameSuccess({ user: data }));
-    message.success("닉네임 변경 완료");
+    const { data } = yield call(updateMeApi, action.payload);
+    yield put(updateMeSuccess({ user: data }));
+    message.success("내 정보 수정 완료");
   } catch (err) {
-    yield put(updateNicknameFailure(err.response?.data?.error || err.message));
-    message.error("닉네임 변경 실패");
+    yield put(updateMeFailure(err.response?.data?.error || err.message));
+    message.error("내 정보 수정 실패");
   }
 }
 
-/* =========================
-   프로필 이미지 변경 API
-========================= */
-function updateProfileImageApi({ userId, file }) {
+function updateProfileImageApi(file) {
   const formData = new FormData();
   formData.append("ufile", file);
 
-  return api.post(`/api/users/${userId}/profile-image`, formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+  return api.post("/api/users/me/profile-image", formData);
 }
 
-export function* updateProfileImage(action) {
+function* updateProfileImage(action) {
   try {
-    const { data } = yield call(updateProfileImageApi, action.payload);
+    const { file } = action.payload; // 🔥 핵심
+    const { data } = yield call(updateProfileImageApi, file);
     yield put(updateProfileImageSuccess({ user: data }));
     message.success("프로필 이미지 변경 완료");
   } catch (err) {
-    yield put(updateProfileImageFailure(err.response?.data?.error || err.message));
+    yield put(
+      updateProfileImageFailure(err.response?.data?.error || err.message)
+    );
     message.error("프로필 이미지 변경 실패");
   }
 }
@@ -161,6 +159,6 @@ export default function* authSaga() {
   yield takeLatest(loginRequest.type, login);
   yield takeLatest(refreshTokenRequest.type, refresh);
   yield takeLatest(logoutRequest.type, logoutFlow);
-  yield takeLatest(updateNicknameRequest.type, updateNickname);
+  yield takeLatest(updateMeRequest.type, updateMe);
   yield takeLatest(updateProfileImageRequest.type, updateProfileImage);
 }

@@ -1,5 +1,5 @@
 // pages/reviewboard/index.js
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { parseJwt } from "../../utils/jwt";
@@ -47,40 +47,31 @@ export default function ReviewBoardIndex() {
     deleteError,
   } = useSelector((state) => state.review);
 
-
-const [loginRole, setLoginRole] = useState(null);
-const [loginUserId, setLoginUserId] = useState(null);
+  const [loginRole, setLoginRole] = useState(null);
+  const [loginUserId, setLoginUserId] = useState(null);
 
   const [searchType, setSearchTypeUI] = useState("all");
   const [keyword, setKeywordUI] = useState("");
 
-  // 1개만 열리는 토글
   const [expandedRowKeys, setExpandedRowKeys] = useState([]);
 
-  // 수정 모달
   const [editOpen, setEditOpen] = useState(false);
   const [editReviewId, setEditReviewId] = useState(null);
 
   const isSearchMode = useMemo(() => mode === "search", [mode]);
   const pageSize = 10;
 
-    const canWrite = loginRole === "ROLE_ADMIN" || loginRole === "ROLE_MEMBER";
+  const canWrite = loginRole === "ROLE_ADMIN" || loginRole === "ROLE_MEMBER";
 
-useEffect(() => {
-  if (typeof window === "undefined") return;
+  useEffect(() => {
+    if (typeof window === "undefined") return;
 
-  const token = localStorage.getItem("accessToken");
-  const payload = token ? parseJwt(token) : null;
+    const token = localStorage.getItem("accessToken");
+    const payload = token ? parseJwt(token) : null;
 
-  // payload.subject = userid / payload.role = ROLE_XXX
-  setLoginRole(payload?.role ?? null);
-  setLoginUserId(payload?.sub ? Number(payload.sub) : null);
-}, []);
-
-
-useEffect(() => {
-  console.log("[auth debug]", { loginRole, loginUserId });
-}, [loginRole, loginUserId]);
+    setLoginRole(payload?.role ?? null);
+    setLoginUserId(payload?.sub ? Number(payload.sub) : null);
+  }, []);
 
   useEffect(() => {
     dispatch(fetchReviewsRequest({ pageNo: 1, condition }));
@@ -201,6 +192,42 @@ useEffect(() => {
     dispatch(deleteReviewRequest({ reviewid }));
   };
 
+  //  클릭 검색 콜백 3개 (columns 생성보다 먼저 선언 필수)
+  const onPetTypeFilter = useCallback(
+    (pettypeid) => {
+      const text = String(pettypeid) === "1" ? "고양이" : "강아지";
+
+      setExpandedRowKeys([]);
+      setSearchTypeUI("pettypeid");
+      setKeywordUI(text);
+
+      dispatch(searchReviewsRequest({ keyword: text, searchType: "pettypeid", pageNo: 1, condition }));
+    },
+    [dispatch, condition]
+  );
+
+  const onBrandFilter = useCallback(
+    (brandname) => {
+      setExpandedRowKeys([]);
+      setSearchTypeUI("brandname");
+      setKeywordUI(brandname);
+
+      dispatch(searchReviewsRequest({ keyword: brandname, searchType: "brandname", pageNo: 1, condition }));
+    },
+    [dispatch, condition]
+  );
+
+  const onFoodFilter = useCallback(
+    (foodname) => {
+      setExpandedRowKeys([]);
+      setSearchTypeUI("foodname");
+      setKeywordUI(foodname);
+
+      dispatch(searchReviewsRequest({ keyword: foodname, searchType: "foodname", pageNo: 1, condition }));
+    },
+    [dispatch, condition]
+  );
+
   const columns = useMemo(
     () =>
       ReviewTableColumns({
@@ -215,8 +242,23 @@ useEffect(() => {
         deleteLoading,
         loginRole,
         loginUserId,
+
+        onPetTypeFilter,
+        onBrandFilter,
+        onFoodFilter,
       }),
-    [total, pageNo, deleteLoading, loginRole, loginUserId, expandedRowKeys]
+    [
+      total,
+      pageNo,
+      pageSize,
+      deleteLoading,
+      loginRole,
+      loginUserId,
+      expandedRowKeys,
+      onPetTypeFilter,
+      onBrandFilter,
+      onFoodFilter,
+    ]
   );
 
   const searchTypeOptions = [
@@ -224,6 +266,7 @@ useEffect(() => {
     { value: "pettypeid", label: "강아지/고양이" },
     { value: "brandname", label: "브랜드명" },
     { value: "foodname", label: "사료명" },
+    { value: "title", label: "제목" },
   ];
 
   if (loading && reviews.length === 0) return <Spin tip="불러오는 중..." />;
@@ -240,7 +283,6 @@ useEffect(() => {
         ) : null
       }
     >
-      {/* 검색(가운데) + 정렬(오른쪽) */}
       <div
         style={{
           display: "flex",
@@ -271,54 +313,37 @@ useEffect(() => {
         </div>
       </div>
 
+      <BoardToggleTable
+        rowKey="reviewid"
+        columns={columns}
+        dataSource={reviews}
+        loading={loading}
+        total={total}
+        pageNo={pageNo}
+        pageSize={pageSize}
+        onChangePage={onChangePage}
+        expandedRowRender={(record) => (
+          <ReviewDetailRow
+            review={record}
+            loginRole={loginRole}
+            loginUserId={loginUserId}
+            onOpenEditModal={onOpenEditModal}
+            onDelete={onDelete}
+            deleteLoading={deleteLoading}
+          />
+        )}
+        expandedRowKeys={expandedRowKeys}
+        onExpand={(expanded, record) => {
+          setExpandedRowKeys((prev) => {
+            const key = record.reviewid;
+            if (expanded) return [...prev, key];
+            return prev.filter((k) => k !== key);
+          });
+        }}
+        expandRowByClick
+        expandIcon={() => null}
+      />
 
-{/* 토글 테이블 */}
-<BoardToggleTable
-  rowKey="reviewid"
-  columns={columns}
-  dataSource={reviews}
-  loading={loading}
-  total={total}
-  pageNo={pageNo}
-  pageSize={pageSize}
-  onChangePage={onChangePage}
-  expandedRowRender={(record) => (
-    <ReviewDetailRow
-      review={record}
-      loginRole={loginRole}
-      loginUserId={loginUserId}
-      onOpenEditModal={onOpenEditModal}
-      onDelete={onDelete}
-      deleteLoading={deleteLoading}
-    />
-  )}
-  expandedRowKeys={expandedRowKeys}
-  onExpand={(expanded, record) => {
-    setExpandedRowKeys((prev) => {
-      const key = record.reviewid;
-      if (expanded) return [...prev, key];      // 여러 개 열기
-      return prev.filter((k) => k !== key);     //  닫기
-    });
-  }}
-
-  //  버튼 없이 행 클릭으로 토글
-  expandRowByClick
-  expandIcon={() => null}
-/>
-
-{/* //  controlled toggle (1개만 열기) - 나중에 다른 게시판 적용용
-<BoardToggleTable
-  ...
-  expandedRowKeys={expandedRowKeys}
-  onExpand={(expanded, record) => {
-    setExpandedRowKeys(expanded ? [record.reviewid] : []);
-  }}
-  expandRowByClick
-  expandIcon={() => null}
-/>
-*/}
-
-      {/* 수정 모달 */}
       <ReviewEditModal
         open={editOpen}
         onClose={() => setEditOpen(false)}
