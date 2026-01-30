@@ -132,6 +132,17 @@ public class PetController {
     ) {
         Long userId = Long.valueOf(principal.getName());
 
+        String filePath = DEFAULT_PROFILE_IMAGE; // 기본 이미지 경로
+
+        // 이미지 업로드 처리
+        if (image != null && !image.isEmpty()) {
+            try {
+                filePath = utilUpload.fileUpload(image, "petimg");
+            } catch (IOException e) {
+                filePath = DEFAULT_PROFILE_IMAGE; // 실패 시 기본 이미지
+            }
+        }
+        
         PetResponseDto dto =
                 petService.updatePet(petId, userId, petRequestDto, image);
 

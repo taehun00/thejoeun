@@ -101,7 +101,7 @@ export default function AppLayout({ children }) {
       >
         {/* 로고 */}
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <Link href="/" legacyBehavior>
+          <Link href="/mainpage" legacyBehavior>
             <a style={{ color: "#fff", fontWeight: 800, fontSize: 18, textDecoration: "none" }}>
               🐾 Petfood&health
             </a>

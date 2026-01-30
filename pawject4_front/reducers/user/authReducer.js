@@ -6,6 +6,7 @@ const initialState = {
   loading: false,
   error: null,
   success: false,
+  isAuthenticated: false,
 };
 
 const authSlice = createSlice({
@@ -41,6 +42,7 @@ const authSlice = createSlice({
       state.loading = false;
       state.user = action.payload.user || null;
       state.accessToken = action.payload.accessToken || null;
+      state.isAuthenticated = true;
     },
     loginFailure: (state, action) => {
       state.loading = false;
@@ -73,25 +75,12 @@ const authSlice = createSlice({
       state.user = null;
       state.accessToken = null;
       state.success = false;
+      state.isAuthenticated = false;
     },
     logoutFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
     },
-
-    // --- 닉네임 변경 ---
-    updateNicknameRequest: (state) => {
-      state.loading = true;
-    },
-    updateNicknameSuccess: (state, action) => {
-      state.loading = false;
-      state.user = action.payload.user;
-    },
-    updateNicknameFailure: (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    },
-
     // --- 프로필 이미지 변경 ---
     updateProfileImageRequest: (state) => {
       state.loading = true;
@@ -104,6 +93,18 @@ const authSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+    updateMeRequest: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    updateMeSuccess: (state, action) => {
+      state.loading = false;
+      state.user = action.payload.user;
+    },
+    updateMeFailure: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
   },
 });
 
@@ -113,8 +114,12 @@ export const {
   loginRequest, loginSuccess, loginFailure,
   refreshTokenRequest, refreshTokenSuccess, refreshTokenFailure,
   logoutRequest, logout, logoutFailure,
-  updateNicknameRequest, updateNicknameSuccess, updateNicknameFailure,
-  updateProfileImageRequest, updateProfileImageSuccess, updateProfileImageFailure,
+  updateMeRequest,
+  updateMeSuccess,
+  updateMeFailure,
+  updateProfileImageRequest,
+  updateProfileImageSuccess,
+  updateProfileImageFailure,
 } = authSlice.actions;
 
 export default authSlice.reducer;
