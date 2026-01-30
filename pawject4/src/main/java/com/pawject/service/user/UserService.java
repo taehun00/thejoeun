@@ -35,7 +35,7 @@ public class UserService {
 
 
     private static final String DEFAULT_PROVIDER = "local";
-    private static final String DEFAULT_PROFILE_IMAGE = "uploads/default.png";
+    private static final String DEFAULT_PROFILE_IMAGE = "default.png";
 
     /* =========================
        회원가입 (프로필 이미지 포함)

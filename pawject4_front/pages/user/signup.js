@@ -80,9 +80,15 @@ export default function SignupPage() {
               </Upload>
             </Form.Item>
 
-            <Button type="primary" htmlType="submit" loading={loading}>
-              회원가입
-            </Button>
+            <div style={{ display: "flex", gap: 10 }}>
+              <Button type="default" onClick={() => window.history.back()}>
+                뒤로가기
+              </Button>
+
+              <Button type="primary" htmlType="submit" loading={loading}>
+                회원가입
+              </Button>
+            </div>
           </Form>
         )}
       </Col>
