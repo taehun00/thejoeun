@@ -7,6 +7,10 @@ import foodSearchSaga      from './food/foodSearchSaga';
 import authSaga from "./user/authSaga";
 import faqSaga from "./support/faqSaga";
 import csSaga from "./support/csSaga";
+import likeSaga from "./like/likeSaga";
+import petSaga from "./pet/petSaga";
+import adminReportSaga from "./admin/reportSaga";
+import reportSaga from "./report/reportSaga"
 import petdiseaseSaga from "./petdisease/petdiseaseSaga";
 import testerSaga from "./tester/testerSaga";
 
@@ -18,8 +22,12 @@ export default  function * rootSaga(){
     fork(authSaga), 
     fork(faqSaga),
     fork(csSaga),
+    fork(likeSaga),
+    fork(petSaga),
+    fork(adminReportSaga),
+    fork(reportSaga),
     fork(petdiseaseSaga),
     fork(testerSaga),
   ]);  
-} 
+}
 

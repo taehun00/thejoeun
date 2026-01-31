@@ -36,6 +36,7 @@ function searchFilterPagingApi(params) {
 
 // ai filter
 function foodApiApi(userMessage) {
+
   return axios.post("/petfoodsearcher/foodapi", null, {
     params: { userMessage },
   });
@@ -70,6 +71,7 @@ function cleanParams(obj) {
 
   return out;
 }
+
 
 /**
  * AI가 내려준 filters(JSON)를
@@ -155,6 +157,7 @@ function* searchFilterPaging(action) {
       ...(payload.filters || {}),
     };
 
+
     const nextPstartno =
       payload.pstartno !== undefined && payload.pstartno !== null
         ? payload.pstartno
@@ -225,6 +228,7 @@ function* openModalAndFetch(action) {
 
     const { data } = yield call(() => modalCardApi(foodid));
 
+
     // 레이스 가드
     const modal = yield select((state) => state.search?.modal);
     if (!modal?.open) return;
@@ -236,9 +240,12 @@ function* openModalAndFetch(action) {
   }
 }
 
+
 export default function* foodSearchSaga() {
   yield takeLatest(fetchInitRequest.type, fetchInit);
   yield takeLatest(searchFilterPagingRequest.type, searchFilterPaging);
   yield takeLatest(foodApiRequest.type, foodApi);
   yield takeLatest(openModal.type, openModalAndFetch);
+
 }
+

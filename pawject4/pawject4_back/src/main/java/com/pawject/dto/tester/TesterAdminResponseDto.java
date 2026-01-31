@@ -62,7 +62,6 @@ public class TesterAdminResponseDto {
         	    .build();
     }
 }
-   
 /**
  * tester 테이블 필요 컬럼
 testerid - 시퀀스 이용, 고유 번호

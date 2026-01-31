@@ -56,6 +56,9 @@ public interface ReviewDao {
 		public List<ReviewDto> reviewsearchByFoodid(int foodid);
 //		<select resultType="int" id="reviewsearchByFoodidCnt" parameterType="int">
 		public int reviewsearchByFoodidCnt(int foodid);
+		
+		
+		int deleteReviewByAdmin(Long reviewId);
 }
 
 
