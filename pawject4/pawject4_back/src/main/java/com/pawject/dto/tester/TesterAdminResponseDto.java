@@ -23,6 +23,7 @@ public class TesterAdminResponseDto {
     private Long userid;
     private String nickname;
     private Integer foodid;   //null 가능하도록 변경
+    private String foodname;
     private int status;
     private int views;
     private int isnotice;
@@ -51,6 +52,7 @@ public class TesterAdminResponseDto {
         	    .userid(t.getUser() == null || t.getUser().getUserId() == null ? 0 : t.getUser().getUserId().longValue())
         	    .nickname(t.getUser() == null ? null : t.getUser().getNickname())
         	    .foodid(t.getFoodid() == null ? null : t.getFoodid().intValue())
+        	    .foodname(null)
         	    .status(t.getStatus() == null ? 0 : t.getStatus())
         	    .views(t.getViews() == null ? 0 : t.getViews())
         	    .isnotice(t.getIsnotice() == null ? 0 : t.getIsnotice())
@@ -62,6 +64,7 @@ public class TesterAdminResponseDto {
         	    .build();
     }
 }
+   
 /**
  * tester 테이블 필요 컬럼
 testerid - 시퀀스 이용, 고유 번호

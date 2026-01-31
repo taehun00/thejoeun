@@ -6,6 +6,7 @@ import com.pawject.dto.report.AdminReportResponseDto;
 import com.pawject.repository.ReportActionRepository;
 import com.pawject.repository.ReportRepository;
 import com.pawject.repository.TesterRepository;
+import com.pawject.service.review.ReviewService;
 
 import org.springframework.transaction.annotation.Transactional; 
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class AdminReportService {
     private final ReportActionRepository reportActionRepository;
     private final ReviewDao reviewDao;
     private final TesterRepository testerRepository;
+    private final ReviewService rservice;
 
     /** 전체 조회 */
     @Transactional(readOnly = true)
@@ -94,7 +96,7 @@ public class AdminReportService {
     /** 실제 게시글 삭제 */
     private void deleteTarget(Report report) {
         if (report.getTargetType() == ReportTargetType.REVIEW) {
-            reviewDao.deleteReviewByAdmin(report.getTargetId());
+//            reviewDao.deleteReviewByAdmin(report.getTargetId());
         } else if (report.getTargetType() == ReportTargetType.TESTER) {
             testerRepository.deleteById(report.getTargetId());
         }

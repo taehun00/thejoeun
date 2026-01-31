@@ -61,15 +61,20 @@ export default function ReviewBoardIndex() {
   const isSearchMode = useMemo(() => mode === "search", [mode]);
   const pageSize = 10;
 
-  const canWrite = loginRole === "ROLE_ADMIN" || loginRole === "ROLE_MEMBER";
+const canWrite = !!loginUserId;
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
+console.log("[ReviewBoard] payload.sub:", payload?.sub);
+console.log("[ReviewBoard] loginUserId(before set):", payload?.sub ? Number(payload.sub) : null);
+console.log("[ReviewBoard] payload:", payload);
+console.log("token parts:", token?.split(".")?.length);
+console.log("payload raw:", token?.split(".")?.[1]);
     const token = localStorage.getItem("accessToken");
     const payload = token ? parseJwt(token) : null;
 
-    setLoginRole(payload?.role ?? null);
+setLoginRole(payload?.role ?? null);
     setLoginUserId(payload?.sub ? Number(payload.sub) : null);
   }, []);
 

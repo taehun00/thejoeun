@@ -17,6 +17,8 @@ api.interceptors.request.use(
 
     if (typeof window !== "undefined") {
       const accessToken = localStorage.getItem("accessToken");
+      
+
       if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`;
       }
@@ -44,6 +46,7 @@ api.interceptors.response.use(
     const original = error.config;
     const status = error.response?.status;
 
+
     if (!original || !original.url) {
       return Promise.reject(error);
     }
@@ -61,10 +64,11 @@ api.interceptors.response.use(
     if (status === 401 && !original._retry) {
       original._retry = true;
 
+
       try {
         const { data } = await api.post("/api/users/refresh");
         const newAccessToken = data?.accessToken;
-
+  
         if (typeof window !== "undefined" && newAccessToken) {
           localStorage.setItem("accessToken", newAccessToken);
         }
@@ -79,6 +83,8 @@ api.interceptors.response.use(
         if (typeof window !== "undefined") {
           localStorage.removeItem("accessToken");
           window.location.href = "/user/login";
+
+          console.log("[AXIOS] refresh FAILED -> remove accessToken & redirect", refreshErr?.response?.status);
         }
         return Promise.reject(refreshErr);
       }

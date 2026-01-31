@@ -205,7 +205,16 @@ export default function TesterForm({
             name="category"
             rules={[{ required: true, message: "카테고리를 선택하세요." }]}
           >
-            <Select placeholder="카테고리 선택" style={{ width: 200 }}>
+<Select
+  placeholder="카테고리 선택"
+  style={{ width: 200 }}
+  onChange={(v) => {
+    form.setFieldsValue({ category: v });
+
+    if (v === "모집중" || v === "모집") form.setFieldsValue({ status: 0 });
+    if (v === "모집완료") form.setFieldsValue({ status: 1 });
+  }}
+>
               {categoryOptions.map((c) => (
                 <Option key={c} value={c}>
                   {c}

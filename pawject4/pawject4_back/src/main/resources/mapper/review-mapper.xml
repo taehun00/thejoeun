@@ -265,10 +265,6 @@
 	    WHERE EMAIL = #{email}
 	</select>
 	
-	<!-- 관리자 강제 삭제 -->
-	<delete id="deleteReviewByAdmin" parameterType="long">
-	    DELETE FROM review
-	    WHERE reviewid = #{reviewId}
-	</delete>
+	
 	
 </mapper>

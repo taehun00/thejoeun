@@ -30,7 +30,7 @@ public class Tester {
 	@SequenceGenerator(name = "tester_seq", sequenceName = "TESTER_SEQ",  allocationSize = 1 )
 	private Long testerid;
 	
-	@Column
+	@Column	
 	private String category;	
 	
 	@Column(nullable = false)
