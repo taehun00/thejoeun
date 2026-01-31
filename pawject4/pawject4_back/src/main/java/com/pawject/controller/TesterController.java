@@ -56,7 +56,7 @@ public class TesterController {
 	//카테고리-관리자용
 	@GetMapping("/categories/admin")
 	public ResponseEntity<List<String>> adminCategories() {
-		return ResponseEntity.ok(List.of("공지", "모집", "모집완료"));
+		return ResponseEntity.ok(List.of("공지", "모집중", "모집완료"));
 	}
 
 	//카테고리-사용자용

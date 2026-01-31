@@ -12,6 +12,7 @@ import {
   updateFoodRequest, updateFoodSuccess, updateFoodFailure,
   deleteFoodRequest, deleteFoodSuccess, deleteFoodFailure,
   quickDeleteFoodRequest, quickDeleteFoodSuccess, quickDeleteFoodFailure,
+
    fetchFoodSelectListRequest, fetchFoodSelectListSuccess, fetchFoodSelectListFailure ,
 } from "../../reducers/food/foodReducer";
 
@@ -220,7 +221,6 @@ function* quickDeleteFood(action) {
   }
 }
 
-
 // 테스터 연동 - 사료명 리스트
 function* fetchFoodSelectListSaga() {
   try {
@@ -247,6 +247,5 @@ export default function* foodSaga() {
 
   yield takeLatest(deleteFoodRequest.type, deleteFood);
   yield takeLatest(quickDeleteFoodRequest.type, quickDeleteFood);
-
   yield takeLatest(fetchFoodSelectListRequest.type, fetchFoodSelectListSaga);
 }

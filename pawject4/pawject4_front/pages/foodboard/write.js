@@ -505,7 +505,6 @@ console.log("렌더링 isEdit =", isEdit, "foodid =", foodid);
         <Divider />
 
         <Space style={{ display: "flex", justifyContent: "flex-end" }}>
-
           <Button onClick={() => router.push("/foodboard")}>목록보기</Button>
 
           <Button type="primary" loading={submitting} onClick={() => form.submit()}>

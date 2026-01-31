@@ -6,7 +6,7 @@ const { Text } = Typography;
 // 카테고리
 function categoryToTag(category) {
   if (category === "공지") return <Tag color="gold">공지</Tag>;
-  if (category === "모집") return <Tag color="green">모집중</Tag>;
+  if (category === "모집중") return <Tag color="green">모집중</Tag>;
   if (category === "모집완료") return <Tag color="default">모집완료</Tag>;
     if (category === "후기") return <Tag color="default">후기</Tag>;
   return <Tag>{category || "-"}</Tag>;

@@ -239,7 +239,6 @@ const foodSlice = createSlice({
     },
 
 
-
     fetchFoodSelectListRequest: (state) => {
       state.foodSelectLoading = true;
       state.foodSelectError = null;

@@ -22,4 +22,5 @@ public class TesterAdminRequestDto {
     private Long userid;
 
 
+
 }

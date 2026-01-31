@@ -282,14 +282,22 @@ SELECT COUNT(*)
 </select>
 <!--모집 여부 0모집중 1모집완료 -->
 <update id="updateStatus" parameterType="Long">
-    UPDATE TESTER SET STATUS = CASE WHEN STATUS = 0 THEN 1 ELSE 0 END
+    UPDATE TESTER
+    SET
+        STATUS = CASE WHEN STATUS = 0 THEN 1 ELSE 0 END,
+        CATEGORY = CASE
+                     WHEN CATEGORY IN ('모집', '모집중') THEN '모집완료'
+                     WHEN CATEGORY = '모집완료' THEN '모집중'
+                     ELSE CATEGORY
+                   END
     WHERE TESTERID = #{testerid}
 </update>
-
 <!--모집 여부 반환-->
 <select id="selectStatus" resultType="Long">
   SELECT STATUS FROM TESTER WHERE TESTERID = #{testerid}
 </select>
+
+
 
 <!--조회수 증가-->
 <update id="updateViews" parameterType="Long">

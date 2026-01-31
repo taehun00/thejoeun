@@ -36,6 +36,7 @@ useEffect(() => {
   }
 }, [result, onApplyAiFilters]);
 
+
   const onClickAsk = () => {
     const msg = userMessage.trim();
     if (!msg) {

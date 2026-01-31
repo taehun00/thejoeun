@@ -133,7 +133,6 @@ export default function ReviewEditModal({
     },
 
     onRemove: (file) => {
-
       // 기존 이미지 삭제 -> keepImgIds에서 제거
       if (file.origin === "old") {
         setKeepImgIds((prev) => prev.filter((id) => id !== file.reviewimgid));

@@ -16,6 +16,8 @@ import {
 
 import { fileUrl } from "../../utils/fileUrl";
 import { parseJwt } from "../../utils/jwt";
+import PetfoodDetailModal from "../../components/petfoodsearch/PetfoodDetailModal";
+
 
 import {
   fetchTesterDetailRequest,
@@ -24,11 +26,16 @@ import {
   deleteTesterRequest,
 } from "../../reducers/tester/testerReducer";
 
+import {
+  openModal,
+  closeModal,
+} from "../../reducers/food/foodSearchReducer";
+
 const { Title, Text } = Typography;
 
 function categoryToTag(category) {
   if (category === "공지") return <Tag color="gold">공지</Tag>;
-  if (category === "모집") return <Tag color="green">모집중</Tag>;
+  if (category === "모집중") return <Tag color="green">모집중</Tag>;
   if (category === "모집완료") return <Tag color="default">모집완료</Tag>;
   if (category === "후기") return <Tag>후기</Tag>;
   return <Tag>{category || "-"}</Tag>;
@@ -60,6 +67,8 @@ export default function TesterDetailPage() {
   const { detail, noticeLoading, statusLoading, deleteLoading } = useSelector(
     (state) => state.tester
   );
+
+  const modal = useSelector((state) => state.search?.modal);
 
   const [loginRole, setLoginRole] = useState(null);
   const [loginUserid, setLoginUserid] = useState(null);
@@ -123,6 +132,15 @@ const canAdminToggle = isAdmin && isAdminPost;
     router.push(`/tester/edit/${testerid}`);
   }, [router, testerid]);
 
+const onOpenFoodModal = useCallback(() => {
+  if (!dto?.foodid) return;
+  dispatch(openModal(dto.foodid));
+}, [dispatch, dto?.foodid]);
+
+const onCloseFoodModal = useCallback(() => {
+  dispatch(closeModal());
+}, [dispatch]);
+
   return (
     <div style={{ width: "min(980px, 94vw)", margin: "28px auto 60px" }}>
       {/* 상단 네비 */}
@@ -132,7 +150,7 @@ const canAdminToggle = isAdmin && isAdminPost;
           justifyContent: "flex-end",
           gap: 12,
           marginBottom: 14,
-        }}
+        }}  
       >
           {/* 관리자 토글 (있으면 제목/태그 라인 다음에 붙임) */}
           {canAdminToggle && (
@@ -155,7 +173,7 @@ const canAdminToggle = isAdmin && isAdminPost;
                   type="primary" 
                   style={{ background:"#52c41a", borderColor:"#52c41a" }}
                 >
-                  {Number(dto?.status) === 1 ? "모집완료" : "모집중"}
+                  모집상태변경
                 </Button>
               </Space>
             </div>
@@ -194,21 +212,37 @@ const canAdminToggle = isAdmin && isAdminPost;
           </Title>
 
           {/* 부가정보 */}
-          <div style={{ marginTop: 10, display: "flex", gap: 10, flexWrap: "wrap" }}>
+          <div
+            style={{
+              marginTop: 10,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 10,
+              flexWrap: "wrap",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+              {canAdminToggle && Number(dto?.isnotice) === 1 && (
+                <Tag color="red">상단공지</Tag>
+              )}
 
-            {canAdminToggle && Number(dto?.isnotice) === 1 && (
-              <Tag color="red">상단공지</Tag>
-            )}
+              {canAdminToggle && (
+                <Tag color={Number(dto?.status) === 0 ? "green" : "default"}>
+                  {Number(dto?.status) === 0 ? "모집중" : "모집완료"}
+                </Tag>
+              )}
 
-            {canAdminToggle && (
-              <Tag color={Number(dto?.status) === 0 ? "green" : "default"}>
-                {Number(dto?.status) === 0 ? "모집중" : "모집완료"}
-              </Tag>
-            )}
+              <Text type="secondary">
+                {dto?.nickname || "-"} · 작성 {createdDate} · 수정 {updatedDate} · 조회 {dto?.views ?? 0}
+              </Text>
+            </div>
 
-          <Text type="secondary">
-            {dto?.nickname || "-"} · 작성 {createdDate} · 수정 {updatedDate} · 조회 {dto?.views ?? 0}
-          </Text>
+            {dto?.foodid ? (
+              <Button size="small" onClick={onOpenFoodModal}>
+                관련 사료 정보 보기
+              </Button>
+            ) : null}
           </div>
 
 
@@ -290,6 +324,16 @@ const canAdminToggle = isAdmin && isAdminPost;
           </div>
         </Card>
       )}
+
+{/* 사료 상세 모달 */}
+<PetfoodDetailModal
+  open={modal?.open}
+  loading={modal?.loading}
+  dto={modal?.dto}
+  error={modal?.error}
+  onClose={onCloseFoodModal}
+/>
+
     </div>
   );
 }

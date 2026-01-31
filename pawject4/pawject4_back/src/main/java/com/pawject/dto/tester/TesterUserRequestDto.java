@@ -17,4 +17,5 @@ public class TesterUserRequestDto {
 	private String content;
 	private List<TesterImgDto> imgList;
     private Long userid;
+    private int foodid;
 }
