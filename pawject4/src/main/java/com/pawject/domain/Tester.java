@@ -44,7 +44,7 @@ public class Tester {
 //	private Integer userid;
 	
 	@Column
-	private Integer foodid;  // 사료게시판 사료와 연관이 있을 경우
+	private Integer foodid=0;  // 사료게시판 사료와 연관이 있을 경우
 	
 	@Column
 	private Integer status=0;  //0모집중 1모집완료 - 관리자 기능
@@ -63,8 +63,9 @@ public class Tester {
 	@Column(nullable = false , name="UPDATEDAT")
 	private LocalDateTime updatedat; // 수정일시
 
-	@Column
-	private boolean deleted=false; 
+	
+	@Column(name = "DELETED", nullable = false)
+	private boolean deleted = false;   //DELETED NUMBER(1) / CHAR(1)
 	
 	@PrePersist
 	void onCreate() {

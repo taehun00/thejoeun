@@ -1,8 +1,10 @@
 // components/tester/TesterForm.js
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Form, Input, Select, Upload, Button, Space, Typography } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { fileUrl } from "../../utils/fileUrl";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchFoodSelectListRequest } from "../../reducers/food/foodReducer";
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -19,7 +21,6 @@ const { Option } = Select;
  * - onSubmit: ({ dto, files, keepImgIds }) => void
  * - loading?: boolean
  */
-
 export default function TesterForm({
   mode = "user",
   isEdit = false,
@@ -29,9 +30,50 @@ export default function TesterForm({
   loading = false,
 }) {
   const [form] = Form.useForm();
-  const isAdmin = mode === "admin";
 
-  // 초기값 세팅
+  const isAdmin = mode === "admin";
+  const isAdminPost = Number(initialValues?.posttype) === 1;
+  const showAdminFields = isAdmin && (!isEdit || isAdminPost);
+
+  const [uiFileList, setUiFileList] = useState([]);
+  const [keepImgIds, setKeepImgIds] = useState([]);
+
+  const dispatch = useDispatch();
+
+  const { foodSelectList, foodSelectLoading, foodSelectError } = useSelector(
+    (state) => state.food
+  );
+
+  const imgList = useMemo(() => {
+    const arr = initialValues?.imgList || [];
+    if (!Array.isArray(arr)) return [];
+    return arr
+      .map((x) => ({
+        testerimgid: x?.testerimgid,
+        imgsrc: x?.imgsrc,
+      }))
+      .filter((x) => x.testerimgid != null && x.imgsrc);
+  }, [initialValues]);
+
+  const foodOptions = useMemo(() => {
+    return (foodSelectList || []).map((f) => ({
+      value: Number(f.foodid),
+      label: f.foodname,
+    }));
+  }, [foodSelectList]);
+
+  useEffect(() => {
+    if (!isAdmin) return;
+    dispatch(fetchFoodSelectListRequest());
+  }, [dispatch, isAdmin]);
+
+  useEffect(() => {
+    if (!isAdmin) return;
+    console.log("foodSelectLoading =", foodSelectLoading);
+    console.log("foodSelectList =", foodSelectList);
+    if (foodSelectError) console.log("foodSelectError =", foodSelectError);
+  }, [isAdmin, foodSelectLoading, foodSelectList, foodSelectError]);
+
   useEffect(() => {
     if (!initialValues) return;
 
@@ -39,9 +81,13 @@ export default function TesterForm({
       category: initialValues.category ?? undefined,
       title: initialValues.title ?? "",
       content: initialValues.content ?? "",
-      foodid: initialValues.foodid ?? 0,
+      foodid:
+        initialValues.foodid !== undefined &&
+        initialValues.foodid !== null &&
+        Number(initialValues.foodid) > 0
+          ? Number(initialValues.foodid)
+          : undefined,
 
-      // 관리자 전용
       isnotice:
         initialValues.isnotice !== undefined && initialValues.isnotice !== null
           ? Number(initialValues.isnotice)
@@ -53,17 +99,62 @@ export default function TesterForm({
     });
   }, [initialValues, form]);
 
-  // category watch (공지->모집상태 비활성화)
+  useEffect(() => {
+    if (!isEdit) return;
+    if (!initialValues) return;
+
+    const initKeep = (initialValues?.imgList || [])
+      .map((img) => img?.testerimgid)
+      .filter((x) => x != null);
+
+    setKeepImgIds(initKeep);
+
+    const oldUiFiles = (initialValues?.imgList || [])
+      .map((img) => ({
+        uid: `old-${img.testerimgid}`,
+        name:
+          String(img.imgsrc || "").split("/").pop() ||
+          `old-${img.testerimgid}`,
+        status: "done",
+        url: fileUrl(img.imgsrc),
+
+        origin: "old",
+        testerimgid: img.testerimgid,
+      }))
+      .filter((x) => x.testerimgid != null && x.url);
+
+    setUiFileList(oldUiFiles);
+  }, [isEdit, initialValues]);
+
   const category = Form.useWatch("category", form);
 
-  // 기존 이미지(수정용) - DTO  imgList[{testerimgid,imgsrc}]
-  const existingImages = useMemo(() => {
-    const arr = initialValues?.imgList || [];
-    if (!Array.isArray(arr)) return [];
-    return arr
-      .map((x) => x?.imgsrc)
-      .filter(Boolean);
-  }, [initialValues]);
+  const uploadProps = {
+    multiple: true,
+    accept: "image/*",
+    listType: "picture-card",
+    beforeUpload: () => false,
+
+    fileList: uiFileList,
+
+    onChange: ({ fileList }) => {
+      setUiFileList(fileList);
+    },
+
+    onRemove: (file) => {
+      if (file.origin === "old") {
+        setKeepImgIds((prev) => prev.filter((id) => id !== file.testerimgid));
+      }
+      return true;
+    },
+
+    onPreview: (file) => {
+      const url =
+        file.url ||
+        (file.originFileObj ? URL.createObjectURL(file.originFileObj) : "");
+
+      if (url) window.open(url, "_blank");
+    },
+  };
 
   const handleFinish = (values) => {
     const dto = {
@@ -74,32 +165,22 @@ export default function TesterForm({
 
     if (isAdmin) {
       dto.foodid = Number(values.foodid || 0);
-
       dto.isnotice = Number(values.isnotice ?? 0);
 
-      // 공지글이면 모집상태는 의미없으니 0으로 고정(모집중)
-      if (values.category === "공지") {
-        dto.status = 0;
-      } else {
-        dto.status = Number(values.status ?? 0);
-      }
+      if (values.category === "공지") dto.status = 0;
+      else dto.status = Number(values.status ?? 0);
 
-      // 관리자 글: posttype = 1 고정
       dto.posttype = 1;
     }
 
-    const files = (values.fileList || [])
-      .map((f) => f?.originFileObj)
+    const realFiles = (uiFileList || [])
+      .filter((f) => f.origin !== "old")
+      .map((f) => f.originFileObj)
       .filter(Boolean);
 
-    // keepImgIds: 수정이면 기존 이미지 전부 유지
-    const keepImgIds = isEdit
-      ? (initialValues?.imgList || [])
-          .map((x) => x?.testerimgid)
-          .filter((x) => x !== undefined && x !== null)
-      : [];
+    const finalKeepImgIds = isEdit ? keepImgIds : [];
 
-    onSubmit?.({ dto, files, keepImgIds });
+    onSubmit?.({ dto, files: realFiles, keepImgIds: finalKeepImgIds });
   };
 
   return (
@@ -114,50 +195,28 @@ export default function TesterForm({
         foodid: 0,
         isnotice: 0,
         status: 0,
-        fileList: [],
       }}
     >
       {/* 관리자-카테고리 */}
-      {isAdmin && (
-        <Form.Item
-          label="카테고리"
-          name="category"
-          rules={[{ required: true, message: "카테고리를 선택하세요." }]}
-        >
-          <Select placeholder="카테고리 선택" style={{ width: 200 }}>
-            {categoryOptions.map((c) => (
-              <Option key={c} value={c}>
-                {c}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
-      )}
+      {showAdminFields && (
+        <Space wrap>
+          <Form.Item
+            label="카테고리"
+            name="category"
+            rules={[{ required: true, message: "카테고리를 선택하세요." }]}
+          >
+            <Select placeholder="카테고리 선택" style={{ width: 200 }}>
+              {categoryOptions.map((c) => (
+                <Option key={c} value={c}>
+                  {c}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
 
-      {/* 제목 */}
-      <Form.Item
-        label="제목"
-        name="title"
-        rules={[{ required: true, message: "제목을 입력하세요." }]}
-      >
-        <Input placeholder="제목 입력" maxLength={80} />
-      </Form.Item>
-
-      {/* 내용 */}
-      <Form.Item
-        label="내용"
-        name="content"
-        rules={[{ required: true, message: "내용을 입력하세요." }]}
-      >
-        <TextArea rows={10} placeholder="내용 입력" />
-      </Form.Item>
-
-      {/* 관리자 - 공지 여부 + 모집상태 */}
-      {isAdmin && (
-        <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
           <Form.Item label="상단공지" name="isnotice" style={{ width: 180 }}>
             <Select>
-              <Option value={0}>공지 아님</Option>
+              <Option value={0}>상단공지X</Option>
               <Option value={1}>상단공지</Option>
             </Select>
           </Form.Item>
@@ -173,59 +232,52 @@ export default function TesterForm({
               <Option value={1}>모집완료</Option>
             </Select>
           </Form.Item>
-        </div>
+
+          <Form.Item label="연관 사료(foodid)" name="foodid">
+            <Select
+              placeholder="사료 선택"
+              showSearch
+              optionFilterProp="label"
+              loading={foodSelectLoading}
+              options={foodOptions}
+              allowClear
+              style={{ width: 360 }}
+            />
+          </Form.Item>
+        </Space>
       )}
 
-      {/* 관리자- foodid */}
-      {isAdmin && (
-        <Form.Item label="연관 사료(foodid)" name="foodid">
-          <Input type="number" min={0} placeholder="없으면 0" style={{ width: 220 }} />
-        </Form.Item>
-      )}
-
-      {/* 기존 이미지 표시 (수정일 때만) */}
-      {isEdit && existingImages.length > 0 && (
-        <div style={{ marginBottom: 12 }}>
-          <Text type="secondary">기존 이미지</Text>
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 8 }}>
-            {existingImages.map((src, idx) => (
-              <img
-                key={`${src}-${idx}`}
-                src={fileUrl(src)}
-                alt="tester-old"
-                style={{
-                  width: 120,
-                  height: 90,
-                  objectFit: "cover",
-                  borderRadius: 8,
-                  border: "1px solid #eee",
-                }}
-              />
-            ))}
-          </div>
-
-          <div style={{ marginTop: 8 }}>
-            <Text type="secondary" style={{ fontSize: 12 }}>
-              ※ 새 이미지를 업로드하면 기존 이미지는 추가됩니다.(유지 + 신규추가 방식)
-            </Text>
-          </div>
-        </div>
-      )}
-
-      {/* 업로드 */}
       <Form.Item
-        label="이미지"
-        name="fileList"
-        valuePropName="fileList"
-        getValueFromEvent={(e) => e?.fileList}
+        label="제목"
+        name="title"
+        rules={[{ required: true, message: "제목을 입력하세요." }]}
       >
-        <Upload multiple listType="picture" beforeUpload={() => false}>
-          <Button icon={<UploadOutlined />}>이미지 선택</Button>
-        </Upload>
+        <Input placeholder="제목 입력" maxLength={80} />
       </Form.Item>
 
-      {/* 버튼 */}
-      <Form.Item>
+      <Form.Item
+        label="내용"
+        name="content"
+        rules={[{ required: true, message: "내용을 입력하세요." }]}
+      >
+        <TextArea rows={10} placeholder="내용 입력" />
+      </Form.Item>
+
+      <div style={{ marginBottom: 6 }}>
+        <Text strong>이미지 첨부</Text>
+        <Text type="secondary" style={{ marginLeft: 8 }}>
+          (선택)
+        </Text>
+      </div>
+
+      <Upload {...uploadProps}>
+        <div style={{ textAlign: "center" }}>
+          <UploadOutlined />
+          <div style={{ marginTop: 8 }}>추가</div>
+        </div>
+      </Upload>
+
+      <Form.Item style={{ marginTop: 18 }}>
         <Space>
           <Button type="primary" htmlType="submit" loading={loading}>
             {isEdit ? "수정" : "등록"}

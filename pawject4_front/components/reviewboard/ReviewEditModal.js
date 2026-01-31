@@ -21,10 +21,10 @@ export default function ReviewEditModal({
 }) {
   const [form] = Form.useForm();
 
-  // ✅ 기존 + 신규 모두 Upload fileList로 관리
+  //  기존 + 신규 모두 Upload fileList로 관리
   const [uiFileList, setUiFileList] = useState([]);
 
-  // ✅ 유지할 기존 이미지 id 목록 (서버로 전송)
+  // 유지할 기존 이미지 id 목록 (서버로 전송)
   const [keepImgIds, setKeepImgIds] = useState([]);
 
   // 초기 setFieldsValue 중 foodid 초기화 방지
@@ -88,11 +88,11 @@ export default function ReviewEditModal({
       reviewcomment: dto.reviewcomment ?? "",
     });
 
-    // ✅ 초기에는 기존 이미지 전부 유지
+    //  초기에는 기존 이미지 전부 유지
     const initKeep = (formData?.imglist || []).map((img) => img.reviewimgid);
     setKeepImgIds(initKeep);
 
-    // ✅ 기존 이미지를 Upload fileList 형식으로 변환 (origin=old 고정)
+    //  기존 이미지를 Upload fileList 형식으로 변환 (origin=old 고정)
     const oldUiFiles = (formData?.imglist || []).map((img) => ({
       uid: `old-${img.reviewimgid}`,
       name: img.reviewimgname,
@@ -118,7 +118,7 @@ export default function ReviewEditModal({
     form.setFieldsValue({ foodid: undefined });
   }, [pettypeid, brandid]);
 
-  // ✅ Upload: 수업 방식(onChange) + 기존이미지 keepImgIds 연동
+  // Upload: 수업 방식(onChange) + 기존이미지 keepImgIds 연동
   const uploadProps = {
     multiple: true,
     accept: "image/*",
@@ -133,7 +133,7 @@ export default function ReviewEditModal({
     },
 
     onRemove: (file) => {
-      // ✅ 기존 이미지 삭제 -> keepImgIds에서 제거
+      // 기존 이미지 삭제 -> keepImgIds에서 제거
       if (file.origin === "old") {
         setKeepImgIds((prev) => prev.filter((id) => id !== file.reviewimgid));
       }
@@ -161,7 +161,7 @@ export default function ReviewEditModal({
       reviewcomment: values.reviewcomment,
     };
 
-    // ✅ 신규 파일만 서버로 전송: originFileObj 있는 것만 = 신규
+    //  신규 파일만 서버로 전송: originFileObj 있는 것만 = 신규
     const realFiles = (uiFileList || [])
       .filter((f) => f.origin !== "old")
       .map((f) => f.originFileObj)

@@ -75,6 +75,7 @@
 		select * from food
 		</select>
 		
+		
 		<select resultMap="FoodMap"    id="foodselectwithBrand" parameterType="int">
 		select f.foodid as foodid, f.foodname as foodname, 	
 				f.brandid as brandid, 
@@ -293,6 +294,17 @@
 	        </choose>
 	    </where>
 	    order by f.foodid desc
+	</select>
+	
+	
+	<!-- 테스터 연동 -->
+	<resultMap id="FoodNameMap" type="com.pawject.dto.food.FoodDto">
+	  <id property="foodid" column="FOODID"/>
+	  <result property="foodname" column="FOODNAME"/>
+	</resultMap>
+	
+	<select resultMap="FoodNameMap" id="foodselectName" >
+	  select foodid, foodname from food order by foodname
 	</select>
 
 

@@ -15,6 +15,19 @@ import {
 
 import { parseJwt } from "../../../utils/jwt";
 
+function extractUserid(payload) {
+  if (!payload) return null;
+
+  const candidates = [payload.userid, payload.userId, payload.id, payload.sub];
+
+  for (const v of candidates) {
+    if (v === null || v === undefined) continue;
+    const s = String(v).trim();
+    if (/^\d+$/.test(s)) return Number(s);
+  }
+  return null;
+}
+
 export default function TesterEditPage() {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -22,7 +35,6 @@ export default function TesterEditPage() {
 
   const { detail, updateLoading, updateError } = useSelector((state) => state.tester);
 
-  // 로그인 정보 (role + userid)
   const [loginRole, setLoginRole] = useState(null);
   const [loginUserid, setLoginUserid] = useState(null);
 
@@ -33,14 +45,11 @@ export default function TesterEditPage() {
     const payload = token ? parseJwt(token) : null;
 
     setLoginRole(payload?.role ?? null);
-
-    const uid = payload?.userid ?? payload?.userId ?? payload?.id ?? null;
-    setLoginUserid(uid);
+    setLoginUserid(extractUserid(payload));
   }, []);
 
   const isAdmin = loginRole === "ROLE_ADMIN";
 
-  // 상세 호출
   useEffect(() => {
     if (!testerid) return;
 
@@ -53,10 +62,12 @@ export default function TesterEditPage() {
 
   const dto = detail?.dto;
 
-  // 권한
   const canEdit = useMemo(() => {
     if (!dto) return false;
-    if (isAdmin) return true;
+
+    if (isAdmin) {
+      return Number(dto?.posttype) === 1;
+    }
 
     const ownerUserid = dto?.userid ?? null;
     if (loginUserid == null || ownerUserid == null) return false;
@@ -64,10 +75,12 @@ export default function TesterEditPage() {
     return Number(loginUserid) === Number(ownerUserid);
   }, [dto, isAdmin, loginUserid]);
 
-  // mode 
-  const formMode = isAdmin ? "admin" : "user";
 
-  // 수정 성공 후 이동
+  const formMode = useMemo(() => {
+    if (!dto) return "user";
+    return Number(dto?.posttype) === 1 ? "admin" : "user";
+  }, [dto]);
+
   const didSubmitRef = useRef(false);
 
   useEffect(() => {
@@ -83,7 +96,7 @@ export default function TesterEditPage() {
     if (updateError) message.error(String(updateError));
   }, [updateError]);
 
-  const onSubmit = ({ dto: patchDto, files }) => {
+  const onSubmit = ({ dto: patchDto, files, keepImgIds }) => {
     if (!testerid) return;
 
     didSubmitRef.current = true;
@@ -93,6 +106,8 @@ export default function TesterEditPage() {
         testerid,
         dto: patchDto,
         files,
+        keepImgIds,
+        mode: formMode, //  관리자글이면 admin으로 고정됨
       })
     );
   };
@@ -102,14 +117,12 @@ export default function TesterEditPage() {
       title="체험단 수정"
       extra={<Button onClick={() => router.push("/tester")}>목록</Button>}
     >
-      {/* 로딩 */}
       {detail?.loading && (
         <div style={{ padding: 30, textAlign: "center" }}>
           <Spin />
         </div>
       )}
 
-      {/* 에러 */}
       {!detail?.loading && detail?.error && (
         <Alert
           type="error"
@@ -119,18 +132,16 @@ export default function TesterEditPage() {
         />
       )}
 
-      {/* 권한 없음 */}
       {!detail?.loading && !detail?.error && dto && !canEdit && (
         <Alert type="error" showIcon message="수정 권한이 없습니다." />
       )}
 
-      {/* 폼 */}
       {!detail?.loading && !detail?.error && dto && canEdit && (
         <TesterForm
           mode={formMode}
           isEdit={true}
           initialValues={dto}
-          categoryOptions={["공지", "모집", "모집완료"]} // user mode면 내부에서 안보임
+          categoryOptions={["공지", "모집", "모집완료"]}
           onSubmit={onSubmit}
           loading={updateLoading}
         />

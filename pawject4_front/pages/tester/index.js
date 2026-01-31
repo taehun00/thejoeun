@@ -208,7 +208,7 @@ export default function TesterIndexPage() {
         </div>
       )}
 
-      {/* ✅ Table */}
+      {/*  Table */}
       <TesterTable
         list={list || []}
         loading={loading}
@@ -216,7 +216,7 @@ export default function TesterIndexPage() {
         pageNo={currentPage}
         pageSize={20}
         onChangePage={onChangePage}
-        onOpenDetail={(testerid) => router.push(`/tester/detail/${testerid}`)} // ✅ 제목 클릭 시 이동
+        onOpenDetail={(testerid) => router.push(`/tester/detail/${testerid}`)} // 제목 클릭 시 이동
       />
 
       {/* 검색바 */}

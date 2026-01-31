@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class TesterImgDto {
     private Long testerimgid;
     private String imgsrc;
+    private Long testerid;
 }

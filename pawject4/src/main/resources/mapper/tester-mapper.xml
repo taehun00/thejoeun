@@ -4,7 +4,7 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 	<mapper namespace="com.pawject.dao.tester.TesterDao">
-	<resultMap   type="com.pawject.dto.tester.TesterAdminResponseDto" id="testerMap">
+	<resultMap   type="com.pawject.dto.tester.TesterAdminResponseDto" id="testerAdminMap">
 
 	<result property="testerid"	column="TESTERID"/>
 	<result property="category"	column="CATEGORY"/>
@@ -19,20 +19,106 @@
 	<result property="deleted"	column="DELETED"/>
 	<result property="createdat"	column="CREATEDAT"/>
 	<result property="updatedat"	column="UPDATEDAT"/>
-	
 	<result property="nickname" column="NICKNAME"/>
 	<result property="foodname" column="FOODNAME"/>
 
 	</resultMap>
 
-<!-- 단건조회-jpa -->
-<!-- 글쓰기-jpa-->
-<!-- 수정-jpa-->
-<!-- 삭제-jpa-->
+	<resultMap   type="com.pawject.dto.tester.TesterUserResponseDto" id="testerUserMap">
+
+	<result property="testerid"	column="TESTERID"/>
+	<result property="category"	column="CATEGORY"/>
+	<result property="title"	    column="TITLE"/>
+	<result property="content"	column="CONTENT"/>
+	<result property="userid"	column="USERID"/>
+	<result property="foodid"	column="FOODID"/>
+	<result property="views"		column="VIEWS"/>
+	<result property="posttype"	column="POSTTYPE"/>
+	<result property="deleted"	column="DELETED"/>
+	<result property="createdat"	column="CREATEDAT"/>
+	<result property="updatedat"	column="UPDATEDAT"/>
+	<result property="nickname" column="NICKNAME"/>
+	<result property="foodname" column="FOODNAME"/>
+
+	</resultMap>
+
+
+<!-- jpa -> mybatis 이전(이미지 이슈)-->
+<!-- 단건조회 -->
+<select id="selectTesterById" parameterType="long" resultMap="testerAdminMap">
+  SELECT
+    T.TESTERID, T.CATEGORY, T.TITLE, T.CONTENT, T.USERID, U.NICKNAME,
+    T.FOODID, F.FOODNAME,
+    T.STATUS, T.VIEWS, T.ISNOTICE, T.POSTTYPE, T.DELETED,
+    T.CREATEDAT, T.UPDATEDAT
+  FROM TESTER T
+  LEFT JOIN USERS U ON T.USERID = U.USERID
+  LEFT JOIN FOOD F ON T.FOODID = F.FOODID
+  WHERE T.TESTERID = #{testerid}
+    AND T.DELETED = 0
+</select>
+
+<!-- 글쓰기(유저) -->
+<insert id="testerUserInsert" parameterType="com.pawject.dto.tester.TesterUserRequestDto">
+  <selectKey keyProperty="testerid" resultType="long" order="BEFORE">
+    SELECT TESTER_SEQ.NEXTVAL FROM DUAL
+  </selectKey>
+
+  INSERT INTO TESTER(
+    TESTERID, USERID, CATEGORY, TITLE, CONTENT, CREATEDAT, UPDATEDAT,
+    FOODID, ISNOTICE, STATUS, POSTTYPE, DELETED, VIEWS
+  )
+  VALUES(
+    #{testerid}, #{userid}, '후기', #{title}, #{content}, SYSDATE, SYSDATE,
+    NVL(#{foodid}, 0), 0, 0, 0, 0, 0
+  )
+</insert>
+
+<!-- 글쓰기(관리자) -->
+<insert id="testerAdminInsert" parameterType="com.pawject.dto.tester.TesterAdminRequestDto">
+  <selectKey keyProperty="testerid" resultType="long" order="BEFORE">
+    SELECT TESTER_SEQ.NEXTVAL FROM DUAL
+  </selectKey>
+
+  INSERT INTO TESTER(
+    TESTERID, USERID, CATEGORY, TITLE, CONTENT, CREATEDAT, UPDATEDAT, FOODID,
+    ISNOTICE, STATUS, POSTTYPE, DELETED, VIEWS
+  )
+  VALUES(
+    #{testerid}, #{userid}, #{category}, #{title}, #{content}, SYSDATE, SYSDATE,
+    NVL(#{foodid}, 0), #{isnotice}, #{status}, 1, 0, 0
+  )
+</insert>
+
+<!-- 수정(유저) -->
+<update id="testerUserUpdate" parameterType="com.pawject.dto.tester.TesterUserRequestDto">
+	UPDATE TESTER SET TITLE=#{title}, CONTENT=#{content}, UPDATEDAT=SYSDATE
+		WHERE TESTERID=#{testerid} AND USERID = #{userid}  AND DELETED = 0
+</update>
+
+
+<!-- 수정(관리자)-->
+<update id="testerAdminUpdate" parameterType="com.pawject.dto.tester.TesterAdminResponseDto">
+	UPDATE TESTER SET TITLE=#{title}, CONTENT=#{content}, UPDATEDAT=SYSDATE, FOODID= #{foodid},
+	CATEGORY=#{category}, ISNOTICE=#{isnotice}, STATUS=#{status}
+		WHERE TESTERID=#{testerid}
+</update>
+
+
+<!-- 삭제-->
+<delete id="testerDBDeleteById" parameterType="long">
+	DELETE FROM TESTER WHERE TESTERID=#{testerid} AND USERID = #{userid}  AND DELETED = 0
+</delete>
+
+<!-- 삭제(소프트딜리트) -->
+<update id="testerDeleteById" parameterType="long">
+    UPDATE TESTER SET DELETED = 1, UPDATEDAT = SYSDATE
+    WHERE TESTERID = #{testerid} AND DELETED = 0
+</update>
 
 <!--조회 영역-->
 <!--페이징+정렬(1)-->
-<select resultMap="testerMap" id="select20Tester" parameterType="java.util.HashMap">
+<select resultMap="testerAdminMap" id="select20Tester" parameterType="java.util.HashMap">
 	SELECT * 
 	FROM(
 	    SELECT ROW_NUMBER()OVER(
@@ -61,7 +147,7 @@
 	    )
 	    AS RNUM,
 	    T.TESTERID, T.CATEGORY, T.TITLE, T.CONTENT, U.NICKNAME,
-	    T.ISNOTICE, T.STATUS, T.VIEWS, T.POSTTYPE, F.FOODNAME,
+	    T.ISNOTICE, T.STATUS, T.VIEWS, T.POSTTYPE, T.FOODID, F.FOODNAME,
 	    T.CREATEDAT, T.UPDATEDAT, T.DELETED
 	    FROM TESTER T 
 	    LEFT JOIN USERS U ON T.USERID = U.USERID
@@ -92,7 +178,7 @@
     </if>
 </select>
 
-<select resultMap="testerMap" id="searchTester" parameterType="java.util.HashMap">
+<select resultMap="testerAdminMap" id="searchTester" parameterType="java.util.HashMap">
 SELECT *
 FROM (
     SELECT ROW_NUMBER() OVER (

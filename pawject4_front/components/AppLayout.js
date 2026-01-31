@@ -51,6 +51,7 @@ export default function AppLayout({ children }) {
       { key: "/petfoodsearch", label: <Link href="/petfoodsearch">사료찾기</Link> },
       { key: "/reviewboard", label: <Link href="/reviewboard">사료리뷰</Link> },
       { key: "/disease", label: <Link href="/petdisease">질환정보</Link> },
+      { key: "/tester", label: <Link href="/tester">체험단</Link> },
       { key: "/faq", label: <Link href="/faq">고객센터</Link> },
     ];
 
@@ -100,7 +101,7 @@ export default function AppLayout({ children }) {
       >
         {/* 로고 */}
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <Link href="/" legacyBehavior>
+          <Link href="/mainpage" legacyBehavior>
             <a style={{ color: "#fff", fontWeight: 800, fontSize: 18, textDecoration: "none" }}>
               🐾 Petfood&health
             </a>

@@ -10,8 +10,8 @@ import {
   Typography,
   Tag,
   Popconfirm,
-  Divider,
   Image,
+  Card,
 } from "antd";
 
 import { fileUrl } from "../../utils/fileUrl";
@@ -26,7 +26,6 @@ import {
 
 const { Title, Text } = Typography;
 
-// 카테고리 태그
 function categoryToTag(category) {
   if (category === "공지") return <Tag color="gold">공지</Tag>;
   if (category === "모집") return <Tag color="green">모집중</Tag>;
@@ -35,17 +34,33 @@ function categoryToTag(category) {
   return <Tag>{category || "-"}</Tag>;
 }
 
+function extractUserid(payload) {
+  if (!payload) return null;
+
+  const candidates = [
+    payload.userid,
+    payload.userId,
+    payload.id,
+    payload.sub,
+  ];
+
+  for (const v of candidates) {
+    if (v === null || v === undefined) continue;
+    const s = String(v).trim();
+    if (/^\d+$/.test(s)) return Number(s);
+  }
+  return null;
+}
+
 export default function TesterDetailPage() {
   const router = useRouter();
   const dispatch = useDispatch();
-
   const { testerid } = router.query;
 
   const { detail, noticeLoading, statusLoading, deleteLoading } = useSelector(
     (state) => state.tester
   );
 
-  // 로그인 정보
   const [loginRole, setLoginRole] = useState(null);
   const [loginUserid, setLoginUserid] = useState(null);
 
@@ -55,38 +70,33 @@ export default function TesterDetailPage() {
     const token = localStorage.getItem("accessToken");
     const payload = token ? parseJwt(token) : null;
 
-    setLoginRole(payload?.role ?? null);
-
-    const uid = payload?.userid ?? payload?.userId ?? payload?.id ?? null;
-    setLoginUserid(uid);
+    setLoginRole(payload?.role ?? payload?.auth ?? payload?.authority ?? null);
+    setLoginUserid(extractUserid(payload));
   }, []);
 
   const isAdmin = loginRole === "ROLE_ADMIN";
 
-  // 상세 호출
   useEffect(() => {
     if (!testerid) return;
-
     dispatch(fetchTesterDetailRequest({ testerid }));
   }, [dispatch, testerid]);
 
   const dto = detail?.dto;
 
-  // 소유자 판별
   const ownerUserid = dto?.userid ?? null;
+
   const isOwner = useMemo(() => {
-    if (!loginUserid) return false;
-    if (!ownerUserid) return false;
+    if (loginUserid === null || loginUserid === undefined) return false;
+    if (ownerUserid === null || ownerUserid === undefined) return false;
     return Number(loginUserid) === Number(ownerUserid);
   }, [loginUserid, ownerUserid]);
 
-  const canEdit = isAdmin || isOwner;
-  const canDelete = isAdmin || isOwner;
+const isAdminPost = Number(dto?.posttype) === 1; // 운영글 여부
+const canEdit = (isAdmin && isAdminPost) || isOwner;
+const canDelete = isAdmin || isOwner;
 
-  // 관리자 토글 버튼 노출 조건
-  const canAdminToggle = isAdmin && Number(dto?.posttype) === 1;
+const canAdminToggle = isAdmin && isAdminPost;
 
-  // 이미지 목록
   const imgList = useMemo(() => {
     const arr = dto?.imgList || [];
     if (!Array.isArray(arr)) return [];
@@ -97,11 +107,11 @@ export default function TesterDetailPage() {
   const updatedDate = dto?.updatedat ? String(dto.updatedat).slice(0, 10) : "-";
 
   const handleToggleNotice = useCallback(() => {
-    dispatch(toggleTesterNoticeRequest({ testerid }));
+    dispatch(toggleTesterNoticeRequest({ testerid, mode: "admin" }));   
   }, [dispatch, testerid]);
 
   const handleToggleStatus = useCallback(() => {
-    dispatch(toggleTesterStatusRequest({ testerid }));
+    dispatch(toggleTesterStatusRequest({ testerid, mode: "admin" }));   
   }, [dispatch, testerid]);
 
   const handleDelete = useCallback(() => {
@@ -114,16 +124,56 @@ export default function TesterDetailPage() {
   }, [router, testerid]);
 
   return (
-    <div style={{ width: "80%", margin: "30px auto" }}>
-      <div style={{ marginBottom: 16 }}>
-        <Button onClick={() => router.push("/tester")}>목록</Button>
+    <div style={{ width: "min(980px, 94vw)", margin: "28px auto 60px" }}>
+      {/* 상단 네비 */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          gap: 12,
+          marginBottom: 14,
+        }}
+      >
+          {/* 관리자 토글 (있으면 제목/태그 라인 다음에 붙임) */}
+          {canAdminToggle && (
+            <div style={{ marginTop: 10 }}>
+              <Space>
+                <Button
+                  size="small"
+                  loading={noticeLoading}
+                  onClick={handleToggleNotice}
+                  type="primary" 
+                  style={{ background:"#fa8c16", borderColor:"#fa8c16" }}
+                >
+                  {Number(dto?.isnotice) === 1 ? "공지내림" : "공지올림"}
+                </Button>
+
+                <Button
+                  size="small"
+                  loading={statusLoading}
+                  onClick={handleToggleStatus}
+                  type="primary" 
+                  style={{ background:"#52c41a", borderColor:"#52c41a" }}
+                >
+                  {Number(dto?.status) === 1 ? "모집완료" : "모집중"}
+                </Button>
+              </Space>
+            </div>
+          )}
+
+                  <Button onClick={() => router.push("/tester")}>목록</Button>
+
+
+
+
       </div>
 
-      {/* 로딩/에러 */}
       {detail?.loading && (
-        <div style={{ textAlign: "center", padding: 20 }}>
-          <Spin />
-        </div>
+        <Card style={{ borderRadius: 14 }}>
+          <div style={{ textAlign: "center", padding: 24 }}>
+            <Spin />
+          </div>
+        </Card>
       )}
 
       {!detail?.loading && detail?.error && (
@@ -131,102 +181,99 @@ export default function TesterDetailPage() {
       )}
 
       {!detail?.loading && !detail?.error && dto && (
-        <>
-          {/* 제목 라인 */}
-          <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
-            <div style={{ transform: "translateY(2px)" }}>
-              {categoryToTag(dto?.category)}
-            </div>
+        <Card
+          style={{
+            borderRadius: 16,
+            boxShadow: "0 4px 18px rgba(0,0,0,0.06)",
+          }}
+          bodyStyle={{ padding: 22 }}
+        >
+          {/* 제목 */}
+          <Title level={3} style={{ margin: 0, lineHeight: 1.25 }}>
+            {categoryToTag(dto?.category)} {dto?.title || "(제목 없음)"}
+          </Title>
 
-            <Title level={4} style={{ marginBottom: 6 }}>
-              {dto?.title || "(제목 없음)"}
-            </Title>
+          {/* 부가정보 */}
+          <div style={{ marginTop: 10, display: "flex", gap: 10, flexWrap: "wrap" }}>
+
+            {canAdminToggle && Number(dto?.isnotice) === 1 && (
+              <Tag color="red">상단공지</Tag>
+            )}
+
+            {canAdminToggle && (
+              <Tag color={Number(dto?.status) === 0 ? "green" : "default"}>
+                {Number(dto?.status) === 0 ? "모집중" : "모집완료"}
+              </Tag>
+            )}
+
+          <Text type="secondary">
+            {dto?.nickname || "-"} · 작성 {createdDate} · 수정 {updatedDate} · 조회 {dto?.views ?? 0}
+          </Text>
           </div>
 
-          {/* 작성정보 + 관리자 토글 */}
+
+          {/*  내용 */}
           <div
             style={{
+              marginTop: 16,
+              padding: "16px 16px",
+              borderRadius: 14,
+              background: "#fafafa",
+              border: "1px solid #f0f0f0",
+            }}
+          >
+            {imgList.length > 0 && (
+              <div style={{ marginBottom: 14 }}>
+                <Image.PreviewGroup>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
+                      gap: 10,
+                    }}
+                  >
+                    {imgList.map((src, idx) => (
+                      <Image
+                        key={`${src}-${idx}`}
+                        src={fileUrl(src)}
+                        alt="tester-img"
+                        style={{
+                          width: "100%",
+                          height: 140,
+                          objectFit: "cover",
+                          borderRadius: 10,
+                        }}
+                      />
+                    ))}
+                  </div>
+                </Image.PreviewGroup>
+              </div>
+            )}
+
+            <div
+              style={{
+                minHeight: 180,
+                whiteSpace: "pre-wrap",
+                lineHeight: 1.8,
+                fontSize: 14,
+              }}
+            >
+              {dto?.content || "-"}
+            </div>
+          </div>
+
+          {/* 하단 (버튼) */}
+          <div
+            style={{
+              marginTop: 14,
               display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: 12,
+              justifyContent: "flex-end",
+              gap: 10,
               flexWrap: "wrap",
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-              <Text type="secondary">
-                {dto?.nickname || "-"} / {createdDate} / 조회 {dto?.views ?? 0}
-              </Text>
-
-              {canAdminToggle && Number(dto?.isnotice) === 1 && <Tag color="red">상단공지</Tag>}
-
-              {canAdminToggle && (
-                <Tag color={Number(dto?.status) === 0 ? "green" : "default"}>
-                  {Number(dto?.status) === 0 ? "모집중" : "모집완료"}
-                </Tag>
-              )}
-            </div>
-
-            {canAdminToggle && (
-              <Space>
-                <Button size="small" loading={noticeLoading} onClick={handleToggleNotice}>
-                  {Number(dto?.isnotice) === 1 ? "공지내림" : "공지올림"}
-                </Button>
-
-                <Button size="small" loading={statusLoading} onClick={handleToggleStatus}>
-                  {Number(dto?.status) === 1 ? "모집중으로" : "모집완료로"}
-                </Button>
-              </Space>
-            )}
-          </div>
-
-          <Divider style={{ margin: "12px 0" }} />
-
-          {/* 이미지 */}
-          {imgList.length > 0 && (
-            <div style={{ marginBottom: 16 }}>
-              <Image.PreviewGroup>
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(170px, 1fr))",
-                    gap: 10,
-                  }}
-                >
-                  {imgList.map((src, idx) => (
-                    <Image
-                      key={`${src}-${idx}`}
-                      src={fileUrl(src)}
-                      alt="tester-img"
-                      style={{
-                        width: "100%",
-                        height: 150,
-                        objectFit: "cover",
-                        borderRadius: 10,
-                      }}
-                    />
-                  ))}
-                </div>
-              </Image.PreviewGroup>
-            </div>
-          )}
-
-          {/* 내용 */}
-          <div style={{ whiteSpace: "pre-wrap", lineHeight: 1.7, fontSize: 14 }}>
-            {dto?.content || "-"}
-          </div>
-
-          <Divider style={{ margin: "12px 0" }} />
-
-          {/* 수정/삭제 */}
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <Text type="secondary" style={{ fontSize: 12 }}>
-              수정일: {updatedDate}
-            </Text>
-
             <Space>
               {canEdit && <Button onClick={onEdit}>수정</Button>}
-
               {canDelete && (
                 <Popconfirm
                   title="삭제할까요?"
@@ -241,7 +288,7 @@ export default function TesterDetailPage() {
               )}
             </Space>
           </div>
-        </>
+        </Card>
       )}
     </div>
   );

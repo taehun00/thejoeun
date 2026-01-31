@@ -20,7 +20,8 @@ public class TesterUserResponseDto {
     private String category;
     private String title;
     private String content;
-    private int userid;
+    private Long userid;
+    private String nickname;
     private Integer foodid;   //null 가능하도록 변경
     private int views;
     private boolean deleted;
@@ -44,7 +45,8 @@ public class TesterUserResponseDto {
             .category(t.getCategory())
             .title(t.getTitle())
             .content(t.getContent())
-            .userid(t.getUser() == null || t.getUser().getUserId() == null ? 0 : t.getUser().getUserId().intValue())
+            .userid(t.getUser() == null || t.getUser().getUserId() == null ? 0 : t.getUser().getUserId().longValue())
+            .nickname(t.getUser() == null ? null : t.getUser().getNickname())
             .foodid(t.getFoodid() == null ? null : t.getFoodid().intValue())
             .views(t.getViews())
             .deleted(t.isDeleted())

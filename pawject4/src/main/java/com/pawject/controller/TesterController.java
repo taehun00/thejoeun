@@ -22,10 +22,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.pawject.dto.food.FoodDto;
 import com.pawject.dto.tester.TesterAdminRequestDto;
 import com.pawject.dto.tester.TesterAdminResponseDto;
 import com.pawject.dto.tester.TesterUserRequestDto;
-import com.pawject.dto.tester.TesterUserResponseDto;
+import com.pawject.service.food.FoodService;
 import com.pawject.service.tester.TesterService;
 import com.pawject.service.user.AuthUserJwtService;
 import com.pawject.util.UtilPaging;
@@ -40,14 +41,16 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/tester")
 @RequiredArgsConstructor
 public class TesterController {
-	private final AuthUserJwtService authUserJwtService;  
+
+	private final AuthUserJwtService authUserJwtService;
 	private final TesterService service;
+	private final FoodService fservice;
 
 	@Operation(summary = "게시글 단건 조회 (공개)")
 	@GetMapping("/{testerid}")
 	public ResponseEntity<TesterAdminResponseDto> getTester(
 			@PathVariable("testerid") Long testerid) {
-		return ResponseEntity.ok(service.findById(testerid));
+		return ResponseEntity.ok(service.selectTesterById(testerid));
 	}
 
 	//카테고리-관리자용
@@ -62,67 +65,86 @@ public class TesterController {
 		return ResponseEntity.ok(List.of("후기"));
 	}
 
+	//사료이름리스트
+	@GetMapping("/food/selectfoodlist")
+	public ResponseEntity<List<FoodDto>> foodSelectList() {
+	    return ResponseEntity.ok(fservice.foodselectName());
+	}
+	
+	
 	@Operation(summary = "게시글 작성-관리자 (JWT 인증 필요)")
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	@PostMapping(value = "/admin", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<TesterAdminResponseDto> createTesterAdmin(
-			Authentication authentication,
-			@ModelAttribute TesterAdminRequestDto dto,
-			@Parameter(description = "업로드할 이미지 파일")
-			@RequestPart(name = "files", required = false) List<MultipartFile> files) {
+	public ResponseEntity<Integer> createTesterAdmin(
+	        Authentication authentication,
+	        @ModelAttribute TesterAdminRequestDto dto,
+	        @RequestPart(name = "files", required = false) List<MultipartFile> files) {
 
-		Long userid = authUserJwtService.getCurrentUserId(authentication);
-		return ResponseEntity.ok(service.adminWrite(userid, dto, files));
+	    Long userid = authUserJwtService.getCurrentUserId(authentication);
+	    dto.setUserid(userid);
+
+	    return ResponseEntity.ok(service.testerAdminInsert(dto, files));
 	}
-
 	@Operation(summary = "게시글 작성-유저 (JWT 인증 필요)")
 	@PreAuthorize("isAuthenticated()")
 	@PostMapping(value = "/user", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<TesterUserResponseDto> createTesterUser(
+	public ResponseEntity<Integer> createTesterUser(
 			Authentication authentication,
 			@ModelAttribute TesterUserRequestDto dto,
 			@Parameter(description = "업로드할 이미지 파일")
 			@RequestPart(name = "files", required = false) List<MultipartFile> files) {
 
 		Long userid = authUserJwtService.getCurrentUserId(authentication);
-		return ResponseEntity.ok(service.userWrite(userid, dto, files));
+		dto.setUserid(userid);
+
+		return ResponseEntity.ok(service.testerUserInsert(dto, files));
 	}
 
-	@Operation(summary = "게시글 수정 (JWT 인증 필요)")
-	@PutMapping(value = "/{testerid}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<?> update(
+	// 수정(관리자)
+	@Operation(summary = "게시글 수정-관리자 (JWT 인증 필요)")
+	@PutMapping(value = "/admin/{testerid}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+	public ResponseEntity<Integer> updateAdmin(
 			Authentication authentication,
 			@PathVariable("testerid") Long testerid,
-			@ModelAttribute TesterAdminRequestDto dto,
+			@ModelAttribute TesterAdminResponseDto dto,
 			@RequestPart(name ="files", required = false) List<MultipartFile> files,
-			@RequestParam(required = false) List<Long> keepImgIds //유지할 이미지
+			@RequestParam(name="keepImgIds", required = false) List<Long> keepImgIds
 	) {
-		Long userid = authUserJwtService.getCurrentUserId(authentication);
-		boolean isAdmin = authUserJwtService.isAdmin(authentication);
-
-		if (isAdmin) {
-			return ResponseEntity.ok(service.adminUpdate(userid, testerid, dto, files, keepImgIds));
-		} else {
-			TesterUserRequestDto userDto = new TesterUserRequestDto();
-			userDto.setTitle(dto.getTitle());
-			userDto.setContent(dto.getContent());
-			return ResponseEntity.ok(service.userUpdate(userid, testerid, userDto, files, keepImgIds));
-		}
+		dto.setTesterid(testerid);
+		return ResponseEntity.ok(service.testerAdminUpdate(dto, files, keepImgIds));
 	}
 
-	@Operation(summary = "게시글 삭제 (JWT 인증 필요)")
+	//유저수정
+	@PutMapping(value = "/user/{testerid}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<Integer> updateUser(
+	        Authentication authentication,
+	        @PathVariable("testerid") Long testerid,
+	        @ModelAttribute TesterUserRequestDto dto,
+	        @RequestPart(name ="files", required = false) List<MultipartFile> files,
+	        @RequestParam(name="keepImgIds", required = false) List<Long> keepImgIds
+	) {
+		System.out.println("### update dto.testerid=" + dto.getTesterid() + ", dto.userid=" + dto.getUserid());
+		
+	    Long userid = authUserJwtService.getCurrentUserId(authentication); 
+	    dto.setUserid(userid);
+	    dto.setTesterid(testerid);
+
+	    return ResponseEntity.ok(service.testerUserUpdate(dto, files, keepImgIds));
+	}
+	
+//삭제(공용)
 	@DeleteMapping("/{testerid}")
-	public ResponseEntity<Void> deletePost(
-			Authentication authentication,
-			@PathVariable("testerid") Long testerid) {
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<Integer> deletePost(
+	        Authentication authentication,
+	        @PathVariable("testerid") Long testerid) {
 
-		Long userid = authUserJwtService.getCurrentUserId(authentication);
-		service.delete(testerid, userid);
-		return ResponseEntity.noContent().build();
+	    Long userid = authUserJwtService.getCurrentUserId(authentication);
+	    return ResponseEntity.ok(service.testerDeleteById(testerid, authentication));
 	}
 
-	///mybatis
 	@Operation(summary = "체험단 페이징")
 	@GetMapping("/paged")
 	@ResponseBody
@@ -167,16 +189,16 @@ public class TesterController {
 	}
 
 	@Operation(summary = "공지전환-관리자전용")
-	@PreAuthorize("hasAuthority(	'ROLE_ADMIN')")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	@PatchMapping("/{testerid}/notice")
-	public ResponseEntity<Integer> updateNotice(@PathVariable Long testerid) {
-		return ResponseEntity.ok(service.updateIsnotice(testerid));
+	public ResponseEntity<Long> updateNotice(@PathVariable("testerid") Long testerid) {
+	    return ResponseEntity.ok(service.updateIsnotice(testerid));
 	}
 
 	@Operation(summary = "모집전환-관리자전용")
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	@PatchMapping("/{testerid}/status")
-	public ResponseEntity<Integer> updateStatus(@PathVariable Long testerid) {
-		return ResponseEntity.ok(service.updateStatus(testerid));
+	public ResponseEntity<Long> updateStatus(@PathVariable("testerid") Long testerid) {
+	    return ResponseEntity.ok(service.updateStatus(testerid));
 	}
 }

@@ -1,7 +1,7 @@
 // sagas/tester/testerSaga.js
 import { call, put, takeLatest } from "redux-saga/effects";
 import axios from "../../api/axios";
-
+import { parseJwt } from "../../utils/jwt";
 import {
   // list
   fetchTesterListRequest,
@@ -45,6 +45,9 @@ import {
   toggleTesterStatusRequest,
   toggleTesterStatusSuccess,
   toggleTesterStatusFailure,
+
+
+    resetTesterWriteUpdateState,
 } from "../../reducers/tester/testerReducer";
 
 /**
@@ -152,6 +155,7 @@ function* createTesterAdmin(action) {
     );
 
     yield put(createTesterAdminSuccess(data));
+    yield put(resetTesterWriteUpdateState());
   } catch (err) {
     yield put(createTesterAdminFailure(err.response?.data?.message || err.message));
   }
@@ -183,52 +187,55 @@ function* createTesterUser(action) {
     );
 
     yield put(createTesterUserSuccess(data));
+    yield put(resetTesterWriteUpdateState());
   } catch (err) {
     yield put(createTesterUserFailure(err.response?.data?.message || err.message));
   }
 }
 
+
 // 수정(공통) - multipart
-// payload: { testerid, dto, files?[], keepImgIds?[] }
 function* updateTester(action) {
   try {
-    const { testerid, dto, files, keepImgIds } = action.payload || {};
+    const { testerid, dto, files, keepImgIds, mode } = action.payload || {};
     if (!testerid) throw new Error("testerid 누락");
     if (!dto) throw new Error("dto 누락");
 
     const formData = new FormData();
 
-    // dto
     Object.entries(dto || {}).forEach(([k, v]) => {
       if (v !== undefined && v !== null) formData.append(k, v);
     });
 
-    // 기존 이미지 유지
     if (Array.isArray(keepImgIds) && keepImgIds.length > 0) {
       keepImgIds.forEach((id) => {
         if (id !== undefined && id !== null) formData.append("keepImgIds", id);
       });
     }
 
-    // files (새 이미지)
     if (Array.isArray(files) && files.length > 0) {
       files.forEach((f) => {
         if (f) formData.append("files", f);
       });
     }
 
+
+    const url = mode === "admin"
+      ? `/tester/admin/${testerid}`
+      : `/tester/user/${testerid}`;
+
     const { data } = yield call(() =>
-      axios.put(`/tester/${testerid}`, formData, {
+      axios.put(url, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       })
     );
 
     yield put(updateTesterSuccess(data));
+    yield put(resetTesterWriteUpdateState());
   } catch (err) {
     yield put(updateTesterFailure(err.response?.data?.message || err.message));
   }
 }
-
 // 삭제
 // payload: { testerid }
 function* deleteTester(action) {
@@ -239,23 +246,33 @@ function* deleteTester(action) {
     yield call(() => axios.delete(`/tester/${testerid}`));
 
     yield put(deleteTesterSuccess({ testerid }));
+    yield put(resetTesterWriteUpdateState());
   } catch (err) {
     yield put(deleteTesterFailure(err.response?.data?.message || err.message));
   }
 }
 
-
 // 공지 토글 (PATCH)
-// payload: { testerid }
 function* toggleTesterNotice(action) {
   try {
     const { testerid } = action.payload || {};
     if (!testerid) throw new Error("testerid 누락");
 
-    const { data } = yield call(() => axios.patch(`/tester/${testerid}/notice`));
-    // data: 0 or 1
+    const url = `/tester/${testerid}/notice`;
 
-    yield put(toggleTesterNoticeSuccess({ testerid, isnotice: data }));
+    // 서버 응답: Long (0/1)
+    const { data } = yield call(() => axios.patch(url));
+
+    // reducer랑 맞추기**
+    yield put(
+      toggleTesterNoticeSuccess({
+        testerid: Number(testerid),
+        isnotice: Number(data),
+      })
+    );
+
+    // 새로고침(상세 재조회)
+    yield put(fetchTesterDetailRequest({ testerid }));
   } catch (err) {
     yield put(toggleTesterNoticeFailure(err.response?.data?.message || err.message));
   }
@@ -263,16 +280,22 @@ function* toggleTesterNotice(action) {
 
 
 // 모집상태 토글 (PATCH)
-// payload: { testerid }
 function* toggleTesterStatus(action) {
   try {
     const { testerid } = action.payload || {};
     if (!testerid) throw new Error("testerid 누락");
 
-    const { data } = yield call(() => axios.patch(`/tester/${testerid}/status`));
-    // data: 0 or 1
+    const url = `/tester/${testerid}/status`;
 
-    yield put(toggleTesterStatusSuccess({ testerid, status: data }));
+    const { data } = yield call(() => axios.patch(url));
+
+    yield put(
+      toggleTesterStatusSuccess({
+        testerid: Number(testerid),
+        status: Number(data),
+      })
+    );
+    yield put(fetchTesterDetailRequest({ testerid })); // 새로고침
   } catch (err) {
     yield put(toggleTesterStatusFailure(err.response?.data?.message || err.message));
   }

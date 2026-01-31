@@ -81,10 +81,23 @@ export default function MyPage() {
                 <p>성별: {pet.pgender}</p>
                 <p>타입: {pet.petTypeId === 1 ? "고양이" : "강아지"}</p>
                 <img
-                  src={`http://localhost:8484/uploads/${pet.pfile || "default.png"}`}
+                  src={`http://localhost:8484/uploads/${pet.imageUrl || "default.png"}`}
                   alt={pet.petName}
                   style={{ width: 150, marginTop: 10 }}
                 />
+                <div style={{ marginTop: 15 }}>
+                  <Button
+                    type="primary"
+                    onClick={() =>
+                      router.push({
+                        pathname: "/pet",
+                        query: { petId: pet.petId },
+                      })
+                    }
+                  >
+                    상세보기
+                  </Button>
+                </div>
               </Card>
             </List.Item>
           )}

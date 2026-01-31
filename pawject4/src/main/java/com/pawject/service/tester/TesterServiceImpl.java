@@ -4,24 +4,21 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.pawject.dao.tester.TesterDao;
-import com.pawject.domain.Tester;
-import com.pawject.domain.Testerimg;
-import com.pawject.domain.User;
+import com.pawject.dao.tester.TesterImgDao;
 import com.pawject.dto.tester.TesterAdminRequestDto;
 import com.pawject.dto.tester.TesterAdminResponseDto;
 import com.pawject.dto.tester.TesterImgDto;
 import com.pawject.dto.tester.TesterUserRequestDto;
-import com.pawject.dto.tester.TesterUserResponseDto;
-import com.pawject.repository.TesterImgRepository;
-import com.pawject.repository.TesterRepository;
-import com.pawject.repository.UserRepository;
+import com.pawject.service.user.AuthUserJwtService;
 import com.pawject.util.UtilUpload;
 
 import lombok.RequiredArgsConstructor;
@@ -32,13 +29,11 @@ import lombok.RequiredArgsConstructor;
 public class TesterServiceImpl implements TesterService {
 
 	private final TesterDao dao;
-	private final TesterRepository repo;
-	private final TesterImgRepository imgrepo;
-	private final UserRepository urepo;
+	private final TesterImgDao idao;
 	private final UtilUpload utilUpload;
+	private final AuthUserJwtService authUserJwtService;
 
-
-	// 이미지 유틸 - 여유 될때 부품화
+	// 파일 삭제
 	private void filedelete(String savedPath) {
 		try {
 			if (savedPath == null || savedPath.isBlank()) return;
@@ -57,9 +52,23 @@ public class TesterServiceImpl implements TesterService {
 		} catch (Exception e) {
 		}
 	}
+	
+	//아이디->이미지 삭제
+	private void deleteTesterImages(Long testerid) {
+	    List<TesterImgDto> imgs = idao.selectImgsByTesterid(testerid);
+	    if (imgs != null) {
+	        for (TesterImgDto img : imgs) {
+	            if (img == null) continue;
+	            TesterImgDto full = idao.testerImgSelectByImgid(img.getTesterimgid());
+	            if (full != null) filedelete(full.getImgsrc());
+	        }
+	    }
+	    idao.deleteImgsByTesterid(testerid);
+	}
 
-	// 이미지 저장
-	private void saveTesterImages(Tester tester, List<MultipartFile> files) {
+	// 이미지 insert
+	private void saveTesterImagesMybatis(Long testerid, List<MultipartFile> files) {
+		if (testerid == null) return;
 		if (files == null || files.isEmpty()) return;
 
 		for (MultipartFile file : files) {
@@ -72,228 +81,48 @@ public class TesterServiceImpl implements TesterService {
 				throw new RuntimeException("이미지 업로드 실패", e);
 			}
 
-			Testerimg img = new Testerimg();
-			img.setImgsrc(savedPath);
-			img.setTester(tester);
+			Map<String, Object> param = new HashMap<>();
+			param.put("testerid", testerid);
+			param.put("imgsrc", savedPath);
 
-			tester.getTesterimg().add(img);
+			idao.insertTesterImg(param);
 		}
 	}
 
-	// 엔티티(객체) -> DTO 이미지 리스트 변환 (id+src)
-	private List<TesterImgDto> extractImgList(Tester t) {
-		if (t == null || t.getTesterimg() == null) return List.of();
-
-		return t.getTesterimg().stream()
-				.filter(x -> x != null && x.getImgsrc() != null && !x.getImgsrc().isBlank())
-				.map(x -> TesterImgDto.builder()
-						.testerimgid(x.getTesterimgid())
-						.imgsrc(x.getImgsrc())
-						.build())
-				.toList();
-	}
-
-	// 목록/검색에서 사용할 이미지 맵(testerid -> imgList)
-	private Map<Long, List<TesterImgDto>> buildImgMap(List<Long> testerids) {
+	//  목록/검색 이미지맵 
+	private Map<Long, List<TesterImgDto>> buildImgMapByMybatis(List<Long> testerids) {
 		if (testerids == null || testerids.isEmpty()) return Map.of();
 
-		List<Testerimg> imgs = imgrepo.findByTester_TesteridIn(testerids);
-
-		return imgs.stream()
-				.filter(img -> img != null
-						&& img.getTester() != null
-						&& img.getTester().getTesterid() != null
-						&& img.getImgsrc() != null
-						&& !img.getImgsrc().isBlank())
-				.collect(Collectors.groupingBy(
-						img -> img.getTester().getTesterid(),
-						Collectors.mapping(img -> TesterImgDto.builder()
-								.testerimgid(img.getTesterimgid())
-								.imgsrc(img.getImgsrc())
-								.build(), Collectors.toList())
-				));
+		Map<Long, List<TesterImgDto>> map = new HashMap<>();
+		for (Long testerid : testerids) {
+			if (testerid == null) continue;
+			List<TesterImgDto> imgs = idao.selectImgsByTesterid(testerid);
+			map.put(testerid, imgs == null ? List.of() : imgs);
+		}
+		return map;
 	}
 
-/////////////////////////jpa
-	//단건조회
+
+	
+	/////////////////////////////////////////
+	
+	
+	// 단건조회 
 	@Transactional(readOnly = true)
 	@Override
-	public TesterAdminResponseDto findById(Long testerid) {
-
-		Tester t = repo.findById(testerid)
-				.filter(x -> !x.isDeleted())
-				.orElseThrow(() -> new IllegalArgumentException("글 없음"));
+	public TesterAdminResponseDto selectTesterById(Long testerid) {
+		TesterAdminResponseDto dto = dao.selectTesterById(testerid);
+		if (dto == null) throw new IllegalArgumentException("글 없음");
 
 		dao.updateViews(testerid);
-		return TesterAdminResponseDto.from(t);
+
+		List<TesterImgDto> imgs = idao.selectImgsByTesterid(testerid);
+		dto.setImgList(imgs == null ? List.of() : imgs);
+
+		return dto;
 	}
 
-	//관리자 작성
-	@Override
-	public TesterAdminResponseDto adminWrite(Long userid, TesterAdminRequestDto dto, List<MultipartFile> files) {
-
-		User user = urepo.findById(userid)
-				.orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
-
-		Tester tester = new Tester();
-		tester.setCategory(dto.getCategory());
-		tester.setTitle(dto.getTitle());
-		tester.setContent(dto.getContent());
-		tester.setFoodid(dto.getFoodid() == 0 ? null : dto.getFoodid());
-		tester.setStatus(dto.getStatus());
-		tester.setIsnotice(dto.getIsnotice());
-		tester.setPosttype(dto.getPosttype() == null ? 1 : dto.getPosttype());
-		tester.setUser(user);
-
-		saveTesterImages(tester, files);
-		Tester saved = repo.save(tester);
-
-		return TesterAdminResponseDto.from(saved);
-	}
-	
-	//유저 작성
-	@Override
-	public TesterUserResponseDto userWrite(Long userid, TesterUserRequestDto dto, List<MultipartFile> files) {
-
-		User user = urepo.findById(userid)
-				.orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
-
-		Tester tester = new Tester();
-		tester.setCategory("후기"); // 고정
-		tester.setTitle(dto.getTitle());
-		tester.setContent(dto.getContent());
-		tester.setUser(user);
-
-		tester.setPosttype(0);
-		tester.setIsnotice(0);
-		tester.setStatus(0);
-
-		saveTesterImages(tester, files);
-
-		Tester saved = repo.save(tester);
-
-		return TesterUserResponseDto.from(saved);
-	}
-	
-	//관리자 수정
-	@Override
-	public TesterAdminResponseDto adminUpdate(Long userid, Long testerid, TesterAdminRequestDto dto,
-			List<MultipartFile> files, List<Long> keepImgIds) {
-
-		Tester tester = repo.findById(testerid)
-				.filter(t -> !t.isDeleted())
-				.orElseThrow(() -> new IllegalArgumentException("게시글 없음"));
-
-		tester.setCategory(dto.getCategory());
-		tester.setTitle(dto.getTitle());
-		tester.setContent(dto.getContent());
-		tester.setFoodid(dto.getFoodid() == 0 ? null : dto.getFoodid());
-		tester.setStatus(dto.getStatus());
-		tester.setIsnotice(dto.getIsnotice());
-
-		if (dto.getPosttype() != null) {
-			tester.setPosttype(dto.getPosttype());
-		}
-
-		// keep 없으면 전체 삭제
-		if (keepImgIds == null) keepImgIds = List.of();
-
-		List<Testerimg> oldImgs = tester.getTesterimg();
-		if (oldImgs != null) {
-			for (Testerimg img : List.copyOf(oldImgs)) {
-				if (img == null) continue;
-
-				Long imgId = img.getTesterimgid();
-				if (imgId == null) continue;
-
-				if (!keepImgIds.contains(imgId)) {
-					filedelete(img.getImgsrc());
-					tester.getTesterimg().remove(img);
-				}
-			}
-		}
-
-		saveTesterImages(tester, files);
-
-		Tester update = repo.save(tester);
-
-		return TesterAdminResponseDto.from(update);
-	}
-	
-	//유저 수정
-	@Override
-	public TesterUserResponseDto userUpdate(Long userid, Long testerid, TesterUserRequestDto dto,
-			List<MultipartFile> files, List<Long> keepImgIds) {
-
-		Tester tester = repo.findById(testerid)
-				.filter(t -> !t.isDeleted())
-				.orElseThrow(() -> new IllegalArgumentException("게시글 없음"));
-
-		if (!tester.getUser().getUserId().equals(userid)) {
-			throw new SecurityException("본인 글만 수정할 수 있습니다.");
-		}
-
-		tester.setTitle(dto.getTitle());
-		tester.setContent(dto.getContent());
-
-		if (keepImgIds == null) keepImgIds = List.of();
-
-		List<Testerimg> oldImgs = tester.getTesterimg();
-		if (oldImgs != null) {
-			for (Testerimg img : List.copyOf(oldImgs)) {
-				if (img == null) continue;
-
-				Long imgId = img.getTesterimgid();
-				if (imgId == null) continue;
-
-				if (!keepImgIds.contains(imgId)) {
-					filedelete(img.getImgsrc());
-					tester.getTesterimg().remove(img);
-				}
-			}
-		}
-
-		saveTesterImages(tester, files);
-
-		Tester update = repo.save(tester);
-
-		return TesterUserResponseDto.from(update);
-	}
-	
-	//삭제
-	@Override
-	public void delete(Long testerid, Long userid) {
-
-		Tester tester = repo.findById(testerid)
-				.filter(t -> !t.isDeleted())
-				.orElseThrow(() -> new IllegalArgumentException("게시글 없음"));
-
-		User loginUser = urepo.findById(userid)
-				.orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
-
-		boolean isOwner = tester.getUser() != null && tester.getUser().getUserId().equals(userid);
-		boolean isAdmin = "ROLE_ADMIN".equals(loginUser.getRole());
-
-		if (!isOwner && !isAdmin) {
-			throw new SecurityException("삭제 권한이 없습니다.");
-		}
-
-		if (tester.getTesterimg() != null) {
-			for (Testerimg img : tester.getTesterimg()) {
-				if (img == null) continue;
-				filedelete(img.getImgsrc());
-			}
-		}
-
-		tester.getTesterimg().clear();
-
-		tester.setDeleted(true);
-		repo.save(tester);
-	}
-
-	///////////////////////////mybatis
-	
-	// 목록/검색 (MyBatis + JPA 이미지 붙이기)
+	//  목록
 	@Transactional(readOnly = true)
 	@Override
 	public List<TesterAdminResponseDto> select20Tester(String condition, int pageNo) {
@@ -319,15 +148,13 @@ public class TesterServiceImpl implements TesterService {
 
 		List<TesterAdminResponseDto> list = dao.select20Tester(para);
 
-		// 목록 imgids
 		List<Long> ids = list.stream()
 				.map(TesterAdminResponseDto::getTesterid)
 				.filter(x -> x != null)
 				.toList();
 
-		Map<Long, List<TesterImgDto>> imgMap = buildImgMap(ids);
+		Map<Long, List<TesterImgDto>> imgMap = buildImgMapByMybatis(ids);
 
-		// imgList 붙이기
 		for (TesterAdminResponseDto dto : list) {
 			if (dto == null || dto.getTesterid() == null) continue;
 			dto.setImgList(imgMap.getOrDefault(dto.getTesterid(), List.of()));
@@ -336,6 +163,7 @@ public class TesterServiceImpl implements TesterService {
 		return list;
 	}
 
+	// CNT
 	@Override
 	public int countByTesterPaging(String condition) {
 		HashMap<String, Object> para = new HashMap<>();
@@ -349,6 +177,8 @@ public class TesterServiceImpl implements TesterService {
 		return dao.countByTesterPaging(para);
 	}
 
+	// 검색
+	@Transactional(readOnly = true)
 	@Override
 	public List<TesterAdminResponseDto> searchTester(String keyword, String searchType, String condition, int pageNo) {
 
@@ -393,7 +223,7 @@ public class TesterServiceImpl implements TesterService {
 				.filter(x -> x != null)
 				.toList();
 
-		Map<Long, List<TesterImgDto>> imgMap = buildImgMap(ids);
+		Map<Long, List<TesterImgDto>> imgMap = buildImgMapByMybatis(ids);
 
 		for (TesterAdminResponseDto dto : list) {
 			if (dto == null || dto.getTesterid() == null) continue;
@@ -403,6 +233,7 @@ public class TesterServiceImpl implements TesterService {
 		return list;
 	}
 
+	// CNT
 	@Override
 	public int searchTesterCnt(String keyword, String searchType, String condition) {
 
@@ -432,13 +263,13 @@ public class TesterServiceImpl implements TesterService {
 	}
 
 	@Override
-	public int updateIsnotice(Long testerid) {
+	public Long updateIsnotice(Long testerid) {
 		dao.updateIsnotice(testerid);
 		return dao.selectIsnotice(testerid);
 	}
 
 	@Override
-	public int updateStatus(Long testerid) {
+	public Long updateStatus(Long testerid) {
 		dao.updateStatus(testerid);
 		return dao.selectStatus(testerid);
 	}
@@ -449,12 +280,174 @@ public class TesterServiceImpl implements TesterService {
 	}
 
 	@Override
-	public int selectIsnotice(Long testerid) {
+	public Long selectIsnotice(Long testerid) {
 		return dao.selectIsnotice(testerid);
 	}
 
 	@Override
-	public int selectStatus(Long testerid) {
+	public Long selectStatus(Long testerid) {
 		return dao.selectStatus(testerid);
+	}
+
+	// 글쓰기(유저)
+	@Override
+	public int testerUserInsert(TesterUserRequestDto dto, List<MultipartFile> files) {
+		int result = dao.testerUserInsert(dto);
+
+		Long testerid = dto.getTesterid();
+		if (testerid != null) {
+			saveTesterImagesMybatis(testerid, files);
+		}
+
+		return result;
+	}
+
+	// 글쓰기(관리자)
+	@Override
+	public int testerAdminInsert(TesterAdminRequestDto dto, List<MultipartFile> files) {
+		int result = dao.testerAdminInsert(dto);
+
+		Long testerid = dto.getTesterid();
+		if (testerid != null) {
+			saveTesterImagesMybatis(testerid, files);
+		}
+
+		return result;
+	}
+
+	//유저수정
+	@Override
+	public int testerUserUpdate(TesterUserRequestDto dto, List<MultipartFile> files, List<Long> keepImgIds) {
+
+	    Long testerid = dto.getTesterid();
+	    Long userid = dto.getUserid();
+
+	    if (testerid == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "testerid 누락");
+	    if (userid == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인 정보 없음");
+
+	    
+	    System.out.println("### dto.testerid=" + dto.getTesterid()
+	    + ", dto.userid=" + dto.getUserid()
+	    + ", title=" + dto.getTitle()
+	    + ", content=" + dto.getContent());
+	    
+	    
+	    int updated = dao.testerUserUpdate(dto);
+	    if (updated == 0) {
+	        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "본인 글만 수정할 수 있습니다.");
+	    }
+
+	    if (keepImgIds == null) keepImgIds = List.of();
+
+	    List<TesterImgDto> oldImgs = idao.selectImgsByTesterid(testerid);
+	    if (oldImgs != null) {
+	        for (TesterImgDto img : oldImgs) {
+	            if (img == null) continue;
+	            Long imgId = img.getTesterimgid();
+	            if (imgId == null) continue;
+
+	            if (!keepImgIds.contains(imgId)) {
+	                TesterImgDto full = idao.testerImgSelectByImgid(imgId);
+	                if (full != null) filedelete(full.getImgsrc());
+	                idao.deleteTesterImgById(imgId);
+	            }
+	        }
+	    }
+	   
+	    
+
+	    saveTesterImagesMybatis(testerid, files);
+
+	    return updated;
+	}
+
+	// 수정(관리자)
+	@Override
+	public int testerAdminUpdate(TesterAdminResponseDto dto, List<MultipartFile> files, List<Long> keepImgIds) {
+
+	    int result = dao.testerAdminUpdate(dto);
+
+	    Long testerid = dto.getTesterid();
+	    if (testerid == null) return result;
+
+	    if (keepImgIds == null) keepImgIds = List.of();
+
+	    List<TesterImgDto> oldImgs = idao.selectImgsByTesterid(testerid);
+	    if (oldImgs != null) {
+	        for (TesterImgDto img : oldImgs) {
+	            if (img == null) continue;
+	            Long imgId = img.getTesterimgid();
+	            if (imgId == null) continue;
+
+	            if (!keepImgIds.contains(imgId)) {
+	                TesterImgDto full = idao.testerImgSelectByImgid(imgId);
+	                if (full != null) filedelete(full.getImgsrc());
+	                idao.deleteTesterImgById(imgId);
+	            }
+	        }
+	    }
+
+	    saveTesterImagesMybatis(testerid, files);
+
+	    return result;
+	}
+	
+	// 삭제
+	@Override
+	public int testerDeleteById(Long testerid, Authentication authentication) {
+
+	    TesterAdminResponseDto origin = dao.selectTesterById(testerid);
+	    if (origin == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "글 없음");
+
+	    boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+	        .anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));
+
+
+	    Long loginUserid = null;
+	    if (!isAdmin) {
+	        loginUserid = authUserJwtService.getCurrentUserId(authentication);
+	        if (loginUserid == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인 정보 없음");
+
+	        if (origin.getUserid() == null || !origin.getUserid().equals(loginUserid)) {
+	            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "본인 글만 삭제할 수 있습니다.");
+	        }
+	    }
+
+	    // 이미지 삭제
+	    deleteTesterImages(testerid);
+
+	    int deleted = dao.testerDeleteById(testerid);
+	    if (deleted == 0) {
+	        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "삭제 대상 없음");
+	    }
+
+	    return deleted;
+	}
+	
+	
+	// img
+	@Override
+	public TesterImgDto testerImgSelectByImgid(Long testerimgid) {
+		return idao.testerImgSelectByImgid(testerimgid);
+	}
+
+	@Override
+	public int insertTesterImg(Map<String, Object> param) {
+		return idao.insertTesterImg(param);
+	}
+
+	@Override
+	public List<TesterImgDto> selectImgsByTesterid(Long testerid) {
+		return idao.selectImgsByTesterid(testerid);
+	}
+
+	@Override
+	public int deleteTesterImgById(Long testerimgid) {
+		return idao.deleteTesterImgById(testerimgid);
+	}
+
+	@Override
+	public int deleteImgsByTesterid(Long testerid) {
+		return idao.deleteImgsByTesterid(testerid);
 	}
 }
