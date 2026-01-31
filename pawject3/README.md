@@ -34,18 +34,17 @@
 
 ## 🎬 Demo / Docs
 
-- **Figma(PPT)**: https://www.figma.com/deck/j626h6S3cxnQN7z0ZsQCNT/PAWJECT_ver2?node-id=10-129&t=LYEOVxYYTiaQjsJA-1
+- **Figma(PPT)**: https://www.figma.com/deck/agVQ2UET3VDuGyPsoOOyh6/PAWJECT_ver3--%EB%B3%B5%EC%82%AC-?node-id=11-491&t=LYEOVxYYTiaQjsJA-1
+- **구글시트**: https://docs.google.com/spreadsheets/d/1qf483W3OjI8tLteDl4ohGsusr4az7OAgQ0jMewwhmjg/edit?gid=0#gid=0
 
 
-### 🎥 Demo Video
+
+### 🎥 Demo Video (v3)
 > 썸네일 클릭 시 시연 영상으로 이동합니다.
 
-### 🎥 Demo Video
-> 썸네일 클릭 시 시연 영상으로 이동합니다.
-
-| 멤버 | 리뷰·사료 | 질환정보 | 운동 |
+| 알림(웹소켓) | 고객센터·API(ChatGPT/OCR) | 이벤트(ChatGPT) | 운동게시판(날씨/지도 API) |
 |---|---|---|---|
-| [![멤버](https://img.youtube.com/vi/solt_Vr0Hm0/0.jpg)](https://www.youtube.com/watch?v=solt_Vr0Hm0&t=2s) | [![리뷰+사료](https://img.youtube.com/vi/1OgiHFzOJ4M/0.jpg)](https://www.youtube.com/watch?si=IoxqWmDDXXLwLkd4&v=1OgiHFzOJ4M&feature=youtu.be) | [![질환정보](https://img.youtube.com/vi/ZcX2HGLvasw/0.jpg)](https://www.youtube.com/watch?v=ZcX2HGLvasw&feature=youtu.be) | [![운동](https://img.youtube.com/vi/eN79WDRs4wI/0.jpg)](https://www.youtube.com/watch?v=eN79WDRs4wI) |
+| [![알림(웹소켓)](https://img.youtube.com/vi/fcRNG0BrCOc/0.jpg)](https://www.youtube.com/watch?v=fcRNG0BrCOc) | [![고객센터·API(ChatGPT/OCR)](https://img.youtube.com/vi/ZDb0pKXf4I8/0.jpg)](https://www.youtube.com/watch?v=ZDb0pKXf4I8&feature=youtu.be) | [![이벤트(ChatGPT)](https://img.youtube.com/vi/MmQSuFz9ofo/0.jpg)](https://www.youtube.com/watch?v=MmQSuFz9ofo&feature=youtu.be) | [![운동게시판(날씨/지도 API)](https://img.youtube.com/vi/zX3kRQAQF2o/0.jpg)](https://www.youtube.com/watch?v=zX3kRQAQF2o) |
 ---
 
 ## 🛠 Tech Stack (v3)

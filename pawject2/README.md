@@ -35,7 +35,7 @@
 
 - **Figma(PPT)**: https://www.figma.com/deck/j626h6S3cxnQN7z0ZsQCNT/PAWJECT_ver2?node-id=10-129&t=LYEOVxYYTiaQjsJA-1
 
-### 🎥 Demo Video
+### 🎥 Demo Video (v2)
 > 썸네일 클릭 시 시연 영상으로 이동합니다.
 
 | 멤버 | 리뷰·사료 | 질환정보 | 운동 |
