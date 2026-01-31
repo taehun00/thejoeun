@@ -12,6 +12,7 @@ import {
   updateFoodRequest, updateFoodSuccess, updateFoodFailure,
   deleteFoodRequest, deleteFoodSuccess, deleteFoodFailure,
   quickDeleteFoodRequest, quickDeleteFoodSuccess, quickDeleteFoodFailure,
+   fetchFoodSelectListRequest, fetchFoodSelectListSuccess, fetchFoodSelectListFailure ,
 } from "../../reducers/food/foodReducer";
 
 // 목록 조회
@@ -219,6 +220,18 @@ function* quickDeleteFood(action) {
   }
 }
 
+
+// 테스터 연동 - 사료명 리스트
+function* fetchFoodSelectListSaga() {
+  try {
+    const { data } = yield call(() => axios.get("/tester/food/selectfoodlist"));
+    yield put(fetchFoodSelectListSuccess(data));
+  } catch (e) {
+    const msg = e?.response?.data || e?.message || "사료 리스트 불러오기 실패";
+    yield put(fetchFoodSelectListFailure(msg));
+  }
+}
+
 //
 export default function* foodSaga() {
   yield takeLatest(fetchFoodsRequest.type, fetchFoods);
@@ -234,4 +247,6 @@ export default function* foodSaga() {
 
   yield takeLatest(deleteFoodRequest.type, deleteFood);
   yield takeLatest(quickDeleteFoodRequest.type, quickDeleteFood);
+
+  yield takeLatest(fetchFoodSelectListRequest.type, fetchFoodSelectListSaga);
 }

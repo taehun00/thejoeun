@@ -1,4 +1,4 @@
-// components/support/FaqActiveButton.jsx
+// components/support/FaqActiveButton.js
 import { Button } from "antd";
 
 /**

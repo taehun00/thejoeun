@@ -15,8 +15,10 @@ public class PetdiseaseRequestDto {
 
 	private Long pettypeid;
 	private String disname;
-	private String disexplain;
-	private String recommend;
-
+	private String definition;
+	private String cause;
+	private String symptom;
+	private String treatment;
+	private String tip;	
 	
 }

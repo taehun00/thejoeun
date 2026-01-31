@@ -7,11 +7,13 @@
 	
 	<resultMap type="com.pawject.dto.petdisease.PetdiseaseResponseDto" id="PetdisResMap">
 		<result property="disno"	column="DISNO"/>
-		<result property="adminid"	column="ADMINID"/>
 		<result property="pettypeid"	column="PETTYPEID"/>
 		<result property="disname"	column="DISNAME"/>
-		<result property="disexplain"	column="DISEXPLAIN"/>
-		<result property="recommend"	column="RECOMMEND"/>
+		<result property="definition"	column="DEFINITION"/>
+		<result property="cause"	column="CAUSE"/>
+		<result property="symptom"	column="SYMPTOM"/>
+		<result property="treatment"	column="TREATMENT"/>
+		<result property="tip"	column="TIP"/>
 		<result property="createdat"	column="CREATEDAT"/>
 		<result property="updatedat"	column="UPDATEDAT"/>
 	</resultMap>
@@ -39,14 +41,14 @@
 					  </otherwise>
 					</choose> 
 	            ) AS RNUM,
-	            D.DISNO, D.ADMINID, D.PETTYPEID, 
-	                    D.DISNAME, D.DISEXPLAIN, D.RECOMMEND,
+	            D.DISNO,  D.PETTYPEID, 
+	                    D.DISNAME, D.DEFINITION, D.CAUSE, 
+	                    D.SYMPTOM, D.TREATMENT, D.TIP, 
 	                    D.CREATEDAT, D.UPDATEDAT
 				FROM PETDISEASE D
 				JOIN PETTYPE P ON D.PETTYPEID=P.PETTYPEID
-				JOIN USERS U ON D.ADMINID=U.USERID
 	)A 
-	WHERE A.RNUM BETWEEN #{START} AND #{END}
+	WHERE A.RNUM BETWEEN #{start} AND #{end}
 	
 	</select>	
 
@@ -77,12 +79,13 @@
 				  </otherwise>
 				</choose> 
             ) AS RNUM,
-            D.DISNO, D.ADMINID, D.PETTYPEID, 
-                    D.DISNAME, D.DISEXPLAIN, D.RECOMMEND,
+            D.DISNO, D.PETTYPEID, 
+	                    D.DISNAME, D.DEFINITION, D.CAUSE, 
+	                    D.SYMPTOM, D.TREATMENT, D.TIP, 
                     D.CREATEDAT, D.UPDATEDAT
 				FROM PETDISEASE D
 				JOIN PETTYPE P ON D.PETTYPEID=P.PETTYPEID
-				JOIN USERS U ON D.ADMINID=U.USERID
+
 	    <where>
 			<choose>
 			    <when test="searchType == 'pettype'">
@@ -90,16 +93,10 @@
 			    </when>
 			    <when test="searchType == 'disname'">
 			        D.DISNAME like #{search}
-			    </when>
-			    <when test="searchType == 'disexplain'">
-			       D.DISEXPLAIN like #{search}
-			    </when>
-			    <when test="searchType == 'all'">
-                   D.DISNAME like #{search}
-                   or D.DISEXPLAIN like #{search}
-			    </when>                
+			    </when>             
 			    <otherwise>
-			        1=1
+			     D.PETTYPEID = #{search}
+			     OR  D.DISNAME like #{search}
 			    </otherwise>
 			</choose>
 	    </where>
@@ -112,27 +109,18 @@
 	    SELECT COUNT(*)
 				FROM PETDISEASE D
 				JOIN PETTYPE P ON D.PETTYPEID=P.PETTYPEID
-				JOIN USERS U ON D.ADMINID=U.USERID
-		    <where>
-				<choose>
-				    <when test="searchType == 'pettype'">
-				        D.PETTYPEID = #{search}
-				    </when>
-				    <when test="searchType == 'disname'">
-				        D.DISNAME like #{search}
-				    </when>
-				    <when test="searchType == 'disexplain'">
-				       D.DISEXPLAIN like #{search}
-				    </when>
-				    <when test="searchType == 'all'">
-				       D.PETTYPEID = #{search}
-	                   or D.DISNAME like #{search}
-	                   or D.DISEXPLAIN like #{search}
-				    </when>                
-				    <otherwise>
-				        1=1
-				    </otherwise>
-				</choose>
-		    </where>
+			<where>
+			  <choose>
+			    <when test="searchType == 'pettype'">
+			      D.PETTYPEID = #{search}
+			    </when>
+			    <when test="searchType == 'disname'">
+			      D.DISNAME LIKE #{search}
+			    </when>
+			    <otherwise>
+			      (D.PETTYPEID = #{search} OR D.DISNAME LIKE #{search})
+			    </otherwise>
+			  </choose>
+			</where>
 	</select>
 	</mapper>

@@ -21,8 +21,8 @@ import {
   fetchModalCardFailure,
 
   setPstartno,
+  setFilters,
 } from "../../reducers/food/foodSearchReducer";
-
 
 // init
 function initApi() {
@@ -36,11 +36,9 @@ function searchFilterPagingApi(params) {
 
 // ai filter
 function foodApiApi(userMessage) {
-  const fd = new URLSearchParams();
-  fd.append("userMessage", userMessage);
 
-  return axios.post("/petfoodsearcher/foodapi", fd, {
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  return axios.post("/petfoodsearcher/foodapi", null, {
+    params: { userMessage },
   });
 }
 
@@ -75,6 +73,67 @@ function cleanParams(obj) {
 }
 
 
+/**
+ * AI가 내려준 filters(JSON)를
+ * UI filters(state.search.filters) 구조로 변환
+ *
+ * AI: { pettype:"고양이", brandname:"로얄캐닌", rangelabel:"체중관리", ... }
+ * UI: { pettypeid:1, brandid:3, rangeid:2, ... }
+ */
+function mapAiFiltersToUiFilters(aiFilters, initData) {
+  const out = {};
+  const f = aiFilters || {};
+
+  const brandList = initData?.brandList || [];
+  const rangeList = initData?.rangeList || [];
+
+  // pettype (문자 -> pettypeid)
+  if (f.pettype) {
+    const v = String(f.pettype).trim();
+
+    if (v.includes("고양이") || v.toLowerCase().includes("cat")) out.pettypeid = 1;
+    else if (
+      v.includes("강아지") ||
+      v.includes("개") ||
+      v.toLowerCase().includes("dog") ||
+      v.toLowerCase().includes("puppy")
+    ) {
+      out.pettypeid = 2;
+    }
+  }
+
+  // brandname (문자 -> brandid)
+  if (f.brandname) {
+    const v = String(f.brandname).trim().toLowerCase();
+    const found = brandList.find(
+      (b) => String(b?.brandname || "").trim().toLowerCase() === v
+    );
+    if (found?.brandid !== undefined && found?.brandid !== null) {
+      out.brandid = found.brandid;
+    }
+  }
+
+  // foodtype/category/petagegroup/isgrainfree/origin (그대로)
+  if (f.foodtype) out.foodtype = String(f.foodtype).trim();
+  if (f.category) out.category = String(f.category).trim();
+  if (f.petagegroup) out.petagegroup = String(f.petagegroup).trim();
+  if (f.isgrainfree) out.isgrainfree = String(f.isgrainfree).trim(); // "Y"/"N"
+  if (f.origin) out.origin = String(f.origin).trim();
+
+  // rangelabel (문자 -> rangeid)
+  if (f.rangelabel) {
+    const v = String(f.rangelabel).trim().toLowerCase();
+    const found = rangeList.find(
+      (r) => String(r?.rangelabel || "").trim().toLowerCase() === v
+    );
+    if (found?.rangeid !== undefined && found?.rangeid !== null) {
+      out.rangeid = found.rangeid;
+    }
+  }
+
+  return out;
+}
+
 // init
 function* fetchInit() {
   try {
@@ -98,9 +157,11 @@ function* searchFilterPaging(action) {
       ...(payload.filters || {}),
     };
 
-  const nextPstartno =
-    payload.pstartno !== undefined && payload.pstartno !== null
-      ? payload.pstartno : (statePstartno || 1);
+
+    const nextPstartno =
+      payload.pstartno !== undefined && payload.pstartno !== null
+        ? payload.pstartno
+        : statePstartno || 1;
 
     // store 페이지번호 동기화
     yield put(setPstartno(nextPstartno));
@@ -130,12 +191,28 @@ function* searchFilterPaging(action) {
   }
 }
 
-// AI 필터 변환
+// AI 필터 변환 (검색 실행 X, 필터만 state에 반영)
 function* foodApi(action) {
   try {
     const { userMessage } = action.payload || {};
+    if (!userMessage) throw new Error("userMessage 누락");
+
     const { data } = yield call(() => foodApiApi(userMessage));
+
+    // AI 결과 저장 (메시지 표시용)
     yield put(foodApiSuccess(data));
+
+    //  initData 가져오기 (브랜드/라벨 -> id 매핑용)
+    const initData = yield select((state) => state.search?.initData);
+
+    //  AI filters -> UI filters
+    const aiFilters = data?.filters || {};
+    const uiFilters = mapAiFiltersToUiFilters(aiFilters, initData);
+
+    //필터만 반영 (검색은 사용자가 버튼 눌러서 실행)
+    if (uiFilters && Object.keys(uiFilters).length > 0) {
+      yield put(setFilters(uiFilters));
+    }
   } catch (e) {
     yield put(foodApiFailure(e?.response?.data || e.message));
   }
@@ -151,7 +228,8 @@ function* openModalAndFetch(action) {
 
     const { data } = yield call(() => modalCardApi(foodid));
 
-    //  레이스 가드 - 응답 꼬임 방지
+
+    // 레이스 가드
     const modal = yield select((state) => state.search?.modal);
     if (!modal?.open) return;
     if (modal?.foodid !== foodid) return;
@@ -168,4 +246,6 @@ export default function* foodSearchSaga() {
   yield takeLatest(searchFilterPagingRequest.type, searchFilterPaging);
   yield takeLatest(foodApiRequest.type, foodApi);
   yield takeLatest(openModal.type, openModalAndFetch);
+
 }
+

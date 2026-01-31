@@ -1,4 +1,4 @@
-// components/support/FaqForm.jsx
+// components/support/FaqForm.js
 import { Button, Form, Input, Select, Space } from "antd";
 
 const { TextArea } = Input;

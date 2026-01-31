@@ -1,4 +1,4 @@
-// components/common/AiPolishBox.jsx
+// components/common/AiPolishBox.js
 import { useMemo, useState } from "react";
 import { Button, Typography, Space, Card, message } from "antd";
 import { RobotOutlined, CheckOutlined } from "@ant-design/icons";

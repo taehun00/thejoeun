@@ -1,4 +1,4 @@
-// components/support/HelpBox.jsx
+// components/support/HelpBox.js
 import { Card, Typography, Row, Col, message } from "antd";
 import { useRouter } from "next/router";
 

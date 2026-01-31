@@ -26,19 +26,36 @@ public class Petdisease {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "petdisease_seq")
 	@SequenceGenerator(name = "petdisease_seq", sequenceName = "PETDISEASE_SEQ",  allocationSize = 1 )
 	private Long disno;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ADMINID", referencedColumnName = "USERID")
+	private User admin;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "PETTYPEID")
+	private PetType pettype;
+
+	// 읽기 전용
+	@Column(name = "PETTYPEID", insertable = false, updatable = false)
+	private Long pettypeid;
 	
-//	@Column(nullable = false)
-//	private Integer pettypeid;
-//	
 	@Column(nullable = false, length = 100)
 	private String disname;
 	
-	@Column(nullable = false, length = 1000)
-	private String disexplain;
+	@Column(nullable = false, length = 500)
+	private String definition;
+	
+	@Column(nullable = false, length = 500)
+	private String cause;
+	
+	@Column(nullable = false, length = 500)
+	private String symptom;
+	
+	@Column(nullable = false, length = 500)
+	private String treatment;
 	
 	@Column(length = 500)
-	private String recommend;
+	private String tip;
 	
 	@Column(nullable = false , name="CREATEDAT")
 	private LocalDateTime createdat; // 생성일시
@@ -56,17 +73,6 @@ public class Petdisease {
 		this.updatedat = LocalDateTime.now();
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ADMINID", referencedColumnName = "USERID")
-	private User admin;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PETTYPEID")
-	private PetType pettype;
-	
-	// 읽기 전용
-	@Column(name = "PETTYPEID", insertable = false, updatable = false)
-	private Long pettypeid;
 
 		
 	}	
@@ -77,18 +83,25 @@ public class Petdisease {
 /**
  *-- (FK) ADMINID : USERS(USERID), PETTYPEID : PETTYPE(PETTYPEID)
 CREATE TABLE PETDISEASE (
-    disno       NUMBER PRIMARY KEY,         -- 글 번호
-    adminid      NUMBER NOT NULL,           -- 작성자(운영자-users.userid 참조)
-    pettypeid     NUMBER NOT NULL,            -- 반려동물 종류(pettype.pettypeid)
-    disname     VARCHAR2(100) NOT NULL,              -- 질환명
-    disexplain      VARCHAR2(1000) NOT NULL,              -- 질환 설명
-    recommend   VARCHAR2(500),            -- 추천 먹거리(저단백, 저인 등등)
-    createdat   DATE DEFAULT SYSDATE,       -- 작성일자
-    updatedat   DATE DEFAULT SYSDATE,       -- 수정일
-    CONSTRAINT fk_disease_user FOREIGN KEY (userid)
-        REFERENCES USERS(userid)         
+    disno       NUMBER PRIMARY KEY,                 -- 글 번호
+    adminid     NUMBER NOT NULL,                    -- 작성자(운영자-users.userid 참조)
+    pettypeid   NUMBER NOT NULL,                    -- 반려동물 종류(pettype.pettypeid)
+    disname     VARCHAR2(100) NOT NULL,             -- 질환명
+
+    definition  VARCHAR2(500) NOT NULL,             -- 정의
+    cause       VARCHAR2(500) NOT N                 -- 원인
+    symptom     VARCHAR2(500) NOT NULL,             -- 증상
+    treatment   VARCHAR2(500) NOT NULL,             -- 치료/관리
+    tip         VARCHAR2(500) NOT NULL,             -- 영양팁
+
+    createdat   DATE DEFAULT SYSDATE,               -- 작성일자
+    updatedat   DATE DEFAULT SYSDATE,               -- 수정일
+
+    CONSTRAINT fk_disease_user FOREIGN KEY (adminid)
+        REFERENCES USERS(userid),
+
     CONSTRAINT fk_disease_pettype FOREIGN KEY (pettypeid)
-        REFERENCES PETTYPE(pettypeid)    
+        REFERENCES PETTYPE(pettypeid)
 );
 
 -- 시퀀스

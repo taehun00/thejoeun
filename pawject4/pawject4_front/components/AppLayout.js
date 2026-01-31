@@ -50,7 +50,8 @@ export default function AppLayout({ children }) {
     const items = [
       { key: "/petfoodsearch", label: <Link href="/petfoodsearch">사료찾기</Link> },
       { key: "/reviewboard", label: <Link href="/reviewboard">사료리뷰</Link> },
-      { key: "/disease", label: <Link href="/disease">질환정보</Link> },
+      { key: "/disease", label: <Link href="/petdisease">질환정보</Link> },
+      { key: "/tester", label: <Link href="/tester">체험단</Link> },
       { key: "/faq", label: <Link href="/faq">고객센터</Link> },
     ];
 
@@ -70,7 +71,7 @@ export default function AppLayout({ children }) {
       );
     } else {  //로그인x
       items.push(
-        { key: "/mypage", label: <Link href="/mypage">마이페이지</Link> },
+        { key: "/mypage", label: <Link href="/user/mypage">마이페이지</Link> },
         { key: "/user/logout", label: <Link href="/user/logout">로그아웃</Link> }
       );
     }

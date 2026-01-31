@@ -1,4 +1,4 @@
-// components/petfoodsearch/PetfoodSearchFilters.jsx
+// components/petfoodsearch/PetfoodSearchFilters.js
 import { useMemo, useState, useCallback } from "react";
 import { Card, Row, Col, Select, Input, Button, Space, Divider, InputNumber } from "antd";
 import { SearchOutlined, FilterOutlined, ReloadOutlined } from "@ant-design/icons";
