@@ -9,12 +9,12 @@ import {
   deletePetRequest,
   deletePetSuccess,
   deletePetFailure,
-} from "../reducers/petReducer";
+} from "../../reducers/pet/petReducer";
 import {
   getPetDetailApi,
   updatePetApi,
   deletePetApi,
-} from "../api/pet";
+} from "../../api/pet";
 import Router from "next/router";
 import { message } from "antd";
 

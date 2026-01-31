@@ -6,7 +6,7 @@ import foodSearchReducer from "./food/foodSearchReducer";
 import authReducer from "./user/authReducer";
 import faqReducer from "./support/faqReducer";
 import csReducer from "./support/csReducer";
-import likeReducer from "./likes/likeReducer";
+import likeReducer from "./like/likeReducer";
 import petReducer from "./pet/petReducer";
 import petdiseaseReducer from "./petdisease/petdiseaseReducer";
 import testerReducer from "./tester/testerReducer";
