@@ -8,7 +8,7 @@ import {
   removeLikeTesterRequest, removeLikeTesterSuccess, removeLikeTesterFailure,
   countLikesReviewRequest, countLikesReviewSuccess, countLikesReviewFailure,
   countLikesTesterRequest, countLikesTesterSuccess, countLikesTesterFailure,
-} from "../../reducers/likes/likesSlice";
+} from "../../reducers/like/likeReducer";
 
 /* =========================
    API 호출
