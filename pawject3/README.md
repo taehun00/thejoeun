@@ -18,22 +18,15 @@
 ---
 
 ## 👥 Team / Period
-**4명 팀 프로젝트**
 **박현주 · 성태훈 · 최상욱 · 한승현**
 
-- **기간**: 2025.12.22 ~ 2026.01.02  
-- **인원**: 4명  
+- **기간**: 2025.12.22 ~ 2026.01.02   
 
 ---
 
-## 🔗 GitHub
+## 🔗 Links
 - **Repository**: https://github.com/taehun00/thejoeun  
 - **Project Path**: https://github.com/taehun00/thejoeun/tree/master/pawject3  
-
----
-
-## 🎬 Demo / Docs
-
 - **Figma(PPT)**: https://www.figma.com/deck/agVQ2UET3VDuGyPsoOOyh6/PAWJECT_ver3--%EB%B3%B5%EC%82%AC-?node-id=11-491&t=LYEOVxYYTiaQjsJA-1
 - **구글시트**: https://docs.google.com/spreadsheets/d/1qf483W3OjI8tLteDl4ohGsusr4az7OAgQ0jMewwhmjg/edit?gid=0#gid=0
 
@@ -66,7 +59,8 @@
 
 ### Others / External
 - JSON
-- External API: **OCR, ChatGPT, 채널톡, 날씨/지도 API**
+- External API: **OCR, ChatGPT, ChannelTalk, Weather/Map API**
+- Realtime: **WebSocket**
 
 ### DevOps / Collaboration
 - Git / GitHub 기반 협업 및 버전 관리
