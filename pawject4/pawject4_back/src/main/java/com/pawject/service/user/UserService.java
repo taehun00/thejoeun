@@ -72,7 +72,7 @@ public class UserService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .nickname(request.getNickname())
                 .provider(provider)
-                .role("ROLE_USER")
+                .role("ROLE_MEMBER")
                 .ufile(profilePath)
                 .build();
 

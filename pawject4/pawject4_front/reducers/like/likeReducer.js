@@ -2,83 +2,89 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   reviewLikes: {},   // { reviewId: count }
+  reviewLikedByMe: {},    // { reviewId: true | false }
   testerLikes: {},   // { testerId: count }
+  testerLikedByMe: {},    // { testerId: true | false }
   loading: false,
   error: null,
-  success: false,
 };
 
 const likesSlice = createSlice({
   name: "likes",
   initialState,
   reducers: {
-    // --- 리뷰 좋아요 ---
     likeReviewRequest: (state) => {
       state.loading = true;
       state.error = null;
-      state.success = false;
     },
+
     likeReviewSuccess: (state, action) => {
       state.loading = false;
-      state.success = true;
       const { reviewId, count } = action.payload;
+
       state.reviewLikes[reviewId] = count;
+      state.reviewLikedByMe[reviewId] = true;
     },
+
     likeReviewFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
     },
 
-    // --- 체험단 좋아요 ---
-    likeTesterRequest: (state) => {
-      state.loading = true;
-      state.error = null;
-      state.success = false;
-    },
-    likeTesterSuccess: (state, action) => {
-      state.loading = false;
-      state.success = true;
-      const { testerId, count } = action.payload;
-      state.testerLikes[testerId] = count;
-    },
-    likeTesterFailure: (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    },
-
-    // --- 리뷰 좋아요 취소 ---
     removeLikeReviewRequest: (state) => {
       state.loading = true;
       state.error = null;
-      state.success = false;
     },
+
     removeLikeReviewSuccess: (state, action) => {
       state.loading = false;
-      state.success = true;
       const { reviewId, count } = action.payload;
+
       state.reviewLikes[reviewId] = count;
+      state.reviewLikedByMe[reviewId] = false;
     },
+
     removeLikeReviewFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
     },
 
-    // --- 체험단 좋아요 취소 ---
+    likeTesterRequest: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+
+    likeTesterSuccess: (state, action) => {
+      state.loading = false;
+      const { testerId, count } = action.payload;
+
+      state.testerLikes[testerId] = count;
+      state.testerLikedByMe[testerId] = true;
+    },
+
+    likeTesterFailure: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+
     removeLikeTesterRequest: (state) => {
       state.loading = true;
       state.error = null;
-      state.success = false;
     },
+
     removeLikeTesterSuccess: (state, action) => {
       state.loading = false;
-      state.success = true;
       const { testerId, count } = action.payload;
+
       state.testerLikes[testerId] = count;
+      state.testerLikedByMe[testerId] = false;
     },
+
     removeLikeTesterFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
     },
+
 
     // --- 좋아요 수 조회 ---
     countLikesReviewRequest: (state) => {
@@ -88,9 +94,23 @@ const likesSlice = createSlice({
     countLikesReviewSuccess: (state, action) => {
       state.loading = false;
       const { reviewId, count } = action.payload;
+
       state.reviewLikes[reviewId] = count;
     },
     countLikesReviewFailure: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+
+    checkLikeReviewMeRequest: (state) => {
+      state.loading = true;
+    },
+    checkLikeReviewMeSuccess: (state, action) => {
+      state.loading = false;
+      const { reviewId, liked } = action.payload;
+      state.reviewLikedByMe[reviewId] = liked;
+    },
+    checkLikeReviewMeFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
     },
@@ -102,7 +122,12 @@ const likesSlice = createSlice({
     countLikesTesterSuccess: (state, action) => {
       state.loading = false;
       const { testerId, count } = action.payload;
+
       state.testerLikes[testerId] = count;
+
+      if (state.testerLikedByMe[testerId] === undefined) {
+        state.testerLikedByMe[testerId] = false;
+      }
     },
     countLikesTesterFailure: (state, action) => {
       state.loading = false;
@@ -111,25 +136,15 @@ const likesSlice = createSlice({
   },
 });
 
+
 export const {
-  likeReviewRequest,
-  likeReviewSuccess,
-  likeReviewFailure,
-  likeTesterRequest,
-  likeTesterSuccess,
-  likeTesterFailure,
-  removeLikeReviewRequest,
-  removeLikeReviewSuccess,
-  removeLikeReviewFailure,
-  removeLikeTesterRequest,
-  removeLikeTesterSuccess,
-  removeLikeTesterFailure,
-  countLikesReviewRequest,
-  countLikesReviewSuccess,
-  countLikesReviewFailure,
-  countLikesTesterRequest,
-  countLikesTesterSuccess,
-  countLikesTesterFailure,
+  likeReviewRequest, likeReviewSuccess, likeReviewFailure,
+  removeLikeReviewRequest, removeLikeReviewSuccess, removeLikeReviewFailure,
+  likeTesterRequest, likeTesterSuccess, likeTesterFailure,
+  removeLikeTesterRequest, removeLikeTesterSuccess, removeLikeTesterFailure,
+  countLikesReviewRequest, countLikesReviewSuccess, countLikesReviewFailure,
+  checkLikeReviewMeRequest, checkLikeReviewMeSuccess, checkLikeReviewMeFailure,
+  countLikesTesterRequest, countLikesTesterSuccess, countLikesTesterFailure
 } = likesSlice.actions;
 
 export default likesSlice.reducer;

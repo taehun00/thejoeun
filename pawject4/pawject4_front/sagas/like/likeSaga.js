@@ -7,6 +7,7 @@ import {
   removeLikeReviewRequest, removeLikeReviewSuccess, removeLikeReviewFailure,
   removeLikeTesterRequest, removeLikeTesterSuccess, removeLikeTesterFailure,
   countLikesReviewRequest, countLikesReviewSuccess, countLikesReviewFailure,
+  checkLikeReviewMeRequest, checkLikeReviewMeSuccess, checkLikeReviewMeFailure,
   countLikesTesterRequest, countLikesTesterSuccess, countLikesTesterFailure,
 } from "../../reducers/like/likeReducer";
 
@@ -30,16 +31,21 @@ function removeLikeTesterApi(testerId) {
 }
 
 function countLikesReviewApi(reviewId) {
-  return api.get(`/api/likes/review/count?reviewId=${reviewId}`);
+  return api.get(`/api/likes/review/count/${reviewId}`);
+}
+
+function checkLikeReviewMeApi(reviewId) {
+  return api.get(`/api/likes/review/${reviewId}/me`);
 }
 
 function countLikesTesterApi(testerId) {
-  return api.get(`/api/likes/tester/count?testerId=${testerId}`);
+  return api.get(`/api/likes/tester/count/${testerId}`);
 }
 
 /* =========================
    Saga
 ========================= */
+// 좋아요 클릭
 export function* likeReview(action) {
   try {
     const { data } = yield call(likeReviewApi, action.payload);
@@ -62,6 +68,7 @@ export function* likeTester(action) {
   }
 }
 
+// 좋아요 취소 클릭
 export function* removeLikeReview(action) {
   try {
     const { data } = yield call(removeLikeReviewApi, action.payload.reviewId);
@@ -84,6 +91,7 @@ export function* removeLikeTester(action) {
   }
 }
 
+// 좋아요 수 조회
 export function* countLikesReview(action) {
   try {
     const { data } = yield call(countLikesReviewApi, action.payload.reviewId);
@@ -92,6 +100,21 @@ export function* countLikesReview(action) {
     yield put(countLikesReviewFailure(err.response?.data?.error || err.message));
   }
 }
+
+export function* checkLikeReviewMe(action) {
+  try {
+    const { data } = yield call(checkLikeReviewMeApi, action.payload.reviewId);
+
+    // data = true / false
+    yield put(checkLikeReviewMeSuccess({
+      reviewId: action.payload.reviewId,
+      liked: data,
+    }));
+  } catch (err) {
+    yield put(checkLikeReviewMeFailure(err.response?.data?.error || err.message));
+  }
+}
+
 
 export function* countLikesTester(action) {
   try {
@@ -111,5 +134,6 @@ export default function* likesSaga() {
   yield takeLatest(removeLikeReviewRequest.type, removeLikeReview);
   yield takeLatest(removeLikeTesterRequest.type, removeLikeTester);
   yield takeLatest(countLikesReviewRequest.type, countLikesReview);
+  yield takeLatest(checkLikeReviewMeRequest.type, checkLikeReviewMe);
   yield takeLatest(countLikesTesterRequest.type, countLikesTester);
 }
