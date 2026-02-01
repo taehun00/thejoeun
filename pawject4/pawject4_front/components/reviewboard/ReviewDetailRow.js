@@ -8,8 +8,17 @@ export default function ReviewDetailRow({
   onOpenEditModal,
   onDelete,
   deleteLoading = false,
+
+  onToggleLike, //
+  likeCount, //
+  liked, //
 }) {
   if (!review) return null;
+
+  // 여기부터 taehun 작성
+  const isMyReview = Number(review.userid) === Number(loginUserId);
+  // 여기까지 taehun 작성
+
 
   const canEditDelete =
     loginRole === "ROLE_ADMIN" ||
@@ -90,6 +99,42 @@ export default function ReviewDetailRow({
         {/* 리뷰 내용 */}
         <div style={{ whiteSpace: "pre-wrap", lineHeight: 1.6, wordBreak: "break-word" }}>
           {review.reviewcomment}
+        </div>
+
+        {/* 하단 버튼 영역 */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginTop: 12,
+        }}
+      >
+        {/* 좋아요 신고 버튼 */}
+          <Button
+            type={liked ? "primary" : "default"}
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleLike(review.reviewid);
+            }}
+          >
+            ❤️ 좋아요 {likeCount ?? 0}
+          </Button>
+        
+
+          {!isMyReview && (
+            <Button
+              size="small"
+              danger
+              onClick={(e) => {
+                e.stopPropagation();
+                console.log("신고 클릭", review.reviewid);
+                // dispatch(reportReviewRequest({ reviewid: review.reviewid }))
+              }}
+            >
+              🚨 신고
+            </Button>
+          )}
         </div>
 
         {/* 버튼 */}

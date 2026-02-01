@@ -19,7 +19,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   faq: faqReducer,
   cs: csReducer,
-  like: likeReducer,
+  likes: likeReducer,
   pet: petReducer,
   petdisease: petdiseaseReducer,
   tester: testerReducer,

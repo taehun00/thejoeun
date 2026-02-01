@@ -4,13 +4,17 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import com.pawject.dto.like.LikeRequestDto;
 import com.pawject.dto.like.LikeResponseDto;
-import com.pawject.service.pet.LikeService;
+import com.pawject.service.like.LikeService;
 import com.pawject.service.user.AuthUserJwtService;
 
 @RestController
@@ -32,7 +36,22 @@ public class LikeController {
         LikeResponseDto response = likeService.addLike(userId, dto);
         return ResponseEntity.ok(response);
     }
+    
+    @GetMapping("/review/{reviewId}/me")
+    public ResponseEntity<Map<String, Object>> isLikedByMe(
+            Authentication authentication,
+            @Parameter(description = "조회할 리뷰 ID", required = true)
+            @PathVariable("reviewId") Long reviewId
+    ) {
+        Long userId = authUserJwtService.getCurrentUserId(authentication);
+        boolean liked = likeService.isLikedReview(userId, reviewId);
 
+        Map<String, Object> response = new HashMap<>();
+        response.put("reviewId", reviewId);
+        response.put("liked", liked);
+
+        return ResponseEntity.ok(response);
+    }
     @Operation(summary = "리뷰 좋아요 수 조회 (공개)")
     @GetMapping("/review/count/{reviewId}")
     public ResponseEntity<LikeResponseDto> countLikesReview(

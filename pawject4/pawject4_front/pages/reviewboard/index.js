@@ -21,7 +21,12 @@ import {
   updateReviewRequest,
   deleteReviewRequest,
 } from "../../reducers/review/reviewReducer";
-
+import {
+  likeReviewRequest,
+  removeLikeReviewRequest,
+  countLikesReviewRequest,
+  checkLikeReviewMeRequest,
+} from "../../reducers/like/likeReducer";
 const { Option } = Select;
 
 export default function ReviewBoardIndex() {
@@ -47,6 +52,11 @@ export default function ReviewBoardIndex() {
     deleteError,
   } = useSelector((state) => state.review);
 
+  // ✅ 리뷰 좋아요 수 상태
+  const { reviewLikedByMe, reviewLikes } = useSelector(
+    (state) => state.likes
+  );
+
   const [loginRole, setLoginRole] = useState(null);
   const [loginUserId, setLoginUserId] = useState(null);
 
@@ -63,6 +73,7 @@ export default function ReviewBoardIndex() {
 
 const canWrite = !!loginUserId;
 
+
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -73,14 +84,29 @@ console.log("token parts:", token?.split(".")?.length);
 console.log("payload raw:", token?.split(".")?.[1]);
     const token = localStorage.getItem("accessToken");
     const payload = token ? parseJwt(token) : null;
-
 setLoginRole(payload?.role ?? null);
     setLoginUserId(payload?.sub ? Number(payload.sub) : null);
   }, []);
 
+
   useEffect(() => {
     dispatch(fetchReviewsRequest({ pageNo: 1, condition }));
   }, []);
+
+  // =====================
+  // ❤️ 리뷰 좋아요 수 조회
+  // =====================
+  useEffect(() => {
+    if (!reviews || reviews.length === 0) return;
+    if (!loginUserId) return;
+
+    reviews.forEach((review) => {
+      // 좋아요 수 조회
+      dispatch(countLikesReviewRequest({ reviewId: review.reviewid }));
+      // 로그인한 사용자가 눌렀는지 확인
+      dispatch(checkLikeReviewMeRequest({ reviewId: review.reviewid }));
+    });
+  }, [reviews, loginUserId, dispatch]);
 
   useEffect(() => {
     setExpandedRowKeys([]);
@@ -197,6 +223,7 @@ setLoginRole(payload?.role ?? null);
     dispatch(deleteReviewRequest({ reviewid }));
   };
 
+
   //  클릭 검색 콜백 3개 (columns 생성보다 먼저 선언 필수)
   const onPetTypeFilter = useCallback(
     (pettypeid) => {
@@ -233,6 +260,33 @@ setLoginRole(payload?.role ?? null);
     [dispatch, condition]
   );
 
+  const onToggleLike = useCallback(
+    (reviewId) => {
+      if (!loginUserId) {
+        message.warning("로그인이 필요합니다.");
+        return;
+      }
+
+      const liked = reviewLikedByMe?.[reviewId];
+
+      if (liked) {
+        // 이미 눌렀으면 → 취소
+        dispatch(removeLikeReviewRequest({ reviewId }));
+
+        // 취소 후 최신 상태 반영
+        dispatch(countLikesReviewRequest({ reviewId }));
+        dispatch(checkLikeReviewMeRequest({ reviewId }));
+      } else {
+        // 안 눌렀으면 → 좋아요
+        dispatch(likeReviewRequest({ reviewId }));
+        
+        // 좋아요 후 최신 상태 반영
+        dispatch(countLikesReviewRequest({ reviewId }));
+        dispatch(checkLikeReviewMeRequest({ reviewId }));
+      }
+    },
+    [dispatch, reviewLikedByMe, loginUserId]
+  );
   const columns = useMemo(
     () =>
       ReviewTableColumns({
@@ -335,6 +389,10 @@ setLoginRole(payload?.role ?? null);
             onOpenEditModal={onOpenEditModal}
             onDelete={onDelete}
             deleteLoading={deleteLoading}
+
+            onToggleLike={onToggleLike} // 태훈 좋아요 기능
+            likeCount={reviewLikes?.[record.reviewid]}
+            liked={reviewLikedByMe?.[record.reviewid]}
           />
         )}
         expandedRowKeys={expandedRowKeys}

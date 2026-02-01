@@ -1,4 +1,4 @@
-package com.pawject.service.pet;
+package com.pawject.service.like;
 
 import com.pawject.dao.review.ReviewDao;
 import com.pawject.domain.Like;
@@ -111,5 +111,10 @@ public class LikeService {
     @Transactional(readOnly = true)
     public boolean hasLikedTester(Long userId, Long testerId) {
         return likeRepository.countByUser_UserIdAndTester_Testerid(userId, testerId) > 0;
+    }
+    
+    @Transactional(readOnly = true)
+    public boolean isLikedReview(Long userId, Long reviewId) {
+        return likeRepository.isLikedReview(userId, reviewId) == 1;
     }
 }

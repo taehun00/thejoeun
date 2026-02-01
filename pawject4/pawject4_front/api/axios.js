@@ -19,7 +19,10 @@ api.interceptors.request.use(
       const accessToken = localStorage.getItem("accessToken");
       
 
-      if (accessToken) {
+      if (!config.url.includes("/login") &&
+          !config.url.includes("/signup") &&
+          accessToken
+        ) {
         config.headers.Authorization = `Bearer ${accessToken}`;
       }
     }
