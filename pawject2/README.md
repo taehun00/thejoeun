@@ -21,19 +21,15 @@
 **박현주 · 성태훈 · 최상욱 · 한승현**
 
 - **기간**: 2025.12.01 ~ 2025.12.07  
-- **인원**: 4명  
 
 ---
 
-## 🔗 GitHub
+## 🔗 Links
 - **Repository**: https://github.com/taehun00/thejoeun  
 - **Project Path**: https://github.com/taehun00/thejoeun/tree/master/pawject2
+- **Docs (Figma PPT)** : https://www.figma.com/deck/j626h6S3cxnQN7z0ZsQCNT/PAWJECT_ver2?t=nY53RShMBW0vHIkx-1
 
----
-
-## 🎬 Demo / Docs
-
-- **Figma(PPT)**: https://www.figma.com/deck/j626h6S3cxnQN7z0ZsQCNT/PAWJECT_ver2?node-id=10-129&t=LYEOVxYYTiaQjsJA-1
+--- 
 
 ### 🎥 Demo Video (v2)
 > 썸네일 클릭 시 시연 영상으로 이동합니다.
