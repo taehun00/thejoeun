@@ -52,7 +52,7 @@ export default function ReviewBoardIndex() {
     deleteError,
   } = useSelector((state) => state.review);
 
-  // ✅ 리뷰 좋아요 수 상태
+  //  리뷰 좋아요 수 상태
   const { reviewLikedByMe, reviewLikes } = useSelector(
     (state) => state.likes
   );
