@@ -85,6 +85,10 @@ public class Tester {
 
 	@OneToMany(mappedBy = "tester", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Testerimg> testerimg = new ArrayList<>();
+
+	@OneToMany(mappedBy = "tester", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<TesterComment> testercomment = new ArrayList<>();
+	
 	
 }
 /**
