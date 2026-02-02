@@ -33,7 +33,33 @@
 
 ### 🎥 Demo Video (v4)
 > 썸네일 클릭 시 시연 영상으로 이동합니다.
-(촬영중)
+
+<table>
+  <tr>
+    <th>체험단/잘환정보</th>
+    <th>좋아요/신고</th>
+    <th>운동챌린지/광고배너</th>
+  </tr>
+  <tr>
+    <td align="center">
+      <a href="https://youtu.be/pZOSRqIKZ6s?si=lzPm4VY2YeDzePXH" target="_blank" rel="noopener noreferrer">
+        <img src="https://img.youtube.com/vi/pZOSRqIKZ6s/0.jpg" width="200" />
+      </a>
+    </td>
+    <td align="center">
+      <a href="#" target="_blank" rel="noopener noreferrer">
+        <img src="../프로젝트4차정리/img/balckcat.png" width="200" />
+      </a>
+      <p>촬영중!</p>
+    </td>
+    <td align="center">
+      <a href="#" target="_blank" rel="noopener noreferrer">
+        <img src="../프로젝트4차정리/img/balckcat.png" width="200" />
+      </a>
+      <p>촬영중!</p>
+    </td>
+  </tr>
+</table>
 
 
 ## 🛠 Tech Stack (v4)
