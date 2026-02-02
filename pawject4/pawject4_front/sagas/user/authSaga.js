@@ -53,11 +53,22 @@ export function* login(action) {
     if (user && accessToken) {
       if (typeof window !== "undefined") {
         localStorage.setItem("accessToken", accessToken);
+        console.log("[LOGIN] accessToken saved:", accessToken);
+  console.log(
+    "[LOGIN] localStorage check:",
+    localStorage.getItem("accessToken")
+  );
         Cookies.set("refreshToken", refreshToken);
       }
       yield put(loginSuccess({ user, accessToken }));
       message.success(`${user.nickname}님 환영합니다!`);
       Router.push("/mainpage");
+      setTimeout(() => {
+  console.log(
+    "[AFTER LOGIN] accessToken:",
+    localStorage.getItem("accessToken")
+  );
+}, 500);
     } else {
       yield put(loginFailure("로그인 실패"));
       message.error("아이디/비밀번호를 확인하세요.");

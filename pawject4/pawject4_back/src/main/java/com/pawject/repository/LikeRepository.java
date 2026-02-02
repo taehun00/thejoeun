@@ -37,4 +37,21 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
 
     Optional<Like> findByUser_UserIdAndReviewId(Long userId, Long reviewId);
     Optional<Like> findByUser_UserIdAndTester_Testerid(Long userId, Long testerId);
-}
+
+    @Query(
+            value = """
+                SELECT CASE
+                         WHEN COUNT(*) > 0 THEN 1
+                         ELSE 0
+                       END
+                FROM likes
+                WHERE user_id = :userId
+                  AND review_id = :reviewId
+            """,
+            nativeQuery = true
+        )
+        int isLikedReview(
+                @Param("userId") Long userId,
+                @Param("reviewId") Long reviewId
+        );
+}	
