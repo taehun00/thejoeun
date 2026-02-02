@@ -13,6 +13,8 @@ import adminReportSaga from "./admin/reportSaga";
 import reportSaga from "./report/reportSaga"
 import petdiseaseSaga from "./petdisease/petdiseaseSaga";
 import testerSaga from "./tester/testerSaga";
+import testerCommentSaga from "./tester/testerCommentSaga";
+
 
 export default  function * rootSaga(){
   yield all([
@@ -28,6 +30,7 @@ export default  function * rootSaga(){
     fork(reportSaga),
     fork(petdiseaseSaga),
     fork(testerSaga),
+    fork(testerCommentSaga)
   ]);  
 }
 
