@@ -1,20 +1,20 @@
 package com.pawject.dto.exec;
-
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
-@Data
-@ToString
-//@Getter @Setter 
-//@AllArgsConstructor
-//@NoArgsConstructor
+@Getter @Setter @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 
-public class ExecSearchDto {
+public class ExecinfoDto {
 	private Integer execid;			//EXECID
 	private String  exectype;		//EXECTYPE
 	private String  description;	//DESCRIPTION
 	private float   avgkcal30min;	//AVGKCAL30MIN
-	private int    exectargetmin;	//EXECTARGETMIN
+	private int     exectargetmin;	//EXECTARGETMIN
 	private String  suitablefor; 	//SUITABLEFOR
 	private String  intensitylevel;	//INTENSITYLEVEL
 	private String  createdAt;		//CREATEDAT

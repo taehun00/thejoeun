@@ -13,10 +13,10 @@ export default function ExecPreparingPage() {
       <Card>
         <Result
           icon={<ToolOutlined />}
-          title="운동챌린지 기능은 준비 중입니다"
+          title="운동 챌린지 게시판은 현재 보수공사 중입니다"
           subTitle={
             <Text type="secondary">
-              현재 기능 개선 및 개편 작업 중입니다. 빠른 시일 내에 오픈하겠습니다.
+              현재 기능 개선 및 개편 작업 중입니다. 빠른 시일 내에 이용하시는데 불편함이 없는 게시판으로 오픈하겠습니다.
             </Text>
           }
           extra={
