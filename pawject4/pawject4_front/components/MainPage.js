@@ -1,178 +1,125 @@
-import { Table, Button } from "antd";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Link from "next/link";
+import { Row, Col, Card, Button, Typography, Space } from "antd";
+import {
+  SearchOutlined,
+  StarOutlined,
+  HeartOutlined,
+  TrophyOutlined,
+  GiftOutlined,
+  CustomerServiceOutlined,
+  RightOutlined,
+} from "@ant-design/icons";
 
-const styles = {
-  page: {
-    fontFamily: '"Segoe UI", Roboto, -apple-system, BlinkMacSystemFont, sans-serif',
-    background: "#eef2f7",
-    color: "#333",
-    minHeight: "100vh",
-    padding: "40px 20px",
-  },
+import BoardCard from "../components/common/BoardCard";
 
-  subArea: {
-    maxWidth: 960,
-    margin: "0 auto 50px",
-    display: "flex",
-    gap: 16,
-    justifyContent: "center",
-    flexWrap: "wrap",
-  },
-
-  mainActionBtn: {
-    display: "inline-block",
-    padding: "14px 28px",
-    borderRadius: 8,
-    fontSize: 15,
-    fontWeight: 600,
-    textAlign: "center",
-    textDecoration: "none",
-    color: "#fff",
-    background: "#4c6fbf",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-    transition: "all 0.25s ease",
-    cursor: "pointer",
-    minWidth: 130,
-  },
-
-  mainActionBtnYellow: {
-    background: "#f4c430",
-    color: "#2b2b2b",
-  },
-
-  mainSections: {
-    maxWidth: 1200,
-    margin: "0 auto",
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-    gap: 28,
-  },
-
-  part: {
-    background: "#ffffff",
-    borderRadius: 12,
-    display: "flex",
-    flexDirection: "column",
-    boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
-    transition: "transform 0.25s ease, box-shadow 0.25s ease",
-    minHeight: 320,
-  },
-
-  partHeader: {
-    padding: "18px 20px",
-    borderBottom: "2px solid #e0e0e0",
-    fontSize: 18,
-    fontWeight: 700,
-    color: "#2b3a67",
-    textAlign: "center", // 중앙 정렬
-  },
-
-  partBody: {
-    padding: "20px 30px", // 양옆 여백 넓힘
-    flexGrow: 1,
-    fontSize: 14,
-    color: "#555",
-    lineHeight: 1.7,
-    textAlign: "justify", // 정렬 깔끔하게
-    whiteSpace: "pre-line", // 엔터(\n) 적용
-  },
-
-  partFooter: {
-    padding: "10px 20px 20px",
-    textAlign: "right",
-  },
-
-  moreBtn: {
-    fontSize: 13,
-    padding: "6px 16px",
-    background: "#4c6fbf",
-    color: "#fff",
-    borderRadius: 8,
-    textDecoration: "none",
-    transition: "background 0.2s ease",
-  },
-};
+const { Title, Text, Paragraph } = Typography;
 
 export default function MainPage() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    setIsLoggedIn(!!token);
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    setIsLoggedIn(false);
-    alert("로그아웃 되었습니다.");
-  };
-
-  const cardData = [
+  const menuCards = [
     {
-      title: "사료 리뷰",
-      description: "사료 리뷰 게시판에서는 다양한 사료에 대한 실제 사용자 리뷰와 평가를 확인할 수 있습니다.\n반려동물에게 맞는 사료 선택에 도움이 되는 정보를 제공합니다.",
-      link: "/reviewboard",
+      title: "사료찾기",
+      desc: "조건 기반 필터로 우리 아이에게 맞는 사료를 탐색합니다.",
+      href: "/petfoodsearch",
+      icon: <SearchOutlined style={{ fontSize: 26 }} />,
     },
     {
-      title: "운동 스마트",
-      description: "운동 스마트 게시판은 반려동물의 건강을 위한 운동 방법, 활동량 관리 팁, 생활 습관 개선 정보를 제공합니다.\n반려동물의 체력과 활력을 관리하는 데 유용한 정보를 확인할 수 있습니다.",
-      link: "/smart",
+      title: "사료리뷰",
+      desc: "실사용자 리뷰로 사료 선택의 실패 확률을 줄입니다.",
+      href: "/reviewboard",
+      icon: <StarOutlined style={{ fontSize: 26 }} />,
     },
     {
-      title: "질환 정보",
-      description: "질환 정보 게시판에서는 반려동물의 주요 질환과 예방 방법, 관리법, 증상 등을 안내합니다.\n반려동물의 건강 관리와 질환 예방에 유용한 정보를 제공합니다.",
-      link: "/petdisease",
+      title: "질환정보",
+      desc: "주요 질환 정보와 관리 포인트를 한눈에 확인합니다.",
+      href: "/petdisease",
+      icon: <HeartOutlined style={{ fontSize: 26 }} />,
+    },
+    {
+      title: "운동챌린지",
+      desc: "건강한 습관을 만들기 위한 운동 챌린지 기능입니다.",
+      href: "/exec",
+      icon: <TrophyOutlined style={{ fontSize: 26 }} />,
+    },
+    {
+      title: "체험단",
+      desc: "체험단 참여/모집 정보를 확인하고 지원할 수 있습니다.",
+      href: "/tester",
+      icon: <GiftOutlined style={{ fontSize: 26 }} />,
+    },
+    {
+      title: "고객센터",
+      desc: "FAQ 및 문의 기능을 통해 빠르게 도움을 받을 수 있습니다.",
+      href: "/faq",
+      icon: <CustomerServiceOutlined style={{ fontSize: 26 }} />,
     },
   ];
 
   return (
-    <div style={styles.page}>
-      {/* CTA 버튼 영역 */}
-      <div style={styles.subArea}>
-        {!isLoggedIn ? (
-          <>
-            <Link href="/user/login">
-              <a style={styles.mainActionBtn}>로그인</a>
-            </Link>
-            <Link href="/user/signup">
-              <a style={{ ...styles.mainActionBtn, ...styles.mainActionBtnYellow }}>회원가입</a>
-            </Link>
-          </>
-        ) : (
-          <>
-            <Link href="/user/mypage">
-              <a style={styles.mainActionBtn}>마이페이지</a>
-            </Link>
-            <a 
-              onClick={handleLogout} 
-              style={{ ...styles.mainActionBtn, background: "#f44336", cursor: "pointer" }}
-            >
-              로그아웃
-            </a>
-          </>
-        )}
+    <BoardCard title="🐾 Petfood & Health">
+      {/* 소개 문구 */}
+      <div style={{ padding: "6px 4px 18px" }}>
+        <Title level={3} style={{ marginBottom: 6 }}>
+          반려동물의 기호와 건강을 세심히 고려해
+          <br />
+          우리 아이에게 꼭 맞는 사료를 고를 수 있도록
+          <br />
+          보호자의 고민을 덜어주는 플랫폼입니다.
+        </Title>
+
+        <Paragraph style={{ marginTop: 12, marginBottom: 0, maxWidth: 900 }}>
+          <Text type="secondary">
+            반려동물은 말을 하지 않지만 작은 몸짓으로 자신에게 필요한 것을 전합니다.
+            우리는 그 신호를 더 정확히 이해하고, 복잡한 정보 속에서도 보호자가 흔들리지 않도록
+            사료·건강 데이터를 보기 쉽게 정리해 선택을 돕고자 합니다.
+          </Text>
+        </Paragraph>
       </div>
 
-      {/* 카드 섹션 */}
-      <section style={styles.mainSections}>
-        {cardData.map((card, idx) => (
-          <div
-            key={idx}
-            style={styles.part}
-            onMouseEnter={(e) => e.currentTarget.style.transform = "translateY(-5px)"}
-            onMouseLeave={(e) => e.currentTarget.style.transform = "translateY(0px)"}
-          >
-            <div style={styles.partHeader}>{card.title}</div>
-            <div style={styles.partBody}>{card.description}</div>
-            <div style={styles.partFooter}>
-              <Link href={card.link}>
-                <a style={styles.moreBtn}>더보기</a>
-              </Link>
-            </div>
-          </div>
+      {/* 메뉴 카드 6개 */}
+      <Row gutter={[16, 16]}>
+        {menuCards.map((m) => (
+          <Col key={m.href} xs={24} sm={12} lg={8}>
+            <Card
+              hoverable
+              style={{
+                borderRadius: 12,
+                height: "100%",
+              }}
+              bodyStyle={{
+                display: "flex",
+                flexDirection: "column",
+                height: "100%",     
+                minHeight: 190,     
+                gap: 10,
+              }}
+            >
+              <Space align="start" style={{ width: "100%", justifyContent: "space-between" }}>
+                <Space>
+                  {m.icon}
+                  <Title level={5} style={{ margin: 0 }}>
+                    {m.title}
+                  </Title>
+                </Space>
+              </Space>
+
+              <Text type="secondary" style={{ lineHeight: 1.6 }}>
+                {m.desc}
+              </Text>
+
+              <div style={{ marginTop: "auto"}}>
+                <Link href={m.href} legacyBehavior>
+                  <a>
+                    <Button type="primary" block icon={<RightOutlined />}>
+                      바로가기
+                    </Button>
+                  </a>
+                </Link>
+              </div>
+            </Card>
+          </Col>
         ))}
-      </section>
-    </div>
+      </Row>
+    </BoardCard>
   );
 }

@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Button, Popconfirm, Descriptions } from "antd";
 import { fileUrl } from "../../utils/fileUrl";
-import ReportButton from "../report/ReportButton";
+import ReportButtonQuiet from "../report/ReportButtonQuiet";
+import { HeartOutlined, HeartFilled } from "@ant-design/icons";
 
 export default function ReviewDetailRow({
   review,
@@ -79,7 +80,7 @@ export default function ReviewDetailRow({
         />
       </div>
 
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0 }}>
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, minHeight: 150 }}>
         {/* 리뷰 이미지 */}
         <div
           style={{
@@ -128,56 +129,67 @@ export default function ReviewDetailRow({
           {review.reviewcomment}
         </div>
 
-        {/* 하단 버튼 영역 */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginTop: 12,
+      {/* 하단 버튼 영역 (한 줄 통일) */}
+<div
+  style={{
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    gap: 8,
+    marginTop: "auto",   
+    paddingTop: 14,   
+    flexWrap: "wrap",
+  }}
+>
+  {/* 좋아요: 항상 표시 */}
+<Button
+  type="text"
+  icon={
+    liked ? <HeartFilled style={{ color: "#ff4d4f" }} /> : <HeartOutlined />
+  }
+  onClick={(e) => {
+    e.stopPropagation();
+    handleLike(review.reviewid);
+  }}
+  style={{
+    display: "inline-flex",
+    alignItems: "center",
+    padding: "0 6px",
+  }}
+>
+  <span style={{ marginLeft: 4, fontSize: 13 }}>{likeCount}</span>
+</Button>
+
+  {/* 내 글이 아니면: 신고 */}
+    {!isMyReview && (
+      <ReportButtonQuiet targetType="REVIEW" targetId={review.reviewid} />
+    )}
+  {/* 내 글(또는 관리자)이면: 수정/삭제 */}
+  {canEditDelete && (
+    <>
+      <Button
+        onClick={(e) => {
+          e.stopPropagation();
+          onOpenEditModal?.(review.reviewid);
         }}
       >
-        {/* 좋아요 신고 버튼 */}
-                  <Button
-            type={liked ? "primary" : "default"}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleLike(review.reviewid);
-            }}
-          >
-            ❤️ 좋아요 {likeCount}
-          </Button>
-        
+        수정
+      </Button>
 
-          {!isMyReview && (
-            <ReportButton targetType="REVIEW" targetId={review.reviewid} />
-          )}
-        </div>
+      <Popconfirm
+        title="정말 삭제하시겠습니까?"
+        okText="삭제"
+        cancelText="취소"
+        onConfirm={() => onDelete?.(review.reviewid)}
+      >
+        <Button danger loading={deleteLoading} onClick={(e) => e.stopPropagation()}>
+          삭제
+        </Button>
+      </Popconfirm>
+    </>
+  )}
+</div>
 
-        {/* 버튼 */}
-        {canEditDelete && (
-          <div style={{ display: "flex", justifyContent: "flex-end", gap: 8, marginTop: 14 }}>
-            <Button
-              onClick={(e) => {
-                e.stopPropagation();
-                onOpenEditModal?.(review.reviewid);
-              }}
-            >
-              수정
-            </Button>
-
-            <Popconfirm
-              title="정말 삭제하시겠습니까?"
-              okText="삭제"
-              cancelText="취소"
-              onConfirm={() => onDelete?.(review.reviewid)}
-            >
-              <Button danger loading={deleteLoading} onClick={(e) => e.stopPropagation()}>
-                삭제
-              </Button>
-            </Popconfirm>
-          </div>
-        )}
       </div>
     </div>
   );

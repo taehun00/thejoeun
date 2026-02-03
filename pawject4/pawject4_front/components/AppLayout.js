@@ -45,6 +45,17 @@ export default function AppLayout({ children }) {
 
   const canAdmin = loginRole === "ROLE_ADMIN" || loginRole === "ADMIN";
 
+// 로그아웃
+const handleLogout = () => {
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("token");
+  localStorage.removeItem("jwt");
+
+  alert("로그아웃 되었습니다.");
+
+ window.location.href = "/mainpage";
+};
+
   // 권한 분기 메뉴
   const menuItems = useMemo(() => {
     const items = [
@@ -76,7 +87,13 @@ export default function AppLayout({ children }) {
     } else {  //로그인x
       items.push(
         { key: "/mypage", label: <Link href="/user/mypage">마이페이지</Link> },
-        { key: "/user/logout", label: <Link href="/user/logout">로그아웃</Link> }
+        { key: "/user/logout",
+          label: (
+            <span onClick={handleLogout} style={{ cursor: "pointer" }}>
+              로그아웃
+            </span>
+          )
+        }
       );
     }
 

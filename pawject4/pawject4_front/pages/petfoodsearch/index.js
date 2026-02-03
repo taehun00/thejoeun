@@ -1,5 +1,5 @@
 // pages/petfoodsearch/index.js
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Alert, Spin } from "antd";
@@ -56,6 +56,9 @@ export default function PetfoodSearchPage() {
   useEffect(() => {
     dispatch(fetchInitRequest());
   }, [dispatch]);
+
+  //디테일 오픈창
+  const [detailOpen, setDetailOpen] = useState(false);
 
   //검색
   const runSearch = useCallback(
@@ -141,14 +144,23 @@ export default function PetfoodSearchPage() {
     [dispatch]
   );
 
-  const onApplyAiFilters = useCallback(
-    (filterPatch) => {
-      if (!filterPatch) return;
-      dispatch(setFilters(filterPatch));
-    },
-    [dispatch]
-  );
+  // const onApplyAiFilters = useCallback(
+  //   (filterPatch) => {
+  //     if (!filterPatch) return;
+  //     dispatch(setFilters(filterPatch));
+  //   },
+  //   [dispatch]
+  // );
+const onApplyAiFilters = useCallback(
+  (filterPatch) => {
+    if (!filterPatch) return;
+    dispatch(setFilters(filterPatch));
+    setDetailOpen(true); // AI 적용하면 상세필터 자동 오픈
+  },
+  [dispatch]
+);
 
+  
   return (
     <>
       <BoardCard title="사료 찾기">
@@ -168,13 +180,14 @@ export default function PetfoodSearchPage() {
             style={{ marginBottom: 12 }}
           />
         )}
-
-        <PetfoodSearchFilters
-          initData={initData}
-          filters={filters}
-          onChangeFilters={onChangeFilters}
-          onClickSearch={onClickSearch}
-        />
+    <PetfoodSearchFilters
+      initData={initData}
+      filters={filters}
+      onChangeFilters={onChangeFilters}
+      onClickSearch={onClickSearch}
+      detailOpen={detailOpen}
+      setDetailOpen={setDetailOpen}
+    />
 
         <div style={{ marginTop: 12 }}>
           <PetfoodSearchAiBox
