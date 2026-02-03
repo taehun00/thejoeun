@@ -156,6 +156,7 @@
 	        <!-- 모집공고 필터 -->
 	    <if test="condition == 'openOnly'">
 	        AND T.POSTTYPE = 1 AND T.STATUS = 0
+	        AND T.CATEGORY = '모집중'
 	    </if>
 	    <if test="condition == 'closeOnly'">
 	        AND T.POSTTYPE = 1 AND T.STATUS = 1
@@ -172,6 +173,7 @@
     WHERE T.DELETED = 0
     <if test="condition == 'openOnly'">
         AND T.POSTTYPE = 1 AND T.STATUS = 0
+        AND T.CATEGORY = '모집중'
     </if>
     <if test="condition == 'closeOnly'">
         AND T.POSTTYPE = 1 AND T.STATUS = 1
@@ -192,7 +194,8 @@ FROM (
 
             <!-- 모집중 우선 정렬 -->
             <when test="condition == 'open' or condition == 'openOnly'">
-                ORDER BY T.ISNOTICE DESC, T.STATUS ASC, T.TESTERID DESC
+                ORDER BY T.ISNOTICE DESC, T.STATUS ASC, 
+                T.TESTERID DESC
             </when>
 
             <!-- 모집완료 우선 정렬 -->
@@ -215,6 +218,7 @@ FROM (
     <!-- 모집공고 필터 -->
     <if test="condition == 'openOnly'">
         AND T.POSTTYPE = 1 AND T.STATUS = 0
+        AND T.CATEGORY = '모집중'
     </if>
     <if test="condition == 'closeOnly'">
         AND T.POSTTYPE = 1 AND T.STATUS = 1
@@ -250,6 +254,7 @@ SELECT COUNT(*)
         <!-- 모집공고 필터 -->
     <if test="condition == 'openOnly'">
         AND T.POSTTYPE = 1 AND T.STATUS = 0
+        AND T.CATEGORY = '모집중'
     </if>
     <if test="condition == 'closeOnly'">
         AND T.POSTTYPE = 1 AND T.STATUS = 1

@@ -1,6 +1,6 @@
 // utils/fileUrl.js
 export function fileUrl(path) {
-  const base = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080";
+  const base = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8484";
   if (!path) return "";
 
   // 이미 절대경로면 그대로

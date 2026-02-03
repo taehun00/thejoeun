@@ -11,6 +11,7 @@ import petReducer from "./pet/petReducer";
 import petdiseaseReducer from "./petdisease/petdiseaseReducer";
 import adReducer from "./ad/adReducer";
 import testerReducer from "./tester/testerReducer";
+import testerCommentReducer from "./tester/testerCommentReducer";
 
 
 const rootReducer = combineReducers({
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   petdisease: petdiseaseReducer,
   ad: adReducer,
   tester: testerReducer,
+  testerComment: testerCommentReducer,
 });
 
 export default rootReducer;
