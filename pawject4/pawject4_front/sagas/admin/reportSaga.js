@@ -10,16 +10,9 @@ import {
   handleReportFailure,
 } from "../../reducers/admin/reportReducer";
 
-/* =========================
-   API
-========================= */
 const fetchReportsApi = ({ type, page, size }) => {
-  if (type === "REVIEW") {
-    return api.get(`/api/admin/reports/review?page=${page}&size=${size}`);
-  }
-  if (type === "TESTER") {
-    return api.get(`/api/admin/reports/tester?page=${page}&size=${size}`);
-  }
+  if (type === "REVIEW") return api.get(`/api/admin/reports/review?page=${page}&size=${size}`);
+  if (type === "TESTER") return api.get(`/api/admin/reports/tester?page=${page}&size=${size}`);
   return api.get(`/api/admin/reports?page=${page}&size=${size}`);
 };
 
@@ -31,12 +24,10 @@ const handleReportApi = ({ reportId, status, action, note }) => {
   );
 };
 
-/* =========================
-   Saga
-========================= */
 function* fetchReports(action) {
   try {
     const { data } = yield call(fetchReportsApi, action.payload);
+    console.log("fetchReports API data:", data); // 확인용
     yield put(fetchReportsSuccess(data));
   } catch (err) {
     yield put(fetchReportsFailure(err.message));

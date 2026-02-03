@@ -20,6 +20,10 @@ import {
   searchTesterRequest,
 } from "../../reducers/tester/testerReducer";
 
+import { 
+  countLikesTesterRequest 
+} from "../../reducers/like/likeReducer";
+
 import { parseJwt } from "../../utils/jwt";
 
 const { Option } = Select;
@@ -44,6 +48,9 @@ export default function TesterIndexPage() {
     condition,
   } = useSelector((state) => state.tester);
 
+  // 좋아요 수 state
+  const { testerLikes } = useSelector(state => state.likes);
+  
   // 관리자 판별
   const [loginRole, setLoginRole] = useState(null);
 
@@ -140,6 +147,27 @@ export default function TesterIndexPage() {
     [dispatch, mode, condition, fetchList, fetchSearch]
   );
 
+  // ===========================
+  // ❤️ 좋아요 수 조회
+  // ===========================
+  useEffect(() => {
+    if (!list || list.length === 0) return;
+
+    list.forEach(t => {
+      dispatch(countLikesTesterRequest({ testerId: t.testerid }));
+    });
+  }, [list, dispatch]);
+
+  // ===========================
+  // list에 likeCount 추가
+  // ===========================
+  const listWithLikes = useMemo(() => {
+    return (list || []).map(t => ({
+      ...t,
+      likeCount: testerLikes?.[t.testerid] ?? 0,
+    }));
+  }, [list, testerLikes]);
+
   return (
     <BoardCard
       title="체험단 게시판"
@@ -210,11 +238,13 @@ export default function TesterIndexPage() {
 
       {/*  Table */}
       <TesterTable
-        list={list || []}
+        list={listWithLikes}
+        //list={list || []}
         loading={loading}
         total={total || 0}
         pageNo={currentPage}
         pageSize={20}
+        testerLikes={testerLikes}
         onChangePage={onChangePage}
         onOpenDetail={(testerid) => router.push(`/tester/detail/${testerid}`)} // 제목 클릭 시 이동
       />

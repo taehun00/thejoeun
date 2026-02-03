@@ -63,7 +63,7 @@ public class TesterComment {
 	
 	@ManyToOne
 	@JoinColumn( name="TESTERID" , nullable = false)
-	private Tester Tester;   // 어떤 게시글에 달린 댓글
+	private Tester tester;   // 어떤 게시글에 달린 댓글
 	
 }
 

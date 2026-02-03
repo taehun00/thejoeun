@@ -312,4 +312,11 @@ public class ReviewServiceImpl implements ReviewService {
 	public int reviewimgdelete(int reviewimgid) {
 		return idao.reviewimgdelete(reviewimgid);
 	}
+
+	@Override
+	public int reviewDeleteByAdmin(int reviewid) {
+		return rdao.reviewDeleteByAdmin(reviewid);
+	}
+	
+
 }

@@ -10,7 +10,8 @@ import likeReducer from "./like/likeReducer";
 import petReducer from "./pet/petReducer";
 import petdiseaseReducer from "./petdisease/petdiseaseReducer";
 import testerReducer from "./tester/testerReducer";
-
+import reportReducer from "./report/reportReducer";
+import adminReportReducer from "./admin/reportReducer";
 
 const rootReducer = combineReducers({
   food: foodReducer,
@@ -23,6 +24,8 @@ const rootReducer = combineReducers({
   pet: petReducer,
   petdisease: petdiseaseReducer,
   tester: testerReducer,
+  report: reportReducer,
+  adminReport: adminReportReducer,
 });
 
 export default rootReducer;

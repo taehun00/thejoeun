@@ -54,4 +54,8 @@ public class Report {
             this.status = ReportStatus.PENDING;
         }
     }
+    
+    public void changeStatus(ReportStatus status) {
+        this.status = status;
+    }
 }

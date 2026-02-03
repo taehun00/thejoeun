@@ -37,4 +37,6 @@ public interface ReviewService {
 	//리액트용 신규
 	public int reviewInsertWithImg(ReviewDto dto, List<MultipartFile> files);
 	public int reviewUpdatetWithImg(ReviewDto dto, List<MultipartFile> files, List<Integer> keepImgIds);
+
+	public int reviewDeleteByAdmin(int reviewid);
 }

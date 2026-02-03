@@ -1,45 +1,55 @@
 import { useState } from "react";
-import { Modal, Select, Input, Button } from "antd";
-import { useDispatch } from "react-redux";
-import { reportRequest } from "../../reducers/report/reportReducer";
-import { WarningOutlined } from "@ant-design/icons";
+import { Modal, Select, Input, Button, message } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { reportRequest, resetReportState } from "../../reducers/report/reportReducer";
 
 const { TextArea } = Input;
 
 export default function ReportButton({ targetType, targetId }) {
   const dispatch = useDispatch();
+  const { loading } = useSelector((state) => state.report);
+
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState("");
   const [details, setDetails] = useState("");
 
   const submit = () => {
-    dispatch(
-      reportRequest({
-        targetType,
-        targetId,
-        reason,
-        details,
-      })
-    );
+    if (!reason) {
+      message.error("신고 사유를 선택해주세요");
+      return;
+    }
+
+    dispatch(reportRequest({ targetType, targetId, reason, details }));
+    message.success("신고가 접수되었습니다");
+
     setOpen(false);
+    setReason("");
+    setDetails("");
+    dispatch(resetReportState());
   };
 
   return (
     <>
-      <WarningOutlined
-        style={{ color: "red", cursor: "pointer" }}
+      {/* 🚨 이모티콘 버튼 */}
+      <Button
+        size="small"
+        danger
         onClick={() => setOpen(true)}
-      />
+      >
+        🚨 신고
+      </Button>
 
       <Modal
         title="신고하기"
         open={open}
         onOk={submit}
         onCancel={() => setOpen(false)}
+        okButtonProps={{ loading }}
       >
         <Select
           style={{ width: "100%", marginBottom: 10 }}
           placeholder="신고 사유"
+          value={reason}
           onChange={setReason}
         >
           <Select.Option value="욕설">욕설</Select.Option>

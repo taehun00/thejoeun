@@ -30,4 +30,5 @@ public interface ReviewImgDao {
 
 		//	<select resultMap="ReviewImgMap" id="reviewimgIdSelect" parameterType="int">
 		public ReviewImgDto  reviewimgIdSelect(int reviewimgid);
+		
 }
