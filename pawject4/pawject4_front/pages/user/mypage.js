@@ -64,8 +64,8 @@ export default function MyPage() {
             <Button danger onClick={handleDeleteAccount} style={{ marginLeft: 10 }}>
               탈퇴
             </Button>
-            <Button onClick={() => router.push("/cs/questionWrite")} style={{ marginLeft: 10 }}>
-              
+            <Button onClick={() => router.push("/cs/myQuestion")} style={{ marginLeft: 10 }}>
+              내 1:1 질문 보기
             </Button>
 
           </>
@@ -78,12 +78,12 @@ export default function MyPage() {
           renderItem={(pet) => (
             <List.Item key={pet.petId}>
               <Card style={{ width: "100%" }}>
+                <p>타입: {pet.petTypeId === 1 ? "고양이" : "강아지"}</p>
                 <p>이름: {pet.petName}</p>
                 <p>종: {pet.petBreed}</p>
                 <p>생일: {pet.birthDate}</p>
                 <p>나이: {pet.page}</p>
                 <p>성별: {pet.pgender}</p>
-                <p>타입: {pet.petTypeId === 1 ? "고양이" : "강아지"}</p>
                 <img
                   src={`http://localhost:8484/uploads/${pet.imageUrl || "default.png"}`}
                   alt={pet.petName}

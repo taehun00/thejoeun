@@ -12,10 +12,10 @@ export default function NewPetPage() {
     try {
       setLoading(true);
       const formData = new FormData();
+      formData.append("petTypeId", values.type); // 1=고양이, 2=강아지
       formData.append("petName", values.name);
       formData.append("petBreed", values.species);
       formData.append("birthDate", values.birthday.format("YYYY-MM-DD"));
-      formData.append("petTypeId", values.type); // 1=고양이, 2=강아지
       formData.append("page", values.age);
       formData.append("pgender", values.gender);
       if (values.image && values.image.length > 0) {
@@ -35,6 +35,14 @@ export default function NewPetPage() {
 
   return (
     <Form onFinish={onFinish} layout="vertical" style={{ maxWidth: 400, margin: "0 auto" }}>
+ 
+       <Form.Item name="type" label="펫 타입" rules={[{ required: true }]}>
+        <Select placeholder="선택하세요">
+          <Select.Option value={1}>고양이</Select.Option>
+          <Select.Option value={2}>강아지</Select.Option>
+        </Select>
+      </Form.Item>
+ 
       <Form.Item name="name" label="펫 이름" rules={[{ required: true }]}>
         <Input />
       </Form.Item>
@@ -45,13 +53,6 @@ export default function NewPetPage() {
 
       <Form.Item name="birthday" label="펫 생일" rules={[{ required: true }]}>
         <DatePicker style={{ width: "100%" }} />
-      </Form.Item>
-
-      <Form.Item name="type" label="펫 타입" rules={[{ required: true }]}>
-        <Select placeholder="선택하세요">
-          <Select.Option value={1}>고양이</Select.Option>
-          <Select.Option value={2}>강아지</Select.Option>
-        </Select>
       </Form.Item>
 
       <Form.Item name="age" label="펫 나이" rules={[{ required: true }]}>

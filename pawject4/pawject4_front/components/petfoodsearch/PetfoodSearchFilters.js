@@ -10,8 +10,10 @@ export default function PetfoodSearchFilters({
   filters,
   onChangeFilters,
   onClickSearch,
+  detailOpen,
+  setDetailOpen,
 }) {
-  const [detailOpen, setDetailOpen] = useState(false);
+//  const [detailOpen, setDetailOpen] = useState(false);    인덱스로 이동(ai박스 이슈)
 
   const brandList = initData?.brandList || [];
   const foodList = initData?.foodList || [];
