@@ -32,12 +32,12 @@ export default function PetDetailPage() {
 
   return (
     <Card title="펫 상세 정보" style={{ maxWidth: 500, margin: "0 auto" }}>
+      <p>타입: {pet.petTypeId === 1 ? "고양이" : "강아지"}</p>
       <p>이름: {pet.petName}</p>
       <p>종: {pet.petBreed}</p>
       <p>생일: {pet.birthDate}</p>
       <p>나이: {pet.page}</p>
       <p>성별: {pet.pgender}</p>
-      <p>타입: {pet.petTypeId === 1 ? "고양이" : "강아지"}</p>
 
       <img
         src={`http://localhost:8484/uploads/${pet.imageUrl || "default.png"}`}

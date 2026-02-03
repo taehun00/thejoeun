@@ -114,12 +114,12 @@ export default function PetfoodDetailModal({
             </Paragraph>
           </div>
 
-          {/* 영양 */}
+          {/* 영양 - 소수점 출력 조심*/}
           <div>
             <Text strong>영양 정보</Text>
-            <Paragraph style={{ marginTop: 4 }}>
-              {dto.nutriinfo}
-            </Paragraph>
+        <Paragraph style={{ marginTop: 4 }}>
+          {String(dto.nutriinfo ?? "").replace(/(^|[^\d])\.(\d)/g, "$10.$2")}
+        </Paragraph>
           </div>
         </>
       )}

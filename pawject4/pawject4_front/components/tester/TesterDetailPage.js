@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
-import ReportButton from "../report/ReportButton";
+import ReportButtonQuiet from "../report/ReportButtonQuiet";
 import {
   Button,
   Space,
@@ -265,48 +265,57 @@ const handleLike = useCallback(() => {
           <Title level={3} style={{ margin: 0, lineHeight: 1.25 }}>
             {categoryToTag(dto?.category)} {dto?.title || "(제목 없음)"}
           </Title>
-          <Button
-            type={likedByMe ? "primary" : "default"}
-            danger={likedByMe}
-            onClick={handleLike}
-          >
-            📝 추천  {likeCount}
-          </Button>
-          <ReportButton targetType="TESTER" targetId={dto?.testerid} />
         </div>
-          {/* 부가정보 */}
-          <div
-            style={{
-              marginTop: 10,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: 10,
-              flexWrap: "wrap",
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-              {canAdminToggle && Number(dto?.isnotice) === 1 && (
-                <Tag color="red">상단공지</Tag>
-              )}
 
-              {canAdminToggle && (
-                <Tag color={Number(dto?.status) === 0 ? "green" : "default"}>
-                  {Number(dto?.status) === 0 ? "모집중" : "모집완료"}
-                </Tag>
-              )}
+            {/* 부가정보 */}
+            <div
+              style={{
+                marginTop: 10,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 10,
+                flexWrap: "wrap",
+              }}
+            >
+              {/* 왼쪽: 작성자/날짜/조회 등 */}
+              <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                {canAdminToggle && Number(dto?.isnotice) === 1 && <Tag color="red">상단공지</Tag>}
 
-              <Text type="secondary">
-                {dto?.nickname || "-"} · 작성 {createdDate} · 수정 {updatedDate} · 조회 {dto?.views ?? 0}
-              </Text>
+                {canAdminToggle && dto?.category !== "공지" && (
+                  <Tag color={Number(dto?.status) === 0 ? "green" : "default"}>
+                    {Number(dto?.status) === 0 ? "모집중" : "모집완료"}
+                  </Tag>
+                )}
+                <Text type="secondary">
+                  {dto?.nickname || "-"} · 작성 {createdDate} · 수정 {updatedDate} · 조회 {dto?.views ?? 0}
+                </Text>
+              </div>
+
+              {/* 오른쪽: 관련사료/추천/신고 버튼 */}
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                {dto?.foodid ? (
+                  <Button size="small" onClick={onOpenFoodModal}>
+                    관련 사료 정보 보기
+                  </Button>
+                ) : null}
+
+                {/* 관리자 운영글(posttype=1) 제외 */}
+                {!isAdminPost && (
+                  <Button
+                    size="small"
+                    type={likedByMe ? "default" : "default"}
+                    onClick={handleLike}
+                  >
+                    추천 {likeCount}
+                  </Button>
+                )}
+
+                {!isAdminPost && (
+                  <ReportButtonQuiet targetType="TESTER" targetId={dto?.testerid} />
+                )}
+              </div>
             </div>
-
-            {dto?.foodid ? (
-              <Button size="small" onClick={onOpenFoodModal}>
-                관련 사료 정보 보기
-              </Button>
-            ) : null}
-          </div>
 
 
           {/*  내용 */}
