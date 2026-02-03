@@ -96,5 +96,5 @@ export default function* adSaga() {
   yield takeLatest(updateAdRequest.type, updateAd);
   yield takeLatest(deleteAdRequest.type, deleteAd);
   // fetchActiveAdsRequest 액션이 들어오면 fetchActiveAdsSaga 실행
-  yield takeLatest(fetchActiveAdsRequest.type, fetchActiveAdsSaga);
+ // yield takeLatest(fetchActiveAdsRequest.type, fetchActiveAdsSaga);
 }
