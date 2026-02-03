@@ -45,11 +45,9 @@ public class TesterAdminResponseDto {
                 .toList();
 
         return TesterAdminResponseDto.builder()
-<<<<<<< HEAD
+        		
         	    .testerid(t.getTesterid() == null ? null : t.getTesterid().longValue())
-=======
-        	    .testerid(t.getTesterid() == null ? null : t.getTesterid())
->>>>>>> 3fc449dfcd74dff4be483b5ffa392053521daa2e
+
         	    .category(t.getCategory())
         	    .title(t.getTitle())
         	    .content(t.getContent())
