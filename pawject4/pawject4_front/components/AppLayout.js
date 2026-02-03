@@ -52,6 +52,8 @@ export default function AppLayout({ children }) {
       { key: "/reviewboard", label: <Link href="/reviewboard">사료리뷰</Link> },
       { key: "/disease", label: <Link href="/petdisease">질환정보</Link> },
       { key: "/tester", label: <Link href="/tester">체험단</Link> },
+      //{ key: "/ad", label: <Link href="/ad">광고</Link> },  // 광고 기능 작동여부 확인용.
+
       { key: "/faq", label: <Link href="/faq">고객센터</Link> },
     ];
 
@@ -59,7 +61,8 @@ export default function AppLayout({ children }) {
     if (canAdmin) {
       items.push(
         { key: "/foodboard", label: <Link href="/foodboard">사료관리</Link> },
-        { key: "/faq/admin", label: <Link href="/faq/admin">FAQ관리</Link> }
+        { key: "/faq/admin", label: <Link href="/faq/admin">FAQ관리</Link> },
+        { key: "/ad", label: <Link href="/ad/ad">광고관리</Link> }  // 관리자가 광고 관리
       );
     }
 

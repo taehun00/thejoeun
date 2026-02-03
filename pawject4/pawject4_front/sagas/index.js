@@ -12,6 +12,7 @@ import petSaga from "./pet/petSaga";
 import adminReportSaga from "./admin/reportSaga";
 import reportSaga from "./report/reportSaga"
 import petdiseaseSaga from "./petdisease/petdiseaseSaga";
+import adSaga from "./ad/adSaga";
 import testerSaga from "./tester/testerSaga";
 import testerCommentSaga from "./tester/testerCommentSaga";
 
@@ -29,6 +30,7 @@ export default  function * rootSaga(){
     fork(adminReportSaga),
     fork(reportSaga),
     fork(petdiseaseSaga),
+    fork(adSaga),
     fork(testerSaga),
     fork(testerCommentSaga)
   ]);  
