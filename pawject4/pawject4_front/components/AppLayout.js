@@ -55,6 +55,7 @@ export default function AppLayout({ children }) {
       //{ key: "/ad", label: <Link href="/ad">광고</Link> },  // 광고 기능 작동여부 확인용.
 
       { key: "/faq", label: <Link href="/faq">고객센터</Link> },
+      //{ key: "/ad", label: <Link href="/ad">광고</Link> },  // 광고 기능 작동여부 확인용.
     ];
 
     // 관리자 전용 메뉴
