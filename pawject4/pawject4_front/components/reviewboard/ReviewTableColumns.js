@@ -41,7 +41,13 @@ export default function ReviewTableColumns({
 
         return (
           <span
-            onClick={() => onPetTypeFilter?.(Number(pettypeid))}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onPetTypeFilter?.(Number(pettypeid));
+          }}
+
+            
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -92,7 +98,14 @@ export default function ReviewTableColumns({
             </span>
 
             <span
-              onClick={() => onFoodFilter?.(food)}
+              // onClick={() => onFoodFilter?.(food)}
+
+
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onFoodFilter?.(food);
+              }}
               style={{
                 cursor: "pointer",
                 fontSize: 13,

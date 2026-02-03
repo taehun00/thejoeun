@@ -15,9 +15,12 @@ import {
   Card,
 } from "antd";
 
+//부품
 import { fileUrl } from "../../utils/fileUrl";
 import { parseJwt } from "../../utils/jwt";
-import PetfoodDetailModal from "../../components/petfoodsearch/PetfoodDetailModal";
+
+import PetfoodDetailModal from "../../components/petfoodsearch/PetfoodDetailModal";  //모달
+import TesterCommentSection from "../../components/tester/TesterCommentSection"; //댓글
 
 
 import {
@@ -70,6 +73,13 @@ export default function TesterDetailPage() {
   const dispatch = useDispatch();
   const { testerid } = router.query;
 
+  //아이디오류방어
+  const stableTesterid = useMemo(() => {
+  const id = Number(testerid);
+  if (!id || Number.isNaN(id)) return null;
+  return id;
+}, [testerid]);
+
   const { detail, noticeLoading, statusLoading, deleteLoading } = useSelector(
     (state) => state.tester
   );
@@ -93,10 +103,10 @@ export default function TesterDetailPage() {
 
   const isAdmin = loginRole === "ROLE_ADMIN";
 
-  useEffect(() => {
-    if (!testerid) return;
-    dispatch(fetchTesterDetailRequest({ testerid }));
-  }, [dispatch, testerid]);
+useEffect(() => {
+  if (!stableTesterid) return;
+  dispatch(fetchTesterDetailRequest({ testerid: stableTesterid }));
+}, [dispatch, stableTesterid]);
 
   const dto = detail?.dto;
   const tester = dto;
@@ -359,7 +369,18 @@ const handleLike = useCallback(() => {
               )}
             </Space>
           </div>
+
+
+          {/* 댓글 붙이기 */}
+        {stableTesterid && (
+          <TesterCommentSection
+            testerid={stableTesterid}
+            loginRole={loginRole}
+            loginUserId={loginUserid}
+          />
+        )}
         </Card>
+
       )}
 
 {/* 사료 상세 모달 */}

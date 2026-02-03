@@ -30,13 +30,13 @@ public class TesterComment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE , generator = "testercomments_seq")  //시퀀스 사용
 	@SequenceGenerator(name = "testercomments_seq", sequenceName = "TESTERCOMMENTS_SEQ" , allocationSize = 1) 
-	private Long id; //PK
+	private Long testercommentid; //PK
 	
-	@Column(nullable = false , name="CREATED_AT")
-	private LocalDateTime createdAt; // 생성일시
+	@Column(nullable = false , name="CREATEDAT")
+	private LocalDateTime createdat; // 생성일시
 	
-	@Column(nullable = false , name="UPDATED_AT")
-	private LocalDateTime updatedAt; // 수정일시
+	@Column(nullable = false , name="UPDATEDAT")
+	private LocalDateTime updatedat; // 수정일시
 
 	@Column
 	private boolean deleted=false; // 삭제 여부
@@ -48,13 +48,13 @@ public class TesterComment {
 	
 	@PrePersist
 	void onCreate() {
-		this.createdAt = LocalDateTime.now();
-		this.updatedAt = LocalDateTime.now();
+		this.createdat = LocalDateTime.now();
+		this.updatedat = LocalDateTime.now();
 	}
 	
 	@PreUpdate
 	void onUpdate() { 
-		this.updatedAt = LocalDateTime.now();
+		this.updatedat = LocalDateTime.now();
 	}
 	 
 	@ManyToOne

@@ -9,9 +9,11 @@ import csReducer from "./support/csReducer";
 import likeReducer from "./like/likeReducer";
 import petReducer from "./pet/petReducer";
 import petdiseaseReducer from "./petdisease/petdiseaseReducer";
+import adReducer from "./ad/adReducer";
 import testerReducer from "./tester/testerReducer";
 import reportReducer from "./report/reportReducer";
 import adminReportReducer from "./admin/reportReducer";
+import testerCommentReducer from "./tester/testerCommentReducer";
 
 const rootReducer = combineReducers({
   food: foodReducer,
@@ -23,9 +25,11 @@ const rootReducer = combineReducers({
   likes: likeReducer,
   pet: petReducer,
   petdisease: petdiseaseReducer,
+  ad: adReducer,
   tester: testerReducer,
   report: reportReducer,
   adminReport: adminReportReducer,
+  testerComment: testerCommentReducer,
 });
 
 export default rootReducer;
