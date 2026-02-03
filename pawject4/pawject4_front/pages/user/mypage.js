@@ -64,6 +64,10 @@ export default function MyPage() {
             <Button danger onClick={handleDeleteAccount} style={{ marginLeft: 10 }}>
               탈퇴
             </Button>
+            <Button onClick={() => router.push("/cs/questionWrite")} style={{ marginLeft: 10 }}>
+              
+            </Button>
+
           </>
         )}
       </Card>

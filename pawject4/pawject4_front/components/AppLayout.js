@@ -61,7 +61,7 @@ export default function AppLayout({ children }) {
       items.push(
         { key: "/foodboard", label: <Link href="/foodboard">사료관리</Link> },
         { key: "/faq/admin", label: <Link href="/faq/admin">FAQ관리</Link> },
-        { key: "/admin/reports", label: <Link href="/admin/reports">신고기록</Link> }
+        { key: "/admin/reports", label: <Link href="/admin/reports">신고기록</Link> },
         { key: "/ad", label: <Link href="/ad">광고관리</Link> }  // 관리자가 광고 관리
       );
     }
