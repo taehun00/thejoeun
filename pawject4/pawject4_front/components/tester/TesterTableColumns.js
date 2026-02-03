@@ -18,6 +18,7 @@ export default function TesterTableColumns({
   pageSize = 20, 
 
   onOpenDetail, 
+  testerLikes = {}, // <- 좋아요 개수 props
 }) {
   return [
     // NO
@@ -56,6 +57,17 @@ export default function TesterTableColumns({
         {v || "(제목 없음)"}
         </Button>
     ),
+    },
+        // 좋아요 수 컬럼 추가
+    {
+      title: "❤️ 좋아요",
+      key: "likes",
+      width: 90,
+      align: "center",
+      render: (_, record) => {
+        // testerLikes[record.testerid]가 있으면 표시, 없으면 0
+        return testerLikes?.[record.testerid] ?? 0;
+      },
     },
     // 작성자
     {

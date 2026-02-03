@@ -11,8 +11,8 @@ import {
 const reportApi = ({ targetType, targetId, reason, details }) => {
   const url =
     targetType === "REVIEW"
-      ? `/api/reports/review/${targetId}`
-      : `/api/reports/tester/${targetId}`;
+      ? `/api/reports/review?reviewId=${targetId}`
+      : `/api/reports/tester?testerId=${targetId}`;
 
   return api.post(url, { reason, details });
 };

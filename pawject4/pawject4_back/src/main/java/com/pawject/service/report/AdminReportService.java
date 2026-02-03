@@ -3,8 +3,12 @@ package com.pawject.service.report;
 import com.pawject.dao.review.ReviewDao;
 import com.pawject.domain.*;
 import com.pawject.dto.report.AdminReportResponseDto;
+import com.pawject.dto.review.ReviewDto;
+import com.pawject.repository.LikeRepository;
 import com.pawject.repository.ReportActionRepository;
 import com.pawject.repository.ReportRepository;
+import com.pawject.repository.TesterCommentsRepository;
+import com.pawject.repository.TesterImgRepository;
 import com.pawject.repository.TesterRepository;
 import com.pawject.service.review.ReviewService;
 
@@ -27,6 +31,9 @@ public class AdminReportService {
     private final ReviewDao reviewDao;
     private final TesterRepository testerRepository;
     private final ReviewService rservice;
+    private final TesterImgRepository testerImgRepository;
+    private final TesterCommentsRepository testerCommentsRepository;
+    private final LikeRepository likeRepository;
 
     /** 전체 조회 */
     @Transactional(readOnly = true)
@@ -64,6 +71,7 @@ public class AdminReportService {
 
 
     /** 신고 처리 */
+    @Transactional
     public void handleReport(
             Long reportId,
             Long adminId,
@@ -71,34 +79,72 @@ public class AdminReportService {
             ReportActionType action,
             String note
     ) {
+        // 1️⃣ 신고 조회
         Report report = reportRepository.findById(reportId)
                 .orElseThrow(() -> new IllegalArgumentException("신고 없음"));
 
-        // 실제 게시글 삭제
-        if (action == ReportActionType.DELETE) {
-            deleteTarget(report);
-        } else if (action == ReportActionType.IGNORE) {
-            // 아무 것도 하지 않고 신고 처리 상태만 기록
-        }
+        // 2️⃣ 신고 상태 변경
+        report.changeStatus(status);
 
-        // 신고 처리 기록 저장
-        ReportAction reportAction = ReportAction.builder()
-                .report(report)
-                .status(status)   // PENDING / RESOLVED / REJECTED
-                .action(action)   // DELETE / IGNORE
-                .adminId(adminId)
-                .note(note)
-                .build();
+        // 3️⃣ 처리 이력 조회 (없으면 생성)
+        ReportAction reportAction = reportActionRepository
+                .findByReport_ReportId(reportId)
+                .orElseGet(() ->
+                    ReportAction.builder()
+                        .report(report)
+                        .status(status)
+                        .build()
+                );
+
+        // 4️⃣ 처리 이력 업데이트
+        reportAction.update(status, action, adminId, note);
 
         reportActionRepository.save(reportAction);
+
+        // 5️⃣ 실제 대상 삭제 (마지막!)
+        if (action == ReportActionType.DELETE) {
+            deleteTarget(report);
+        }
     }
 
-    /** 실제 게시글 삭제 */
     private void deleteTarget(Report report) {
+
         if (report.getTargetType() == ReportTargetType.REVIEW) {
-//            reviewDao.deleteReviewByAdmin(report.getTargetId());
-        } else if (report.getTargetType() == ReportTargetType.TESTER) {
-            testerRepository.deleteById(report.getTargetId());
+            forceDeleteReview(report.getTargetId());
         }
+
+        else if (report.getTargetType() == ReportTargetType.TESTER) {
+        	forceDeleteTester(report.getTargetId());
+        }
+    }
+
+    
+    @Transactional(readOnly = true)
+    public AdminReportResponseDto getReportDetail(Long reportId) {
+        Report report = reportRepository.findById(reportId)
+            .orElseThrow(() -> new IllegalArgumentException("신고 없음"));
+
+        return AdminReportResponseDto.from(report);
+    }
+    
+    @Transactional
+    private void forceDeleteReview(Long reviewId) {
+
+        // 1️⃣ REVIEWIMG 먼저 삭제 (FK 끊기)
+        rservice.reviewimgdeleteById(reviewId.intValue());
+
+        // 2️⃣ REVIEW 관리자 강제 삭제
+        rservice.reviewDeleteByAdmin(reviewId.intValue());
+    }
+    
+    @Transactional
+    private void forceDeleteTester(Long testerId) {
+        // 1️⃣ 자식 테이블 삭제 (FK 끊기)
+        testerImgRepository.deleteByTesterId(testerId);       // TESTERIMG
+        testerCommentsRepository.deleteByTesterId(testerId);  // TESTERCOMMENTS
+        likeRepository.deleteByTesterId(testerId);           // LIKES
+
+        // 2️⃣ 부모 테이블 삭제
+        testerRepository.deleteById(testerId);               // TESTER
     }
 }

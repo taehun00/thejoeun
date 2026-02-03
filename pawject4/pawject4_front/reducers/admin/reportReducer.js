@@ -4,7 +4,6 @@ const initialState = {
   reports: [],
   page: 0,
   size: 10,
-  totalPages: 0,
   totalElements: 0,
   loading: false,
   error: null,
@@ -14,25 +13,28 @@ const adminReportSlice = createSlice({
   name: "adminReport",
   initialState,
   reducers: {
-    // 신고 목록 조회
     fetchReportsRequest: (state) => {
       state.loading = true;
       state.error = null;
     },
     fetchReportsSuccess: (state, action) => {
       state.loading = false;
-      state.reports = action.payload.content;
-      state.page = action.payload.pageable.pageNumber;
-      state.size = action.payload.size;
-      state.totalPages = action.payload.totalPages;
-      state.totalElements = action.payload.totalElements;
+      if (Array.isArray(action.payload)) {
+        state.reports = action.payload;
+        state.page = 1;
+        state.size = action.payload.length;
+        state.totalElements = action.payload.length;
+      } else {
+        state.reports = action.payload.content || [];
+        state.page = action.payload.pageable?.pageNumber || 0;
+        state.size = action.payload.size || 10;
+        state.totalElements = action.payload.totalElements || 0;
+      }
     },
     fetchReportsFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
     },
-
-    // 신고 처리
     handleReportRequest: (state) => {
       state.loading = true;
       state.error = null;

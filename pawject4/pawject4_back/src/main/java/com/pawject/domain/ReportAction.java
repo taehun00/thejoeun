@@ -52,4 +52,15 @@ public class ReportAction {
     void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
+    public void update(
+            ReportStatus status,
+            ReportActionType action,
+            Long adminId,
+            String note
+    ) {
+        this.status = status;
+        this.action = action;
+        this.adminId = adminId;
+        this.note = note;
+    }
 }

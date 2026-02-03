@@ -265,6 +265,14 @@
 	    WHERE EMAIL = #{email}
 	</select>
 	
+	<delete id="reviewimgdeleteById" parameterType="int">
+	    DELETE FROM REVIEWIMG
+	    WHERE REVIEWID = #{value}
+	</delete>
 	
+	<delete id="reviewDeleteByAdmin" parameterType="int">
+	    delete from review
+	    where reviewid = #{value}
+	</delete>
 	
 </mapper>

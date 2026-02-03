@@ -88,4 +88,12 @@ public class AdminReportController {
 	            dto.getNote()
 	    );
 	}
+	
+	@GetMapping("/{reportId}")
+	public AdminReportResponseDto getReportDetail(
+			@Parameter(description = "신고 ID", required = true)
+	        @PathVariable("reportId") Long reportId
+	) {
+	    return adminReportService.getReportDetail(reportId);
+	}
 }

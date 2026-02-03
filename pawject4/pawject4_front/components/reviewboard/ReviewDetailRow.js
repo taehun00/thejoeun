@@ -1,5 +1,7 @@
+import { useState, useEffect } from "react";
 import { Button, Popconfirm, Descriptions } from "antd";
 import { fileUrl } from "../../utils/fileUrl";
+import ReportButton from "../report/ReportButton";
 
 export default function ReviewDetailRow({
   review,
@@ -10,13 +12,38 @@ export default function ReviewDetailRow({
   deleteLoading = false,
 
   onToggleLike, //
-  likeCount, //
-  liked, //
 }) {
   if (!review) return null;
 
   // 여기부터 taehun 작성
+  const [liked, setLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+
+  useEffect(() => {
+    setLiked(review?.liked ?? false);
+    setLikeCount(review?.likeCount ?? 0);
+  }, [review?.liked, review?.likeCount]);
+
   const isMyReview = Number(review.userid) === Number(loginUserId);
+
+    const handleLike = async (reviewId) => {
+    try {
+      // 토글 요청
+      const result = await onToggleLike(reviewId); // { liked: true/false, likeCount: number }
+
+      // 서버 응답 기반으로 상태 업데이트
+    if (result) {
+      setLiked(result.liked ?? liked);
+      setLikeCount(result.likeCount ?? likeCount);
+    } else {
+      // result 없으면 그냥 토글
+      setLiked((prev) => !prev);
+      setLikeCount((prev) => (liked ? prev - 1 : prev + 1));
+    }
+    } catch (err) {
+      console.error("좋아요 처리 실패", err);
+    }
+  };
   // 여기까지 taehun 작성
 
 
@@ -111,29 +138,19 @@ export default function ReviewDetailRow({
         }}
       >
         {/* 좋아요 신고 버튼 */}
-          <Button
+                  <Button
             type={liked ? "primary" : "default"}
             onClick={(e) => {
               e.stopPropagation();
-              onToggleLike(review.reviewid);
+              handleLike(review.reviewid);
             }}
           >
-            ❤️ 좋아요 {likeCount ?? 0}
+            ❤️ 좋아요 {likeCount}
           </Button>
         
 
           {!isMyReview && (
-            <Button
-              size="small"
-              danger
-              onClick={(e) => {
-                e.stopPropagation();
-                console.log("신고 클릭", review.reviewid);
-                // dispatch(reportReviewRequest({ reviewid: review.reviewid }))
-              }}
-            >
-              🚨 신고
-            </Button>
+            <ReportButton targetType="REVIEW" targetId={review.reviewid} />
           )}
         </div>
 

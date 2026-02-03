@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
+import ReportButton from "../report/ReportButton";
 import {
   Button,
   Space,
@@ -39,6 +40,11 @@ import {
   openModal,
   closeModal,
 } from "../../reducers/food/foodSearchReducer";
+
+import {
+  likeTesterRequest,
+  removeLikeTesterRequest,
+} from "../../reducers/like/likeReducer";
 
 const { Title, Text } = Typography;
 
@@ -89,6 +95,8 @@ export default function TesterDetailPage() {
 
   const modal = useSelector((state) => state.search?.modal);
 
+  const { testerLikes, testerLikedByMe } = useSelector(state => state.likes);
+
   const [loginRole, setLoginRole] = useState(null);
   const [loginUserid, setLoginUserid] = useState(null);
 
@@ -117,7 +125,7 @@ useEffect(() => {
 >>>>>>> 3fc449dfcd74dff4be483b5ffa392053521daa2e
 
   const dto = detail?.dto;
-
+  const tester = dto;
   const ownerUserid = dto?.userid ?? null;
 
   const isOwner = useMemo(() => {
@@ -167,6 +175,19 @@ const onCloseFoodModal = useCallback(() => {
   dispatch(closeModal());
 }, [dispatch]);
 
+const likeCount = testerLikes?.[testerid] ?? 0;
+const likedByMe = testerLikedByMe?.[testerid] ?? false;
+
+const handleLike = useCallback(() => {
+  if (!testerid) return;
+
+  if (likedByMe) {
+    dispatch(removeLikeTesterRequest({ testerId: testerid }));
+  } else {
+    dispatch(likeTesterRequest({ testerId: testerid }));
+  }
+}, [dispatch, testerid, likedByMe]);
+
   return (
     <div style={{ width: "min(980px, 94vw)", margin: "28px auto 60px" }}>
       {/* 상단 네비 */}
@@ -211,7 +232,6 @@ const onCloseFoodModal = useCallback(() => {
 
 
       </div>
-
       {detail?.loading && (
         <Card style={{ borderRadius: 14 }}>
           <div style={{ textAlign: "center", padding: 24 }}>
@@ -232,11 +252,28 @@ const onCloseFoodModal = useCallback(() => {
           }}
           bodyStyle={{ padding: 22 }}
         >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 12,
+                marginBottom: 10,
+              }}
+            >
           {/* 제목 */}
           <Title level={3} style={{ margin: 0, lineHeight: 1.25 }}>
             {categoryToTag(dto?.category)} {dto?.title || "(제목 없음)"}
           </Title>
-
+          <Button
+            type={likedByMe ? "primary" : "default"}
+            danger={likedByMe}
+            onClick={handleLike}
+          >
+            📝 추천  {likeCount}
+          </Button>
+          <ReportButton targetType="TESTER" targetId={dto?.testerid} />
+        </div>
           {/* 부가정보 */}
           <div
             style={{

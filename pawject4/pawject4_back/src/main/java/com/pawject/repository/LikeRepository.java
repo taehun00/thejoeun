@@ -54,4 +54,9 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
                 @Param("userId") Long userId,
                 @Param("reviewId") Long reviewId
         );
+    
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Like l WHERE l.tester.testerid = :testerId")
+    void deleteByTesterId(@Param("testerId") Long testerId);
 }	

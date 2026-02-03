@@ -22,6 +22,7 @@ export default function TesterTable({
   onChangePage,
 
   onOpenDetail,
+  testerLikes = {},
 }) {
   const columns = [
     // NO
@@ -59,6 +60,17 @@ export default function TesterTable({
         </Button>
       ),
     },
+
+
+    // 좋아요 수
+    {
+      title: "📝 추천",
+      key: "likes",
+      width: 90,
+      align: "center",
+      render: (_, record) => record.likeCount ?? 0,
+    },
+
 
     // 작성자
     {
