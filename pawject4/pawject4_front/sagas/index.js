@@ -28,7 +28,7 @@ export default  function * rootSaga(){
     fork(adminReportSaga),
     fork(reportSaga),
     fork(petdiseaseSaga),
-    fork(adSaga),
+    fork(adSaga), 
     fork(testerSaga),
   ]);  
 }
