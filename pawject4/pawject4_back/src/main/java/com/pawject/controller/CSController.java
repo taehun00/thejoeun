@@ -31,7 +31,7 @@ import lombok.RequiredArgsConstructor;
 
 @Tag(name = "CS", description = "고객센터 CS")
 @RestController
-@RequestMapping("/csBoard")
+@RequestMapping("/api/csBoard")
 @RequiredArgsConstructor
 public class CSController {
 

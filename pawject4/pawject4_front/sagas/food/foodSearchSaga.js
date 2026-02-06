@@ -26,24 +26,24 @@ import {
 
 // init
 function initApi() {
-  return axios.get("/petfoodsearcher/init");
+  return axios.get("/api/petfoodsearcher/init");
 }
 
 // search + paging
 function searchFilterPagingApi(params) {
-  return axios.get("/petfoodsearcher/searchfilterPaging", { params });
+  return axios.get("/api/petfoodsearcher/searchfilterPaging", { params });
 }
 
 // ai filter
 function foodApiApi(userMessage) {
-  return axios.post("/petfoodsearcher/foodapi", null, {
+  return axios.post("/api/petfoodsearcher/foodapi", null, {
     params: { userMessage },
   });
 }
 
 // modal card
 function modalCardApi(foodid) {
-  return axios.get(`/petfoodsearcher/modalcard/${foodid}`);
+  return axios.get(`/api/petfoodsearcher/modalcard/${foodid}`);
 }
 
 /**

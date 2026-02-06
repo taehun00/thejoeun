@@ -20,7 +20,7 @@ function* fetchReviews(action) {
     const { pageNo = 1, condition = "new" } = action.payload || {};
 
     const { data } = yield call(() =>
-      axios.get("/reviewboard/reviewPaging", {
+      axios.get("/api/reviewboard/reviewPaging", {
         params: { pageNo, ...(condition ? { condition } : {}) },
       })
     );
@@ -42,7 +42,7 @@ function* searchReviews(action) {
     } = action.payload || {};
 
     const { data } = yield call(() =>
-      axios.get("/reviewboard/reviewsearch", {
+      axios.get("/api/reviewboard/reviewsearch", {
         params: {
           keyword,
           searchType,
@@ -64,7 +64,7 @@ function* fetchReviewForm(action) {
     const { reviewid } = action.payload || {};
 
     const { data } = yield call(() =>
-      axios.get("/reviewboard/form", {
+      axios.get("/api/reviewboard/form", {
         params: reviewid ? { reviewid } : {},
       })
     );
@@ -77,7 +77,7 @@ function* fetchReviewForm(action) {
 
 // 문장 순화 API
 function reviewPolishApi(params) {
-  return axios.post("/reviewboard/reviewapi", null, { params });
+  return axios.post("/api/reviewboard/reviewapi", null, { params });
 }
 
 function* reviewPolish(action) {
@@ -110,7 +110,7 @@ function* createReview(action) {
     }
 
     const { data } = yield call(() =>
-      axios.post("/reviewboard/reviewwrite", formData, {
+      axios.post("/api/reviewboard/reviewwrite", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       })
     );
@@ -147,7 +147,7 @@ function* updateReview(action) {
     }
 
     yield call(() =>
-      axios.post(`/reviewboard/reviewedit/${reviewid}`, formData, {
+      axios.post(`/api/reviewboard/reviewedit/${reviewid}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       })
     );
@@ -166,7 +166,7 @@ function* deleteReview(action) {
     const { reviewid } = action.payload || {};
 
     yield call(() =>
-      axios.delete("/reviewboard", { params: { reviewid } })
+      axios.delete("/api/reviewboard", { params: { reviewid } })
     );
 
     yield put(deleteReviewSuccess(reviewid));
@@ -181,7 +181,7 @@ function* fetchModalReviews(action) {
     const foodid = action.payload;
 
     const { data } = yield call(() =>
-      axios.get("/reviewboard/reviewsearchByFoodid", {
+      axios.get("/api/reviewboard/reviewsearchByFoodid", {
         params: { foodid },
       })
     );
