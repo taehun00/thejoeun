@@ -70,7 +70,7 @@ function* fetchTesterList(action) {
     const { pageNo = 1, condition = "" } = action.payload || {};
 
     const { data } = yield call(() =>
-      axios.get("/tester/paged", {
+      axios.get("/api/tester/paged", {
         params: {
           pageNo,
           ...(condition ? { condition } : {}),
@@ -96,7 +96,7 @@ function* searchTester(action) {
     } = action.payload || {};
 
     const { data } = yield call(() =>
-      axios.get("/tester/search", {
+      axios.get("/api/tester/search", {
         params: {
           keyword,
           searchType,
@@ -119,7 +119,7 @@ function* fetchTesterDetail(action) {
     const { testerid } = action.payload || {};
     if (!testerid) throw new Error("testerid 누락");
 
-    const { data } = yield call(() => axios.get(`/tester/${testerid}`));
+    const { data } = yield call(() => axios.get(`/api/tester/${testerid}`));
 
     yield put(fetchTesterDetailSuccess(data));
   } catch (err) {
@@ -149,7 +149,7 @@ function* createTesterAdmin(action) {
     }
 
     const { data } = yield call(() =>
-      axios.post("/tester/admin", formData, {
+      axios.post("/api/tester/admin", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       })
     );
@@ -181,7 +181,7 @@ function* createTesterUser(action) {
     }
 
     const { data } = yield call(() =>
-      axios.post("/tester/user", formData, {
+      axios.post("/api/tester/user", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       })
     );
@@ -221,8 +221,8 @@ function* updateTester(action) {
 
 
     const url = mode === "admin"
-      ? `/tester/admin/${testerid}`
-      : `/tester/user/${testerid}`;
+      ? `/api/tester/admin/${testerid}`
+      : `/api/tester/user/${testerid}`;
 
     const { data } = yield call(() =>
       axios.put(url, formData, {
@@ -243,7 +243,7 @@ function* deleteTester(action) {
     const { testerid } = action.payload || {};
     if (!testerid) throw new Error("testerid 누락");
 
-    yield call(() => axios.delete(`/tester/${testerid}`));
+    yield call(() => axios.delete(`/api/tester/${testerid}`));
 
     yield put(deleteTesterSuccess({ testerid }));
     yield put(resetTesterWriteUpdateState());
@@ -258,7 +258,7 @@ function* toggleTesterNotice(action) {
     const { testerid } = action.payload || {};
     if (!testerid) throw new Error("testerid 누락");
 
-    const url = `/tester/${testerid}/notice`;
+    const url = `/api/tester/${testerid}/notice`;
 
     // 서버 응답: Long (0/1)
     const { data } = yield call(() => axios.patch(url));
@@ -285,7 +285,7 @@ function* toggleTesterStatus(action) {
     const { testerid } = action.payload || {};
     if (!testerid) throw new Error("testerid 누락");
 
-    const url = `/tester/${testerid}/status`;
+    const url = `/api/tester/${testerid}/status`;
 
     const { data } = yield call(() => axios.patch(url));
 

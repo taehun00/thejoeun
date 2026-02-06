@@ -35,7 +35,7 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "FOOD", description = "사료 관리") 
 @RestController 
 @RequiredArgsConstructor 
-@RequestMapping("/foodboard")
+@RequestMapping("/api/foodboard")
 //@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 public class FoodController {
 	@Autowired private FoodService service;

@@ -34,7 +34,7 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "REVIEW", description = "리뷰게시판") 
 @RestController 
 @RequiredArgsConstructor 
-@RequestMapping("/reviewboard")
+@RequestMapping("/api/reviewboard")
 public class ReviewController {
 	 private final ReviewService service;
      private final FoodService fservice;
@@ -143,7 +143,7 @@ public class ReviewController {
 
 	    return result;
 	}
-	@Operation(summary = "리뷰삭제")
+
 	@DeleteMapping
 	@PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_ADMIN','ROLE_MEMBER')")
 	public ResponseEntity<Void> deleteByreviewid(
@@ -156,10 +156,22 @@ public class ReviewController {
 	    dto.setReviewid(reviewid);
 	    dto.setUserid(userid.intValue());
 
-	    service.reviewimgdeleteById(reviewid);
-	    int result = service.reviewDelete(dto);
+	    boolean isAdmin = authentication.getAuthorities().stream()
+	            .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
 
-	    if (result > 0) return ResponseEntity.noContent().build();
+	    int result;
+
+	    if (isAdmin) {
+	        result = service.reviewDeleteByAdmin(reviewid);
+	    } else {
+	        result = service.reviewDelete(dto);
+	    }
+
+	    if (result > 0) {
+	        service.reviewimgdeleteById(reviewid);
+	        return ResponseEntity.noContent().build();
+	    }
+
 	    return ResponseEntity.status(403).build();
 	}
 	
