@@ -6,22 +6,22 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.pawject.dao.exec.ExecinfoDao;
-import com.pawject.dto.exec.ExecinfoDto;
+import com.pawject.dao.exec.ExecSearchDao;
+import com.pawject.dto.exec.ExecSearchDto;
 
 @Service
-public class ExecinfoServiceImpl implements ExecinfoService {
-	@Autowired ExecinfoDao idao;
+public class ExecSearchServiceImpl implements ExecSearchService {
+	@Autowired ExecSearchDao idao;
 	
-	@Override public int insertinfo(ExecinfoDto idto) { return idao.insertinfo(idto); }
-	@Override public int updateinfo(ExecinfoDto idto) { return idao.updateinfo(idto); }
-	@Override public int deleteinfo(int execid) { return idao.deleteinfo(execid); }
-	@Override public List<ExecinfoDto> selectAllinfo() {  return idao.selectAllinfo(); }
-	@Override public ExecinfoDto selectinfo(int execid) { return idao.selectinfo(execid); }
-	@Override public ExecinfoDto selectinfoUpdateForm(int execid) { return idao.selectinfo(execid); }
+	@Override public int insertinfo(ExecSearchDto idto) { return idao.insertinfo(idto); }
+//	@Override public int updateinfo(ExecSearchDto idto) { return idao.updateinfo(idto); }
+//	@Override public int deleteinfo(int execid) { return idao.deleteinfo(execid); }
+//	@Override public List<ExecSearchDto> selectAllinfo() {  return idao.selectAllinfo(); }
+	@Override public ExecSearchDto selectinfo(int execid) { return idao.selectinfo(execid); }
+//	@Override public ExecSearchDto selectinfoUpdateForm(int execid) { return idao.selectinfo(execid); }
 
 	/* PAGING */
-	@Override public List<ExecinfoDto> selectinfo10(int pageNo) { 
+	@Override public List<ExecSearchDto> selectinfo10(int pageNo) { 
 		HashMap<String,Integer>   para = new HashMap<>();
 		int start = (pageNo-1)*10 + 1;  //(1)1    (2)11  (2)21
 		int end   = start + 9;
@@ -35,7 +35,7 @@ public class ExecinfoServiceImpl implements ExecinfoService {
 	@Override public int selectinfoTotalCnt() { return idao.selectinfoTotalCnt(); }
 
 	/* SEARCH + PAGING */
-	@Override public List<ExecinfoDto> selectinfo3(String keyword, int pageNo) { 
+	@Override public List<ExecSearchDto> selectinfo3(String keyword, int pageNo) { 
 		HashMap<String, Object> para = new HashMap<>();
 		//  11-1 (10/10 = 1) 20-1(19/10 = 1)
 		int pageSize=3; //3개씩의 페이지

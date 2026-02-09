@@ -60,38 +60,43 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             // 권한 설정
             .authorizeHttpRequests(auth -> auth
-                // Swagger, 인증 관련 경로는 모두 허용
-                .requestMatchers(
-                    "/auth/**", "/login/**", "/oauth2/**",
-                    "/swagger-ui/**", "/v3/api-docs/**",
-                    "/swagger-resources/**", "/webjars/**",
-                    "/configuration/**", "/upload/**"  , "/api/likes/**",
-                    "/api/users/signup", "/api/users/login", "/api/users/refresh",
-                    "/api/test/openai/**"
-                ).permitAll()
-                // 전체조회만 허용
-                .requestMatchers(HttpMethod.GET, "/api/posts").permitAll()   
-                // 단건조회만 허용
-                .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll()  
-                // 해쉬태크
-                .requestMatchers(HttpMethod.GET, "/api/posts/search/hashtag").permitAll()  
-                .requestMatchers("/api/posts/paged").permitAll() 
-                // /api/요청은 JWT 인증 필요
-                .requestMatchers("/api/**").authenticated()
-                .requestMatchers("/api/users/mypage").authenticated()
-                .requestMatchers("/api/pets/**").authenticated()
-                // 나머지는 모두 허용
-                .anyRequest().permitAll()
-            )
+            	    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+            	    .requestMatchers(
+            	    	    "/auth/**", "/login/**", "/oauth2/**",
+            	    	    "/swagger-ui/**", "/v3/api-docs/**",
+            	    	    "/swagger-resources/**", "/webjars/**",
+            	    	    "/configuration/**", "/upload/**", "/api/likes/**",
+
+            	    	    "/api/users/signup",
+            	    	    "/api/users/login",
+            	    	    "/api/users/refresh",
+            	    	    "/api/test/openai/**",
+
+            	    	    // ⭐ 공개 게시판 API 추가
+            	    	    "/api/ads/**",
+            	    	    "/api/petfoodsearcher/**",
+            	    	    "/api/petdisease/**",
+            	    	    "/api/exec/**",
+            	    	    "/api/tester/**",
+            	    	    "/api/reviewboard/**",
+            	    	    "/api/faqBoard/**"
+            	    	).permitAll()
+
+            	    .requestMatchers(HttpMethod.GET, "/api/posts").permitAll()
+            	    .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
+            	    .requestMatchers(HttpMethod.GET, "/api/posts/search/hashtag").permitAll()
+            	    .requestMatchers("/api/posts/paged").permitAll()
+
+            	    .requestMatchers("/api/**").authenticated()
+
+            	    .anyRequest().permitAll()
+            	)
+
             // Oauth2 로그인은 소셜로그인 전용
             .oauth2Login(oauth2 -> oauth2.successHandler(oAuth2SuccessHandler))
             // JWT 필터 추가
-            .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-        	.exceptionHandling(ex -> ex
-                .authenticationEntryPoint((request, response, authException) ->
-                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")
-                )
-            );
+            .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -106,7 +111,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
  
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));  //★ Front 포트번호
+        configuration.setAllowedOriginPatterns(List.of("http://localhost:3000", "http://13.236.66.10"));    //★ Front 포트번호
 
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));

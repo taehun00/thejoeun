@@ -18,7 +18,7 @@ function* fetchCsPaged(action) {
     const { pageNo = 1, condition = "" } = action.payload || {};
 
     const { data } = yield call(() =>
-      axios.get("/csBoard/cspaged", {
+      axios.get("/api/csBoard/cspaged", {
         params: {
           pstartno: pageNo,
           ...(condition ? { condition } : {}),
@@ -38,7 +38,7 @@ function* searchCs(action) {
     const { keyword = "", searchType = "", pageNo = 1, condition = "" } = action.payload || {};
 
     const { data } = yield call(() =>
-      axios.get("/csBoard/cssearch", {
+      axios.get("/api/csBoard/cssearch", {
         params: {
           searchType,
           keyword,
@@ -62,7 +62,7 @@ function* quickAnswer(action) {
     if (!questionid) throw new Error("questionid 누락");
 
     const { data } = yield call(() =>
-      axios.patch(`/csBoard/${questionid}/active`, { questionid })
+      axios.patch(`/api/csBoard/${questionid}/active`, { questionid })
     );
     const status =
       data?.status ??
@@ -103,7 +103,7 @@ function* quickAnswer(action) {
 // 유저 내 1:1질문 목록
 function* fetchMyCsList() {
   try {
-    const { data } = yield call(() => axios.get("/csBoard/cslistuser"));
+    const { data } = yield call(() => axios.get("/api/csBoard/cslistuser"));
     yield put(fetchMyCsListSuccess(data));
   } catch (err) {
     yield put(fetchMyCsListFailure(err.response?.data?.message || err.message));
@@ -113,7 +113,7 @@ function* fetchMyCsList() {
 // 카테고리
 function* fetchCategories() {
   try {
-    const { data } = yield call(() => axios.get("/csBoard/categories"));
+    const { data } = yield call(() => axios.get("/api/csBoard/categories"));
     yield put(fetchCategoriesSuccess(data));
   } catch (err) {
     yield put(fetchCategoriesFailure(err.response?.data?.message || err.message));
@@ -123,7 +123,7 @@ function* fetchCategories() {
 // 질문 작성
 function* writeQuestion(action) {
   try {
-    yield call(() => axios.post("/csBoard", action.payload));
+    yield call(() => axios.post("/api/csBoard", action.payload));
     yield put(writeQuestionSuccess());
   } catch (err) {
     yield put(writeQuestionFailure(err.response?.data?.message || err.message));
@@ -138,7 +138,7 @@ function* writeAnswer(action) {
     if (!questionid) throw new Error("questionid 누락");
 
     const { data } = yield call(() =>
-      axios.post(`/csBoard/cs/${questionid}/answer`, { answercontent })
+      axios.post(`/api/csBoard/cs/${questionid}/answer`, { answercontent })
     );
 
     // payload: { questionid, answer }

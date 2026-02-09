@@ -32,7 +32,7 @@ import lombok.RequiredArgsConstructor;
 
 @Tag(name = "FAQ", description = "고객센터 FAQ") 
 @RestController 
-@RequestMapping("/faqBoard") 
+@RequestMapping("/api/faqBoard") 
 @RequiredArgsConstructor 
 public class FAQController {
 	@Autowired private FAQService service;

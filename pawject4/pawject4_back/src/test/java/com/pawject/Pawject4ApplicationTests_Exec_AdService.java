@@ -1,9 +1,10 @@
 package com.pawject;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.pawject.domain.User;
 import com.pawject.dto.exec.AdRequestDto;
 import com.pawject.dto.exec.AdResponseDto;
+import com.pawject.repository.AdRepository;
 import com.pawject.repository.UserRepository;
 import com.pawject.service.exec.AdService;
 
@@ -24,6 +26,7 @@ import com.pawject.service.exec.AdService;
 class Pawject4ApplicationTests_Exec_AdService {
 
     @Autowired AdService adService;
+    @Autowired AdRepository adRepository;
     @Autowired UserRepository userRepository;
 
     private Long userId;
@@ -52,6 +55,42 @@ class Pawject4ApplicationTests_Exec_AdService {
         assertThat(res.isActive()).isTrue(); // 무조건 true
     }
 
+    @Test
+    @DisplayName("■ AdService - 최신 광고 페이징 조회")
+    void testGetLatestAdsWithPaging() throws IOException {
+        // given: 테스트 데이터 여러 개 삽입
+        for (int i = 0; i < 15; i++) {
+            AdRequestDto dto = new AdRequestDto();
+            dto.setTitle("광고 " + i);
+            dto.setContent("내용 " + i);
+
+            MockMultipartFile file = new MockMultipartFile(
+                    "file", "img" + i + ".png", "image/png", ("dummy" + i).getBytes()
+            );
+
+            adService.createAd(userId, dto, file);
+        }
+
+        // when
+        List<AdResponseDto> latestAds = adService.getLatestAdsWithPaging(1, 10);
+
+        // then
+        assertThat(latestAds).isNotNull();
+        assertThat(latestAds.size()).isEqualTo(10);
+
+        // 최신순 정렬 확인
+        for (int i = 0; i < latestAds.size() - 1; i++) {
+            LocalDateTime first = latestAds.get(i).getCreatedAt();
+            LocalDateTime second = latestAds.get(i + 1).getCreatedAt();
+            assertThat(!first.isBefore(second)).isTrue(); // first >= second
+        }
+    }
+
+
+    
+    
+    
+    
     @Test
     @DisplayName("■ AdService - CRUD")
     void adServiceCrud() {

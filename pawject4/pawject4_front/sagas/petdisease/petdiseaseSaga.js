@@ -32,21 +32,21 @@ import {
 
 // /petdisease/list
 function apiFetchPetdiseaseList({ pettypeid, page = 1, size = 10, condition = "new" }) {
-  return axios.get("/petdisease/list", {
+  return axios.get("/api/petdisease/list", {
     params: { pettypeid, page, size, condition },
   });
 }
 
 // /petdisease/search
 function apiSearchPetdisease({ pettypeid, keyword = "", page = 1, size = 10, condition = "new" }) {
-  return axios.get("/petdisease/search", {
+  return axios.get("/api/petdisease/search", {
     params: { pettypeid, keyword, page, size, condition },
   });
 }
 
 // /petdisease/{disno}
 function apiFetchPetdiseaseDetail(disno) {
-  return axios.get(`/petdisease/${disno}`);
+  return axios.get(`/api/petdisease/${disno}`);
 }
 
 // POST /petdisease (ModelAttribute -> FormData)
@@ -59,7 +59,7 @@ function apiCreatePetdisease({ pettypeid, dto }) {
   formData.append("treatment", dto.treatment ?? "");
   formData.append("tip", dto.tip ?? "");
 
-  return axios.post("/petdisease", formData, {
+  return axios.post("/api/petdisease", formData, {
     params: { pettypeid },
     headers: { "Content-Type": "multipart/form-data" },
   });
@@ -75,7 +75,7 @@ function apiUpdatePetdisease({ disno, pettypeid, dto }) {
   formData.append("treatment", dto.treatment ?? "");
   formData.append("tip", dto.tip ?? "");
 
-  return axios.put(`/petdisease/${disno}`, formData, {
+  return axios.put(`/api/petdisease/${disno}`, formData, {
     params: { pettypeid },
     headers: { "Content-Type": "multipart/form-data" },
   });
@@ -83,7 +83,7 @@ function apiUpdatePetdisease({ disno, pettypeid, dto }) {
 
 // DELETE /petdisease/{disno}
 function apiDeletePetdisease(disno) {
-  return axios.delete(`/petdisease/${disno}`);
+  return axios.delete(`/api/petdisease/${disno}`);
 }
 
 // SAGA

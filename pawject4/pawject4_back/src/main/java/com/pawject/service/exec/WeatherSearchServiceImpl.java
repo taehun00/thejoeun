@@ -5,25 +5,24 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import com.pawject.dao.exec.SaveweatherDao;
-import com.pawject.dto.Apiweather.WeatherScheduled;
-import com.pawject.dto.exec.SaveweatherDto;
+import com.pawject.dao.exec.WeatherSearchDao;
+import com.pawject.dto.exec.WeatherSearchDto;
+
 
 @Service
-public class SaveweatherServiceImpl implements SaveweatherService {
-	@Autowired SaveweatherDao wdao;
+public class WeatherSearchServiceImpl implements WeatherSearchService {
+	@Autowired WeatherSearchDao wdao;
 	
-	@Override public int insertweather(SaveweatherDto wdto) { return wdao.insertweather(wdto); }
-	@Override public int updateweather(SaveweatherDto wdto) { return wdao.updateweather(wdto); }
-	@Override public int deleteweather(int wid) { return wdao.deleteweather(wid); }
-	@Override public List<SaveweatherDto> selectAllweather() { return wdao.selectAllweather(); }
-	@Override public SaveweatherDto selectweather(int wid) { return wdao.selectweather(wid); }
-	@Override public SaveweatherDto selectweatherUpdateForm(int wid) { return wdao.selectweather(wid); }
+	@Override public int insertweather(WeatherSearchDto wdto) { return wdao.insertweather(wdto); }
+//	@Override public int updateweather(WeatherSearchDto wdto) { return wdao.updateweather(wdto); }
+//	@Override public int deleteweather(int wid) { return wdao.deleteweather(wid); }
+//	@Override public List<WeatherSearchDto> selectAllweather() { return wdao.selectAllweather(); }
+	@Override public WeatherSearchDto selectweather(int wid) { return wdao.selectweather(wid); }
+//	@Override public WeatherSearchDto selectweatherUpdateForm(int wid) { return wdao.selectweather(wid); }
 
 	/* PAGING */
-	@Override public List<SaveweatherDto> selectweather10(int pageNo) { 
+	@Override public List<WeatherSearchDto> selectweather10(int pageNo) { 
 		HashMap<String,Integer>   para = new HashMap<>();
 		int start = (pageNo-1)*10 + 1;  //(1)1    (2)11  (2)21
 		int end   = start + 9;
@@ -36,7 +35,7 @@ public class SaveweatherServiceImpl implements SaveweatherService {
 	@Override public int selectweatherTotalCnt() { return wdao.selectweatherTotalCnt(); }
 
 	/* SEARCH + PAGING */
-	@Override public List<SaveweatherDto> selectweather3(String keyword, int pageNo) { 
+	@Override public List<WeatherSearchDto> selectweather3(String keyword, int pageNo) { 
 		HashMap<String, Object> para = new HashMap<>();
 		//  11-1 (10/10 = 1) 20-1(19/10 = 1)
 		int pageSize=3; //3개씩의 페이지

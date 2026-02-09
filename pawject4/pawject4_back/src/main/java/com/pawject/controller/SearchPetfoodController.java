@@ -29,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 
 @Tag(name = "PETFOODSEARCHER", description = "사료검색") 
 @RestController 
-@RequestMapping("/petfoodsearcher") 
+@RequestMapping("/api/petfoodsearcher") 
 @RequiredArgsConstructor 
 public class SearchPetfoodController {
 @Autowired private SearchPetfoodService service;

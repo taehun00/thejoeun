@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 
 @Tag(name = "Petdisease", description = "질병정보 API")
 @RestController
-@RequestMapping("/petdisease")
+@RequestMapping("/api/petdisease")
 @RequiredArgsConstructor
 public class PetdiseaseController {
 	private final PetdiseaseService service;

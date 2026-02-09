@@ -27,7 +27,7 @@ import {
 // 리스트 - 유저
 function* fetchFaqUser() {
   try {
-    const { data } = yield call(() => axios.get("/faqBoard/faquser"));
+    const { data } = yield call(() => axios.get("/api/faqBoard/faquser"));
     yield put(fetchFaqSuccess(data));
   } catch (err) {
     yield put(fetchFaqFailure(err.response?.data?.message || err.message));
@@ -37,7 +37,7 @@ function* fetchFaqUser() {
 // 리스트 - 관리자
 function* fetchFaqAdmin() {
   try {
-    const { data } = yield call(() => axios.get("/faqBoard/faqadmin"));
+    const { data } = yield call(() => axios.get("/api/faqBoard/faqadmin"));
     yield put(fetchFaqSuccess(data));
   } catch (err) {
     yield put(fetchFaqFailure(err.response?.data?.message || err.message));
@@ -47,7 +47,7 @@ function* fetchFaqAdmin() {
 // 카테고리
 function* fetchFaqCategories() {
   try {
-    const { data } = yield call(() => axios.get("/faqBoard/categories"));
+    const { data } = yield call(() => axios.get("/api/faqBoard/categories"));
     yield put(fetchFaqCategoriesSuccess(data));
   } catch (err) {
     yield put(fetchFaqCategoriesFailure(err.response?.data?.message || err.message));
@@ -58,7 +58,7 @@ function* fetchFaqCategories() {
 function* writeFaq(action) {
   try {
     const dto = action.payload || {};
-    yield call(() => axios.post("/faqBoard", dto));
+    yield call(() => axios.post("/api/faqBoard", dto));
     yield put(writeFaqSuccess());
 
     // 등록 후 관리자 리스트 새로고침
@@ -72,7 +72,7 @@ function* writeFaq(action) {
 function* editFaq(action) {
   try {
     const { faqid, dto } = action.payload || {};
-    yield call(() => axios.put(`/faqBoard/${faqid}`, dto));
+    yield call(() => axios.put(`/api/faqBoard/${faqid}`, dto));
     yield put(editFaqSuccess());
 
     // 수정 후 관리자 리스트 새로고침
@@ -89,7 +89,7 @@ function* activeFaq(action) {
 
     // 컨트롤러가 @RequestBody FAQDto 요구하므로 {}라도 body 보내야 400 안터짐
     yield call(() =>
-      axios.patch(`/faqBoard/${faqid}/active`, {})
+      axios.patch(`/api/faqBoard/${faqid}/active`, {})
     );
 
     yield put(activeFaqSuccess());

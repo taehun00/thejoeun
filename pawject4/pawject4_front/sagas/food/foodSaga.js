@@ -22,7 +22,7 @@ function* fetchFoods(action) {
   try {
     const { pageNo = 1, condition = "" } = action.payload || {};
 
-    const { data } = yield call(() => axios.get("/foodboard/foodselectForList", {
+    const { data } = yield call(() => axios.get("/api/foodboard/foodselectForList", {
         params: {
           pageNo, ...(condition ? { condition } : {}),
         },
@@ -48,7 +48,7 @@ function* searchFoods(action) {
     } = action.payload || {};
 
     const { data } = yield call(() =>
-      axios.get("/foodboard/foodsearch", {
+      axios.get("/api/foodboard/foodsearch", {
         params: {
           keyword,
           searchType,
@@ -71,7 +71,7 @@ function* fetchFoodDetail(action) {
   try {
     const { foodid } = action.payload;
 
-    const { data } = yield call(() => axios.get(`/foodboard/detail/${foodid}`));
+    const { data } = yield call(() => axios.get(`/api/foodboard/detail/${foodid}`));
 
     // data: { fdto, nutrientList }
     yield put(fetchFoodDetailSuccess(data));
@@ -87,7 +87,7 @@ function* fetchFoodForm(action) {
     const { foodid } = action.payload || {};
 
     const { data } = yield call(() =>
-      axios.get("/foodboard/form", {
+      axios.get("/api/foodboard/form", {
         params: foodid ? { foodid } : {},
       })
     );
@@ -106,7 +106,7 @@ function* foodOcr(action) {
     formData.append("ocrfile", file);
 
     const { data } = yield call(() =>
-      axios.post("/foodboard/naverocr", formData, {
+      axios.post("/api/foodboard/naverocr", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       })
     );
@@ -145,7 +145,7 @@ function* createFood(action) {
     }
 
     const { data } = yield call(() =>
-      axios.post("/foodboard/foodwrite", formData, {
+      axios.post("/api/foodboard/foodwrite", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       })
     );
@@ -180,7 +180,7 @@ function* updateFood(action) {
     }
 
     const { data } = yield call(() =>
-      axios.put(`/foodboard/edit/${foodid}`, formData, {
+      axios.put(`/api/foodboard/edit/${foodid}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       })
     );
@@ -198,7 +198,7 @@ function* deleteFood(action) {
   try {
     const { foodid } = action.payload;
 
-    yield call(() => axios.delete("/foodboard", {params: { foodid },}));
+    yield call(() => axios.delete("/api/foodboard", {params: { foodid },}));
 
     yield put(deleteFoodSuccess(foodid));
   } catch (err) {
@@ -213,7 +213,7 @@ function* quickDeleteFood(action) {
     const { foodid } = action.payload;
 
     yield call(() =>
-      axios.post("/foodboard/foodquikdelete", null, {params: { foodid },}));
+      axios.post("/api/foodboard/foodquikdelete", null, {params: { foodid },}));
 
     yield put(quickDeleteFoodSuccess(foodid));
   } catch (err) {
@@ -224,7 +224,7 @@ function* quickDeleteFood(action) {
 // 테스터 연동 - 사료명 리스트
 function* fetchFoodSelectListSaga() {
   try {
-    const { data } = yield call(() => axios.get("/tester/food/selectfoodlist"));
+    const { data } = yield call(() => axios.get("/api/tester/food/selectfoodlist"));
     yield put(fetchFoodSelectListSuccess(data));
   } catch (e) {
     const msg = e?.response?.data || e?.message || "사료 리스트 불러오기 실패";
