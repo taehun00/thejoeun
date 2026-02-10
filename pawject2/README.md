@@ -42,7 +42,7 @@
 > 썸네일 클릭 시 시연 영상으로 이동합니다.
 
 | 멤버 | 리뷰·사료 | 질환정보 | 운동 |
-|---|---|---|---|
+|:---:|:---:|:---:|:---:|
 | [![성태훈](https://img.youtube.com/vi/solt_Vr0Hm0/0.jpg)](https://www.youtube.com/watch?v=solt_Vr0Hm0&t=2s)<br>**성태훈** | [![리뷰+사료](https://img.youtube.com/vi/1OgiHFzOJ4M/0.jpg)](https://www.youtube.com/watch?si=IoxqWmDDXXLwLkd4&v=1OgiHFzOJ4M&feature=youtu.be) | [![질환정보](https://img.youtube.com/vi/ZcX2HGLvasw/0.jpg)](https://www.youtube.com/watch?v=ZcX2HGLvasw&feature=youtu.be) | [![운동](https://img.youtube.com/vi/eN79WDRs4wI/0.jpg)](https://www.youtube.com/watch?v=eN79WDRs4wI) |
 ---
 
