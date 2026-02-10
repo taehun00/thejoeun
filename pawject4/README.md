@@ -21,7 +21,7 @@
 ### ✔ Role Assignment
 - **성태훈(팀장)** : 계정/권한 및 사용자 기능 총괄 (유저관리·좋아요·신고)
 - **박현주** : 체험단/질환정보 도메인 기능 담당 (게시판 설계·리뉴얼)
-- **한승현** : 커뮤니티/프로모션 UI 담당 (운동 챌린지·SNS 피드·광고 배너)
+- **한승현** : 커뮤니티/프로모션 UI 담당 (운동 챌린지·SNS 피드(추후업데이트예정)·광고 배너)
 
     </br>
     
@@ -59,8 +59,8 @@
       <p><strong>성태훈</strong></p>
     </td>
     <td align="center">
-      <a href="#" target="_blank" rel="noopener noreferrer">
-        <img src="../프로젝트4차정리/img/balckcat.png" width="200" />
+      <a href="[#](https://www.youtube.com/watch?v=L5Sabniz1DY)" target="_blank" rel="noopener noreferrer">
+        <img src="https://img.youtube.com/vi/L5Sabniz1DY/maxresdefault.jpg" width="200" />
       </a>
       <p><strong>한승현</strong></p>
     </td>
