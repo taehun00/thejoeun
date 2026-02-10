@@ -53,7 +53,7 @@
       <p><strong>박현주</strong></p>
     </td>
     <td align="center">
-      <a href="#" target="_blank" rel="noopener noreferrer">
+      <a href="https://www.youtube.com/watch?v=TF3cFZ7jMKw&t=2s" target="_blank" rel="noopener noreferrer">
         <img src="../프로젝트4차정리/img/balckcat.png" width="200" />
       </a>
       <p><strong>성태훈</strong></p>
