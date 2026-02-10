@@ -43,7 +43,7 @@
 > 썸네일 클릭 시 시연 영상으로 이동합니다.
 
 | 알림(웹소켓) | 고객센터·API(ChatGPT/OCR) | 이벤트(ChatGPT) | 운동게시판(날씨/지도 API) |
-|---|---|---|---|
+|:---:|:---:|:---:|:---:|
 | [![성태훈](https://img.youtube.com/vi/fcRNG0BrCOc/0.jpg)](https://www.youtube.com/watch?v=fcRNG0BrCOc)<br>**성태훈** | [![박현주](https://img.youtube.com/vi/ZDb0pKXf4I8/0.jpg)](https://www.youtube.com/watch?v=ZDb0pKXf4I8&feature=youtu.be)<br>**박현주** | [![최상욱](https://img.youtube.com/vi/MmQSuFz9ofo/0.jpg)](https://www.youtube.com/watch?v=MmQSuFz9ofo&feature=youtu.be)<br>**최상욱** | [![한승현](https://img.youtube.com/vi/zX3kRQAQF2o/0.jpg)](https://www.youtube.com/watch?v=zX3kRQAQF2o)<br>**한승현** |
 ---
 
