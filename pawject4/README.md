@@ -50,19 +50,19 @@
       <a href="https://youtu.be/pZOSRqIKZ6s?si=lzPm4VY2YeDzePXH" target="_blank" rel="noopener noreferrer">
         <img src="https://img.youtube.com/vi/pZOSRqIKZ6s/0.jpg" width="200" />
       </a>
+      <p><strong>박현주</strong></p>
+    </td>
+    <td align="center">
+      <a href="#" target="_blank" rel="noopener noreferrer">
+        <img src="../프로젝트4차정리/img/balckcat.png" width="200" />
+      </a>
       <p><strong>성태훈</strong></p>
     </td>
     <td align="center">
       <a href="#" target="_blank" rel="noopener noreferrer">
         <img src="../프로젝트4차정리/img/balckcat.png" width="200" />
       </a>
-      <p>촬영중!</p>
-    </td>
-    <td align="center">
-      <a href="#" target="_blank" rel="noopener noreferrer">
-        <img src="../프로젝트4차정리/img/balckcat.png" width="200" />
-      </a>
-      <p>촬영중!</p>
+      <p><strong>한승현</strong></p>
     </td>
   </tr>
 </table>
