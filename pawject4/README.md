@@ -54,7 +54,7 @@
     </td>
     <td align="center">
       <a href="https://www.youtube.com/watch?v=TF3cFZ7jMKw&t=2s" target="_blank" rel="noopener noreferrer">
-        <img src="https://img.youtube.com/vi/TF3cFZ7jMKw/KakaoTalk_20260210_153531551.png" width="200" />
+        <img src="https://img.youtube.com/vi/TF3cFZ7jMKw/0.jpg" width="200" />
       </a>
       <p><strong>성태훈</strong></p>
     </td>
