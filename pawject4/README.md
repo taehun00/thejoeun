@@ -50,6 +50,7 @@
       <a href="https://youtu.be/pZOSRqIKZ6s?si=lzPm4VY2YeDzePXH" target="_blank" rel="noopener noreferrer">
         <img src="https://img.youtube.com/vi/pZOSRqIKZ6s/0.jpg" width="200" />
       </a>
+      <p><strong>성태훈</strong></p>
     </td>
     <td align="center">
       <a href="#" target="_blank" rel="noopener noreferrer">
