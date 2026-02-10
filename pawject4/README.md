@@ -54,7 +54,7 @@
     </td>
     <td align="center">
       <a href="https://www.youtube.com/watch?v=TF3cFZ7jMKw&t=2s" target="_blank" rel="noopener noreferrer">
-        <img src="../프로젝트4차정리/img/balckcat.png" width="200" />
+        <img src="https://img.youtube.com/vi/pZOSRqIKZ6s/0.jpg" width="200" />
       </a>
       <p><strong>성태훈</strong></p>
     </td>
