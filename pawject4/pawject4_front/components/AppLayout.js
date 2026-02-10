@@ -6,11 +6,11 @@ import { useRouter } from "next/router";
 import { useMemo, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchLatestAdsRequest } from "../reducers/ad/adReducer";
-import { parseJwt } from "../utils/jwt"; 
+import { parseJwt } from "../utils/jwt";
 
 const { Header, Content } = Layout;
 const { useBreakpoint } = Grid;
-const { Title, Paragraph, Text } = Typography;
+const { Text } = Typography;
 
 export default function AppLayout({ children }) {
   const router = useRouter();
@@ -99,6 +99,45 @@ export default function AppLayout({ children }) {
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8484";
 
+  // ✅ 광고 카드 렌더링 함수 (중복 제거)
+  const renderAds = () => (
+    <Card title="📢 최신 광고" bordered={false} size="small">
+      {loading ? (
+        <Text type="secondary">불러오는 중...</Text>
+      ) : error ? (
+        <Text type="danger">광고 불러오기 실패: {error}</Text>
+      ) : latestAds && latestAds.length > 0 ? (
+        <Row gutter={[8, 8]}>
+          {latestAds.map((ad) => {
+            const imageUrl =
+              ad.imgUrl || (ad.img ? `${API_URL}/upload/${ad.img}` : null);
+
+            return (
+              <Col span={24} key={ad.id}>
+                <Card
+                  hoverable
+                  size="small"
+                  style={{ borderRadius: 8 }}
+                  cover={
+                    imageUrl ? (
+                      <img
+                        src={imageUrl}
+                        alt="광고 이미지" // ✅ 제목 대신 일반 alt 텍스트
+                        style={{ maxHeight: 300, objectFit: "cover" }}
+                      />
+                    ) : null
+                  }
+                />
+              </Col>
+            );
+          })}
+        </Row>
+      ) : (
+        <Text type="secondary">등록된 광고가 없습니다.</Text>
+      )}
+    </Card>
+  );
+
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Header
@@ -149,59 +188,22 @@ export default function AppLayout({ children }) {
         />
       </Drawer>
 
-      {/* Content + 광고 영역 */}
-      <Content style={{ padding: "16px" }}> {/* ✅ padding 줄임 */}
-        <Row gutter={[16, 16]}> {/* ✅ gutter 줄임 */}
-          <Col xs={24} md={18} lg={18}> {/* ✅ 메인 콘텐츠 넓힘 */}
-            <div style={{ maxWidth: "100%" }}>{children}</div> {/* ✅ margin 제거 */}
+      {/* ✅ Content + 좌우 광고 영역 */}
+      <Content style={{ padding: "16px" }}>
+        <Row gutter={[16, 16]}>
+          {/* ✅ 왼쪽 광고 */}
+          <Col xs={24} md={6} lg={6}>
+            {renderAds()}
           </Col>
 
-          {/* ✅ 오른쪽 광고 최신글 영역 */}
-          <Col xs={24} md={6} lg={6}> {/* ✅ 광고 영역 너비 줄임 */}
-            <Card title="📢 최신 광고" bordered={false} size="small"> {/* ✅ 카드 크기 줄임 */}
-              {loading ? (
-                <Text type="secondary">불러오는 중...</Text>
-              ) : error ? (
-                <Text type="danger">광고 불러오기 실패: {error}</Text>
-              ) : latestAds && latestAds.length > 0 ? (
-                <Row gutter={[8, 8]}> {/* ✅ 카드 내부 여백 줄임 */}
-                  {latestAds.map((ad) => {
-                    const imageUrl =
-                      ad.imgUrl || (ad.img ? `${API_URL}/upload/${ad.img}` : null);
+          {/* ✅ 메인 콘텐츠 중앙 */}
+          <Col xs={24} md={12} lg={12}>
+            <div style={{ maxWidth: "100%" }}>{children}</div>
+          </Col>
 
-                    return (
-                      <Col span={24} key={ad.id}>
-                        <Card
-                          hoverable
-                          size="small" 
-                          style={{ borderRadius: 8 }}
-                          cover={
-                            imageUrl ? (
-                              <img
-                                src={imageUrl}
-                                alt={ad.title}
-                                style={{ maxHeight: 300, objectFit: "cover" }} 
-                              />
-                            ) : null
-                          }
-                        >
-                          <Card.Meta
-                            title={<Title level={5}>{ad.title}</Title>}
-                            description={
-                              <Paragraph ellipsis={{ rows: 2 }}>
-                                {ad.content}
-                              </Paragraph>
-                            }
-                          />
-                        </Card>
-                      </Col>
-                    );
-                  })}
-                </Row>
-              ) : (
-                <Text type="secondary">등록된 광고가 없습니다.</Text>
-              )}
-            </Card>
+          {/* ✅ 오른쪽 광고 */}
+          <Col xs={24} md={6} lg={6}>
+            {renderAds()}
           </Col>
         </Row>
       </Content>
