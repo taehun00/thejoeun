@@ -70,7 +70,7 @@
 
 ## 🛠 Tech Stack (v4)
 ### Backend
-- Java 11 (JDK 11)
+- Java 17 (JDK 17)
 - **Spring Boot 3.4 (MVC, Security)**
 - **JPA**
 - **MyBatis 3.5**
