@@ -61,7 +61,7 @@
       
     <td align="center">
       <a href="https://www.youtube.com/watch?v=L5Sabniz1DY" target="_blank" rel="noopener noreferrer">
-        <img src="https://img.youtube.com/vi/L5Sabniz1DY/maxresdefault.jpg" width="300" />
+        <img src="https://img.youtube.com/vi/L5Sabniz1DY/maxresdefault.jpg" width="200" />
       </a>
       <p><strong>한승현</strong></p>
     </td>
