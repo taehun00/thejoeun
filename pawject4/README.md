@@ -48,19 +48,19 @@
   <tr>
     <td align="center">
       <a href="https://youtu.be/pZOSRqIKZ6s?si=lzPm4VY2YeDzePXH" target="_blank" rel="noopener noreferrer">
-        <img src="https://img.youtube.com/vi/pZOSRqIKZ6s/0.jpg" width="200" />
+        <img src="https://img.youtube.com/vi/pZOSRqIKZ6s/0.jpg" style="width:200px; height:150px; object-fit:cover;"  />
       </a>
       <p><strong>박현주</strong></p>
     </td>
     <td align="center">
       <a href="https://www.youtube.com/watch?v=TF3cFZ7jMKw&t=2s" target="_blank" rel="noopener noreferrer">
-        <img src="https://img.youtube.com/vi/TF3cFZ7jMKw/0.jpg" width="200" />
+        <img src="https://img.youtube.com/vi/TF3cFZ7jMKw/0.jpg" style="width:200px; height:150px; object-fit:cover;"  />
       </a>
       <p><strong>성태훈</strong></p>
     </td>
     <td align="center">
       <a href="https://www.youtube.com/watch?v=L5Sabniz1DY" target="_blank" rel="noopener noreferrer">
-        <img src="https://img.youtube.com/vi/L5Sabniz1DY/maxresdefault.jpg" width="200" />
+        <img src="https://img.youtube.com/vi/L5Sabniz1DY/maxresdefault.jpg" style="width:200px; height:150px; object-fit:cover;"  />
       </a>
       <p><strong>한승현</strong></p>
     </td>
