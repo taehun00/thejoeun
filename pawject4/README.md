@@ -58,7 +58,6 @@
       </a>
       <p><strong>성태훈</strong></p>
     </td>
-      
     <td align="center">
       <a href="https://www.youtube.com/watch?v=L5Sabniz1DY" target="_blank" rel="noopener noreferrer">
         <img src="https://img.youtube.com/vi/L5Sabniz1DY/maxresdefault.jpg" width="200" />
