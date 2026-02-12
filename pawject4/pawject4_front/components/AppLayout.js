@@ -123,7 +123,7 @@ export default function AppLayout({ children }) {
                       <img
                         src={imageUrl}
                         alt="광고 이미지" // ✅ 제목 대신 일반 alt 텍스트
-                        style={{ maxHeight: 300, objectFit: "cover" }}
+                        style={{ maxHeight: 200, objectFit: "cover" }}
                       />
                     ) : null
                   }
