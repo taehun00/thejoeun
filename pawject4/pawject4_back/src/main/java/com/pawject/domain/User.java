@@ -94,5 +94,24 @@ public class User {
    private List<Petdisease> petdis = new ArrayList<>();
    
    
+   //운동
+	@OneToMany( mappedBy = "user" , cascade = CascadeType.ALL , orphanRemoval = true )
+	private List<ExecPost> posts = new ArrayList<>();  // 유저가 작성한 게시글
+	
+	@OneToMany( mappedBy = "user" , cascade = CascadeType.ALL , orphanRemoval = true )
+	private List<ExecComment> comments = new ArrayList<>();  // 유저가 작성한 댓글
+	
+	@OneToMany( mappedBy = "follower" , cascade = CascadeType.ALL , orphanRemoval = true )
+	private List<ExecFollow> followings = new ArrayList<>();  // 내가 팔로우한 사람들
+	
+	@OneToMany( mappedBy = "followee" , cascade = CascadeType.ALL , orphanRemoval = true )
+	private List<ExecFollow> followers = new ArrayList<>();  // 나를 팔로우하는 사람들 
+	
+	@OneToMany( mappedBy = "user" , cascade = CascadeType.ALL , orphanRemoval = true )
+	private List<ExecRetweet> retweets = new ArrayList<>();  // 나를 팔로우하는 사람들 
+	
+	@OneToMany( mappedBy = "user" , cascade = CascadeType.ALL , orphanRemoval = true )
+	private List<ExecPostLike> likes = new ArrayList<>();  // 유저가 누른 좋아요들
+   
    
 }
