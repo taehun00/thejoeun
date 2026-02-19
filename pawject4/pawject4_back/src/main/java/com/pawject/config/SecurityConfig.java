@@ -74,6 +74,7 @@ public class SecurityConfig {
             	    	    "/api/test/openai/**",
 
             	    	    // ⭐ 공개 게시판 API 추가
+            	    	    "/api/ads/**",
             	    	    "/api/petfoodsearcher/**",
             	    	    "/api/petdisease/**",
             	    	    "/api/exec/**",

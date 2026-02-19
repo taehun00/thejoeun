@@ -21,7 +21,7 @@
 ### ✔ Role Assignment
 - **성태훈(팀장)** : 계정/권한 및 사용자 기능 총괄 (유저관리·좋아요·신고)
 - **박현주** : 체험단/질환정보 도메인 기능 담당 (게시판 설계·리뉴얼)
-- **한승현** : 커뮤니티/프로모션 UI 담당 (운동 챌린지·SNS 피드·광고 배너)
+- **한승현** : 커뮤니티/프로모션 UI 담당 (운동 챌린지·SNS 피드(추후 촬영예정)·광고 배너)
 
     </br>
     
@@ -41,27 +41,28 @@
 
 <table>
   <tr>
-    <th>체험단/잘환정보</th>
+    <th>체험단/질환정보</th>
     <th>좋아요/신고</th>
-    <th>운동챌린지/광고배너</th>
+    <th>광고배너</th>
   </tr>
   <tr>
     <td align="center">
       <a href="https://youtu.be/pZOSRqIKZ6s?si=lzPm4VY2YeDzePXH" target="_blank" rel="noopener noreferrer">
-        <img src="https://img.youtube.com/vi/pZOSRqIKZ6s/0.jpg" width="200" />
+        <img src="https://img.youtube.com/vi/pZOSRqIKZ6s/0.jpg" style="width:200px; height:150px; object-fit:cover;"  />
       </a>
+      <p><strong>박현주</strong></p>
     </td>
     <td align="center">
-      <a href="#" target="_blank" rel="noopener noreferrer">
-        <img src="../프로젝트4차정리/img/balckcat.png" width="200" />
+      <a href="https://www.youtube.com/watch?v=TF3cFZ7jMKw&t=2s" target="_blank" rel="noopener noreferrer">
+        <img src="https://img.youtube.com/vi/TF3cFZ7jMKw/0.jpg" style="width:200px; height:150px; object-fit:cover;"  />
       </a>
-      <p>촬영중!</p>
+      <p><strong>성태훈</strong></p>
     </td>
     <td align="center">
-      <a href="#" target="_blank" rel="noopener noreferrer">
-        <img src="../프로젝트4차정리/img/balckcat.png" width="200" />
+      <a href="https://www.youtube.com/watch?v=L5Sabniz1DY" target="_blank" rel="noopener noreferrer">
+        <img src="https://img.youtube.com/vi/L5Sabniz1DY/maxresdefault.jpg" style="width:200px; height:150px; object-fit:cover;"  />
       </a>
-      <p>촬영중!</p>
+      <p><strong>한승현</strong></p>
     </td>
   </tr>
 </table>
@@ -69,7 +70,7 @@
 
 ## 🛠 Tech Stack (v4)
 ### Backend
-- Java 11 (JDK 11)
+- Java 17 (JDK 17)
 - **Spring Boot 3.4 (MVC, Security)**
 - **JPA**
 - **MyBatis 3.5**
