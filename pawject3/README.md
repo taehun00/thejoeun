@@ -44,7 +44,7 @@
 
 | 알림(웹소켓) | 고객센터·API(ChatGPT/OCR) | 이벤트(ChatGPT) | 운동게시판(날씨/지도 API) |
 |:---:|:---:|:---:|:---:|
-| <a href="https://www.youtube.com/watch?v=fcRNG0BrCOc"><img src="https://img.youtube.com/vi/fcRNG0BrCOc/0.jpg" width="200"></a><br>**성태훈** | <a href="https://www.youtube.com/watch?v=ZDb0pKXf4I8"><img src="https://img.youtube.com/vi/ZDb0pKXf4I8/0.jpg" width="200"></a><br>**박현주** | <a href="https://www.youtube.com/watch?v=MmQSuFz9ofo"><img src="https://img.youtube.com/vi/MmQSuFz9ofo/0.jpg" width="200"></a><br>**최상욱** | <a href="https://www.youtube.com/watch?v=zX3kRQAQF2o"><img src="https://img.youtube.com/vi/zX3kRQAQF2o/0.jpg" width="200"></a><br>**한승현** |
+| <a href="https://www.youtube.com/watch?v=fcRNG0BrCOc"><img src="https://img.youtube.com/vi/fcRNG0BrCOc/0.jpg" width="200"></a><br>**성태훈** | <a href="https://www.youtube.com/watch?v=OrbyM_7n1P0"><img src="https://img.youtube.com/vi/ZDb0pKXf4I8/0.jpg" width="200"></a><br>**박현주** | <a href="https://www.youtube.com/watch?v=MmQSuFz9ofo"><img src="https://img.youtube.com/vi/MmQSuFz9ofo/0.jpg" width="200"></a><br>**최상욱** | <a href="https://www.youtube.com/watch?v=zX3kRQAQF2o"><img src="https://img.youtube.com/vi/zX3kRQAQF2o/0.jpg" width="200"></a><br>**한승현** |
 ---
 
 ## 🛠 Tech Stack (v3)
