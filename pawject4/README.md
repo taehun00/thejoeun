@@ -31,10 +31,12 @@
 ## 🔗 Links
 - **Repository**: https://github.com/taehun00/thejoeun  
 - **Project Path**: https://github.com/taehun00/thejoeun/tree/master/pawject4  
-- **Figma(PPT)**: (업데이트 예정)
+- **Figma(PPT)**: https://www.figma.com/deck/p5XSa4gGr7FLTs0VTKnDgF/PAWJECT_ver4?node-id=1-261&t=D3kIEAG6m1mSIbBk-1
 - **구글시트**: https://docs.google.com/spreadsheets/d/1tKH45UxPa-RrMnF8XNpTcCXr2Naq1IjctwE3coVSyS8/edit?gid=0#gid=0
-
-
+- **배포 링크** : http://13.236.66.10
+  > ✨테스트 계정 제공 <br/>
+  > ▶관리자 계정 ID: admin@test.com  PW : admin <br/>
+  > ▶사용자 계정 ID: user@test.com  PW : user
 
 ### 🎥 Demo Video (v4)
 > 썸네일 클릭 시 시연 영상으로 이동합니다.
