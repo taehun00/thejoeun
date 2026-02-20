@@ -34,7 +34,7 @@
 ## 🔗 Links
 - **Repository**: https://github.com/taehun00/thejoeun  
 - **Project Path**: https://github.com/taehun00/thejoeun/tree/master/pawject3  
-- **Figma(PPT)**: https://www.figma.com/deck/agVQ2UET3VDuGyPsoOOyh6/PAWJECT_ver3--%EB%B3%B5%EC%82%AC-?node-id=11-491&t=LYEOVxYYTiaQjsJA-1
+- **Figma(PPT)**: https://www.figma.com/deck/agVQ2UET3VDuGyPsoOOyh6/PAWJECT_ver3?node-id=1-261&t=LYEOVxYYTiaQjsJA-1
 - **구글시트**: https://docs.google.com/spreadsheets/d/1qf483W3OjI8tLteDl4ohGsusr4az7OAgQ0jMewwhmjg/edit?gid=0#gid=0
 
 
