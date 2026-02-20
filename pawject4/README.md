@@ -20,8 +20,8 @@
 ## 👥 Team / Period
 ### ✔ Role Assignment
 - **성태훈(팀장)** : 계정/권한 및 사용자 기능 총괄 (유저관리·좋아요·신고)
-- **박현주** : 체험단/질환정보 도메인 기능 담당 (게시판 설계·리뉴얼)
-- **한승현** : 커뮤니티/프로모션 UI 담당 (운동 챌린지·SNS 피드(추후 촬영예정)·광고 배너)
+- **박현주** : 사료 관련 게시판과 고객센터 및 각종 UI 개선 담당 (게시판 설계·리뉴얼)
+- **한승현** : 커뮤니티/프로모션 UI 담당 (운동 챌린지·댓글·광고 배너)
 
     </br>
     
@@ -33,6 +33,7 @@
 - **Project Path**: https://github.com/taehun00/thejoeun/tree/master/pawject4  
 - **Figma(PPT)**: https://www.figma.com/deck/p5XSa4gGr7FLTs0VTKnDgF/PAWJECT_ver4?node-id=1-261&t=D3kIEAG6m1mSIbBk-1
 - **구글시트**: https://docs.google.com/spreadsheets/d/1tKH45UxPa-RrMnF8XNpTcCXr2Naq1IjctwE3coVSyS8/edit?gid=0#gid=0
+-  <br/>
 - **배포 링크** : http://13.236.66.10
   > ✨테스트 계정 제공 <br/>
   > ▶관리자 계정 ID: admin@test.com  PW : admin <br/>
